@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "llm-wiki": {
+      "command": "node",
+      "args": [
+        "/Users/jw/.gemini/config/plugins/blog-agent-plugin/mcp/server.js"
+      ],
+      "description": "개인 지식베이스(옵시디언 위키) Q&A 저널 및 요약 토픽 RAG 조회 MCP"
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "description": "최신 라이브러리 및 API 공식 문서 실시간 조회 MCP"
+    }
+  }
+}

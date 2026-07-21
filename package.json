@@ -1,0 +1,16 @@
+{
+  "name": "agents-kit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "agents-kit": "./bin/cli.js"
+  },
+  "scripts": {
+    "gui": "./scripts/run-gui.sh",
+    "apply": "node ./bin/cli.js apply",
+    "status": "node ./bin/cli.js status",
+    "tauri:dev": "npm --prefix gui run tauri:dev",
+    "tauri:build": "npm --prefix gui run tauri:build"
+  }
+}

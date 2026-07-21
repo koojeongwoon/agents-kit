@@ -1,0 +1,32 @@
+# Codex Automation: daily-docs-sweep
+#
+# Install: copy or symlink to ~/.codex/automations/daily-docs-sweep.toml
+# Ref: https://developers.openai.com/codex/guides/agents-md
+
+name = "daily-docs-sweep"
+description = "Check docs staleness against recent code changes; edit only with direct evidence."
+
+# Cron: daily 09:00 (adjust as needed)
+schedule = "0 9 * * *"
+
+prompt = """
+Follow the loop-runner skill.
+
+1. Read AGENTS_KIT/loops/daily-docs-sweep/LOOP.md
+2. Read AGENTS_KIT/loops/daily-docs-sweep/memory.md
+3. Execute the Prompt section
+4. Run loop-verify (Done condition) before updating memory
+5. Append run record to memory.md on pass
+
+AGENTS_KIT = /Users/in07375_etc23a00026_mac/__dev/agents-kit
+
+If edits were made, spawn a checker using agents/code-reviewer.md before finalizing.
+"""
+
+memory = "/Users/in07375_etc23a00026_mac/__dev/agents-kit/loops/daily-docs-sweep/memory.md"
+
+# Isolated worktree recommended for parallel automations
+worktree = true
+
+# Optional: link to Codex subagent definitions
+# agents = ["code-reviewer"]
