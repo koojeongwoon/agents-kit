@@ -36,6 +36,27 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
+function antigravityDeployTarget(assetSubTab: string): string {
+  switch (assetSubTab) {
+    case 'harness':
+      return 'kit/harness/ + kit/adapters/antigravity/plugin.json → Antigravity plugins/';
+    case 'skills':
+      return '~/.gemini/config/plugins/agents-kit/skills/';
+    case 'mcp':
+      return '~/.gemini/config/mcp_config.json → kit/mcp-servers.local.json';
+    case 'agents':
+      return '~/.gemini/config/plugins/agents-kit/agents/';
+    case 'loops':
+      return '~/.gemini/config/plugins/agents-kit/loops/';
+    case 'memory':
+      return '~/.gemini/config/global_memory.md';
+    case 'hooks':
+      return '~/.gemini/config/plugins/agents-kit/hooks.json ← kit/harness/hooks.json';
+    default:
+      return '~/.gemini/config/';
+  }
+}
+
 interface LinkItem {
   name: string;
   target: string;
@@ -121,6 +142,7 @@ interface GitStatus {
 export default function App() {
   const [clients, setClients] = useState<ClientStatus[]>([]);
   const [projectRoot, setProjectRoot] = useState<string>('');
+  const [kitRoot, setKitRoot] = useState<string>('');
   const [kits, setKits] = useState<CategorizedKits>({ skills: [], mcp: [], agents: [], harness: [], loops: [], memory: [], hooks: [] });
   
   // Deploy Action Loading States
@@ -173,6 +195,7 @@ export default function App() {
       const data = await res.json();
       setClients(data.clients);
       setProjectRoot(data.projectRoot);
+      setKitRoot(data.kitRoot || '');
     } catch (err) {
       console.error('Failed to fetch status:', err);
     }
@@ -444,7 +467,9 @@ export default function App() {
               <h1 className="font-bold text-lg leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
                 agents-kit Adapter Hub
               </h1>
-              <p className="text-xs text-slate-400 font-mono truncate max-w-xs">{projectRoot}</p>
+              <p className="text-xs text-slate-400 font-mono truncate max-w-md" title={kitRoot || projectRoot}>
+                Kit: {kitRoot || '—'}
+              </p>
             </div>
           </div>
 
@@ -666,7 +691,7 @@ export default function App() {
                     <p>⚡ <strong>Skills (스킬)</strong>: AI 에이전트가 특정 전문 작업(문서 요약, 루프 검증 등)을 수행할 수 있도록 확장하는 AgentSkills.io 표준 기능 묶음입니다.</p>
                   )}
                   {assetSubTab === 'mcp' && (
-                    <p>🔌 <strong>MCP (Model Context Protocol)</strong>: 로컬 지식베이스(llm-wiki), 데이터베이스, 외부 API 툴을 AI 클라이언트에 공유하는 공용 서버 정의입니다.</p>
+                    <p>🔌 <strong>MCP (Model Context Protocol)</strong>: <code className="text-indigo-300">kit/mcp/mcp-servers.json</code> (Git) + <code className="text-indigo-300">kit/.env</code> (gitignored) → apply 시 <code className="text-indigo-300">kit/mcp-servers.local.json</code> 생성 후 클라이언트에 symlink.</p>
                   )}
                   {assetSubTab === 'agents' && (
                     <p>🤖 <strong>Sub-Agents (서브에이전트)</strong>: 메인 에이전트와 독립된 세션에서 특정 전담 역할(Code Reviewer, Security Auditor 등)을 맡아 수행하는 동료 AI 정의입니다.</p>
@@ -695,7 +720,7 @@ export default function App() {
                     <div className="flex items-center space-x-1.5 truncate">
                       <span className="text-purple-400 font-bold shrink-0">Antigravity (App, IDE, CLI):</span>
                       <span className="text-slate-400 truncate">
-                        {assetSubTab === 'memory' ? '~/.gemini/config/global_memory.md' : '~/.gemini/config/plugins/agents-kit (통합 번들)'}
+                        {antigravityDeployTarget(assetSubTab)}
                       </span>
                     </div>
                     <div className="flex items-center space-x-1.5 truncate">

@@ -27,8 +27,13 @@ AGENTS.override.md
 # 시크릿 (혹시 adapter에 실수로 넣는 경우 방지)
 .env
 .env.*
+!.env.example
 *.pem
 credentials.json
+
+# MCP resolved output lives inside kit/
+kit/.env
+kit/mcp-servers.local.json
 
 # 루프 실행 이력 — 로컬 only로 두려면 아래 주석 해제
 # loops/*/memory.md

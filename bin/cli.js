@@ -5,35 +5,59 @@ import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import { buildResolvedMcpConfig, mcpResolvedPath } from '../lib/mcp-env.js';
+import { resolveKitRoot, kitPaths } from '../lib/kit-paths.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '../');
-
 const homeDir = os.homedir();
-const permissionsFilePath = path.join(projectRoot, 'permissions/allowed-commands.json');
-const mcpFilePath = path.join(projectRoot, 'mcp/mcp-servers.json');
-const globalMemoryFilePath = path.join(projectRoot, 'memory/global_memory.md');
-const hooksFilePath = path.join(projectRoot, 'hooks/hooks.json');
+
+const args = process.argv.slice(2);
+const command = args[0] || 'apply';
+
+function getArgValue(flag) {
+  const idx = args.indexOf(flag);
+  return idx !== -1 && args[idx + 1] ? args[idx + 1] : '';
+}
+
+const kitPathOverride = getArgValue('--kit');
+const kitRoot = resolveKitRoot(projectRoot, kitPathOverride);
+const kit = kitPaths(kitRoot);
 
 function assertSafeProjectTarget(targetDir) {
-  if (path.resolve(targetDir) === projectRoot) {
-    throw new Error('agents-kit cannot be deployed into its own repository root');
+  const resolved = path.resolve(targetDir);
+  if (resolved === projectRoot || resolved === kitRoot) {
+    throw new Error('agents-kit cannot be deployed into its own repository or kit directory');
   }
+}
+
+function getMcpDeploySource() {
+  return mcpResolvedPath(kitRoot);
+}
+
+function resolveMcpConfigForDeploy() {
+  const result = buildResolvedMcpConfig(kitRoot);
+  if (result.unresolved.length > 0) {
+    console.warn(`⚠️  MCP placeholders unresolved: ${result.unresolved.join(', ')}`);
+    console.warn(`    Fill kit/.env (see kit/.env.example) then re-run apply.`);
+  }
+  return result;
 }
 
 function exists(p) {
   try {
     return fs.existsSync(p);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
 function getClientConfigs(scope = 'global', customProjectPath = '') {
-  const baseDir = (scope === 'project' && customProjectPath.trim()) 
-    ? path.resolve(customProjectPath) 
+  const baseDir = (scope === 'project' && customProjectPath.trim())
+    ? path.resolve(customProjectPath)
     : homeDir;
+  const mcpSource = getMcpDeploySource();
 
   return [
     {
@@ -42,16 +66,15 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
       detectedPath: scope === 'global' ? path.join(homeDir, '.gemini/config') : path.join(baseDir, '.gemini/config'),
       categorizedLinks: {
         harness: [
-          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/plugin.json') : path.join(baseDir, '.agents/plugins/agents-kit/plugin.json'), source: path.join(projectRoot, 'plugin.json') },
-          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/rules/AGENTS.md') : path.join(baseDir, '.agents/plugins/agents-kit/rules/AGENTS.md'), source: path.join(projectRoot, 'AGENTS.md') },
-          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/allowed_commands.json') : path.join(baseDir, '.gemini/config/allowed_commands.json'), source: permissionsFilePath }
+          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/plugin.json') : path.join(baseDir, '.agents/plugins/agents-kit/plugin.json'), source: kit.pluginJson },
+          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/rules/AGENTS.md') : path.join(baseDir, '.agents/plugins/agents-kit/rules/AGENTS.md'), source: kit.agentsMd }
         ],
-        skills: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/skills') : path.join(baseDir, '.agents/plugins/agents-kit/skills'), source: path.join(projectRoot, 'skills') }],
-        mcp: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/mcp_config.json') : path.join(baseDir, '.gemini/config/mcp_config.json'), source: mcpFilePath }],
-        agents: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/agents') : path.join(baseDir, '.agents/plugins/agents-kit/agents'), source: path.join(projectRoot, 'agents') }],
-        loops: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/loops') : path.join(baseDir, '.agents/plugins/agents-kit/loops'), source: path.join(projectRoot, 'loops') }],
-        memory: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/global_memory.md') : path.join(baseDir, '.gemini/config/global_memory.md'), source: globalMemoryFilePath }],
-        hooks: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/hooks.json') : path.join(baseDir, '.agents/plugins/agents-kit/hooks.json'), source: hooksFilePath }]
+        skills: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/skills') : path.join(baseDir, '.agents/plugins/agents-kit/skills'), source: kit.skillsDir }],
+        mcp: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/mcp_config.json') : path.join(baseDir, '.gemini/config/mcp_config.json'), source: mcpSource }],
+        agents: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/agents') : path.join(baseDir, '.agents/plugins/agents-kit/agents'), source: kit.agentsDir }],
+        loops: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/loops') : path.join(baseDir, '.agents/plugins/agents-kit/loops'), source: kit.loopsDir }],
+        memory: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/global_memory.md') : path.join(baseDir, '.gemini/config/global_memory.md'), source: kit.memoryFile }],
+        hooks: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/hooks.json') : path.join(baseDir, '.agents/plugins/agents-kit/hooks.json'), source: kit.hooksFile }]
       }
     },
     {
@@ -60,17 +83,17 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
       detectedPath: scope === 'global' ? path.join(homeDir, '.cursor') : path.join(baseDir, '.cursor'),
       categorizedLinks: {
         harness: [
-          { target: path.join(baseDir, '.cursorrules'), source: path.join(projectRoot, 'AGENTS.md') },
-          { target: path.join(baseDir, '.cursor/permissions.json'), source: permissionsFilePath }
+          { target: path.join(baseDir, '.cursorrules'), source: kit.agentsMd },
+          { target: path.join(baseDir, '.cursor/permissions.json'), source: kit.permissionsFile }
         ],
         skills: [
-          { target: path.join(baseDir, '.cursor/skills/loop-runner'), source: path.join(projectRoot, 'skills/loop-runner') },
-          { target: path.join(baseDir, '.cursor/skills/loop-verify'), source: path.join(projectRoot, 'skills/loop-verify') }
+          { target: path.join(baseDir, '.cursor/skills/loop-runner'), source: path.join(kit.skillsDir, 'loop-runner') },
+          { target: path.join(baseDir, '.cursor/skills/loop-verify'), source: path.join(kit.skillsDir, 'loop-verify') }
         ],
-        mcp: [{ target: path.join(baseDir, '.cursor/mcp.json'), source: mcpFilePath }],
-        agents: [{ target: path.join(baseDir, '.cursor/agents/code-reviewer.md'), source: path.join(projectRoot, 'agents/code-reviewer.md') }],
-        loops: [{ target: path.join(baseDir, '.cursor/loops/daily-docs-sweep'), source: path.join(projectRoot, 'loops/daily-docs-sweep') }],
-        memory: [{ target: path.join(baseDir, '.cursor/rules/global_memory.md'), source: globalMemoryFilePath }]
+        mcp: [{ target: path.join(baseDir, '.cursor/mcp.json'), source: mcpSource }],
+        agents: [{ target: path.join(baseDir, '.cursor/agents/code-reviewer.md'), source: path.join(kit.agentsDir, 'code-reviewer.md') }],
+        loops: [{ target: path.join(baseDir, '.cursor/loops/daily-docs-sweep'), source: path.join(kit.loopsDir, 'daily-docs-sweep') }],
+        memory: [{ target: path.join(baseDir, '.cursor/rules/global_memory.md'), source: kit.memoryFile }]
       }
     },
     {
@@ -79,17 +102,17 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
       detectedPath: scope === 'global' ? path.join(homeDir, '.codex') : path.join(baseDir, '.codex'),
       categorizedLinks: {
         harness: [
-          { target: path.join(baseDir, '.codex/AGENTS.md'), source: path.join(projectRoot, 'AGENTS.md') },
-          { target: path.join(baseDir, '.codex/allowed_commands.json'), source: permissionsFilePath }
+          { target: path.join(baseDir, '.codex/AGENTS.md'), source: kit.agentsMd },
+          { target: path.join(baseDir, '.codex/allowed_commands.json'), source: kit.permissionsFile }
         ],
         skills: [
-          { target: path.join(baseDir, '.codex/skills/loop-runner'), source: path.join(projectRoot, 'skills/loop-runner') },
-          { target: path.join(baseDir, '.codex/skills/loop-verify'), source: path.join(projectRoot, 'skills/loop-verify') }
+          { target: path.join(baseDir, '.codex/skills/loop-runner'), source: path.join(kit.skillsDir, 'loop-runner') },
+          { target: path.join(baseDir, '.codex/skills/loop-verify'), source: path.join(kit.skillsDir, 'loop-verify') }
         ],
-        mcp: [{ target: path.join(baseDir, '.codex/mcp.json'), source: mcpFilePath }],
-        agents: [{ target: path.join(baseDir, '.codex/agents/code-reviewer.md'), source: path.join(projectRoot, 'agents/code-reviewer.md') }],
+        mcp: [{ target: path.join(baseDir, '.codex/mcp.json'), source: mcpSource }],
+        agents: [{ target: path.join(baseDir, '.codex/agents/code-reviewer.md'), source: path.join(kit.agentsDir, 'code-reviewer.md') }],
         loops: [],
-        memory: [{ target: path.join(baseDir, '.codex/global_memory.md'), source: globalMemoryFilePath }]
+        memory: [{ target: path.join(baseDir, '.codex/global_memory.md'), source: kit.memoryFile }]
       }
     },
     {
@@ -97,16 +120,16 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
       name: 'Claude Code (CLI)',
       detectedPath: scope === 'global' ? path.join(homeDir, '.claude') : path.join(baseDir, '.claude'),
       categorizedLinks: {
-        harness: [{ target: path.join(baseDir, '.claude/CLAUDE.md'), source: path.join(projectRoot, 'AGENTS.md') }],
-        skills: [{ target: path.join(baseDir, '.claude/skills'), source: path.join(projectRoot, 'skills') }],
-        mcp: [{ target: scope === 'global' ? path.join(homeDir, '.claude.json') : path.join(baseDir, '.mcp.json'), source: mcpFilePath }],
+        harness: [{ target: path.join(baseDir, '.claude/CLAUDE.md'), source: kit.agentsMd }],
+        skills: [{ target: path.join(baseDir, '.claude/skills'), source: kit.skillsDir }],
+        mcp: [{ target: scope === 'global' ? path.join(homeDir, '.claude.json') : path.join(baseDir, '.mcp.json'), source: mcpSource }],
         agents: [
-          { target: path.join(baseDir, '.claude/agents/code-reviewer.md'), source: path.join(projectRoot, 'agents/code-reviewer.md') },
-          { target: path.join(baseDir, '.claude/agents/security-auditor.md'), source: path.join(projectRoot, 'agents/security-auditor.md') }
+          { target: path.join(baseDir, '.claude/agents/code-reviewer.md'), source: path.join(kit.agentsDir, 'code-reviewer.md') },
+          { target: path.join(baseDir, '.claude/agents/security-auditor.md'), source: path.join(kit.agentsDir, 'security-auditor.md') }
         ],
-        loops: [{ target: path.join(baseDir, '.claude/loops/daily-docs-sweep'), source: path.join(projectRoot, 'loops/daily-docs-sweep') }],
-        memory: [{ target: path.join(baseDir, '.claude/global_memory.md'), source: globalMemoryFilePath }],
-        hooks: [{ target: path.join(baseDir, '.claude/hooks.json'), source: hooksFilePath }]
+        loops: [{ target: path.join(baseDir, '.claude/loops/daily-docs-sweep'), source: path.join(kit.loopsDir, 'daily-docs-sweep') }],
+        memory: [{ target: path.join(baseDir, '.claude/global_memory.md'), source: kit.memoryFile }],
+        hooks: [{ target: path.join(baseDir, '.claude/hooks.json'), source: kit.hooksFile }]
       }
     },
     {
@@ -114,12 +137,12 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
       name: 'Claude Desktop (GUI)',
       detectedPath: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude') : path.join(baseDir, '.claude'),
       categorizedLinks: {
-        harness: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/AGENTS.md') : path.join(baseDir, '.claude/AGENTS.md'), source: path.join(projectRoot, 'AGENTS.md') }],
-        skills: [{ target: path.join(baseDir, '.claude/skills'), source: path.join(projectRoot, 'skills') }],
-        mcp: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/claude_desktop_config.json') : path.join(baseDir, '.claude/claude_desktop_config.json'), source: mcpFilePath }],
+        harness: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/AGENTS.md') : path.join(baseDir, '.claude/AGENTS.md'), source: kit.agentsMd }],
+        skills: [{ target: path.join(baseDir, '.claude/skills'), source: kit.skillsDir }],
+        mcp: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/claude_desktop_config.json') : path.join(baseDir, '.claude/claude_desktop_config.json'), source: mcpSource }],
         agents: [],
-        loops: [{ target: path.join(baseDir, '.claude/loops/daily-docs-sweep'), source: path.join(projectRoot, 'loops/daily-docs-sweep') }],
-        memory: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/global_memory.md') : path.join(baseDir, '.claude/global_memory.md'), source: globalMemoryFilePath }],
+        loops: [{ target: path.join(baseDir, '.claude/loops/daily-docs-sweep'), source: path.join(kit.loopsDir, 'daily-docs-sweep') }],
+        memory: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/global_memory.md') : path.join(baseDir, '.claude/global_memory.md'), source: kit.memoryFile }],
         hooks: []
       }
     }
@@ -151,7 +174,7 @@ function deployConfigs(clientConfigs, scope, baseDir) {
           } else {
             fs.renameSync(link.target, `${link.target}.bak`);
           }
-        } catch (e) {
+        } catch {
           // File does not exist, proceed
         }
         fs.symlinkSync(link.source, link.target);
@@ -161,8 +184,8 @@ function deployConfigs(clientConfigs, scope, baseDir) {
   }
 
   let allowedCmds = [];
-  if (fs.existsSync(permissionsFilePath)) {
-    const pData = JSON.parse(fs.readFileSync(permissionsFilePath, 'utf-8'));
+  if (fs.existsSync(kit.permissionsFile)) {
+    const pData = JSON.parse(fs.readFileSync(kit.permissionsFile, 'utf-8'));
     allowedCmds = pData.commands || [];
   }
 
@@ -181,10 +204,6 @@ function deployConfigs(clientConfigs, scope, baseDir) {
   return { appliedLinksCount, syncedCommandsCount: allowedCmds.length };
 }
 
-// CLI Arg Parsing
-const args = process.argv.slice(2);
-const command = args[0] || 'apply';
-
 function printHelp() {
   console.log(`
 🚀 agents-kit CLI - AI Client Asset Deployment & Sync Tool
@@ -193,22 +212,24 @@ Usage:
   agents-kit [command] [options]
 
 Commands:
-  apply, sync        Apply master assets to clients (default: global ~/ system)
+  apply, sync        Apply master kit to clients (default: global ~/ system)
   status             Check detection and link status of AI clients
-  git                Run git sync operations (push/pull)
+  git                Run git sync operations on kit directory (push/pull)
   help               Show this help message
 
 Options:
+  --kit <dir>        Master kit directory (default: ./kit)
   --project <dir>    Deploy to a specific project directory instead of global ~/
   --client <id>      Deploy only to a specific client (antigravity, cursor, codex, claude)
-  --push             Git commit & push master assets
-  --pull             Git pull master assets
+  --push             Git commit & push kit assets
+  --pull             Git pull kit assets
 
 Examples:
-  npx agents-kit apply                      # Apply to global (~/)
+  npx agents-kit apply                      # Apply kit/ to global (~/)
+  npx agents-kit apply --kit ~/my-agent-kit # Apply external kit repo
   npx agents-kit apply --project ./my-app   # Apply to ./my-app
   npx agents-kit apply --client cursor      # Apply only to Cursor
-  npx agents-kit git --pull                 # Git pull latest assets
+  npx agents-kit git --pull                 # Git pull latest kit
   npx agents-kit status                     # View current link status
 `);
 }
@@ -218,10 +239,15 @@ if (command === 'help' || args.includes('-h') || args.includes('--help')) {
   process.exit(0);
 }
 
+if (!exists(kitRoot)) {
+  console.error(`❌ Kit directory not found: ${kitRoot}`);
+  process.exit(1);
+}
+
 if (command === 'status') {
-  console.log('\n🔍 agents-kit Client Detection & Link Status:\n');
-  const configs = getClientConfigs('global');
-  configs.forEach(c => {
+  console.log(`\n📦 Kit: ${kitRoot}\n`);
+  console.log('🔍 agents-kit Client Detection & Link Status:\n');
+  getClientConfigs('global').forEach(c => {
     const isDet = exists(c.detectedPath);
     console.log(`${isDet ? '🟢' : '⚪'} ${c.name} (${c.id}) - Path: ${c.detectedPath}`);
   });
@@ -229,21 +255,23 @@ if (command === 'status') {
   process.exit(0);
 }
 
+const gitCwd = kitPathOverride ? kitRoot : kitRoot;
+
 if (command === 'git') {
   try {
     if (args.includes('--pull')) {
-      console.log('🔄 Executing git pull...');
-      const out = execSync('git pull origin HEAD', { cwd: projectRoot, encoding: 'utf-8' });
+      console.log(`🔄 Executing git pull in ${gitCwd}...`);
+      const out = execSync('git pull origin HEAD', { cwd: gitCwd, encoding: 'utf-8' });
       console.log('✅ Success:', out.trim());
     } else if (args.includes('--push')) {
-      console.log('🚀 Executing git add, commit & push...');
-      execSync('git add .', { cwd: projectRoot });
+      console.log(`🚀 Executing git add, commit & push in ${gitCwd}...`);
+      execSync('git add .', { cwd: gitCwd });
       try {
-        execSync(`git commit -m "agents-kit cli sync: ${new Date().toISOString()}"`, { cwd: projectRoot });
-      } catch (e) {
+        execSync(`git commit -m "agents-kit kit sync: ${new Date().toISOString()}"`, { cwd: gitCwd });
+      } catch {
         console.log('ℹ️  Nothing to commit.');
       }
-      const out = execSync('git push origin HEAD', { cwd: projectRoot, encoding: 'utf-8' });
+      const out = execSync('git push origin HEAD', { cwd: gitCwd, encoding: 'utf-8' });
       console.log('✅ Success:', out.trim());
     } else {
       console.log('Please specify --push or --pull for git command.');
@@ -254,35 +282,27 @@ if (command === 'git') {
   process.exit(0);
 }
 
-// Default action: apply / sync
 let scope = 'global';
-let customPath = '';
-let targetClient = '';
+let customPath = getArgValue('--project');
+if (customPath) scope = 'project';
 
-const projIdx = args.indexOf('--project');
-if (projIdx !== -1 && args[projIdx + 1]) {
-  scope = 'project';
-  customPath = args[projIdx + 1];
-}
-
-const clientIdx = args.indexOf('--client');
-if (clientIdx !== -1 && args[clientIdx + 1]) {
-  targetClient = args[clientIdx + 1];
-}
+const targetClient = getArgValue('--client');
 
 let configs = getClientConfigs(scope, customPath);
 if (targetClient) {
   configs = configs.filter(c => c.id === targetClient);
   if (configs.length === 0) {
-    console.error(`❌ Client '${targetClient}' not found. Valid: antigravity, cursor, codex, claude`);
+    console.error(`❌ Client '${targetClient}' not found. Valid: antigravity, cursor, codex, claude-code, claude-desktop`);
     process.exit(1);
   }
 }
 
 const targetLocation = scope === 'project' ? path.resolve(customPath) : homeDir;
-console.log(`\n⚡ Applying agents-kit assets to ${scope === 'project' ? `project (${targetLocation})` : 'global (~/)'}...`);
+console.log(`\n📦 Kit: ${kitRoot}`);
+console.log(`⚡ Applying to ${scope === 'project' ? `project (${targetLocation})` : 'global (~/)'}...`);
 
 try {
+  resolveMcpConfigForDeploy();
   const result = deployConfigs(configs, scope, targetLocation);
   console.log(`\n✅ Done! Connected ${result.appliedLinksCount} symlinks & synced ${result.syncedCommandsCount} allowed commands.`);
   console.log(`🎯 Targets: ${configs.map(c => c.name).join(', ')}\n`);

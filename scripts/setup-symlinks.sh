@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# setup-symlinks.sh — agents-kit을 각 클라이언트에 연결
+# setup-symlinks.sh — agents-kit kit/ 을 각 클라이언트에 연결 (레거시)
 set -euo pipefail
 
 AGENTS_KIT="${AGENTS_KIT:-$(cd "$(dirname "$0")/.." && pwd)}"
+KIT="${AGENTS_KIT}/kit"
 HOME_DIR="${HOME}"
 
 echo "agents-kit: $AGENTS_KIT"
+echo "kit: $KIT"
 
 link_file() {
   local src="$1"
@@ -38,24 +40,25 @@ link_dir_merge() {
 echo ""
 echo "== Codex =="
 mkdir -p "$HOME_DIR/.codex"
-link_file "$AGENTS_KIT/AGENTS.md" "$HOME_DIR/.codex/AGENTS.md"
-link_dir_merge "$AGENTS_KIT/skills" "$HOME_DIR/.codex/skills"
+link_file "$KIT/harness/AGENTS.md" "$HOME_DIR/.codex/AGENTS.md"
+link_dir_merge "$KIT/skills" "$HOME_DIR/.codex/skills"
 mkdir -p "$HOME_DIR/.codex/automations"
-link_file "$AGENTS_KIT/adapters/codex/daily-docs-sweep.toml" \
+link_file "$KIT/adapters/codex/daily-docs-sweep.toml" \
   "$HOME_DIR/.codex/automations/daily-docs-sweep.toml"
 
 echo ""
 echo "== Cursor =="
 mkdir -p "$HOME_DIR/.cursor/skills"
-link_dir_merge "$AGENTS_KIT/skills" "$HOME_DIR/.cursor/skills"
+link_dir_merge "$KIT/skills" "$HOME_DIR/.cursor/skills"
 
 echo ""
 echo "== Antigravity (Gemini) =="
 AG_DIR="$HOME_DIR/.gemini/config"
 mkdir -p "$AG_DIR"
-link_file "$AGENTS_KIT/AGENTS.md" "$AG_DIR/AGENTS.md"
+link_file "$KIT/harness/AGENTS.md" "$AG_DIR/AGENTS.md"
 
 echo ""
-echo "Done. Optional: git init in agents-kit and add project-level symlinks:"
-echo "  ln -s $AGENTS_KIT/loops ./loops"
-echo "  ln -s $AGENTS_KIT/AGENTS.md ./AGENTS.md"
+echo "Done. Prefer: agents-kit apply"
+echo "  Optional project symlinks:"
+echo "  ln -s $KIT/loops ./loops"
+echo "  ln -s $KIT/harness/AGENTS.md ./AGENTS.md"

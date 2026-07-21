@@ -5,6 +5,12 @@ import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
+import {
+  buildResolvedMcpConfig,
+  mcpResolvedPath,
+  mcpTemplatePath as getMcpTemplatePath
+} from '../../lib/mcp-env.js';
+import { resolveKitRoot, kitPaths } from '../../lib/kit-paths.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,14 +22,29 @@ app.use(express.json());
 const PORT = 3710;
 const homeDir = os.homedir();
 const projectRoot = path.resolve(__dirname, '../../');
-const permissionsFilePath = path.join(projectRoot, 'permissions/allowed-commands.json');
-const mcpFilePath = path.join(projectRoot, 'mcp/mcp-servers.json');
-const globalMemoryFilePath = path.join(projectRoot, 'memory/global_memory.md');
-const hooksFilePath = path.join(projectRoot, 'hooks/hooks.json');
+const kitRoot = resolveKitRoot(projectRoot);
+const kit = kitPaths(kitRoot);
+const permissionsFilePath = kit.permissionsFile;
+const globalMemoryFilePath = kit.memoryFile;
+const hooksFilePath = kit.hooksFile;
+
+function getMcpDeploySource() {
+  return mcpResolvedPath(kitRoot);
+}
+
+function resolveMcpConfigForDeploy() {
+  const result = buildResolvedMcpConfig(kitRoot);
+  if (result.unresolved.length > 0) {
+    console.warn(`MCP placeholders unresolved: ${result.unresolved.join(', ')}`);
+    console.warn('Fill kit/.env (see kit/.env.example) then re-run apply.');
+  }
+  return result;
+}
 
 function assertSafeProjectTarget(targetDir) {
-  if (path.resolve(targetDir) === projectRoot) {
-    throw new Error('agents-kit cannot be deployed into its own repository root');
+  const resolved = path.resolve(targetDir);
+  if (resolved === projectRoot || resolved === kitRoot) {
+    throw new Error('agents-kit cannot be deployed into its own repository or kit directory');
   }
 }
 
@@ -64,6 +85,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
   const baseDir = (scope === 'project' && customProjectPath.trim()) 
     ? path.resolve(customProjectPath) 
     : homeDir;
+  const mcpSource = getMcpDeploySource();
 
   return [
     {
@@ -76,45 +98,40 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
           {
             name: 'plugin.json (Plugin Manifest)',
             target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/plugin.json') : path.join(baseDir, '.agents/plugins/agents-kit/plugin.json'),
-            source: path.join(projectRoot, 'plugin.json')
+            source: kit.pluginJson
           },
           {
             name: 'rules/AGENTS.md (Rules)',
             target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/rules/AGENTS.md') : path.join(baseDir, '.agents/plugins/agents-kit/rules/AGENTS.md'),
-            source: path.join(projectRoot, 'AGENTS.md')
-          },
-          {
-            name: 'allowed_commands.json (Permissions)',
-            target: scope === 'global' ? path.join(homeDir, '.gemini/config/allowed_commands.json') : path.join(baseDir, '.gemini/config/allowed_commands.json'),
-            source: permissionsFilePath
+            source: kit.agentsMd
           }
         ],
         skills: [
           {
             name: 'skills/ (Skills Suite)',
             target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/skills') : path.join(baseDir, '.agents/plugins/agents-kit/skills'),
-            source: path.join(projectRoot, 'skills')
+            source: kit.skillsDir
           }
         ],
         mcp: [
           {
-            name: 'mcp_config.json (Personal Credentials Isolated)',
+            name: 'mcp_config.json (Global — symlink to resolved local)',
             target: scope === 'global' ? path.join(homeDir, '.gemini/config/mcp_config.json') : path.join(baseDir, '.gemini/config/mcp_config.json'),
-            source: mcpFilePath
+            source: mcpSource
           }
         ],
         agents: [
           {
             name: 'agents/ (Sub-Agents)',
             target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/agents') : path.join(baseDir, '.agents/plugins/agents-kit/agents'),
-            source: path.join(projectRoot, 'agents')
+            source: kit.agentsDir
           }
         ],
         loops: [
           {
             name: 'loops/ (Loop Recipes)',
             target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/loops') : path.join(baseDir, '.agents/plugins/agents-kit/loops'),
-            source: path.join(projectRoot, 'loops')
+            source: kit.loopsDir
           }
         ],
         memory: [
@@ -145,7 +162,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.cursorrules')
               : path.join(baseDir, '.cursorrules'),
-            source: path.join(projectRoot, 'AGENTS.md')
+            source: kit.agentsMd
           },
           {
             name: 'permissions.json (Allowed Commands)',
@@ -161,14 +178,14 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.cursor/skills/loop-runner')
               : path.join(baseDir, '.cursor/skills/loop-runner'),
-            source: path.join(projectRoot, 'skills/loop-runner')
+            source: path.join(kit.skillsDir, 'loop-runner')
           },
           {
             name: 'loop-verify Skill',
             target: scope === 'global'
               ? path.join(homeDir, '.cursor/skills/loop-verify')
               : path.join(baseDir, '.cursor/skills/loop-verify'),
-            source: path.join(projectRoot, 'skills/loop-verify')
+            source: path.join(kit.skillsDir, 'loop-verify')
           }
         ],
         mcp: [
@@ -177,7 +194,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.cursor/mcp.json')
               : path.join(baseDir, '.cursor/mcp.json'),
-            source: mcpFilePath
+            source: mcpSource
           }
         ],
         agents: [
@@ -186,7 +203,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.cursor/agents/code-reviewer.md')
               : path.join(baseDir, '.cursor/agents/code-reviewer.md'),
-            source: path.join(projectRoot, 'agents/code-reviewer.md')
+            source: path.join(kit.agentsDir, 'code-reviewer.md')
           }
         ],
         loops: [
@@ -195,7 +212,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.cursor/loops/daily-docs-sweep')
               : path.join(baseDir, '.cursor/loops/daily-docs-sweep'),
-            source: path.join(projectRoot, 'loops/daily-docs-sweep')
+            source: path.join(kit.loopsDir, 'daily-docs-sweep')
           }
         ],
         memory: [
@@ -221,7 +238,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.codex/AGENTS.md')
               : path.join(baseDir, '.codex/AGENTS.md'),
-            source: path.join(projectRoot, 'AGENTS.md')
+            source: kit.agentsMd
           },
           {
             name: 'allowed_commands.json',
@@ -237,14 +254,14 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.codex/skills/loop-runner')
               : path.join(baseDir, '.codex/skills/loop-runner'),
-            source: path.join(projectRoot, 'skills/loop-runner')
+            source: path.join(kit.skillsDir, 'loop-runner')
           },
           {
             name: 'loop-verify Skill',
             target: scope === 'global'
               ? path.join(homeDir, '.codex/skills/loop-verify')
               : path.join(baseDir, '.codex/skills/loop-verify'),
-            source: path.join(projectRoot, 'skills/loop-verify')
+            source: path.join(kit.skillsDir, 'loop-verify')
           }
         ],
         mcp: [
@@ -253,7 +270,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.codex/mcp.json')
               : path.join(baseDir, '.codex/mcp.json'),
-            source: mcpFilePath
+            source: mcpSource
           }
         ],
         agents: [
@@ -262,14 +279,14 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
             target: scope === 'global'
               ? path.join(homeDir, '.codex/agents/code-reviewer.md')
               : path.join(baseDir, '.codex/agents/code-reviewer.md'),
-            source: path.join(projectRoot, 'agents/code-reviewer.md')
+            source: path.join(kit.agentsDir, 'code-reviewer.md')
           }
         ],
         loops: [
           {
             name: 'daily-docs-sweep Loop Recipe',
             target: scope === 'global' ? path.join(homeDir, '.codex/loops/daily-docs-sweep') : path.join(baseDir, '.codex/loops/daily-docs-sweep'),
-            source: path.join(projectRoot, 'loops/daily-docs-sweep')
+            source: path.join(kit.loopsDir, 'daily-docs-sweep')
           }
         ],
         memory: [
@@ -293,40 +310,40 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
           {
             name: 'CLAUDE.md (Rules)',
             target: scope === 'global' ? path.join(homeDir, '.claude/CLAUDE.md') : path.join(baseDir, '.claude/CLAUDE.md'),
-            source: path.join(projectRoot, 'AGENTS.md')
+            source: kit.agentsMd
           }
         ],
         skills: [
           {
             name: 'skills/ (Agent Skills)',
             target: scope === 'global' ? path.join(homeDir, '.claude/skills') : path.join(baseDir, '.claude/skills'),
-            source: path.join(projectRoot, 'skills')
+            source: kit.skillsDir
           }
         ],
         mcp: [
           {
             name: '~/.claude.json / .mcp.json (MCP)',
             target: scope === 'global' ? path.join(homeDir, '.claude.json') : path.join(baseDir, '.mcp.json'),
-            source: mcpFilePath
+            source: mcpSource
           }
         ],
         agents: [
           {
             name: 'code-reviewer Sub-Agent',
             target: scope === 'global' ? path.join(homeDir, '.claude/agents/code-reviewer.md') : path.join(baseDir, '.claude/agents/code-reviewer.md'),
-            source: path.join(projectRoot, 'agents/code-reviewer.md')
+            source: path.join(kit.agentsDir, 'code-reviewer.md')
           },
           {
             name: 'security-auditor Sub-Agent',
             target: scope === 'global' ? path.join(homeDir, '.claude/agents/security-auditor.md') : path.join(baseDir, '.claude/agents/security-auditor.md'),
-            source: path.join(projectRoot, 'agents/security-auditor.md')
+            source: path.join(kit.agentsDir, 'security-auditor.md')
           }
         ],
         loops: [
           {
             name: 'daily-docs-sweep Loop Recipe',
             target: scope === 'global' ? path.join(homeDir, '.claude/loops/daily-docs-sweep') : path.join(baseDir, '.claude/loops/daily-docs-sweep'),
-            source: path.join(projectRoot, 'loops/daily-docs-sweep')
+            source: path.join(kit.loopsDir, 'daily-docs-sweep')
           }
         ],
         memory: [
@@ -355,21 +372,21 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
           {
             name: 'AGENTS.md (Rules)',
             target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/AGENTS.md') : path.join(baseDir, '.claude/AGENTS.md'),
-            source: path.join(projectRoot, 'AGENTS.md')
+            source: kit.agentsMd
           }
         ],
         skills: [
           {
             name: 'skills/ (Agent Skills)',
             target: scope === 'global' ? path.join(homeDir, '.claude/skills') : path.join(baseDir, '.claude/skills'),
-            source: path.join(projectRoot, 'skills')
+            source: kit.skillsDir
           }
         ],
         mcp: [
           {
             name: 'claude_desktop_config.json (MCP)',
             target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/claude_desktop_config.json') : path.join(baseDir, '.claude/claude_desktop_config.json'),
-            source: mcpFilePath
+            source: mcpSource
           }
         ],
         agents: [],
@@ -377,7 +394,7 @@ function getClientConfigs(scope = 'global', customProjectPath = '') {
           {
             name: 'daily-docs-sweep Loop Recipe',
             target: scope === 'global' ? path.join(homeDir, '.claude/loops/daily-docs-sweep') : path.join(baseDir, '.claude/loops/daily-docs-sweep'),
-            source: path.join(projectRoot, 'loops/daily-docs-sweep')
+            source: path.join(kit.loopsDir, 'daily-docs-sweep')
           }
         ],
         memory: [
@@ -462,6 +479,7 @@ app.get('/api/status', (req, res) => {
 
   res.json({
     projectRoot,
+    kitRoot,
     scope,
     customPath,
     clients: statusList
@@ -571,6 +589,8 @@ app.post('/api/save-asset-content', (req, res) => {
 // Helper: Apply links for client configs
 function deployConfigs(clientConfigs, scope, baseDir) {
   if (scope === 'project') assertSafeProjectTarget(baseDir);
+
+  resolveMcpConfigForDeploy();
 
   let appliedLinksCount = 0;
   for (const client of clientConfigs) {
@@ -743,7 +763,7 @@ app.post('/api/import-merge', (req, res) => {
       }
     }
 
-    const masterAgentsPath = path.join(projectRoot, 'AGENTS.md');
+    const masterAgentsPath = kit.agentsMd;
     let currentMasterAgents = fs.existsSync(masterAgentsPath) ? fs.readFileSync(masterAgentsPath, 'utf-8') : '';
     
     let rulesAddedCount = 0;
@@ -851,12 +871,19 @@ app.get('/api/kits', (req, res) => {
   const clientConfigs = getClientConfigs('global', '');
 
   const findTargetsForSource = (itemSourcePath) => {
+    const resolvedItem = path.resolve(itemSourcePath);
+    const resolvedMcpTemplate = path.resolve(getMcpTemplatePath(kitRoot));
+    const resolvedMcpDeploy = path.resolve(getMcpDeploySource());
     const targets = [];
     clientConfigs.forEach(client => {
       Object.values(client.categorizedLinks).forEach(links => {
         links.forEach(link => {
-          if (path.resolve(link.source) === path.resolve(itemSourcePath) || 
-              path.dirname(path.resolve(link.source)) === path.resolve(itemSourcePath)) {
+          const resolvedLinkSource = path.resolve(link.source);
+          if (
+            resolvedLinkSource === resolvedItem ||
+            path.dirname(resolvedLinkSource) === resolvedItem ||
+            (resolvedItem === resolvedMcpTemplate && resolvedLinkSource === resolvedMcpDeploy)
+          ) {
             targets.push({
               client: client.name,
               targetPath: link.target
@@ -869,7 +896,7 @@ app.get('/api/kits', (req, res) => {
   };
 
   const readDirItems = (subDir) => {
-    const fullPath = path.join(projectRoot, subDir);
+    const fullPath = path.join(kitRoot, subDir);
     if (!fs.existsSync(fullPath)) return [];
     const entries = fs.readdirSync(fullPath, { withFileTypes: true });
     
@@ -904,30 +931,54 @@ app.get('/api/kits', (req, res) => {
   };
 
   const harnessItems = [
+    ...readDirItems('harness'),
     {
-      name: 'AGENTS.md (Rules)',
+      name: 'adapters/antigravity/plugin.json (Antigravity only)',
       isDir: false,
-      path: path.join(projectRoot, 'AGENTS.md'),
-      readmeSnippet: fs.existsSync(path.join(projectRoot, 'AGENTS.md')) ? fs.readFileSync(path.join(projectRoot, 'AGENTS.md'), 'utf-8').slice(0, 300) : '',
-      targets: findTargetsForSource(path.join(projectRoot, 'AGENTS.md'))
+      path: kit.pluginJson,
+      readmeSnippet: fs.existsSync(kit.pluginJson) ? fs.readFileSync(kit.pluginJson, 'utf-8').slice(0, 300) : '',
+      targets: findTargetsForSource(kit.pluginJson)
+    }
+  ];
+
+  const hooksItems = [{
+    name: 'hooks.json (Event Hooks)',
+    isDir: false,
+    path: kit.hooksFile,
+    readmeSnippet: fs.existsSync(kit.hooksFile) ? fs.readFileSync(kit.hooksFile, 'utf-8').slice(0, 300) : '',
+    targets: findTargetsForSource(kit.hooksFile)
+  }];
+
+  const mcpItems = [
+    {
+      name: 'mcp-servers.json (template — Git)',
+      isDir: false,
+      path: getMcpTemplatePath(kitRoot),
+      readmeSnippet: fs.existsSync(getMcpTemplatePath(kitRoot))
+        ? fs.readFileSync(getMcpTemplatePath(kitRoot), 'utf-8').slice(0, 300)
+        : '',
+      targets: findTargetsForSource(getMcpTemplatePath(kitRoot))
     },
     {
-      name: 'permissions/allowed-commands.json',
+      name: '.env.example (secrets template)',
       isDir: false,
-      path: permissionsFilePath,
-      readmeSnippet: fs.existsSync(permissionsFilePath) ? fs.readFileSync(permissionsFilePath, 'utf-8') : '',
-      targets: findTargetsForSource(permissionsFilePath)
+      path: kit.envExample,
+      readmeSnippet: fs.existsSync(kit.envExample)
+        ? fs.readFileSync(kit.envExample, 'utf-8').slice(0, 300)
+        : '',
+      targets: []
     }
   ];
 
   res.json({
     skills: readDirItems('skills'),
-    mcp: readDirItems('mcp'),
+    mcp: mcpItems,
     agents: readDirItems('agents'),
     harness: harnessItems,
     loops: readDirItems('loops'),
     memory: readDirItems('memory'),
-    hooks: readDirItems('hooks')
+    hooks: hooksItems,
+    kitRoot
   });
 });
 
@@ -936,7 +987,7 @@ app.get('/api/kits', (req, res) => {
 // Helper: run a shell command and return stdout/stderr as a promise
 function runGit(cmd, cwd) {
   return new Promise((resolve, reject) => {
-    exec(cmd, { cwd: cwd || projectRoot }, (error, stdout, stderr) => {
+    exec(cmd, { cwd: cwd || kitRoot }, (error, stdout, stderr) => {
       if (error) {
         reject(new Error(stderr || error.message));
       } else {
