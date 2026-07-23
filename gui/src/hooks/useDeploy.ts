@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {DeploymentChange, DeploymentPlanData} from '../App';
+import type {DeploymentChange, DeploymentPlanData} from '../types';
 import {
     deployClient as apiDeployClient,
     deployGlobalAll as apiDeployGlobalAll,

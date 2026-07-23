@@ -47,7 +47,7 @@ Usage:
 Commands:
   apply, sync        Apply master kit to clients (default: global ~/ system)
   init, import       Bootstrap master kit (default template or import from an existing client)
-  generate, ai       Use AI to generate master kit assets (harness, subagent, skill)
+  generate, AI       Use AI to generate master kit assets (harness, subagent, skill)
   status             Check detection and link status of AI clients
   git                Run git sync operations on kit directory (push/pull)
   help               Show this help message

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {GitStatus} from '../App';
+import type {GitStatus} from '../types';
 import {
     fetchGhLoginStatus,
     fetchGhStatus as apiFetchGhStatus,

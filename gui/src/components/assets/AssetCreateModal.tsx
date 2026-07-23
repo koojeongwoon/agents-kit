@@ -65,7 +65,7 @@ export function AssetCreateModal({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-xs font-semibold text-purple-300 truncate">
                 <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
-                <span className="truncate">✨ AI 전문가 템플릿 초안 자동 생성</span>
+                <span className="truncate">AI 전문가 템플릿 초안 자동 생성</span>
               </div>
 
               <button
@@ -99,7 +99,7 @@ export function AssetCreateModal({
                 className="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold flex items-center space-x-1.5 disabled:opacity-50 transition-all shadow-lg active:scale-95 shrink-0"
               >
                 <Sparkles className={`w-3.5 h-3.5 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                <span>{isAiGenerating ? 'AI 초안 생성 중...' : '✨ AI 전문가 초안 작성'}</span>
+                <span>{isAiGenerating ? 'AI 초안 생성 중...' : 'AI 전문가 초안 작성'}</span>
               </button>
             </div>
 

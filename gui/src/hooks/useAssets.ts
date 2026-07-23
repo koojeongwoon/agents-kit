@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {CategorizedKits} from '../App';
+import type {CategorizedKits} from '../types';
 import {fetchKits as apiFetchKits} from '../api/assets';
 
 export function useAssets(kitScope: 'global' | 'project', selectedProjectName: string) {

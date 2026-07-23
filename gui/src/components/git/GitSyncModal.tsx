@@ -1,6 +1,6 @@
 import {Download, ExternalLink, GitBranch, Info, LogIn, RefreshCw, Settings} from 'lucide-react';
 import {Modal} from '../common/Modal';
-import type {GitStatus} from '../../App';
+import type {GitStatus} from '../../types';
 
 interface GitSyncModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import {apiFetch} from './client';
-import type {CategorizedKits} from '../App';
+import type {CategorizedKits} from '../types';
 
 export async function fetchKits(scope: string, projectName: string): Promise<CategorizedKits> {
   const res = await apiFetch(`/api/kits?scope=${scope}&projectName=${projectName}`);
