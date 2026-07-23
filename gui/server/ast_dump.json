@@ -1,0 +1,587 @@
+[
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import express from 'express';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import cors from 'cors';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import fs from 'fs';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import path from 'path';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import os from 'os';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import crypto from 'crypto';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { fileURLToPath } from 'url';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { execFile, spawn } from 'child_process';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import {\n  buildResolvedMcpConfig,\n  mcpResolvedPath\n} from '../../lib/mcp-env.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { resolveKitRoot, kitPaths } from '../../lib/kit-paths.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { bootstrapProjectKit } from '../../lib/defaults/templates.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { deployAllAdapters, getAdapters } from '../../lib/adapters/index.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { generateExpertAsset } from '../../lib/utils/llm-client.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { assertWithinRoots, isWithinRoot, resolveForAuthorization } from '../../lib/security-boundary.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { redactCredentials, stripRemoteCredentials, validateRemoteUrl, validateRepositoryName } from '../../lib/git-security.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createMutationTokenMiddleware, createOriginValidator } from '../../lib/gui-security.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { CLIENT_CATALOG, RESOURCE_CATEGORIES } from '../../lib/catalog.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { parseSkillsShLocator } from '../../lib/skills-sh.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import {\n  buildSmitheryMcpEntry,\n  smitheryConfigFields\n} from '../../lib/smithery.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createMergeSmitheryMcp } from '../../lib/application/merge-smithery-mcp.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createInstallSkill } from '../../lib/application/install-skill.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createFsMcpKitStore } from '../../lib/infrastructure/fs-mcp-kit-store.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createFsSkillStore } from '../../lib/infrastructure/fs-skill-store.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createSkillsCliDownloader } from '../../lib/infrastructure/skills-cli-downloader.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { sendBadRequest, sendServerError } from '../../lib/interfaces/http/error-mapper.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { createSkillsCatalogClient, createSmitheryCatalogClient } from '../../lib/infrastructure/catalog-clients.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { errorResponse, httpStatusForError } from '../../lib/interfaces/http/error-mapper.js';"
+  },
+  {
+    "type": "ImportDeclaration",
+    "name": "",
+    "code": "import { domainError } from '../../lib/domain/errors.js';"
+  },
+  {
+    "type": "Var",
+    "name": "__filename",
+    "code": "const __filename = fileURLToPath(import.meta.url);"
+  },
+  {
+    "type": "Var",
+    "name": "__dirname",
+    "code": "const __dirname = path.dirname(__filename);"
+  },
+  {
+    "type": "Var",
+    "name": "app",
+    "code": "const app = express();"
+  },
+  {
+    "type": "Var",
+    "name": "PORT",
+    "code": "const PORT = Number.parseInt(process.env.AGENTS_KIT_GUI_PORT || '3710', 10);"
+  },
+  {
+    "type": "Var",
+    "name": "API_TOKEN",
+    "code": "const API_TOKEN = crypto.randomBytes(32).toString('hex');"
+  },
+  {
+    "type": "AppCall",
+    "name": "app.use",
+    "code": "app.use(cors({\n  origin: createOriginValidator(),\n  allowedHeaders: ['Content-Type', 'X-Agents-Kit-Token']\n}));"
+  },
+  {
+    "type": "AppCall",
+    "name": "app.use",
+    "code": "app.use(express.json({ limit: '2mb' }));"
+  },
+  {
+    "type": "AppCall",
+    "name": "app.use",
+    "code": "app.use((req, res, next) => {\n  const requestId = crypto.randomUUID();\n  const startedAt = Date.now();\n  req.requestId = requestId;\n  res.set('X-Request-Id', requestId);\n  res.on('finish', () => {\n    console.info(JSON.stringify({\n      event: 'http_request', requestId, method: req.method, route: req.path,\n      status: res.statusCode, durationMs: Date.now() - startedAt\n    }));\n  });\n  next();\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/session",
+    "code": "app.get('/api/session', (req, res) => {\n  res.set('Cache-Control', 'no-store');\n  res.json({ token: API_TOKEN });\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/catalog",
+    "code": "app.get('/api/catalog', (req, res) => {\n  res.json({ clients: CLIENT_CATALOG, resources: RESOURCE_CATEGORIES });\n});"
+  },
+  {
+    "type": "Route",
+    "name": "USE /api",
+    "code": "app.use('/api', createMutationTokenMiddleware(API_TOKEN));"
+  },
+  {
+    "type": "Func",
+    "name": "sendApiError",
+    "code": "function sendApiError(req, res, error) {\n  res.status(httpStatusForError(error)).json(errorResponse(error, req.requestId));\n}"
+  },
+  {
+    "type": "Var",
+    "name": "homeDir",
+    "code": "const homeDir = os.homedir();"
+  },
+  {
+    "type": "Var",
+    "name": "projectRoot",
+    "code": "const projectRoot = path.resolve(__dirname, '../../');"
+  },
+  {
+    "type": "Var",
+    "name": "kitRoot",
+    "code": "const kitRoot = resolveKitRoot(projectRoot);"
+  },
+  {
+    "type": "Var",
+    "name": "kit",
+    "code": "const kit = kitPaths(kitRoot);"
+  },
+  {
+    "type": "Var",
+    "name": "permissionsFilePath",
+    "code": "const permissionsFilePath = kit.permissionsFile;"
+  },
+  {
+    "type": "Var",
+    "name": "approvedProjectRoots",
+    "code": "const approvedProjectRoots = new Set();"
+  },
+  {
+    "type": "Func",
+    "name": "globalClientRoots",
+    "code": "function globalClientRoots() {\n  return getAdapters({ scope: 'global', kitRoot }).map(adapter => adapter.detectedPath);\n}"
+  },
+  {
+    "type": "Func",
+    "name": "readableRoots",
+    "code": "function readableRoots() {\n  return [kitRoot, ...globalClientRoots(), ...approvedProjectRoots];\n}"
+  },
+  {
+    "type": "Func",
+    "name": "isKnownLinkPair",
+    "code": "function isKnownLinkPair(source, target) {\n  const adapters = [\n    ...getAdapters({ scope: 'global', kitRoot }),\n    ...Array.from(approvedProjectRoots).flatMap(projectPath => getAdapters({\n      scope: 'project', kitRoot, customProjectPath: projectPath\n    }))\n  ];\n  return adapters.some(adapter => adapter.getLinks().some(link => (\n    path.resolve(link.source) === path.resolve(source) && path.resolve(link.target) === path.resolve(target)\n  )));\n}"
+  },
+  {
+    "type": "Func",
+    "name": "resolveMcpConfigForDeploy",
+    "code": "function resolveMcpConfigForDeploy(scope = 'global', projectName = '') {\n  const result = buildResolvedMcpConfig(kitRoot, scope, projectName);\n  if (result.unresolved.length > 0) {\n    console.warn(`MCP placeholders unresolved: ${result.unresolved.join(', ')}`);\n    console.warn('Fill kit/.env (see kit/.env.example) then re-run apply.');\n  }\n  return result;\n}"
+  },
+  {
+    "type": "Func",
+    "name": "assertSafeProjectTarget",
+    "code": "function assertSafeProjectTarget(targetDir) {\n  const resolved = resolveForAuthorization(targetDir);\n  const filesystemRoot = path.parse(resolved).root;\n  const forbiddenRoots = [filesystemRoot, homeDir, projectRoot, kitRoot];\n  if (forbiddenRoots.some(root => isWithinRoot(resolved, root) && isWithinRoot(root, resolved))) {\n    throw new Error('agents-kit cannot be deployed into a filesystem root, home, repository, or kit directory');\n  }\n  if (isWithinRoot(resolved, kitRoot) || isWithinRoot(resolved, projectRoot)) {\n    throw new Error('agents-kit cannot be deployed inside its own repository or kit directory');\n  }\n}"
+  },
+  {
+    "type": "Func",
+    "name": "resolveDocumentPath",
+    "code": "// Helper to resolve directory paths to their primary markdown document (e.g. SKILL.md, LOOP.md)\nfunction resolveDocumentPath(p) {\n  if (!p) return p;\n  try {\n    let resolved = p;\n    if (fs.existsSync(resolved)) {\n      const lstat = fs.lstatSync(resolved);\n      if (lstat.isSymbolicLink()) {\n        const symlinkSource = fs.readlinkSync(resolved);\n        resolved = path.resolve(path.dirname(resolved), symlinkSource);\n      }\n      const stat = fs.statSync(resolved);\n      if (stat.isDirectory()) {\n        const skillDoc = path.join(resolved, 'SKILL.md');\n        const loopDoc = path.join(resolved, 'LOOP.md');\n        const readmeDoc = path.join(resolved, 'README.md');\n\n        if (fs.existsSync(skillDoc)) return skillDoc;\n        if (fs.existsSync(loopDoc)) return loopDoc;\n        if (fs.existsSync(readmeDoc)) return readmeDoc;\n\n        const files = fs.readdirSync(resolved);\n        const mdFile = files.find(f => f.endsWith('.md'));\n        if (mdFile) return path.join(resolved, mdFile);\n      }\n    }\n    return resolved;\n  } catch (e) {\n    return p;\n  }\n}"
+  },
+  {
+    "type": "Func",
+    "name": "getClientConfigs",
+    "code": "// Helper to construct categorized client config list dynamically from Adapters\nfunction getClientConfigs(scope = 'global', customProjectPath = '', projectName = '') {\n  const adapters = getAdapters({\n    scope,\n    kitRoot,\n    targetDir: customProjectPath ? path.resolve(customProjectPath) : process.cwd(),\n    projectName\n  });\n\n  return adapters.map(a => {\n    const rawLinks = a.getCategorizedLinks();\n    const formattedCategories = {};\n    Object.keys(rawLinks).forEach(cat => {\n      formattedCategories[cat] = rawLinks[cat].map(link => {\n        let name = path.basename(link.source);\n        if (link.source.endsWith('AGENTS.md')) name = 'AGENTS.md (Master Rules)';\n        else if (link.source.endsWith('allowed-commands.json')) name = 'allowed-commands.json (Permissions)';\n        else if (link.source.endsWith('hooks.json')) name = 'hooks.json (Event Hooks)';\n        else if (link.source.includes('mcp-servers')) name = 'mcp-servers.json (MCP Config)';\n\n        return {\n          name,\n          target: link.target,\n          source: link.source\n        };\n      });\n    });\n\n    let icon = 'Sparkles';\n    if (a.id === 'cursor') icon = 'Code2';\n    if (a.id === 'codex') icon = 'Terminal';\n    if (a.id.includes('claude')) icon = 'Bot';\n\n    return {\n      id: a.id,\n      name: a.name,\n      icon,\n      detectedPath: a.detectedPath,\n      categorizedLinks: formattedCategories\n    };\n  });\n}"
+  },
+  {
+    "type": "Func",
+    "name": "exists",
+    "code": "function exists(p) {\n  try {\n    return fs.existsSync(p);\n  } catch (e) {\n    return false;\n  }\n}"
+  },
+  {
+    "type": "Func",
+    "name": "existsBrokenSymlink",
+    "code": "function existsBrokenSymlink(p) {\n  try {\n    return fs.lstatSync(p).isSymbolicLink();\n  } catch {\n    return false;\n  }\n}"
+  },
+  {
+    "type": "Func",
+    "name": "checkSymlink",
+    "code": "function checkSymlink(target, source) {\n  try {\n    const lstat = fs.lstatSync(target);\n    if (lstat.isSymbolicLink()) {\n      const linkSource = fs.readlinkSync(target);\n      return path.resolve(path.dirname(target), linkSource) === path.resolve(source);\n    }\n  } catch (e) {\n    return false;\n  }\n  return false;\n}"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/status",
+    "code": "// GET /api/status\napp.get('/api/status', (req, res) => {\n  const scope = req.query.scope || 'global';\n  const customPath = req.query.projectPath || '';\n  const projectName = req.query.projectName || '';\n  const clientConfigs = getClientConfigs(scope, customPath, projectName);\n\n  const statusList = clientConfigs.map(client => {\n    const isDetected = scope === 'project' ? true : exists(client.detectedPath);\n\n    const evaluatedCategories = {};\n    let totalLinks = 0;\n    let totalLinked = 0;\n\n    Object.keys(client.categorizedLinks).forEach(catKey => {\n      const links = client.categorizedLinks[catKey];\n      evaluatedCategories[catKey] = links.map(link => {\n        const targetExists = exists(link.target);\n        const isLinked = checkSymlink(link.target, link.source);\n        totalLinks++;\n        if (isLinked) totalLinked++;\n        return {\n          name: link.name,\n          target: link.target,\n          source: link.source,\n          exists: targetExists,\n          isLinked,\n          hasBakFile: exists(`${link.target}.bak`)\n        };\n      });\n    });\n\n    const isFullyLinked = isDetected && totalLinks > 0 && totalLinked === totalLinks;\n    const isPartiallyLinked = isDetected && totalLinked > 0 && !isFullyLinked;\n\n    return {\n      id: client.id,\n      name: client.name,\n      icon: client.icon,\n      detectedPath: client.detectedPath,\n      isDetected,\n      isFullyLinked,\n      isPartiallyLinked,\n      categorizedLinks: evaluatedCategories\n    };\n  });\n\n  res.json({\n    projectRoot,\n    kitRoot,\n    scope,\n    customPath,\n    clients: statusList\n  });\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/file-preview",
+    "code": "// GET /api/file-preview\napp.get('/api/file-preview', (req, res) => {\n  const filePath = req.query.path;\n  if (!filePath) return sendBadRequest(res, 'Path is required');\n\n  try {\n    assertWithinRoots(filePath, readableRoots(), 'file preview');\n    const targetFileToRead = resolveDocumentPath(filePath);\n    assertWithinRoots(targetFileToRead, readableRoots(), 'file preview');\n    let isBakFile = false;\n\n    if (!fs.existsSync(targetFileToRead)) {\n      if (fs.existsSync(`${filePath}.bak`)) {\n        const bakResolved = resolveDocumentPath(`${filePath}.bak`);\n        const content = fs.readFileSync(bakResolved, 'utf-8');\n        return res.json({ exists: true, isBakFile: true, readPath: bakResolved, content, message: '백업(.bak) 파일의 내용입니다.' });\n      } else {\n        return res.json({ exists: false, content: '', message: '파일이 존재하지 않습니다.' });\n      }\n    }\n\n    const content = fs.readFileSync(targetFileToRead, 'utf-8');\n    res.json({\n      exists: true,\n      isBakFile,\n      readPath: targetFileToRead,\n      content,\n      message: '자원 지침서 내용입니다.'\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/diff-preview",
+    "code": "// GET /api/diff-preview\napp.get('/api/diff-preview', (req, res) => {\n  const { targetPath, sourcePath } = req.query;\n  if (!targetPath || !sourcePath) {\n    return sendBadRequest(res, 'targetPath and sourcePath are required');\n  }\n\n  try {\n    assertWithinRoots(targetPath, readableRoots(), 'diff target');\n    assertWithinRoots(sourcePath, [kitRoot], 'diff source');\n    const resolvedTarget = resolveDocumentPath(targetPath);\n    const resolvedSource = resolveDocumentPath(sourcePath);\n    assertWithinRoots(resolvedTarget, readableRoots(), 'diff target');\n    assertWithinRoots(resolvedSource, [kitRoot], 'diff source');\n\n    let existingContent = '';\n    let hasExisting = false;\n\n    if (fs.existsSync(targetPath)) {\n      const lstat = fs.lstatSync(targetPath);\n      if (!lstat.isSymbolicLink()) {\n        existingContent = fs.readFileSync(resolvedTarget, 'utf-8');\n        hasExisting = true;\n      } else if (fs.existsSync(`${targetPath}.bak`)) {\n        const bakResolved = resolveDocumentPath(`${targetPath}.bak`);\n        existingContent = fs.readFileSync(bakResolved, 'utf-8');\n        hasExisting = true;\n      }\n    } else if (fs.existsSync(`${targetPath}.bak`)) {\n      const bakResolved = resolveDocumentPath(`${targetPath}.bak`);\n      existingContent = fs.readFileSync(bakResolved, 'utf-8');\n      hasExisting = true;\n    }\n\n    let masterContent = '';\n    if (fs.existsSync(resolvedSource)) {\n      masterContent = fs.readFileSync(resolvedSource, 'utf-8');\n    }\n\n    res.json({\n      success: true,\n      hasExisting,\n      existingContent,\n      masterContent,\n      resolvedSource,\n      resolvedTarget\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/save-asset-content",
+    "code": "// POST /api/save-asset-content\napp.post('/api/save-asset-content', (req, res) => {\n  const { path: filePath, content } = req.body;\n  if (!filePath || content === undefined) {\n    return sendBadRequest(res, 'Path and content are required');\n  }\n\n  try {\n    assertWithinRoots(filePath, [kitRoot], 'save asset');\n    const targetPath = resolveDocumentPath(filePath);\n    assertWithinRoots(targetPath, [kitRoot], 'save asset');\n\n    fs.mkdirSync(path.dirname(targetPath), { recursive: true });\n    fs.writeFileSync(targetPath, content, 'utf-8');\n\n    res.json({ success: true, targetPath, message: '자원 내용이 성공적으로 저장되었습니다.' });\n  } catch (err) {\n    console.error('Error in save-asset-content:', err);\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/deploy-single-asset",
+    "code": "// POST /api/deploy-single-asset — Deploy single resource or specific file\napp.post('/api/deploy-single-asset', (req, res) => {\n  const { scope = 'global', clientFilter = '', resourceFilter = '', fileFilter = '', projectPath = '', projectName = '' } = req.body;\n  try {\n    if (scope === 'project') {\n      if (!projectPath?.trim()) return sendBadRequest(res, 'PROJECT_PATH_REQUIRED', 'project path is required for project deployment');\n      assertSafeProjectTarget(projectPath);\n      approvedProjectRoots.add(fs.existsSync(projectPath) ? fs.realpathSync(projectPath) : path.resolve(projectPath));\n    }\n    if (!resourceFilter || resourceFilter === 'mcp') resolveMcpConfigForDeploy(scope, projectName);\n    const result = deployAllAdapters({\n      scope,\n      kitRoot,\n      clientFilter,\n      resourceFilter,\n      fileFilter,\n      customProjectPath: projectPath,\n      projectName\n    });\n    res.json({ success: true, ...result, message: '지정한 자원이 성공적으로 즉시 적용되었습니다.' });\n  } catch (err) {\n    console.error('Error in deploy-single-asset:', err);\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/ai-assist",
+    "code": "// POST /api/ai-assist — Generate/modify asset content using multi-LLM client with Category-Specific Best Practice Prompts\napp.post('/api/ai-assist', async (req, res) => {\n  const { prompt = '', currentContent = '', assetType = 'skills', provider } = req.body;\n\n  try {\n    const cleanedText = await generateExpertAsset({\n      assetType,\n      currentContent,\n      additionalPrompt: prompt,\n      provider\n    });\n\n    res.json({ success: true, generatedText: cleanedText, message: 'AI 전문가 템플릿으로 고도화가 완료되었습니다.' });\n  } catch (err) {\n    console.error('Error in ai-assist:', err);\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/deploy-global-all",
+    "code": "// POST /api/deploy-global-all\napp.post('/api/deploy-global-all', (req, res) => {\n  try {\n    const dryRun = req.body?.dryRun === true;\n    if (!dryRun) resolveMcpConfigForDeploy('global');\n    const result = deployAllAdapters({\n      scope: 'global',\n      kitRoot,\n      dryRun\n    });\n    if (dryRun) return res.json({ success: true, ...result });\n    res.json({\n      success: true,\n      appliedLinksCount: result.totalAppliedLinks,\n      syncedCommandsCount: result.totalSyncedCommands,\n      message: 'All agents-kit settings successfully applied to Global System (~/)!'\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/deploy-project",
+    "code": "// POST /api/deploy-project\napp.post('/api/deploy-project', (req, res) => {\n  const { projectPath, projectName = 'default', dryRun = false } = req.body;\n  if (!projectPath || !projectPath.trim()) {\n    return sendBadRequest(res, 'PROJECT_PATH_REQUIRED', 'Project path is required');\n  }\n  const targetDir = path.resolve(projectPath.trim());\n\n  try {\n    assertSafeProjectTarget(targetDir);\n    if (!dryRun) approvedProjectRoots.add(fs.existsSync(targetDir) ? fs.realpathSync(targetDir) : targetDir);\n    if (!dryRun) resolveMcpConfigForDeploy('project', projectName);\n    const result = deployAllAdapters({\n      scope: 'project',\n      kitRoot,\n      customProjectPath: targetDir,\n      dryRun,\n      projectName\n    });\n    if (dryRun) return res.json({ success: true, ...result, targetDir });\n    res.json({\n      success: true,\n      appliedLinksCount: result.totalAppliedLinks,\n      syncedCommandsCount: result.totalSyncedCommands,\n      targetDir,\n      message: `All agents-kit settings successfully applied to project: ${targetDir}`\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/deploy-client",
+    "code": "// POST /api/deploy-client\napp.post('/api/deploy-client', (req, res) => {\n  const { clientId, scope = 'global', customProjectPath = '', projectName = '' } = req.body;\n  if (!clientId) return sendBadRequest(res, 'CLIENT_ID_REQUIRED', 'clientId is required');\n\n  try {\n    if (scope === 'project') {\n      if (!customProjectPath?.trim()) return sendBadRequest(res, 'PROJECT_PATH_REQUIRED', 'project path is required for project deployment');\n      assertSafeProjectTarget(customProjectPath);\n      approvedProjectRoots.add(fs.existsSync(customProjectPath) ? fs.realpathSync(customProjectPath) : path.resolve(customProjectPath));\n    }\n    resolveMcpConfigForDeploy(scope, projectName);\n    const result = deployAllAdapters({\n      scope,\n      kitRoot,\n      clientFilter: clientId,\n      customProjectPath,\n      projectName\n    });\n    res.json({\n      success: true,\n      clientId,\n      appliedLinksCount: result.totalAppliedLinks,\n      syncedCommandsCount: result.totalSyncedCommands,\n      message: `Client ${clientId} 설정이 성공적으로 이식되었습니다!`\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/mcp/toggle-server",
+    "code": "// POST /api/mcp/toggle-server — Toggle disabled state of an MCP server\napp.post('/api/mcp/toggle-server', (req, res) => {\n  const { scope = 'global', projectName = '', serverName } = req.body;\n  if (!serverName) return sendBadRequest(res, 'SERVER_NAME_REQUIRED', 'serverName is required');\n\n  const kit = kitPaths(kitRoot, scope, projectName);\n  if (!fs.existsSync(kit.mcpTemplate)) {\n    return res.status(404).json({ error: 'mcp-servers.json missing', code: 'MCP_FILE_NOT_FOUND' });\n  }\n\n  try {\n    const raw = fs.readFileSync(kit.mcpTemplate, 'utf-8');\n    const parsed = JSON.parse(raw);\n    const servers = parsed.mcpServers || parsed;\n\n    if (servers && servers[serverName]) {\n      const isCurrentlyDisabled = Boolean(servers[serverName].disabled);\n      servers[serverName].disabled = !isCurrentlyDisabled;\n      fs.writeFileSync(kit.mcpTemplate, JSON.stringify(parsed, null, 2), 'utf-8');\n\n      // Auto resolve and sync\n      try {\n        resolveMcpConfigForDeploy(scope, projectName);\n        deployAllAdapters({\n          scope,\n          kitRoot,\n          projectName\n        });\n      } catch (depErr) {\n        console.warn('Auto deploy after toggle warning:', depErr);\n      }\n\n      return res.json({\n        success: true,\n        serverName,\n        disabled: !isCurrentlyDisabled,\n        message: `MCP 서버 '${serverName}' 상태가 ${!isCurrentlyDisabled ? '🔴 비활성화(Disabled)' : '🟢 활성화(Active)'}(으)로 전환되었습니다.`\n      });\n    }\n\n    return res.status(404).json({ error: `Server '${serverName}' not found in mcp-servers.json`, code: 'SERVER_NOT_FOUND' });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/import-merge",
+    "code": "// POST /api/import-merge\napp.post('/api/import-merge', (req, res) => {\n  try {\n    let importedRules = [];\n    let importedCommands = new Set();\n\n    if (fs.existsSync(permissionsFilePath)) {\n      const pData = JSON.parse(fs.readFileSync(permissionsFilePath, 'utf-8'));\n      (pData.commands || []).forEach(c => importedCommands.add(c));\n    }\n\n    const potentialRulePaths = [\n      path.join(homeDir, '.cursorrules'),\n      path.join(homeDir, '.cursorrules.bak'),\n      path.join(homeDir, '.gemini/config/AGENTS.md'),\n      path.join(homeDir, '.gemini/config/AGENTS.md.bak'),\n      path.join(homeDir, '.codex/AGENTS.md'),\n      path.join(homeDir, '.codex/AGENTS.md.bak')\n    ];\n\n    const potentialPermPaths = [\n      path.join(homeDir, '.cursor/permissions.json'),\n      path.join(homeDir, '.cursor/permissions.json.bak'),\n      path.join(homeDir, '.gemini/config/allowed_commands.json'),\n      path.join(homeDir, '.codex/allowed_commands.json')\n    ];\n\n    for (const rPath of potentialRulePaths) {\n      if (fs.existsSync(rPath)) {\n        try {\n          const lstat = fs.lstatSync(rPath);\n          if (!lstat.isSymbolicLink()) {\n            const content = fs.readFileSync(rPath, 'utf-8').trim();\n            if (content && !importedRules.includes(content)) {\n              importedRules.push(`<!-- Imported from ${path.basename(rPath)} -->\\n${content}`);\n            }\n          }\n        } catch (e) {}\n      }\n    }\n\n    for (const pPath of potentialPermPaths) {\n      if (fs.existsSync(pPath)) {\n        try {\n          const lstat = fs.lstatSync(pPath);\n          if (!lstat.isSymbolicLink()) {\n            const raw = fs.readFileSync(pPath, 'utf-8');\n            const data = JSON.parse(raw);\n            const cmds = data.auto_approve_commands || data.allowed_commands || data.commands || [];\n            cmds.forEach(c => importedCommands.add(c));\n          }\n        } catch (e) {}\n      }\n    }\n\n    const masterAgentsPath = kit.agentsMd;\n    let currentMasterAgents = fs.existsSync(masterAgentsPath) ? fs.readFileSync(masterAgentsPath, 'utf-8') : '';\n\n    let rulesAddedCount = 0;\n    if (importedRules.length > 0) {\n      const mergedContent = currentMasterAgents + '\\n\\n## Imported Existing Rules\\n\\n' + importedRules.join('\\n\\n---\\n\\n');\n      fs.writeFileSync(masterAgentsPath, mergedContent, 'utf-8');\n      rulesAddedCount = importedRules.length;\n    }\n\n    const finalCmdList = Array.from(importedCommands);\n    fs.mkdirSync(path.dirname(permissionsFilePath), { recursive: true });\n    fs.writeFileSync(permissionsFilePath, JSON.stringify({\n      commands: finalCmdList,\n      updatedAt: new Date().toISOString()\n    }, null, 2));\n\n    res.json({\n      success: true,\n      rulesAddedCount,\n      totalCommandsCount: finalCmdList.length,\n      message: `기존 클라이언트의 설정이 agents-kit 마스터 자원으로 성공적으로 병합(Merge)되었습니다! (규칙 ${rulesAddedCount}개 흡수, 허용 명령어 총 ${finalCmdList.length}개 병합)`\n    });\n  } catch (err) {\n    console.error(err);\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/link",
+    "code": "// Single link / unlink\napp.post('/api/link', (req, res) => {\n  const { linkTarget } = req.body;\n  try {\n    if (!linkTarget?.source || !linkTarget?.target) return sendBadRequest(res, 'LINK_TARGET_REQUIRED', 'link target and source are required');\n    assertWithinRoots(linkTarget.source, [kitRoot], 'link source');\n    assertWithinRoots(linkTarget.target, [...globalClientRoots(), ...approvedProjectRoots], 'link target');\n    if (!isKnownLinkPair(linkTarget.source, linkTarget.target)) return sendBadRequest(res, 'LINK_PAIR_NOT_MANAGED', 'link pair is not managed by agents-kit');\n    const targetDir = path.dirname(linkTarget.target);\n    if (!fs.existsSync(targetDir)) {\n      fs.mkdirSync(targetDir, { recursive: true });\n    }\n\n    let backupPath = '';\n    let previousSymlink = '';\n    if (fs.existsSync(linkTarget.target) || existsBrokenSymlink(linkTarget.target)) {\n      const lstat = fs.lstatSync(linkTarget.target);\n      if (!lstat.isSymbolicLink()) {\n        backupPath = `${linkTarget.target}.bak`;\n        if (fs.existsSync(backupPath) || existsBrokenSymlink(backupPath)) return sendBadRequest(res, 'MCP_ALIAS_COLLISION', `Backup collision: ${backupPath} already exists`);\n        fs.renameSync(linkTarget.target, backupPath);\n      } else {\n        previousSymlink = fs.readlinkSync(linkTarget.target);\n        if (checkSymlink(linkTarget.target, linkTarget.source)) return res.json({ success: true, unchanged: true });\n        fs.unlinkSync(linkTarget.target);\n      }\n    }\n    try {\n      fs.symlinkSync(linkTarget.source, linkTarget.target);\n    } catch (err) {\n      if (backupPath && fs.existsSync(backupPath)) fs.renameSync(backupPath, linkTarget.target);\n      else if (previousSymlink) fs.symlinkSync(previousSymlink, linkTarget.target);\n      return sendServerError(res, err);\n    }\n    res.json({ success: true });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/unlink",
+    "code": "app.post('/api/unlink', (req, res) => {\n  const { linkTarget } = req.body;\n  try {\n    if (!linkTarget?.source || !linkTarget?.target) return sendBadRequest(res, 'LINK_TARGET_REQUIRED', 'unlink target and source are required');\n    assertWithinRoots(linkTarget.source, [kitRoot], 'unlink source');\n    assertWithinRoots(linkTarget.target, [...globalClientRoots(), ...approvedProjectRoots], 'unlink target');\n    if (!isKnownLinkPair(linkTarget.source, linkTarget.target)) return sendBadRequest(res, 'LINK_PAIR_NOT_MANAGED', 'link pair is not managed by agents-kit');\n    if (fs.existsSync(linkTarget.target) || existsBrokenSymlink(linkTarget.target)) {\n      if (!checkSymlink(linkTarget.target, linkTarget.source)) return sendBadRequest(res, 'UNLINK_TARGET_UNLINKED', 'refusing to unlink a target not linked to the expected source');\n      fs.unlinkSync(linkTarget.target);\n      if (fs.existsSync(`${linkTarget.target}.bak`)) {\n        fs.renameSync(`${linkTarget.target}.bak`, linkTarget.target);\n      }\n    }\n    res.json({ success: true });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/permissions",
+    "code": "// Permissions API\napp.get('/api/permissions', (req, res) => {\n  try {\n    if (!fs.existsSync(permissionsFilePath)) {\n      const defaultData = { commands: [\"git status\", \"git diff\", \"npm test\"], updatedAt: new Date().toISOString() };\n      fs.mkdirSync(path.dirname(permissionsFilePath), { recursive: true });\n      fs.writeFileSync(permissionsFilePath, JSON.stringify(defaultData, null, 2));\n    }\n    const data = JSON.parse(fs.readFileSync(permissionsFilePath, 'utf-8'));\n    res.json(data);\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/permissions",
+    "code": "app.post('/api/permissions', (req, res) => {\n  const { command, action } = req.body;\n  try {\n    let data = { commands: [], updatedAt: new Date().toISOString() };\n    if (fs.existsSync(permissionsFilePath)) {\n      data = JSON.parse(fs.readFileSync(permissionsFilePath, 'utf-8'));\n    }\n    if (action === 'add' && command && !data.commands.includes(command)) {\n      data.commands.push(command);\n    } else if (action === 'remove' && command) {\n      data.commands = data.commands.filter(c => c !== command);\n    }\n    data.updatedAt = new Date().toISOString();\n    fs.writeFileSync(permissionsFilePath, JSON.stringify(data, null, 2));\n    res.json({ success: true, data });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/projects",
+    "code": "// GET /api/projects — List all managed project kit names\napp.get('/api/projects', (req, res) => {\n  try {\n    const projectsDir = path.join(kitRoot, 'projects');\n    if (!fs.existsSync(projectsDir)) {\n      bootstrapProjectKit(kitRoot, 'default');\n    }\n    const entries = fs.readdirSync(projectsDir, { withFileTypes: true });\n    const projectNames = entries\n      .filter(e => e.isDirectory() && !e.name.startsWith('.'))\n      .map(e => e.name);\n\n    if (!projectNames.includes('default')) {\n      projectNames.unshift('default');\n    }\n\n    res.json({ projects: projectNames, kitRoot });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/projects",
+    "code": "// POST /api/projects — Create a new named project kit (e.g. backend-api, frontend-app)\napp.post('/api/projects', (req, res) => {\n  const { projectName } = req.body;\n  if (!projectName || !projectName.trim()) {\n    return sendBadRequest(res, 'PROJECT_PATH_REQUIRED', 'Project name is required');\n  }\n\n  const cleanName = projectName.trim().replace(/[^a-zA-Z0-9_-]/g, '-');\n\n  try {\n    const projectScopeDir = bootstrapProjectKit(kitRoot, cleanName);\n    res.json({\n      success: true,\n      projectName: cleanName,\n      projectScopeDir,\n      message: `프로젝트 킷 '${cleanName}'이(가) 성공적으로 생성되었습니다!`\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "DELETE /api/projects/:name",
+    "code": "// DELETE /api/projects/:name — Delete a custom named project kit\napp.delete('/api/projects/:name', (req, res) => {\n  const { name } = req.params;\n  if (!name || name === 'default') {\n    return sendBadRequest(res, '기본(default) 프로젝트 킷은 삭제할 수 없습니다.');\n  }\n\n  const cleanName = name.trim().replace(/[^a-zA-Z0-9_-]/g, '-');\n  const targetDir = path.join(kitRoot, 'projects', cleanName);\n\n  try {\n    if (fs.existsSync(targetDir)) {\n      fs.rmSync(targetDir, { recursive: true, force: true });\n    }\n    res.json({\n      success: true,\n      projectName: cleanName,\n      message: `프로젝트 킷 '${cleanName}'이(가) 성공적으로 삭제되었습니다.`\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/browse-dirs",
+    "code": "// GET /api/browse-dirs — List directory children & parent for visual directory selection\napp.get('/api/browse-dirs', (req, res) => {\n  try {\n    const osHome = os.homedir();\n    let targetDir = req.query.path ? path.resolve(req.query.path) : process.cwd();\n    \n    if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {\n      targetDir = osHome;\n    }\n\n    const parentDir = path.dirname(targetDir) !== targetDir ? path.dirname(targetDir) : null;\n    const entries = fs.readdirSync(targetDir, { withFileTypes: true });\n\n    const directories = [];\n    for (const entry of entries) {\n      if (entry.name.startsWith('.')) continue; // ignore hidden folders like .git\n      if (entry.isDirectory()) {\n        const fullPath = path.join(targetDir, entry.name);\n        const hasGit = fs.existsSync(path.join(fullPath, '.git'));\n        const hasPackageJson = fs.existsSync(path.join(fullPath, 'package.json'));\n        directories.push({\n          name: entry.name,\n          path: fullPath,\n          isProject: hasGit || hasPackageJson,\n          hasGit,\n          hasPackageJson\n        });\n      }\n    }\n\n    directories.sort((a, b) => {\n      if (a.isProject && !b.isProject) return -1;\n      if (!a.isProject && b.isProject) return 1;\n      return a.name.localeCompare(b.name);\n    });\n\n    res.json({\n      currentPath: targetDir,\n      parentPath: parentDir,\n      homePath: osHome,\n      directories\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/delete-asset",
+    "code": "// POST /api/delete-asset — Delete a single resource file or directory\napp.post('/api/delete-asset', (req, res) => {\n  const { path: filePath } = req.body;\n  if (!filePath) return sendBadRequest(res, 'Path is required');\n\n  try {\n    assertWithinRoots(filePath, [kitRoot], 'delete asset');\n    const targetPath = resolveDocumentPath(filePath);\n    assertWithinRoots(targetPath, [kitRoot], 'delete asset');\n    if (fs.existsSync(targetPath)) {\n      fs.rmSync(targetPath, { recursive: true, force: true });\n    }\n    res.json({ success: true, message: '자원이 성공적으로 삭제되었습니다.' });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Var",
+    "name": "skillsCatalog",
+    "code": "const skillsCatalog = createSkillsCatalogClient();"
+  },
+  {
+    "type": "Var",
+    "name": "smitheryCatalog",
+    "code": "const smitheryCatalog = createSmitheryCatalogClient();"
+  },
+  {
+    "type": "Var",
+    "name": "fetchSmitheryServer",
+    "code": "const fetchSmitheryServer = (qualifiedName, signal) => smitheryCatalog.getServer(qualifiedName, signal);"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/skills-recommendations",
+    "code": "// GET /api/skills-recommendations — Blend public install totals and recent weekly momentum\napp.get('/api/skills-recommendations', async (req, res) => {\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 15000);\n  try {\n    const skills = await skillsCatalog.recommendations(controller.signal);\n    res.set('Cache-Control', 'private, max-age=300');\n    res.json({ success: true, skills, count: skills.length, ranking: 'popularity+weekly-momentum' });\n  } catch (err) {\n    sendApiError(req, res, err);\n  } finally {\n    clearTimeout(timeout);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/smithery-recommendations",
+    "code": "// GET /api/smithery-recommendations — Blend usage, freshness, and verification\napp.get('/api/smithery-recommendations', async (req, res) => {\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 15000);\n  try {\n    const servers = await smitheryCatalog.recommendations(controller.signal);\n    res.set('Cache-Control', 'private, max-age=300');\n    res.json({ success: true, servers, count: servers.length, ranking: 'usage+freshness+verification' });\n  } catch (err) {\n    sendApiError(req, res, err);\n  } finally {\n    clearTimeout(timeout);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/smithery-search",
+    "code": "// GET /api/smithery-search — Search deployable remote MCP servers\napp.get('/api/smithery-search', async (req, res) => {\n  const query = String(req.query.q || '').trim();\n  if (query.length < 2 || query.length > 100) {\n    return sendApiError(req, res, domainError('INVALID_SEARCH_QUERY', 'Search query must contain 2 to 100 characters'));\n  }\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 15000);\n  try {\n    const servers = await smitheryCatalog.search(query, controller.signal);\n    res.set('Cache-Control', 'private, max-age=30');\n    res.json({ success: true, query, servers, count: servers.length });\n  } catch (err) {\n    sendApiError(req, res, err);\n  } finally {\n    clearTimeout(timeout);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/smithery-server",
+    "code": "// GET /api/smithery-server — Load a server's trusted connection schema\napp.get('/api/smithery-server', async (req, res) => {\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 15000);\n  try {\n    const detail = await fetchSmitheryServer(req.query.qualifiedName, controller.signal);\n    const connection = Array.isArray(detail.connections)\n      ? detail.connections.find(item => item?.type === 'http' && typeof item.deploymentUrl === 'string')\n      : null;\n    if (!connection) return sendApiError(req, res, domainError('INVALID_MCP_CONNECTION', 'This server has no supported HTTP connection'));\n    res.json({\n      success: true,\n      server: {\n        qualifiedName: detail.qualifiedName,\n        displayName: detail.displayName,\n        description: detail.description,\n        deploymentUrl: connection.deploymentUrl,\n        fields: smitheryConfigFields(connection),\n        toolCount: Array.isArray(detail.tools) ? detail.tools.length : 0,\n        security: detail.security || null\n      }\n    });\n  } catch (err) {\n    sendApiError(req, res, err);\n  } finally {\n    clearTimeout(timeout);\n  }\n});"
+  },
+  {
+    "type": "Var",
+    "name": "mergeSmitheryMcp",
+    "code": "const mergeSmitheryMcp = createMergeSmitheryMcp({\n  fetchServer: fetchSmitheryServer,\n  buildEntry: buildSmitheryMcpEntry,\n  kitStore: createFsMcpKitStore({ kitRoot }),\n  authorizeProject: assertSafeProjectTarget,\n  resolveMcp: scope => resolveMcpConfigForDeploy(scope.type, scope.projectName),\n  deployMcp: ({ scope, projectPath }) => {\n    if (scope.type === 'project') {\n      approvedProjectRoots.add(fs.existsSync(projectPath) ? fs.realpathSync(projectPath) : path.resolve(projectPath));\n    }\n    return deployAllAdapters({\n      scope: scope.type,\n      kitRoot,\n      resourceFilter: 'mcp',\n      customProjectPath: scope.type === 'project' ? projectPath : '',\n      projectName: scope.projectName\n    });\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/smithery-merge",
+    "code": "// POST /api/smithery-merge — Merge one Smithery server into the MCP template and apply it\napp.post('/api/smithery-merge', async (req, res) => {\n  const {\n    qualifiedName,\n    alias,\n    configValues = {},\n    scope = 'global',\n    projectName = 'default',\n    projectPath = ''\n  } = req.body || {};\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 15000);\n\n  try {\n    const result = await mergeSmitheryMcp({\n      qualifiedName, alias, configValues, scope, projectName, projectPath\n    }, { signal: controller.signal });\n    res.json({\n      success: true,\n      ...result,\n      message: `Merged '${result.qualifiedName}' into MCP config and applied it.`\n    });\n  } catch (err) {\n    console.error(JSON.stringify({ event: 'use_case_failed', requestId: req.requestId, useCase: 'merge_smithery_mcp', code: err.code || 'INTERNAL_ERROR' }));\n    sendApiError(req, res, err);\n  } finally {\n    clearTimeout(timeout);\n  }\n});"
+  },
+  {
+    "type": "Var",
+    "name": "installSkill",
+    "code": "const installSkill = createInstallSkill({\n  parseLocator: parseSkillsShLocator,\n  downloader: createSkillsCliDownloader(),\n  skillStore: createFsSkillStore({ kitRoot }),\n  authorizeProject: assertSafeProjectTarget,\n  deploySkill: ({ scope, projectPath, installedPath }) => {\n    if (scope.type === 'project') {\n      approvedProjectRoots.add(fs.existsSync(projectPath) ? fs.realpathSync(projectPath) : path.resolve(projectPath));\n    }\n    return deployAllAdapters({\n      scope: scope.type,\n      kitRoot,\n      resourceFilter: 'skills',\n      fileFilter: installedPath,\n      customProjectPath: scope.type === 'project' ? projectPath : '',\n      projectName: scope.projectName\n    });\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/skills-search",
+    "code": "// GET /api/skills-search — Proxy the public skills.sh catalog search for the desktop UI\napp.get('/api/skills-search', async (req, res) => {\n  const query = String(req.query.q || '').trim();\n  if (query.length < 2 || query.length > 100) {\n    return sendApiError(req, res, domainError('INVALID_SEARCH_QUERY', 'Search query must contain 2 to 100 characters'));\n  }\n\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 15000);\n  try {\n    const skills = await skillsCatalog.search(query, controller.signal);\n    res.set('Cache-Control', 'private, max-age=30');\n    res.json({ success: true, query, skills, count: skills.length });\n  } catch (err) {\n    sendApiError(req, res, err);\n  } finally {\n    clearTimeout(timeout);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/install-skill",
+    "code": "// POST /api/install-skill — Download one skills.sh skill into the master kit and apply it\napp.post('/api/install-skill', async (req, res) => {\n  const {\n    locator,\n    scope = 'global',\n    projectName = 'default',\n    projectPath = ''\n  } = req.body || {};\n  try {\n    const result = await installSkill({ locator, scope, projectName, projectPath });\n    res.json({\n      success: true,\n      ...result,\n      message: `Downloaded '${result.skill.slug}' from skills.sh and applied it successfully.`\n    });\n  } catch (err) {\n    console.error(JSON.stringify({ event: 'use_case_failed', requestId: req.requestId, useCase: 'install_skill', code: err.code || 'INTERNAL_ERROR' }));\n    sendApiError(req, res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/create-asset",
+    "code": "// POST /api/create-asset — Create a new asset file in any category (agents, harness, loops, memory, skills, mcp)\napp.post('/api/create-asset', (req, res) => {\n  const { scope = 'global', projectName = '', category, name, content } = req.body;\n  if (!category || !name || !name.trim()) {\n    return sendBadRequest(res, 'Category and name are required');\n  }\n\n  try {\n    const kit = kitPaths(kitRoot, scope, projectName);\n    const scopeDir = kit.scopeDir;\n    const cleanName = name.trim().replace(/[^a-zA-Z0-9_.-]/g, '_');\n\n    let targetPath;\n    if (category === 'skills') {\n      const skillFolder = path.join(scopeDir, 'skills', cleanName.replace(/\\.md$/i, ''));\n      fs.mkdirSync(skillFolder, { recursive: true });\n      targetPath = path.join(skillFolder, 'SKILL.md');\n    } else if (category === 'loops') {\n      const loopFolder = path.join(scopeDir, 'loops', cleanName.replace(/\\.md$/i, ''));\n      fs.mkdirSync(loopFolder, { recursive: true });\n      targetPath = path.join(loopFolder, 'LOOP.md');\n    } else if (category === 'agents') {\n      const fileName = cleanName.endsWith('.md') ? cleanName : `${cleanName}.md`;\n      targetPath = path.join(scopeDir, 'agents', fileName);\n    } else if (category === 'memory') {\n      const fileName = cleanName.endsWith('.md') ? cleanName : `${cleanName}.md`;\n      targetPath = path.join(scopeDir, 'memory', fileName);\n    } else if (category === 'harness') {\n      const fileName = cleanName.endsWith('.md') ? cleanName : (cleanName.endsWith('.json') ? cleanName : `${cleanName}.md`);\n      targetPath = path.join(scopeDir, 'harness', fileName);\n    } else {\n      targetPath = path.join(scopeDir, category, cleanName);\n    }\n\n    fs.mkdirSync(path.dirname(targetPath), { recursive: true });\n\n    let defaultText = content;\n    if (!defaultText || !defaultText.trim()) {\n      if (category === 'agents') {\n        defaultText = `---\\nname: ${cleanName.replace(/\\.md$/, '')}\\ndescription: Custom sub-agent for ${cleanName}\\n---\\n\\n# ${cleanName} Sub-Agent\\n\\nSpecify sub-agent instructions here.\\n`;\n      } else if (category === 'skills') {\n        defaultText = `---\\nname: ${cleanName}\\ndescription: Custom skill for ${cleanName}\\n---\\n\\n# ${cleanName} Skill\\n\\nSpecify skill instructions here.\\n`;\n      } else if (category === 'loops') {\n        defaultText = `---\\nname: ${cleanName}\\ninterval: 3600\\ndescription: Custom automated loop for ${cleanName}\\n---\\n\\n# ${cleanName} Loop\\n\\n1. Specify loop workflow steps here.\\n`;\n      } else if (category === 'memory') {\n        defaultText = `# ${cleanName} Memory\\n\\nPersistent memory notes.\\n`;\n      } else {\n        defaultText = `# ${cleanName}\\n\\nInitial content.\\n`;\n      }\n    }\n\n    fs.writeFileSync(targetPath, defaultText, 'utf-8');\n\n    res.json({\n      success: true,\n      targetPath,\n      message: `'${name}' 자원이 성공적으로 생성되었습니다!`\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/kits",
+    "code": "// GET /api/kits - 7 resource categories (global/project scope)\napp.get('/api/kits', (req, res) => {\n  const scope = req.query.scope === 'project' ? 'project' : 'global';\n  const projectName = req.query.projectName || '';\n  const kit = kitPaths(kitRoot, scope, projectName);\n  const clientConfigs = getClientConfigs(scope, '', projectName);\n\n  const findTargetsForSource = (itemSourcePath) => {\n    const resolvedItem = path.resolve(itemSourcePath);\n    const resolvedMcpTemplate = path.resolve(kit.mcpTemplate);\n    const resolvedMcpDeploy = path.resolve(mcpResolvedPath(kitRoot, scope, projectName));\n    const targets = [];\n    clientConfigs.forEach(client => {\n      Object.values(client.categorizedLinks).forEach(links => {\n        links.forEach(link => {\n          const resolvedLinkSource = path.resolve(link.source);\n          if (\n            resolvedLinkSource === resolvedItem ||\n            path.dirname(resolvedLinkSource) === resolvedItem ||\n            (resolvedItem === resolvedMcpTemplate && resolvedLinkSource === resolvedMcpDeploy)\n          ) {\n            targets.push({\n              client: client.name,\n              targetPath: link.target\n            });\n          }\n        });\n      });\n    });\n    return targets;\n  };\n\n  const readDirItems = (subDir) => {\n    const fullPath = path.join(kit.scopeDir, subDir);\n    if (!fs.existsSync(fullPath)) return [];\n    const entries = fs.readdirSync(fullPath, { withFileTypes: true });\n    \n    const validExtensions = ['.md', '.json', '.toml', '.yaml', '.yml'];\n\n    return entries\n      .filter(entry => {\n        if (entry.name.startsWith('.')) return false;\n        if (entry.isDirectory()) return true;\n        const ext = path.extname(entry.name).toLowerCase();\n        return validExtensions.includes(ext);\n      })\n      .map(entry => {\n        const itemPath = path.join(fullPath, entry.name);\n        let readme = '';\n        if (entry.isDirectory()) {\n          const docFile = path.join(itemPath, 'SKILL.md');\n          const loopFile = path.join(itemPath, 'LOOP.md');\n          if (fs.existsSync(docFile)) readme = fs.readFileSync(docFile, 'utf-8');\n          else if (fs.existsSync(loopFile)) readme = fs.readFileSync(loopFile, 'utf-8');\n        } else {\n          readme = fs.readFileSync(itemPath, 'utf-8');\n        }\n        return {\n          name: entry.name,\n          isDir: entry.isDirectory(),\n          path: itemPath,\n          readmeSnippet: readme.slice(0, 300),\n          targets: findTargetsForSource(itemPath)\n        };\n      });\n  };\n\n  res.json({\n    skills: readDirItems('skills'),\n    mcp: [\n      {\n        name: 'mcp-servers.json (template — Git)',\n        isDir: false,\n        path: kit.mcpTemplate,\n        readmeSnippet: fs.existsSync(kit.mcpTemplate)\n          ? fs.readFileSync(kit.mcpTemplate, 'utf-8').slice(0, 300)\n          : '',\n        mcpServers: (() => {\n          if (!fs.existsSync(kit.mcpTemplate)) return [];\n          try {\n            const parsed = JSON.parse(fs.readFileSync(kit.mcpTemplate, 'utf-8'));\n            const serversObj = parsed.mcpServers || parsed;\n            return typeof serversObj === 'object' && serversObj !== null ? Object.keys(serversObj) : [];\n          } catch {\n            return [];\n          }\n        })(),\n        mcpServersDetail: (() => {\n          if (!fs.existsSync(kit.mcpTemplate)) return [];\n          try {\n            const parsed = JSON.parse(fs.readFileSync(kit.mcpTemplate, 'utf-8'));\n            const serversObj = parsed.mcpServers || parsed;\n            if (typeof serversObj !== 'object' || serversObj === null) return [];\n            return Object.entries(serversObj).map(([serverName, cfg]) => ({\n              name: serverName,\n              disabled: Boolean(cfg && typeof cfg === 'object' && cfg.disabled === true),\n              command: typeof cfg === 'object' ? (cfg?.command || cfg?.url || '') : ''\n            }));\n          } catch {\n            return [];\n          }\n        })(),\n        targets: findTargetsForSource(kit.mcpTemplate)\n      },\n      {\n        name: '.env.example (secrets template)',\n        isDir: false,\n        path: kit.envExample,\n        readmeSnippet: fs.existsSync(kit.envExample)\n          ? fs.readFileSync(kit.envExample, 'utf-8').slice(0, 300)\n          : '',\n        targets: []\n      }\n    ],\n    agents: readDirItems('agents'),\n    harness: readDirItems('harness'),\n    loops: readDirItems('loops'),\n    memory: readDirItems('memory'),\n    kitRoot\n  });\n});"
+  },
+  {
+    "type": "Func",
+    "name": "execFileResult",
+    "code": "// ─── Git API Endpoints ────────────────────────────────────────────────────\n\nfunction execFileResult(command, args = [], options = {}) {\n  return new Promise((resolve, reject) => {\n    execFile(command, args, options, (error, stdout, stderr) => {\n      if (error) {\n        error.stdout = stdout;\n        error.stderr = stderr;\n        reject(error);\n        return;\n      }\n      resolve({ stdout: stdout || '', stderr: stderr || '' });\n    });\n  });\n}"
+  },
+  {
+    "type": "Func",
+    "name": "findExecutable",
+    "code": "async function findExecutable(command, knownPaths = []) {\n  for (const candidate of knownPaths) {\n    if (fs.existsSync(candidate)) return candidate;\n  }\n  try {\n    const { stdout } = await execFileResult('/usr/bin/which', [command]);\n    return stdout.trim();\n  } catch {\n    return '';\n  }\n}"
+  },
+  {
+    "type": "Var",
+    "name": "findGhExecutable",
+    "code": "const findGhExecutable = () => findExecutable('gh', ['/opt/homebrew/bin/gh', '/usr/local/bin/gh']);"
+  },
+  {
+    "type": "Var",
+    "name": "findBrewExecutable",
+    "code": "const findBrewExecutable = () => findExecutable('brew', ['/opt/homebrew/bin/brew', '/usr/local/bin/brew']);"
+  },
+  {
+    "type": "Func",
+    "name": "runGit",
+    "code": "async function runGit(args, cwd = kitRoot) {\n  try {\n    const result = await execFileResult('git', args, {\n      cwd,\n      env: { ...process.env, GIT_TERMINAL_PROMPT: '0' }\n    });\n    return `${result.stdout}${result.stderr}`.trim();\n  } catch (err) {\n    let msg = redactCredentials(err.stderr || err.message).trim();\n    if (msg.includes('could not read Username') || msg.includes('terminal prompts disabled') || msg.includes('Permission denied')) {\n      msg = 'GitHub CLI (gh) 로그인이 필요하거나 저장소 접근 권한이 부족합니다.';\n    }\n    throw new Error(msg);\n  }\n}"
+  },
+  {
+    "type": "Func",
+    "name": "configureGitHubCredentialHelper",
+    "code": "async function configureGitHubCredentialHelper() {\n  const ghPath = await findGhExecutable();\n  if (!ghPath) throw new Error('GitHub CLI가 설치되어 있지 않습니다.');\n  await execFileResult(ghPath, ['auth', 'setup-git', '--hostname', 'github.com']);\n}"
+  },
+  {
+    "type": "Func",
+    "name": "removeStoredRemoteCredentials",
+    "code": "async function removeStoredRemoteCredentials() {\n  try {\n    const current = await runGit(['remote', 'get-url', 'origin']);\n    const cleaned = stripRemoteCredentials(current);\n    if (cleaned !== current) await runGit(['remote', 'set-url', 'origin', cleaned]);\n    return cleaned;\n  } catch {\n    return '';\n  }\n}"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/gh-status",
+    "code": "// GET /api/gh-status — Check GitHub CLI (gh) installation & login status\napp.get('/api/gh-status', async (req, res) => {\n  const ghPath = await findGhExecutable();\n  if (!ghPath) return res.json({ isInstalled: false, isLoggedIn: false, username: '' });\n\n  let version = '';\n  try {\n    const result = await execFileResult(ghPath, ['--version']);\n    version = result.stdout.split('\\n')[0].trim();\n  } catch (err) {\n    return res.json({ isInstalled: false, isLoggedIn: false, username: '', error: err.message });\n  }\n\n  try {\n    const result = await execFileResult(ghPath, ['api', 'user', '--jq', '.login'], { timeout: 15000 });\n    return res.json({\n      isInstalled: true,\n      isLoggedIn: true,\n      username: result.stdout.trim(),\n      version,\n      ghPath\n    });\n  } catch (err) {\n    const authLog = `${err.stdout || ''}${err.stderr || ''}`.trim();\n    return res.json({ isInstalled: true, isLoggedIn: false, username: '', version, ghPath, authLog });\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/gh-install",
+    "code": "// POST /api/gh-install — One-click install GitHub CLI via brew\napp.post('/api/gh-install', async (req, res) => {\n  const existingGh = await findGhExecutable();\n  if (existingGh) return res.json({ success: true, alreadyInstalled: true, ghPath: existingGh });\n\n  if (process.platform !== 'darwin') {\n    const installHint = process.platform === 'win32'\n      ? 'winget install --id GitHub.cli'\n      : 'See https://github.com/cli/cli/blob/trunk/docs/install_linux.md';\n    return sendBadRequest(res, `Automatic installation is currently supported on macOS with Homebrew. ${installHint}`);\n  }\n\n  const brewPath = await findBrewExecutable();\n  if (!brewPath) {\n    return sendBadRequest(res, 'HOMEBREW_NOT_FOUND', 'Homebrew를 찾을 수 없습니다. brew.sh에서 Homebrew를 먼저 설치하세요.');\n  }\n\n  try {\n    const result = await execFileResult(brewPath, ['install', 'gh'], { timeout: 300000 });\n    const ghPath = await findGhExecutable();\n    if (!ghPath) {\n      return sendServerError(res, new Error('GitHub CLI 설치 실패: 설치 후 gh 실행 파일을 찾지 못했습니다.'));\n    }\n    res.json({ success: true, ghPath, output: `${result.stdout}${result.stderr}`.trim() });\n  } catch (err) {\n    sendServerError(res, err, `GitHub CLI 설치 실패: ${err.stderr || err.message}`);\n  }\n});"
+  },
+  {
+    "type": "Var",
+    "name": "ghLoginSession",
+    "code": "// POST /api/gh-login — Non-interactive GitHub CLI login via token or web browser device code\nlet ghLoginSession = null;"
+  },
+  {
+    "type": "Func",
+    "name": "publicGhLoginSession",
+    "code": "function publicGhLoginSession() {\n  if (!ghLoginSession) return { running: false, completed: false, output: '', error: '' };\n  return {\n    running: ghLoginSession.running,\n    completed: ghLoginSession.completed,\n    output: ghLoginSession.output.slice(-4000),\n    error: ghLoginSession.error\n  };\n}"
+  },
+  {
+    "type": "Func",
+    "name": "openGitHubDevicePage",
+    "code": "function openGitHubDevicePage() {\n  const url = 'https://github.com/login/device';\n  let command;\n  let args;\n  if (process.platform === 'darwin') {\n    command = '/usr/bin/open';\n    args = [url];\n  } else if (process.platform === 'win32') {\n    command = 'cmd.exe';\n    args = ['/c', 'start', '', url];\n  } else {\n    command = 'xdg-open';\n    args = [url];\n  }\n  const opener = spawn(command, args, { detached: true, stdio: 'ignore' });\n  opener.unref();\n}"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/gh-login",
+    "code": "app.post('/api/gh-login', async (req, res) => {\n  const { token } = req.body;\n  const ghPath = await findGhExecutable();\n  if (!ghPath) return sendBadRequest(res, 'GH_CLI_NOT_INSTALLED', 'GitHub CLI가 설치되어 있지 않습니다.');\n\n  if (token && token.trim()) {\n    const child = spawn(ghPath, ['auth', 'login', '--hostname', 'github.com', '--with-token'], { stdio: ['pipe', 'pipe', 'pipe'] });\n    let stdout = '';\n    let stderr = '';\n    child.stdout.on('data', chunk => { stdout += chunk; });\n    child.stderr.on('data', chunk => { stderr += chunk; });\n    child.stdin.end(`${token.trim()}\\n`);\n    child.on('error', err => sendServerError(res, err, `gh CLI 토큰 로그인 실패: ${err.message}`));\n    child.on('close', code => {\n      if (code !== 0) return sendServerError(res, new Error(`gh CLI 토큰 로그인 실패: ${stderr || stdout || `exit code ${code}`}`));\n      res.json({ success: true, completed: true, message: 'GitHub CLI 토큰 로그인이 완료됐습니다.' });\n    });\n  } else {\n    if (ghLoginSession?.running) {\n      return res.json({\n        success: true,\n        completed: false,\n        message: '이미 GitHub 브라우저 인증을 기다리고 있습니다.'\n      });\n    }\n\n    const child = spawn(ghPath, ['auth', 'login', '--hostname', 'github.com', '--git-protocol', 'https', '--web', '--clipboard'], {\n      stdio: ['ignore', 'pipe', 'pipe']\n    });\n    ghLoginSession = { child, running: true, completed: false, output: '', error: '' };\n    const appendOutput = chunk => {\n      if (ghLoginSession?.child !== child) return;\n      ghLoginSession.output = `${ghLoginSession.output}${chunk}`.replace(/\\u001b\\[[0-9;]*m/g, '').slice(-4000);\n    };\n    child.stdout.on('data', appendOutput);\n    child.stderr.on('data', appendOutput);\n    child.on('error', error => {\n      if (ghLoginSession?.child !== child) return;\n      ghLoginSession.running = false;\n      ghLoginSession.error = error.message;\n    });\n    child.on('close', code => {\n      if (ghLoginSession?.child !== child) return;\n      ghLoginSession.running = false;\n      ghLoginSession.completed = code === 0;\n      if (code !== 0 && !ghLoginSession.error) {\n        ghLoginSession.error = ghLoginSession.output.trim() || `gh auth login exited with code ${code}`;\n      }\n    });\n    try {\n      openGitHubDevicePage();\n    } catch (error) {\n      ghLoginSession.output = `브라우저를 자동으로 열지 못했습니다. https://github.com/login/device 를 직접 여세요.\\n${error.message}`;\n    }\n    res.json({\n      success: true,\n      completed: false,\n      message: '브라우저에서 GitHub 인증을 완료하세요. 일회용 코드는 클립보드에 복사됩니다.'\n    });\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/gh-open-auth",
+    "code": "app.post('/api/gh-open-auth', (req, res) => {\n  try {\n    openGitHubDevicePage();\n    res.json({ success: true });\n  } catch (error) {\n    sendServerError(res, error, `브라우저 열기 실패: ${error.message}`);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/gh-login-status",
+    "code": "app.get('/api/gh-login-status', (req, res) => {\n  res.json(publicGhLoginSession());\n});"
+  },
+  {
+    "type": "Func",
+    "name": "getYamlConfigPath",
+    "code": "// Helper to parse/read ~/.agents-kit/config/config.yaml\nfunction getYamlConfigPath() {\n  return path.join(os.homedir(), '.agents-kit', 'config', 'config.yaml');\n}"
+  },
+  {
+    "type": "Func",
+    "name": "readYamlConfig",
+    "code": "function readYamlConfig() {\n  const cfgFile = getYamlConfigPath();\n  if (!fs.existsSync(cfgFile)) return { llm: { keys: {} } };\n  try {\n    const raw = fs.readFileSync(cfgFile, 'utf-8');\n    const lines = raw.split('\\n');\n    const res = { llm: { keys: {} } };\n    let section = '';\n    for (const l of lines) {\n      const trimmed = l.trim();\n      if (!trimmed || trimmed.startsWith('#')) continue;\n      if (trimmed === 'llm:') { section = 'llm'; continue; }\n      if (trimmed === 'keys:') { section = 'keys'; continue; }\n      const idx = trimmed.indexOf(':');\n      if (idx !== -1) {\n        const k = trimmed.slice(0, idx).trim();\n        let v = trimmed.slice(idx + 1).trim();\n        if ((v.startsWith('\"') && v.endsWith('\"')) || (v.startsWith(\"'\") && v.endsWith(\"'\"))) v = v.slice(1, -1);\n        if (section === 'keys') res.llm.keys[k] = v;\n        else if (section === 'llm' && k === 'provider') res.llm.provider = v;\n      }\n    }\n    return res;\n  } catch {\n    return { llm: { keys: {} } };\n  }\n}"
+  },
+  {
+    "type": "Func",
+    "name": "writeYamlConfig",
+    "code": "function writeYamlConfig(configObj) {\n  const cfgFile = getYamlConfigPath();\n  const dir = path.dirname(cfgFile);\n  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });\n\n  const keys = configObj.llm?.keys || {};\n  let content = 'llm:\\n';\n  if (configObj.llm?.provider) {\n    content += `  provider: ${configObj.llm.provider}\\n`;\n  }\n  content += '  keys:\\n';\n  if (keys.openai) content += `    openai: \"${keys.openai}\"\\n`;\n  if (keys.gemini) content += `    gemini: \"${keys.gemini}\"\\n`;\n  if (keys.anthropic) content += `    anthropic: \"${keys.anthropic}\"\\n`;\n\n  fs.writeFileSync(cfgFile, content, 'utf-8');\n}"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/llm-keys",
+    "code": "// GET /api/llm-keys — Fetch status of LLM API Keys and default provider from ~/.agents-kit/config/config.yaml\napp.get('/api/llm-keys', (req, res) => {\n  try {\n    const cfg = readYamlConfig();\n    const keys = cfg.llm?.keys || {};\n    const provider = cfg.llm?.provider || 'gemini';\n\n    const gemini = keys.gemini || process.env.GEMINI_API_KEY || '';\n    const openai = keys.openai || process.env.OPENAI_API_KEY || '';\n    const anthropic = keys.anthropic || process.env.ANTHROPIC_API_KEY || '';\n\n    const maskKey = (key) => key ? `${key.slice(0, 4)}...${key.slice(-4)}` : '';\n\n    res.json({\n      provider,\n      hasGemini: !!gemini,\n      hasOpenai: !!openai,\n      hasAnthropic: !!anthropic,\n      geminiMasked: maskKey(gemini),\n      openaiMasked: maskKey(openai),\n      anthropicMasked: maskKey(anthropic)\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/llm-keys",
+    "code": "// POST /api/llm-keys — Save LLM API Keys & Provider to ~/.agents-kit/config/config.yaml\napp.post('/api/llm-keys', (req, res) => {\n  const { provider, apiKey, geminiApiKey, openaiApiKey, anthropicApiKey } = req.body;\n  try {\n    const cfg = readYamlConfig();\n    if (!cfg.llm) cfg.llm = { provider: 'gemini', keys: {} };\n    if (!cfg.llm.keys) cfg.llm.keys = {};\n\n    if (provider) {\n      cfg.llm.provider = provider;\n      if (apiKey !== undefined && apiKey.trim()) {\n        const normKey = provider === 'claude' ? 'anthropic' : provider;\n        cfg.llm.keys[normKey] = apiKey.trim();\n      }\n    }\n\n    if (geminiApiKey !== undefined && geminiApiKey.trim()) cfg.llm.keys.gemini = geminiApiKey.trim();\n    if (openaiApiKey !== undefined && openaiApiKey.trim()) cfg.llm.keys.openai = openaiApiKey.trim();\n    if (anthropicApiKey !== undefined && anthropicApiKey.trim()) cfg.llm.keys.anthropic = anthropicApiKey.trim();\n\n    writeYamlConfig(cfg);\n    res.json({\n      success: true,\n      provider: cfg.llm.provider,\n      message: `~/.agents-kit/config/config.yaml 파일에 기본 프로바이더(${cfg.llm.provider}) 및 API 키가 저장되었습니다.`\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "GET /api/git-status",
+    "code": "// GET /api/git-status  — user info, remote url, branch, changed files\napp.get('/api/git-status', async (req, res) => {\n  try {\n    const gitDir = path.join(kitRoot, '.git');\n    if (!fs.existsSync(gitDir)) {\n      return res.json({\n        isRepo: false,\n        kitRoot,\n        message: '마스터 킷(~/.agents-kit/kit)에 아직 Git 레포지토리가 생성되지 않았습니다.'\n      });\n    }\n\n    const [userName, userEmail, remoteUrl, branch, statusRaw, logRaw] = await Promise.allSettled([\n      runGit(['config', 'user.name']),\n      runGit(['config', 'user.email']),\n      runGit(['remote', 'get-url', 'origin']),\n      runGit(['rev-parse', '--abbrev-ref', 'HEAD']),\n      runGit(['status', '--short']),\n      runGit(['log', '--oneline', '-5'])\n    ]);\n\n    const changedFiles = statusRaw.status === 'fulfilled' && statusRaw.value\n      ? statusRaw.value.split('\\n').filter(Boolean).map(line => ({\n          status: line.slice(0, 2).trim(),\n          file: line.slice(3)\n        }))\n      : [];\n\n    const recentCommits = logRaw.status === 'fulfilled' && logRaw.value\n      ? logRaw.value.split('\\n').filter(Boolean)\n      : [];\n\n    const cleanRemoteUrl = remoteUrl.status === 'fulfilled' ? stripRemoteCredentials(remoteUrl.value) : '';\n    let remoteVerified = false;\n    let remoteRepository = '';\n    let remotePermission = '';\n    let remoteError = '';\n    if (cleanRemoteUrl) {\n      try {\n        const ghPath = await findGhExecutable();\n      if (!ghPath) {\n        remoteError = 'GitHub CLI가 설치되어 있지 않습니다.';\n      } else {\n        const match = cleanRemoteUrl.match(/github\\.com[/:]([^/]+)\\/([^/]+?)(?:\\.git)?$/i);\n        if (!match) {\n          remoteError = '현재는 github.com 원격 저장소만 검증할 수 있습니다.';\n        } else {\n          const repository = `${match[1]}/${match[2]}`;\n          const result = await execFileResult(ghPath, [\n            'repo', 'view', repository,\n            '--json', 'nameWithOwner,url,viewerPermission'\n          ], { timeout: 15000 });\n          const details = JSON.parse(result.stdout);\n          remoteVerified = true;\n          remoteRepository = details.nameWithOwner || repository;\n          remotePermission = details.viewerPermission || '';\n        }\n      }\n      } catch (error) {\n        remoteError = redactCredentials(error.stderr || error.message).trim();\n      }\n    }\n\n    res.json({\n      isRepo: true,\n      kitRoot,\n      userName: userName.status === 'fulfilled' ? userName.value : '',\n      userEmail: userEmail.status === 'fulfilled' ? userEmail.value : '',\n      remoteUrl: cleanRemoteUrl,\n      remoteConfigured: !!cleanRemoteUrl,\n      remoteVerified,\n      remoteRepository,\n      remotePermission,\n      remoteError,\n      branch: branch.status === 'fulfilled' ? branch.value : 'main',\n      changedFiles,\n      recentCommits,\n      isConnected: remoteVerified\n    });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/git-config",
+    "code": "// POST /api/git-config  — set user.name, user.email, remote origin URL (auto git init if missing)\napp.post('/api/git-config', async (req, res) => {\n  const { userName, userEmail, remoteUrl } = req.body;\n  try {\n    const gitDir = path.join(kitRoot, '.git');\n    if (!fs.existsSync(gitDir)) {\n      await runGit(['init']);\n      try {\n        await runGit(['add', '.']);\n        await runGit(['commit', '-m', 'Initial commit of Master Kit']);\n      } catch (e) {\n        // initial commit optional\n      }\n    }\n\n    const results = [];\n    if (userName) {\n      await runGit(['config', 'user.name', String(userName)]);\n      results.push(`user.name = ${userName}`);\n    }\n    if (userEmail) {\n      await runGit(['config', 'user.email', String(userEmail)]);\n      results.push(`user.email = ${userEmail}`);\n    }\n    if (remoteUrl) {\n      const finalUrl = validateRemoteUrl(remoteUrl);\n\n      try {\n        await runGit(['remote', 'get-url', 'origin']);\n        await runGit(['remote', 'set-url', 'origin', finalUrl]);\n      } catch (e) {\n        await runGit(['remote', 'add', 'origin', finalUrl]);\n      }\n      results.push(`remote origin = ${remoteUrl}`);\n    }\n    await removeStoredRemoteCredentials();\n    res.json({ success: true, applied: results });\n  } catch (err) {\n    sendServerError(res, err);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/git-create-remote",
+    "code": "// POST /api/git-create-remote — Auto create private GitHub repository via gh CLI\napp.post('/api/git-create-remote', async (req, res) => {\n  const { repoName = 'my-master-agent-kit', isPrivate = true } = req.body;\n  try {\n    const gitDir = path.join(kitRoot, '.git');\n    if (!fs.existsSync(gitDir)) {\n      await runGit(['init']);\n      try {\n        await runGit(['add', '.']);\n        await runGit(['commit', '-m', 'Initial commit of Master Kit']);\n      } catch (e) {\n        // ignore\n      }\n    }\n\n    const safeRepoName = validateRepositoryName(repoName);\n    const ghPath = await findGhExecutable();\n    if (!ghPath) {\n      return sendServerError(res, new Error('GitHub 레포 자동 생성 실패 (gh CLI 미설치 또는 로그인 필요): GitHub CLI가 설치되어 있지 않습니다.'));\n    }\n    const visibilityFlag = isPrivate ? '--private' : '--public';\n    const result = await execFileResult(ghPath, ['repo', 'create', safeRepoName, visibilityFlag, `--source=${kitRoot}`, '--remote=origin', '--push'], { cwd: kitRoot });\n    const out = result.stdout.trim();\n    let remoteUrl = '';\n    try {\n      remoteUrl = await runGit(['remote', 'get-url', 'origin']);\n    } catch {\n      // ignore\n    }\n\n    res.json({ success: true, remoteUrl, output: out });\n  } catch (err) {\n    sendServerError(res, err, `GitHub 레포 자동 생성 실패 (gh CLI 미설치 또는 로그인 필요): ${err.message}`);\n  }\n});"
+  },
+  {
+    "type": "Route",
+    "name": "POST /api/git-sync",
+    "code": "// POST /api/git-sync  — commit + push OR pull\napp.post('/api/git-sync', async (req, res) => {\n  const { action, commitMessage } = req.body;\n  // action: 'push' | 'pull'\n  try {\n    if (action === 'push') {\n      const msg = commitMessage || `agents-kit: update assets ${new Date().toISOString()}`;\n      await configureGitHubCredentialHelper();\n      await removeStoredRemoteCredentials();\n      await runGit(['add', '.']);\n      const pendingChanges = await runGit(['status', '--porcelain']);\n      let commitOut = 'Nothing new to commit locally.';\n      if (pendingChanges) {\n        commitOut = await runGit(['commit', '-m', String(msg)]);\n      }\n      const pushOut = await runGit(['push', '-u', 'origin', 'HEAD']);\n      res.json({ success: true, output: `${commitOut}\\n${pushOut}`.trim() });\n    } else if (action === 'pull') {\n      await configureGitHubCredentialHelper();\n      await removeStoredRemoteCredentials();\n      const pullOut = await runGit(['pull', 'origin', 'HEAD']);\n      res.json({ success: true, output: pullOut });\n    } else {\n      sendBadRequest(res, 'action must be push or pull');\n    }\n  } catch (err) {\n    let userMsg = err.message;\n    if (userMsg.includes('terminal prompts disabled') || userMsg.includes('could not read Username') || userMsg.includes('Permission denied (publickey)')) {\n      userMsg = 'GitHub 원격 저장소 인증이 필요합니다. GitHub CLI 로그인을 완료한 뒤 다시 시도하세요.';\n    }\n    sendServerError(res, err, userMsg);\n  }\n});"
+  },
+  {
+    "type": "AppCall",
+    "name": "app.use",
+    "code": "// Global Express Error Handling Middleware\napp.use((err, req, res, next) => {\n  if (res.headersSent) return next(err);\n  sendServerError(res, err);\n});"
+  },
+  {
+    "type": "Var",
+    "name": "server",
+    "code": "const server = app.listen(PORT, '127.0.0.1', () => {\n  console.log(`[agents-kit GUI Server] Running on http://localhost:${PORT}`);\n});"
+  },
+  {
+    "type": "ExpressionStatement",
+    "name": "",
+    "code": "server.on('error', (err) => {\n  if (err.code === 'EADDRINUSE') {\n    console.warn(`⚠️  Port ${PORT} is already in use by another GUI server instance.`);\n    console.warn(`   Run 'lsof -ti :3710 | xargs kill -9' to terminate the previous process.`);\n    process.exit(0);\n  }\n});"
+  }
+]

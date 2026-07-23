@@ -1,4 +1,4 @@
-import { ArrowRightLeft, Download, Layers, Search, XCircle } from 'lucide-react';
+import {ArrowRightLeft, Download, Layers, Search, XCircle} from 'lucide-react';
 
 export interface SkillSearchResult {
   id: string;
