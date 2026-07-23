@@ -1,6 +1,0 @@
-{
-  "description": "agents-kit Master Event Hooks & Safety Guardrails",
-  "max_consecutive_replies": 5,
-  "pre_tool_execution": [],
-  "post_tool_execution": []
-}

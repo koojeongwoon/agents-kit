@@ -3,6 +3,7 @@ name = "agents-kit"
 version = "1.0.0"
 description = "agents-kit Cross-Platform Desktop Adapter Hub"
 authors = ["agents-kit team"]
+license = "MIT"
 edition = "2021"
 
 [build-dependencies]

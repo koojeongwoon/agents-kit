@@ -6,10 +6,13 @@
   "bin": {
     "agents-kit": "./bin/cli.js"
   },
+  "license": "MIT",
   "scripts": {
     "gui": "./scripts/run-gui.sh",
     "apply": "node ./bin/cli.js apply",
     "status": "node ./bin/cli.js status",
+    "test": "node --test test/domain-contracts.test.js test/merge-smithery-mcp.test.js test/fs-mcp-kit-store.test.js test/http-error-mapper.test.js test/install-skill.test.js test/catalog-ranking.test.js test/file-transaction.test.js && node test/adapters.test.js",
+    "test:all": "npm test && npm --prefix gui run build:desktop && cargo check --manifest-path gui/src-tauri/Cargo.toml",
     "tauri:dev": "npm --prefix gui run tauri:dev",
     "tauri:build": "npm --prefix gui run tauri:build"
   }

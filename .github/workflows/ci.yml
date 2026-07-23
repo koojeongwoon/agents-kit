@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: gui/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install GUI dependencies
+        run: npm ci --prefix gui
+      - name: Run isolated tests
+        run: npm test
+      - name: Build desktop assets
+        run: npm --prefix gui run build:desktop
+      - name: Check Tauri
+        run: cargo check --manifest-path gui/src-tauri/Cargo.toml

@@ -1,5 +1,0 @@
-{
-  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
-  "name": "agents-kit-plugin",
-  "description": "Universal Multi-Client Agentic Harness, Skills, Sub-Agents, Loops, Memory & Hooks Plugin Suite"
-}

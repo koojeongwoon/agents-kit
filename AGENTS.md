@@ -1,1 +1,0 @@
-kit/harness/AGENTS.md

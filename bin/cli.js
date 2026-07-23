@@ -4,9 +4,13 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
-import { buildResolvedMcpConfig, mcpResolvedPath } from '../lib/mcp-env.js';
-import { resolveKitRoot, kitPaths } from '../lib/kit-paths.js';
+import { execFileSync } from 'child_process';
+import { validateRepositoryName } from '../lib/git-security.js';
+import { CLIENT_IDS, RESOURCE_IDS } from '../lib/catalog.js';
+import { buildResolvedMcpConfig } from '../lib/mcp-env.js';
+import { resolveKitRoot, kitPaths, ensureUserKitBootstrapped } from '../lib/kit-paths.js';
+import { getAdapters, deployAllAdapters, importFromAdapter } from '../lib/adapters/index.js';
+import { generateExpertAsset } from '../lib/utils/llm-client.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,185 +27,14 @@ function getArgValue(flag) {
 
 const kitPathOverride = getArgValue('--kit');
 const kitRoot = resolveKitRoot(projectRoot, kitPathOverride);
-const kit = kitPaths(kitRoot);
 
-function assertSafeProjectTarget(targetDir) {
-  const resolved = path.resolve(targetDir);
-  if (resolved === projectRoot || resolved === kitRoot) {
-    throw new Error('agents-kit cannot be deployed into its own repository or kit directory');
-  }
-}
-
-function getMcpDeploySource() {
-  return mcpResolvedPath(kitRoot);
-}
-
-function resolveMcpConfigForDeploy() {
-  const result = buildResolvedMcpConfig(kitRoot);
+function resolveMcpConfigForDeploy(scope = 'global') {
+  const result = buildResolvedMcpConfig(kitRoot, scope);
   if (result.unresolved.length > 0) {
     console.warn(`⚠️  MCP placeholders unresolved: ${result.unresolved.join(', ')}`);
-    console.warn(`    Fill kit/.env (see kit/.env.example) then re-run apply.`);
+    console.warn(`    Fill kit/${scope}/.env (see kit/${scope}/.env.example) then re-run apply.`);
   }
   return result;
-}
-
-function exists(p) {
-  try {
-    return fs.existsSync(p);
-  } catch {
-    return false;
-  }
-}
-
-function getClientConfigs(scope = 'global', customProjectPath = '') {
-  const baseDir = (scope === 'project' && customProjectPath.trim())
-    ? path.resolve(customProjectPath)
-    : homeDir;
-  const mcpSource = getMcpDeploySource();
-
-  return [
-    {
-      id: 'antigravity',
-      name: 'Google Antigravity (App, IDE, CLI)',
-      detectedPath: scope === 'global' ? path.join(homeDir, '.gemini/config') : path.join(baseDir, '.gemini/config'),
-      categorizedLinks: {
-        harness: [
-          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/plugin.json') : path.join(baseDir, '.agents/plugins/agents-kit/plugin.json'), source: kit.pluginJson },
-          { target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/rules/AGENTS.md') : path.join(baseDir, '.agents/plugins/agents-kit/rules/AGENTS.md'), source: kit.agentsMd }
-        ],
-        skills: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/skills') : path.join(baseDir, '.agents/plugins/agents-kit/skills'), source: kit.skillsDir }],
-        mcp: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/mcp_config.json') : path.join(baseDir, '.gemini/config/mcp_config.json'), source: mcpSource }],
-        agents: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/agents') : path.join(baseDir, '.agents/plugins/agents-kit/agents'), source: kit.agentsDir }],
-        loops: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/loops') : path.join(baseDir, '.agents/plugins/agents-kit/loops'), source: kit.loopsDir }],
-        memory: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/global_memory.md') : path.join(baseDir, '.gemini/config/global_memory.md'), source: kit.memoryFile }],
-        hooks: [{ target: scope === 'global' ? path.join(homeDir, '.gemini/config/plugins/agents-kit/hooks.json') : path.join(baseDir, '.agents/plugins/agents-kit/hooks.json'), source: kit.hooksFile }]
-      }
-    },
-    {
-      id: 'cursor',
-      name: 'Cursor IDE',
-      detectedPath: scope === 'global' ? path.join(homeDir, '.cursor') : path.join(baseDir, '.cursor'),
-      categorizedLinks: {
-        harness: [
-          { target: path.join(baseDir, '.cursorrules'), source: kit.agentsMd },
-          { target: path.join(baseDir, '.cursor/permissions.json'), source: kit.permissionsFile }
-        ],
-        skills: [
-          { target: path.join(baseDir, '.cursor/skills/loop-runner'), source: path.join(kit.skillsDir, 'loop-runner') },
-          { target: path.join(baseDir, '.cursor/skills/loop-verify'), source: path.join(kit.skillsDir, 'loop-verify') }
-        ],
-        mcp: [{ target: path.join(baseDir, '.cursor/mcp.json'), source: mcpSource }],
-        agents: [{ target: path.join(baseDir, '.cursor/agents/code-reviewer.md'), source: path.join(kit.agentsDir, 'code-reviewer.md') }],
-        loops: [{ target: path.join(baseDir, '.cursor/loops/daily-docs-sweep'), source: path.join(kit.loopsDir, 'daily-docs-sweep') }],
-        memory: [{ target: path.join(baseDir, '.cursor/rules/global_memory.md'), source: kit.memoryFile }]
-      }
-    },
-    {
-      id: 'codex',
-      name: 'Codex CLI',
-      detectedPath: scope === 'global' ? path.join(homeDir, '.codex') : path.join(baseDir, '.codex'),
-      categorizedLinks: {
-        harness: [
-          { target: path.join(baseDir, '.codex/AGENTS.md'), source: kit.agentsMd },
-          { target: path.join(baseDir, '.codex/allowed_commands.json'), source: kit.permissionsFile }
-        ],
-        skills: [
-          { target: path.join(baseDir, '.codex/skills/loop-runner'), source: path.join(kit.skillsDir, 'loop-runner') },
-          { target: path.join(baseDir, '.codex/skills/loop-verify'), source: path.join(kit.skillsDir, 'loop-verify') }
-        ],
-        mcp: [{ target: path.join(baseDir, '.codex/mcp.json'), source: mcpSource }],
-        agents: [{ target: path.join(baseDir, '.codex/agents/code-reviewer.md'), source: path.join(kit.agentsDir, 'code-reviewer.md') }],
-        loops: [],
-        memory: [{ target: path.join(baseDir, '.codex/global_memory.md'), source: kit.memoryFile }]
-      }
-    },
-    {
-      id: 'claude-code',
-      name: 'Claude Code (CLI)',
-      detectedPath: scope === 'global' ? path.join(homeDir, '.claude') : path.join(baseDir, '.claude'),
-      categorizedLinks: {
-        harness: [{ target: path.join(baseDir, '.claude/CLAUDE.md'), source: kit.agentsMd }],
-        skills: [{ target: path.join(baseDir, '.claude/skills'), source: kit.skillsDir }],
-        mcp: [{ target: scope === 'global' ? path.join(homeDir, '.claude.json') : path.join(baseDir, '.mcp.json'), source: mcpSource }],
-        agents: [
-          { target: path.join(baseDir, '.claude/agents/code-reviewer.md'), source: path.join(kit.agentsDir, 'code-reviewer.md') },
-          { target: path.join(baseDir, '.claude/agents/security-auditor.md'), source: path.join(kit.agentsDir, 'security-auditor.md') }
-        ],
-        loops: [{ target: path.join(baseDir, '.claude/loops/daily-docs-sweep'), source: path.join(kit.loopsDir, 'daily-docs-sweep') }],
-        memory: [{ target: path.join(baseDir, '.claude/global_memory.md'), source: kit.memoryFile }],
-        hooks: [{ target: path.join(baseDir, '.claude/hooks.json'), source: kit.hooksFile }]
-      }
-    },
-    {
-      id: 'claude-desktop',
-      name: 'Claude Desktop (GUI)',
-      detectedPath: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude') : path.join(baseDir, '.claude'),
-      categorizedLinks: {
-        harness: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/AGENTS.md') : path.join(baseDir, '.claude/AGENTS.md'), source: kit.agentsMd }],
-        skills: [{ target: path.join(baseDir, '.claude/skills'), source: kit.skillsDir }],
-        mcp: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/claude_desktop_config.json') : path.join(baseDir, '.claude/claude_desktop_config.json'), source: mcpSource }],
-        agents: [],
-        loops: [{ target: path.join(baseDir, '.claude/loops/daily-docs-sweep'), source: path.join(kit.loopsDir, 'daily-docs-sweep') }],
-        memory: [{ target: scope === 'global' ? path.join(homeDir, 'Library/Application Support/Claude/global_memory.md') : path.join(baseDir, '.claude/global_memory.md'), source: kit.memoryFile }],
-        hooks: []
-      }
-    }
-  ];
-}
-
-function deployConfigs(clientConfigs, scope, baseDir) {
-  if (scope === 'project') assertSafeProjectTarget(baseDir);
-
-  let appliedLinksCount = 0;
-  for (const client of clientConfigs) {
-    if (scope === 'global' && !exists(client.detectedPath)) continue;
-
-    Object.values(client.categorizedLinks).forEach(links => {
-      for (const link of links) {
-        if (path.resolve(link.source) === path.resolve(link.target)) {
-          throw new Error(`Refusing to create a self-referencing symlink: ${link.target}`);
-        }
-
-        const targetDir = path.dirname(link.target);
-        if (!fs.existsSync(targetDir)) {
-          fs.mkdirSync(targetDir, { recursive: true });
-        }
-
-        try {
-          const lstat = fs.lstatSync(link.target);
-          if (lstat.isSymbolicLink()) {
-            fs.unlinkSync(link.target);
-          } else {
-            fs.renameSync(link.target, `${link.target}.bak`);
-          }
-        } catch {
-          // File does not exist, proceed
-        }
-        fs.symlinkSync(link.source, link.target);
-        appliedLinksCount++;
-      }
-    });
-  }
-
-  let allowedCmds = [];
-  if (fs.existsSync(kit.permissionsFile)) {
-    const pData = JSON.parse(fs.readFileSync(kit.permissionsFile, 'utf-8'));
-    allowedCmds = pData.commands || [];
-  }
-
-  const geminiConfigDir = path.join(baseDir, '.gemini/config');
-  if (!fs.existsSync(geminiConfigDir)) fs.mkdirSync(geminiConfigDir, { recursive: true });
-  fs.writeFileSync(path.join(geminiConfigDir, 'allowed_commands.json'), JSON.stringify({ allowed_commands: allowedCmds }, null, 2));
-
-  const cursorDir = path.join(baseDir, '.cursor');
-  if (!fs.existsSync(cursorDir)) fs.mkdirSync(cursorDir, { recursive: true });
-  fs.writeFileSync(path.join(cursorDir, 'permissions.json'), JSON.stringify({ auto_approve_commands: allowedCmds }, null, 2));
-
-  const codexDir = path.join(baseDir, '.codex');
-  if (!fs.existsSync(codexDir)) fs.mkdirSync(codexDir, { recursive: true });
-  fs.writeFileSync(path.join(codexDir, 'allowed_commands.json'), JSON.stringify({ allowed_commands: allowedCmds }, null, 2));
-
-  return { appliedLinksCount, syncedCommandsCount: allowedCmds.length };
 }
 
 function printHelp() {
@@ -213,24 +46,34 @@ Usage:
 
 Commands:
   apply, sync        Apply master kit to clients (default: global ~/ system)
+  init, import       Bootstrap master kit (default template or import from an existing client)
+  generate, ai       Use AI to generate master kit assets (harness, subagent, skill)
   status             Check detection and link status of AI clients
   git                Run git sync operations on kit directory (push/pull)
   help               Show this help message
 
 Options:
-  --kit <dir>        Master kit directory (default: ./kit)
-  --project <dir>    Deploy to a specific project directory instead of global ~/
-  --client <id>      Deploy only to a specific client (antigravity, cursor, codex, claude)
+  --kit <ul>        Master kit directory (default: ~/.agents-kit/kit)
+  --resource <type>  Apply only a resource type (${RESOURCE_IDS.join(', ')})
+  --file <path>      Apply only a specific asset file or subdirectory
+  --from <client>    Source client to import settings from (cursor, antigravity, codex, claude-code)
+  --prompt <str>     Instructions for AI generation (used with 'generate' command)
+  --provider <name>  LLM provider override (gemini, openai, claude)
+  --name <str>       Asset name for generating subagents or skills
+  --project <ul>    Deploy or import project kit for a specific project directory
+  --client <id>      Deploy only to a client (${CLIENT_IDS.join(', ')})
   --push             Git commit & push kit assets
   --pull             Git pull kit assets
+  --dry-run          Preview apply changes without modifying client files
 
 Examples:
-  npx agents-kit apply                      # Apply kit/ to global (~/)
-  npx agents-kit apply --kit ~/my-agent-kit # Apply external kit repo
-  npx agents-kit apply --project ./my-app   # Apply to ./my-app
-  npx agents-kit apply --client cursor      # Apply only to Cursor
-  npx agents-kit git --pull                 # Git pull latest kit
-  npx agents-kit status                     # View current link status
+  npx agents-kit init                        # Initialize default master kit template at ~/.agents-kit/kit
+  npx agents-kit init --from cursor          # Import settings from existing Cursor configuration
+  npx agents-kit generate harness --prompt "Next.js 15, TypeScript coding guidelines"
+  npx agents-kit apply                       # Apply master kit to global clients
+  npx agents-kit apply --project ./my-app    # Apply project kit to ./my-app
+  npx agents-kit apply --dry-run              # Preview global deployment changes
+  npx agents-kit status                      # View current link status
 `);
 }
 
@@ -239,74 +82,188 @@ if (command === 'help' || args.includes('-h') || args.includes('--help')) {
   process.exit(0);
 }
 
-if (!exists(kitRoot)) {
-  console.error(`❌ Kit directory not found: ${kitRoot}`);
-  process.exit(1);
+if (!fs.existsSync(kitRoot)) {
+  ensureUserKitBootstrapped(projectRoot);
 }
 
-if (command === 'status') {
-  console.log(`\n📦 Kit: ${kitRoot}\n`);
+if (command === 'generate' || command === 'ai') {
+  const assetType = args[1] || 'harness';
+  const prompt = getArgValue('--prompt');
+  const provider = getArgValue('--provider');
+  const name = getArgValue('--name') || 'custom-asset';
+  let scope = 'global';
+  if (getArgValue('--project')) scope = 'project';
+
+  if (!prompt) {
+    console.error('❌ Please specify --prompt "<instructions for AI generation>"');
+    process.exit(1);
+  }
+
+  const kit = kitPaths(kitRoot, scope);
+  console.log(`\n🤖 Calling LLM Provider (${provider || 'configured provider'})...`);
+
+  generateExpertAsset({
+    assetType,
+    additionalPrompt: `Asset Name: ${name}\nUser Instructions: ${prompt}`,
+    provider
+  })
+    .then(generated => {
+      if (assetType === 'harness' || assetType === 'rules') {
+        fs.mkdirSync(path.dirname(kit.agentsMd), { recursive: true });
+        fs.writeFileSync(kit.agentsMd, generated.trim());
+        console.log(`✅ Generated harness AGENTS.md in ${kit.agentsMd}\n`);
+      } else if (assetType === 'agent' || assetType === 'subagent') {
+        const agentFile = path.join(kit.agentsDir, `${name}.md`);
+        fs.mkdirSync(path.dirname(agentFile), { recursive: true });
+        fs.writeFileSync(agentFile, generated.trim());
+        console.log(`✅ Generated subagent ${name}.md in ${agentFile}\n`);
+      } else if (assetType === 'skill') {
+        const skillMd = path.join(kit.skillsDir, name, 'SKILL.md');
+        fs.mkdirSync(path.dirname(skillMd), { recursive: true });
+        fs.writeFileSync(skillMd, generated.trim());
+        console.log(`✅ Generated skill ${name}/SKILL.md in ${skillMd}\n`);
+      } else {
+        console.error(`❌ Unknown asset type '${assetType}'. Valid: harness, agent, skill`);
+        process.exit(1);
+      }
+    })
+    .catch(err => {
+      console.error('❌ AI Generation failed:', err.message);
+      process.exit(1);
+    });
+} else if (command === 'init' || command === 'import') {
+  const fromClient = getArgValue('--from') || getArgValue('--client');
+  let scope = 'global';
+  let customPath = getArgValue('--project');
+  if (customPath) scope = 'project';
+
+  if (!fromClient) {
+    ensureUserKitBootstrapped(projectRoot);
+    console.log(`\n✅ Successfully initialized default Master Kit at ${kitRoot}!`);
+    console.log(`💡 Tip: To import settings from an existing AI client, run:`);
+    console.log(`   • agents-kit init --from cursor`);
+    console.log(`   • agents-kit init --from antigravity`);
+    console.log(`   • agents-kit init --from codex\n`);
+  } else {
+    console.log(`\n📥 Importing initial kit settings from client '${fromClient}' (${scope.toUpperCase()})...`);
+    try {
+      const res = importFromAdapter({
+        scope,
+        kitRoot,
+        clientFilter: fromClient,
+        customProjectPath: customPath
+      });
+
+      console.log(`✅ Successfully bootstrapped kit/ from ${res.clientName}!`);
+      console.log(`   • Rules (AGENTS.md): ${res.importedRules ? 'Imported' : 'Not found (used default)'}`);
+      console.log(`   • Permissions: ${res.importedPermissions} commands imported`);
+      console.log(`   • MCP Servers: ${res.importedMcp} servers imported\n`);
+    } catch (err) {
+      console.error('❌ Import failed:', err.message);
+      process.exit(1);
+    }
+  }
+} else if (command === 'status') {
+  console.log(`\n📦 Kit Root: ${kitRoot}\n`);
   console.log('🔍 agents-kit Client Detection & Link Status:\n');
-  getClientConfigs('global').forEach(c => {
-    const isDet = exists(c.detectedPath);
-    console.log(`${isDet ? '🟢' : '⚪'} ${c.name} (${c.id}) - Path: ${c.detectedPath}`);
+  const adapters = getAdapters({ scope: 'global', kitRoot });
+  adapters.forEach(a => {
+    const status = a.checkStatus();
+    console.log(`${status.detected ? '🟢' : '⚪'} ${a.name} (${a.id}) - Path: ${a.detectedPath}`);
+    if (status.detected) {
+      console.log(`   Links: ${status.validLinksCount}/${status.linksCount} valid, ${status.missingLinks.length} missing, ${status.mislinkedLinks.length} mismatched`);
+      for (const mismatch of status.mislinkedLinks) {
+        console.log(`   ⚠️  ${mismatch.target} -> ${mismatch.actualSource || 'regular file'} (expected ${mismatch.expectedSource})`);
+      }
+    }
   });
   console.log('');
-  process.exit(0);
-}
-
-const gitCwd = kitPathOverride ? kitRoot : kitRoot;
-
-if (command === 'git') {
+} else if (command === 'git') {
   try {
-    if (args.includes('--pull')) {
-      console.log(`🔄 Executing git pull in ${gitCwd}...`);
-      const out = execSync('git pull origin HEAD', { cwd: gitCwd, encoding: 'utf-8' });
+    const gitDir = path.join(kitRoot, '.git');
+    if (!fs.existsSync(gitDir)) {
+      console.log(`📁 Initializing Git repository in ${kitRoot}...`);
+      execFileSync('git', ['init'], { cwd: kitRoot });
+      try {
+        execFileSync('git', ['add', '.'], { cwd: kitRoot });
+        execFileSync('git', ['commit', '-m', 'Initial commit of Master Kit'], { cwd: kitRoot });
+      } catch {
+        // ignore
+      }
+    }
+
+    if (args.includes('--create')) {
+      const repoName = validateRepositoryName(getArgValue('--create') || 'my-master-agent-kit');
+      console.log(`🚀 Creating GitHub repository '${repoName}' via gh CLI...`);
+      const out = execFileSync('gh', ['repo', 'create', repoName, '--private', `--source=${kitRoot}`, '--remote=origin', '--push'], { cwd: kitRoot, encoding: 'utf-8' });
+      console.log('✅ Successfully created and connected GitHub repo:', out.trim());
+    } else if (args.includes('--pull')) {
+      console.log(`🔄 Executing git pull in ${kitRoot}...`);
+      execFileSync('gh', ['auth', 'setup-git', '--hostname', 'github.com'], { stdio: 'ignore' });
+      const out = execFileSync('git', ['pull', 'origin', 'HEAD'], { cwd: kitRoot, encoding: 'utf-8' });
       console.log('✅ Success:', out.trim());
     } else if (args.includes('--push')) {
-      console.log(`🚀 Executing git add, commit & push in ${gitCwd}...`);
-      execSync('git add .', { cwd: gitCwd });
+      console.log(`🚀 Executing git add, commit & push in ${kitRoot}...`);
+      execFileSync('git', ['add', '.'], { cwd: kitRoot });
       try {
-        execSync(`git commit -m "agents-kit kit sync: ${new Date().toISOString()}"`, { cwd: gitCwd });
+        execFileSync('git', ['commit', '-m', `agents-kit kit sync: ${new Date().toISOString()}`], { cwd: kitRoot });
       } catch {
         console.log('ℹ️  Nothing to commit.');
       }
-      const out = execSync('git push origin HEAD', { cwd: gitCwd, encoding: 'utf-8' });
+      execFileSync('gh', ['auth', 'setup-git', '--hostname', 'github.com'], { stdio: 'ignore' });
+      const out = execFileSync('git', ['push', 'origin', 'HEAD'], { cwd: kitRoot, encoding: 'utf-8' });
       console.log('✅ Success:', out.trim());
     } else {
-      console.log('Please specify --push or --pull for git command.');
+      console.log('Please specify --push, --pull, or --create <name> for git command.');
     }
   } catch (err) {
     console.error('❌ Git operation failed:', err.message);
   }
-  process.exit(0);
-}
+} else if (command === 'apply' || command === 'sync') {
+  let scope = 'global';
+  let customPath = getArgValue('--project');
+  if (customPath) scope = 'project';
 
-let scope = 'global';
-let customPath = getArgValue('--project');
-if (customPath) scope = 'project';
+  const targetClient = getArgValue('--client');
+  const resourceFilter = getArgValue('--resource');
+  const fileFilter = getArgValue('--file');
+  const dryRun = args.includes('--dry-run');
+  const targetLocation = scope === 'project' ? path.resolve(customPath) : homeDir;
 
-const targetClient = getArgValue('--client');
+  console.log(`\n📦 Kit Root: ${kitRoot}`);
+  console.log(`⚡ Scope: ${scope.toUpperCase()} (source: ${scope === 'project' ? 'projects/default' : 'global'})`);
+  if (resourceFilter) console.log(`🎯 Resource Filter: ${resourceFilter}`);
+  if (fileFilter) console.log(`📄 File Filter: ${fileFilter}`);
+  if (dryRun) console.log('🧪 Dry Run: no client files will be changed');
+  console.log(`🎯 Applying to ${scope === 'project' ? `project (${targetLocation})` : 'global (~/)'}...`);
 
-let configs = getClientConfigs(scope, customPath);
-if (targetClient) {
-  configs = configs.filter(c => c.id === targetClient);
-  if (configs.length === 0) {
-    console.error(`❌ Client '${targetClient}' not found. Valid: antigravity, cursor, codex, claude-code, claude-desktop`);
+  try {
+    if (!dryRun && (!resourceFilter || resourceFilter.toLowerCase() === 'mcp')) {
+      resolveMcpConfigForDeploy(scope);
+    }
+
+    const result = deployAllAdapters({
+      scope,
+      kitRoot,
+      clientFilter: targetClient,
+      resourceFilter,
+      fileFilter,
+      customProjectPath: customPath,
+      dryRun
+    });
+
+    if (dryRun) {
+      console.log('\n📋 Planned changes:');
+      for (const change of result.changes) {
+        console.log(`   [${change.clientId}] ${change.action}: ${change.target} <- ${change.source}`);
+      }
+      console.log(`\n✅ Dry run complete. ${result.changes.length} entries inspected; no files changed.\n`);
+    } else {
+      console.log(`\n✅ Done! Connected ${result.totalAppliedLinks} symlinks & synced ${result.totalSyncedCommands} allowed commands.`);
+      console.log(`🎯 Targets: ${result.deployedTargets.join(', ')}\n`);
+    }
+  } catch (err) {
+    console.error('\n❌ Deployment failed:', err.message);
     process.exit(1);
   }
-}
-
-const targetLocation = scope === 'project' ? path.resolve(customPath) : homeDir;
-console.log(`\n📦 Kit: ${kitRoot}`);
-console.log(`⚡ Applying to ${scope === 'project' ? `project (${targetLocation})` : 'global (~/)'}...`);
-
-try {
-  resolveMcpConfigForDeploy();
-  const result = deployConfigs(configs, scope, targetLocation);
-  console.log(`\n✅ Done! Connected ${result.appliedLinksCount} symlinks & synced ${result.syncedCommandsCount} allowed commands.`);
-  console.log(`🎯 Targets: ${configs.map(c => c.name).join(', ')}\n`);
-} catch (err) {
-  console.error('\n❌ Deployment failed:', err.message);
-  process.exit(1);
 }
