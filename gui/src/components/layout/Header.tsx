@@ -1,4 +1,4 @@
-import {GitBranch, Layers} from 'lucide-react';
+import {GitBranch, Layers, Sun, Moon} from 'lucide-react';
 
 interface HeaderProps {
   kitRoot: string;
@@ -14,6 +14,8 @@ interface HeaderProps {
   fetchLlmKeysStatus: () => Promise<void>;
   mainView: 'assets' | 'clients';
   setMainView: (view: 'assets' | 'clients') => void;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
 }
 
 export function Header({
@@ -24,10 +26,12 @@ export function Header({
   setShowLlmKeyModal,
   fetchLlmKeysStatus,
   mainView,
-  setMainView
+  setMainView,
+  theme,
+  toggleTheme
 }: HeaderProps) {
   return (
-    <header className="border-b border-slate-800 bg-[#0F172A]/90 backdrop-blur sticky top-0 z-50">
+    <header className="border-b border-slate-800/60 bg-[#0F172A]/90 dark:bg-[#0B0F17]/90 backdrop-blur sticky top-0 z-50 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
@@ -92,9 +96,18 @@ export function Header({
               setShowLlmKeyModal(true);
               fetchLlmKeysStatus().catch(console.error);
             }}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-850 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-all flex items-center space-x-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-all flex items-center space-x-1.5"
           >
             <span>API 키 관리</span>
+          </button>
+
+          {/* Theme Toggle Switched Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-750 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-300 transition-colors flex items-center justify-center"
+            title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
           </button>
         </div>
       </div>

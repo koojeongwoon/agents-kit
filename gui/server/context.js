@@ -103,14 +103,36 @@ export function createAppContext() {
       const rawLinks = a.getCategorizedLinks();
       const formattedCategories = {};
       Object.keys(rawLinks).forEach(cat => {
-        formattedCategories[cat] = rawLinks[cat].map(link => {
-          let name = path.basename(link.source);
-          if (link.source.endsWith('AGENTS.md')) name = 'AGENTS.md (Master Rules)';
-          else if (link.source.endsWith('allowed-commands.json')) name = 'allowed-commands.json (Permissions)';
-          else if (link.source.endsWith('hooks.json')) name = 'hooks.json (Event Hooks)';
-          else if (link.source.includes('mcp-servers')) name = 'mcp-servers.json (MCP Config)';
-          return { name, target: link.target, source: link.source };
+        const list = [];
+        rawLinks[cat].forEach(link => {
+          try {
+            if (fs.existsSync(link.source) && fs.statSync(link.source).isDirectory()) {
+              const files = fs.readdirSync(link.source);
+              files.forEach(file => {
+                if (file.startsWith('.')) return; // skip hidden files
+                const fileSource = path.join(link.source, file);
+                const fileTarget = path.join(link.target, file);
+                list.push({
+                  name: `${path.basename(link.source)}/${file}`,
+                  target: fileTarget,
+                  source: fileSource
+                });
+              });
+            } else {
+              let name = path.basename(link.source);
+              if (link.source.endsWith('AGENTS.md')) name = 'AGENTS.md (Master Rules)';
+              else if (link.source.endsWith('allowed-commands.json')) name = 'allowed-commands.json (Permissions)';
+              else if (link.source.endsWith('hooks.json')) name = 'hooks.json (Event Hooks)';
+              else if (link.source.includes('mcp-servers')) name = 'mcp-servers.json (MCP Config)';
+              list.push({ name, target: link.target, source: link.source });
+            }
+          } catch (e) {
+            // Fallback to original directory reference if scanning fails
+            let name = path.basename(link.source);
+            list.push({ name, target: link.target, source: link.source });
+          }
         });
+        formattedCategories[cat] = list;
       });
 
       let icon = 'Sparkles';

@@ -59,6 +59,24 @@ export default function App() {
   const [projectRoot, setProjectRoot] = useState<string>('');
   const [kitRoot, setKitRoot] = useState<string>('');
 
+  // Theme State Setup
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'dark';
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   // Layout View State
   const [mainView, setMainView] = useState<'assets' | 'clients'>('assets');
   const [kitScope, setKitScope] = useState<'global' | 'project'>('global');
@@ -387,7 +405,7 @@ export default function App() {
   const itemsPerPage = 6;
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] text-slate-100 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0B0F17] text-slate-800 dark:text-slate-100 font-sans flex flex-col transition-colors duration-250">
       <Header
         kitRoot={kitRoot}
         projectRoot={projectRoot}
@@ -397,6 +415,8 @@ export default function App() {
         fetchLlmKeysStatus={fetchLlmKeysStatus}
         mainView={mainView}
         setMainView={setMainView}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
 
       {/* Notification Toast */}
