@@ -18,13 +18,13 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
       />
       
       {/* Modal Container */}
-      <div className="bg-[#0F172A] border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between shrink-0">
-          <h3 className="text-base font-bold text-white font-sans">{title}</h3>
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+          <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans">{title}</h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 text-sm font-semibold transition-colors"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm font-semibold transition-colors"
           >
             ✕
           </button>
