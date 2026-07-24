@@ -6,7 +6,7 @@ import {parseSkillsShLocator} from '../../../lib/skills-sh.js';
 import {createInstallSkill} from '../../../lib/application/install-skill.js';
 import {createFsSkillStore} from '../../../lib/infrastructure/fs-skill-store.js';
 import {createSkillsCliDownloader} from '../../../lib/infrastructure/skills-cli-downloader.js';
-import {createSkillsCatalogClient} from '../../../lib/infrastructure/catalog-clients.js';
+import {createSkillsCatalogClient, createSmitheryCatalogClient} from '../../../lib/infrastructure/catalog-clients.js';
 import {domainError} from '../../../lib/domain/errors.js';
 
 export function createSkillsRouter(ctx) {
@@ -14,6 +14,7 @@ export function createSkillsRouter(ctx) {
   const { kitRoot, approvedProjectRoots, assertSafeProjectTarget, sendApiError } = ctx;
 
   const skillsCatalog = createSkillsCatalogClient();
+  const smitheryCatalog = createSmitheryCatalogClient();
 
 
 

@@ -128,7 +128,7 @@ export function AssetPreviewEditModal({
               <div className="flex space-x-2">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 rounded-xl bg-slate-850 hover:bg-slate-850 text-slate-400 hover:text-slate-300 text-xs font-semibold transition-colors"
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-300 text-xs font-semibold transition-colors"
                 >
                   닫기
                 </button>

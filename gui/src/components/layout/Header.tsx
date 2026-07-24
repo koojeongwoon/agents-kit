@@ -90,13 +90,12 @@ export function Header({
             )}
           </button>
 
-          {/* LLM API Keys Management Button */}
           <button
             onClick={() => {
               setShowLlmKeyModal(true);
               fetchLlmKeysStatus().catch(console.error);
             }}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-all flex items-center space-x-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-all flex items-center space-x-1.5"
           >
             <span>API 키 관리</span>
           </button>
@@ -104,7 +103,7 @@ export function Header({
           {/* Theme Toggle Switched Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-750 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-300 transition-colors flex items-center justify-center"
+            className="p-2 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-300 transition-colors flex items-center justify-center"
             title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}

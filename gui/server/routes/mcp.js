@@ -8,10 +8,14 @@ import {createMergeSmitheryMcp} from '../../../lib/application/merge-smithery-mc
 import {createFsMcpKitStore} from '../../../lib/infrastructure/fs-mcp-kit-store.js';
 import {sendBadRequest, sendServerError} from '../../../lib/interfaces/http/error-mapper.js';
 import {domainError} from '../../../lib/domain/errors.js';
+import {createSmitheryCatalogClient} from '../../../lib/infrastructure/catalog-clients.js';
 
 export function createMcpRouter(ctx) {
   const router = express.Router();
   const { kitRoot, approvedProjectRoots, resolveMcpConfigForDeploy, assertSafeProjectTarget, sendApiError } = ctx;
+
+  const smitheryCatalog = createSmitheryCatalogClient();
+  const fetchSmitheryServer = (qualifiedName, signal) => smitheryCatalog.getServer(qualifiedName, signal);
 
   // POST /api/mcp/toggle-server — Toggle disabled state of an MCP server
   router.post('/api/mcp/toggle-server', (req, res) => {
