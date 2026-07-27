@@ -60,10 +60,10 @@ tests, and user surface are linked here.
 |---|---|---|---|
 | AK-D01 | Plan before mutation | Deployment lifecycle | Implemented for copy and merge |
 | AK-D02 | Show diff before apply | Deployment lifecycle | Implemented for copy and merge |
-| AK-D03 | Support managed strategy | ADR-004 | Designed |
+| AK-D03 | Support managed strategy | ADR-004 | Implemented for complete regular files |
 | AK-D04 | Support merge strategy | ADR-004 | Implemented for JSON, TOML, and Markdown ownership units |
 | AK-D05 | Support copy strategy | ADR-004 | Implemented |
-| AK-D06 | Support link strategy | ADR-004 | Designed |
+| AK-D06 | Support link strategy | ADR-004 | Implemented for file and directory sources |
 | AK-D07 | Support manual strategy | ADR-004 | Designed |
 | AK-D08 | Track managed fields, sections, blocks, and files | ADR-004 | Implemented for copy and merge |
 | AK-D09 | Preserve user-owned configuration | ADR-004 | Implemented for copy and structured merge |
@@ -75,7 +75,7 @@ tests, and user surface are linked here.
 | AK-D15 | Retain self-target and symlink escape prevention | AGENTS.md, baseline | Designed |
 | AK-D16 | Never store or display literal credentials | Asset and policy models | Manifest input implemented and tested |
 | AK-D17 | Account for JSON, JSONC, TOML, YAML, and Markdown formats | Deployment lifecycle | Designed |
-| AK-D18 | Do not silently fall back from link to copy | Deployment lifecycle | Designed |
+| AK-D18 | Do not silently fall back from link to copy | Deployment lifecycle | Implemented |
 | AK-D19 | Resolve complete transitive dependency closure | Resource reference model | Core implemented and tested |
 | AK-D20 | Reject missing asset references | `MISSING_REFERENCE` | Implemented and tested |
 | AK-D21 | Reject missing or ambiguous Tool providers | Tool resolution | Implemented and tested |

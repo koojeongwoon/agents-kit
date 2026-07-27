@@ -48,3 +48,25 @@ test('remove participates in rollback and rejects directories', () => {
   fs.mkdirSync(directory);
   assert.throws(() => new FileTransaction().remove(directory), /cannot remove a directory/);
 });
+
+test('link participates in rollback for created and replaced symlinks', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-file-link-'));
+  const first = path.join(root, 'first');
+  const second = path.join(root, 'second');
+  const target = path.join(root, 'target');
+  fs.writeFileSync(first, 'first');
+  fs.writeFileSync(second, 'second');
+
+  let transaction = new FileTransaction();
+  transaction.link(first, target);
+  assert.equal(fs.realpathSync(target), fs.realpathSync(first));
+  transaction.rollback();
+  assert.equal(fs.existsSync(target), false);
+
+  fs.symlinkSync(first, target);
+  transaction = new FileTransaction();
+  transaction.link(second, target);
+  assert.equal(fs.realpathSync(target), fs.realpathSync(second));
+  transaction.rollback();
+  assert.equal(fs.realpathSync(target), fs.realpathSync(first));
+});
