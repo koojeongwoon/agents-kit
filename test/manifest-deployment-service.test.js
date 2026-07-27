@@ -218,4 +218,19 @@ test('application service retrieves resource registry and handles mutations', ()
       assetId: 'new-skill'
     }]
   }), error => error.code === 'DELETE_BLOCKED_BY_REFERENCES');
+
+  const deps = subject.service.dependencies({ scopeRoot: subject.scopeRoot });
+  assert.ok(deps.nodes.some(n => n.id === 'reviewer-agent'));
+  assert.ok(deps.links.some(l => l.source === 'reviewer-agent' && l.target === 'new-skill'));
+
+  const forceDeletePlan = subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [{
+      type: 'delete',
+      kind: 'skills',
+      assetId: 'new-skill',
+      force: true
+    }]
+  });
+  assert.ok(forceDeletePlan.planId);
 });

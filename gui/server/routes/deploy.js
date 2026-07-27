@@ -132,6 +132,17 @@ export function createDeployRouter(ctx) {
     }
   });
 
+  router.get('/api/manifest/dependencies', (req, res) => {
+    const { scope = 'project', projectPath = '', projectName = '' } = req.query;
+    try {
+      const resolved = locations({scope, projectPath: projectPath.toString(), projectName: projectName.toString()});
+      const data = manifestDeploymentService.dependencies({ scopeRoot: resolved.scopeRoot });
+      res.json({ success: true, ...data });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
   router.post('/api/manifest/edit/plan', (req, res) => {
     const { scope = 'project', projectPath = '', projectName = '', mutations } = req.body;
     try {

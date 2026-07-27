@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react';
-import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, Shield, Tool, Layers, Settings, FileText, Cpu, Database, Clipboard} from 'lucide-react';
+import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, Shield, Tool, Layers, Settings, FileText, Cpu, Database, Clipboard, Info, ArrowRight, GitFork} from 'lucide-react';
 import {
   fetchManifestRegistry,
   planManifestEdit,
   applyManifestEdit,
-  RegistryResource
+  fetchManifestDependencies,
+  RegistryResource,
+  DependencyGraph
 } from '../../api/deploy';
 
 const ASSET_KINDS = [
@@ -28,6 +30,7 @@ interface ManifestEditorProps {
 
 export function ManifestEditor({ scope, projectName, projectPath }: ManifestEditorProps) {
   const [registry, setRegistry] = useState<RegistryResource[]>([]);
+  const [dependencyGraph, setDependencyGraph] = useState<DependencyGraph>({ nodes: [], links: [] });
   const [filterKind, setFilterKind] = useState<string>('all');
   const [selectedResource, setSelectedResource] = useState<RegistryResource | null>(null);
   const [mutations, setMutations] = useState<any[]>([]);
@@ -38,34 +41,34 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
   // Editing states
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDependencyMap, setShowDependencyMap] = useState(false);
 
-  // General fields
+  // Form fields
   const [editId, setEditId] = useState('');
   const [editKind, setEditKind] = useState('skills');
   const [editDisplayName, setEditDisplayName] = useState('');
   const [editSource, setEditSource] = useState('');
 
   // Specific Form states
-  // 1. Skill/Agent dependencies
   const [selectedDependsSkills, setSelectedDependsSkills] = useState<string[]>([]);
   const [requiredTools, setRequiredTools] = useState<any[]>([]);
   const [selectedPolicies, setSelectedPolicies] = useState<string[]>([]);
 
-  // 2. Harness enables
+  // Harness enables
   const [harnessAgents, setHarnessAgents] = useState<string[]>([]);
   const [harnessSkills, setHarnessSkills] = useState<string[]>([]);
   const [harnessWorkflows, setHarnessWorkflows] = useState<string[]>([]);
   const [harnessAllowedCaps, setHarnessAllowedCaps] = useState<string>('');
   const [harnessDeniedCaps, setHarnessDeniedCaps] = useState<string>('');
 
-  // 3. Workflow steps
+  // Workflow steps
   const [workflowSteps, setWorkflowSteps] = useState<any[]>([]);
 
-  // 4. Policy rules
+  // Policy rules
   const [policyAllowCaps, setPolicyAllowCaps] = useState<string>('');
   const [policyDenyCaps, setPolicyDenyCaps] = useState<string>('');
 
-  // 5. Memory readers/writers
+  // Memory readers/writers
   const [memoryReaderAgents, setMemoryReaderAgents] = useState<string[]>([]);
   const [memoryReaderSkills, setMemoryReaderSkills] = useState<string[]>([]);
   const [memoryWriterAgents, setMemoryWriterAgents] = useState<string[]>([]);
@@ -74,6 +77,11 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
 
   // Raw Content fallback
   const [rawAssetContent, setRawAssetContent] = useState('');
+
+  // Deletion Downstream confirmation
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  const [deletionTarget, setDeletionTarget] = useState<RegistryResource | null>(null);
 
   const targetReady = scope === 'global' || projectPath.trim().length > 0;
 
@@ -84,9 +92,12 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     try {
       const data = await fetchManifestRegistry({ scope, projectName, projectPath });
       setRegistry(data.registry || []);
+      const graph = await fetchManifestDependencies({ scope, projectName, projectPath });
+      setDependencyGraph(graph);
       setSelectedResource(null);
       setMutations([]);
       setIsEditing(false);
+      setIsDeleting(false);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Registry 로드 실패');
     } finally {
@@ -110,6 +121,29 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
   const deniedCapabilities = registry
     .filter(r => r.kind === 'policies')
     .flatMap(p => (p as any).deny?.capabilities || []);
+
+  // Transitive impact logic
+  const getDownstreamImpact = (startId: string): string[] => {
+    const visited = new Set<string>();
+    const queue = [startId];
+    const downstream: string[] = [];
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      const parents = dependencyGraph.links
+        .filter(l => l.target === current)
+        .map(l => l.source);
+
+      for (const parent of parents) {
+        if (!visited.has(parent)) {
+          visited.add(parent);
+          downstream.push(parent);
+          queue.push(parent);
+        }
+      }
+    }
+    return downstream;
+  };
 
   const addOrUpdateMutation = (mutation: any) => {
     const existingIdx = mutations.findIndex(
@@ -153,7 +187,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     setMessage('생성 변경 사항이 임시 저장되었습니다.');
   };
 
-  // Helper to filter referenced assets based on "global asset cannot select project asset" rule
   const filterReferencable = (kind: string) => {
     return registry.filter(r => {
       if (r.kind !== kind) return false;
@@ -171,7 +204,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     setEditSource((resource as any).source || '');
     clearEditForm();
 
-    // Load kind-specific fields
     if (resource.kind === 'skills') {
       setSelectedDependsSkills((resource as any).dependsOn?.skills || []);
       const reqTools = (resource as any).requires?.tools || [];
@@ -261,17 +293,31 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     setMessage(`'${editId}' 변경 사항이 임시 저장되었습니다.`);
   };
 
-  const addDeleteMutation = (resource: RegistryResource) => {
-    if (mutations.some(m => m.type === 'delete' && m.assetId === resource.id)) return;
+  const startDeletionPlanning = (resource: RegistryResource) => {
+    setDeletionTarget(resource);
+    setIsDeleting(true);
+    setDeleteConfirmed(false);
+  };
+
+  const confirmDeletionMutation = () => {
+    if (!deletionTarget) return;
+    const downstream = getDownstreamImpact(deletionTarget.id);
+    if (downstream.length > 0 && !deleteConfirmed) {
+      setError('다운스트림 영향 검증 확인이 필요합니다.');
+      return;
+    }
 
     const mutation = {
       type: 'delete',
-      kind: resource.kind,
-      assetId: resource.id
+      kind: deletionTarget.kind,
+      assetId: deletionTarget.id,
+      force: downstream.length > 0
     };
 
     addOrUpdateMutation(mutation);
-    setMessage(`'${resource.id}' 삭제 변경 사항이 임시 저장되었습니다.`);
+    setIsDeleting(false);
+    setDeletionTarget(null);
+    setMessage(`'${mutation.assetId}' 삭제 계획이 임시 저장되었습니다.`);
   };
 
   const clearEditForm = () => {
@@ -342,10 +388,18 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
             </p>
           </div>
           <div className="flex gap-2">
+            <button
+              onClick={() => setShowDependencyMap(!showDependencyMap)}
+              className={`flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-semibold ${
+                showDependencyMap ? 'bg-blue-500/10 border-blue-500/30 text-blue-600' : 'border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-950'
+              }`}
+            >
+              <GitFork className="h-3.5 w-3.5" /> 의존성 시각화 맵
+            </button>
             <button onClick={loadRegistry} disabled={loading || !targetReady} className="flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950">
               <RefreshCw className="h-3.5 w-3.5" /> 새로고침
             </button>
-            <button onClick={() => { setIsCreating(true); setIsEditing(false); }} disabled={loading || !targetReady} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500">
+            <button onClick={() => { setIsCreating(true); setIsEditing(false); setIsDeleting(false); }} disabled={loading || !targetReady} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500">
               <Plus className="h-3.5 w-3.5" /> 리소스 추가
             </button>
           </div>
@@ -369,6 +423,94 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
 
       {error && <div className="flex items-start gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-300"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div>}
       {message && <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{message}</div>}
+
+      {/* Complete Dependency Map Visualization */}
+      {showDependencyMap && (
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3 dark:border-slate-800">
+            <h3 className="text-base font-bold flex items-center gap-2"><GitFork className="h-5 w-5 text-blue-500" /> 전체 의존성 관계도 (Resource Connection Map)</h3>
+            <button onClick={() => setShowDependencyMap(false)} className="text-slate-500 hover:text-slate-700"><X className="h-4 w-4" /></button>
+          </div>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 max-h-[350px] overflow-y-auto pr-1">
+            {dependencyGraph.nodes.map(node => {
+              const inward = dependencyGraph.links.filter(l => l.target === node.id);
+              const outward = dependencyGraph.links.filter(l => l.source === node.id);
+              return (
+                <div key={node.id} className="p-3 border border-slate-200 dark:border-slate-850 rounded-2xl bg-slate-50 dark:bg-slate-950/30 text-xs">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{node.displayName || node.id}</span>
+                    <span className="text-[10px] bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded-full text-slate-500">{node.kind}</span>
+                  </div>
+                  <div className="space-y-1 text-slate-500 font-mono text-[10px]">
+                    <div>📥 Inward (피참조): {inward.length > 0 ? inward.map(l => l.source).join(', ') : '없음'}</div>
+                    <div>📤 Outward (참조): {outward.length > 0 ? outward.map(l => l.target).join(', ') : '없음'}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {isDeleting && deletionTarget && (
+        <section className="rounded-3xl border border-rose-500/30 bg-rose-50/15 p-6 shadow-sm dark:bg-rose-950/10">
+          <h3 className="text-base font-bold text-rose-700 dark:text-rose-400">리소스 삭제 검토: {deletionTarget.id}</h3>
+          <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
+            정말로 이 리소스를 삭제하시겠습니까? 다운스트림 파급 효과를 검증합니다.
+          </p>
+
+          {(() => {
+            const downstream = getDownstreamImpact(deletionTarget.id);
+            return (
+              <div className="mt-4 space-y-4">
+                {downstream.length > 0 ? (
+                  <div className="p-4 border border-rose-500/30 bg-rose-500/5 rounded-2xl">
+                    <div className="flex gap-2 text-rose-700 dark:text-rose-400 text-xs font-bold items-center">
+                      <AlertTriangle className="h-4 w-4" />
+                      <span>중요 경고: 삭제 시 깨지는 다운스트림 파급 효과 (Transitive Downstream Impact)</span>
+                    </div>
+                    <ul className="mt-3 space-y-1.5 text-xs text-rose-650 dark:text-rose-350 list-disc list-inside font-mono">
+                      {downstream.map(depId => (
+                        <li key={depId}>{depId}</li>
+                      ))}
+                    </ul>
+                    <p className="text-[11px] text-slate-500 mt-3 leading-5">
+                      위의 리소스들이 {deletionTarget.id}에 직간접적으로 의존하고 있습니다. 삭제를 계속 진행하려면 반드시 아래 동의 확인란을 체크해야 합니다.
+                    </p>
+                    <label className="flex items-center gap-2 mt-4 text-xs font-bold text-rose-700 dark:text-rose-300 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={deleteConfirmed}
+                        onChange={e => setDeleteConfirmed(e.target.checked)}
+                        className="rounded border-rose-300 text-rose-600 focus:ring-rose-500"
+                      />
+                      네, 위 리소스들이 손상되는 것을 인지하였으며 강제 삭제 처리에 동의합니다.
+                    </label>
+                  </div>
+                ) : (
+                  <div className="p-4 border border-emerald-500/20 bg-emerald-500/5 rounded-2xl text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-semibold">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>안전함: 이 리소스를 의존하는 하위 다운스트림 리소스가 없습니다. 안전하게 삭제할 수 있습니다.</span>
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-3 border-t border-slate-200 dark:border-slate-800 pt-4">
+                  <button onClick={() => { setIsDeleting(false); setDeletionTarget(null); }} className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-700">취소</button>
+                  <button
+                    onClick={confirmDeletionMutation}
+                    disabled={downstream.length > 0 && !deleteConfirmed}
+                    className={`rounded-xl px-5 py-2 text-sm font-bold text-white transition-colors ${
+                      downstream.length > 0 && !deleteConfirmed ? 'bg-slate-400 cursor-not-allowed' : 'bg-rose-600 hover:bg-rose-500'
+                    }`}
+                  >
+                    삭제 계획 추가
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
+        </section>
+      )}
 
       {isCreating && (
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
@@ -664,7 +806,7 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
             {editKind === 'workflows' && (
               <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Workflow Steps (순차 실행 단계 정의)</h4>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Workflow Steps</h4>
                   <button
                     onClick={() => setWorkflowSteps([...workflowSteps, { id: '', use: {} }])}
                     className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-500"
@@ -679,7 +821,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                     const targetId = step.use?.[stepType] || '';
                     return (
                       <div key={index} className="flex flex-wrap items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
-                        {/* Step ID */}
                         <div className="min-w-[100px]">
                           <input
                             value={step.id || ''}
@@ -693,7 +834,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                           />
                         </div>
 
-                        {/* Step Target Kind */}
                         <div>
                           <select
                             value={stepType}
@@ -711,7 +851,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                           </select>
                         </div>
 
-                        {/* Target ID Selection */}
                         <div className="flex-1 min-w-[150px]">
                           {stepType === 'tool' ? (
                             <select
@@ -746,7 +885,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                           )}
                         </div>
 
-                        {/* Capability for Tool steps */}
                         {stepType === 'tool' && (
                           <div className="min-w-[120px]">
                             <input
@@ -762,7 +900,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                           </div>
                         )}
 
-                        {/* Delete step */}
                         <button
                           onClick={() => setWorkflowSteps(workflowSteps.filter((_, idx) => idx !== index))}
                           className="p-1.5 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20"
@@ -873,7 +1010,7 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                       onChange={e => setMemoryRequiresApproval(e.target.checked)}
                       className="rounded border-slate-300 text-blue-600"
                     />
-                    Requires approval for promotion (장기 기억 승인 수동 검증 필수화)
+                    Requires approval for promotion
                   </label>
                 </div>
               </div>
@@ -889,7 +1026,7 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                   value={rawAssetContent}
                   onChange={e => setRawAssetContent(e.target.value)}
                   rows={8}
-                  className="w-full rounded-xl border border-slate-350 bg-slate-50 p-3 font-mono text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                  className="w-full rounded-xl border border-slate-355 bg-slate-50 p-3 font-mono text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
                 />
               </div>
             )}
@@ -916,7 +1053,7 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
             {filteredRegistry.map(resource => (
               <button
                 key={resource.id}
-                onClick={() => { setSelectedResource(resource); setIsEditing(false); }}
+                onClick={() => { setSelectedResource(resource); setIsEditing(false); setIsDeleting(false); }}
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
                   selectedResource?.id === resource.id
                     ? 'border-blue-500 bg-blue-500/5 text-blue-700 dark:text-blue-400'
@@ -947,11 +1084,49 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                   <button onClick={() => handleStartEdit(selectedResource)} className="flex items-center gap-1 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-500/20 dark:text-blue-300">
                     <Edit className="h-3.5 w-3.5" /> 상세 편집
                   </button>
-                  <button onClick={() => addDeleteMutation(selectedResource)} className="flex items-center gap-1 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-500/20 dark:text-rose-300">
+                  <button onClick={() => startDeletionPlanning(selectedResource)} className="flex items-center gap-1 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-500/20 dark:text-rose-300">
                     <Trash2 className="h-3.5 w-3.5" /> 삭제 계획
                   </button>
                 </div>
               </div>
+
+              {/* Inward and Outward visual links */}
+              {(() => {
+                const inward = dependencyGraph.links.filter(l => l.target === selectedResource.id);
+                const outward = dependencyGraph.links.filter(l => l.source === selectedResource.id);
+                return (
+                  <div className="grid gap-4 sm:grid-cols-2 bg-slate-50 dark:bg-slate-950/25 p-4 rounded-2xl text-[11px] leading-5">
+                    <div>
+                      <h4 className="font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1"><ArrowRight className="h-3.5 w-3.5 text-blue-500" /> 이 리소스가 참조하는 대상 (Outward)</h4>
+                      {outward.length > 0 ? (
+                        <ul className="mt-2 space-y-1 font-mono">
+                          {outward.map((l, idx) => (
+                            <li key={idx} className="text-slate-700 dark:text-slate-300">
+                              ➡️ <span className="text-slate-450">[{l.relation}]</span> {l.target}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="mt-2 text-slate-400">참조 관계가 정의되지 않았습니다.</p>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-550 uppercase tracking-wider flex items-center gap-1"><GitFork className="h-3.5 w-3.5 text-purple-550" /> 이 리소스를 참조하는 피참조자 (Inward)</h4>
+                      {inward.length > 0 ? (
+                        <ul className="mt-2 space-y-1 font-mono">
+                          {inward.map((l, idx) => (
+                            <li key={idx} className="text-slate-700 dark:text-slate-300">
+                              ⬅️ <span className="text-slate-450">[{l.relation}]</span> {l.source}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="mt-2 text-slate-400">피참조 의존성이 없는 독립 리소스입니다.</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="grid gap-4 sm:grid-cols-2 text-xs leading-5">
                 <div>

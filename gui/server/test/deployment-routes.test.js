@@ -25,6 +25,7 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
 
   assert.deepEqual(routes, [
     'GET /api/deployment/history',
+    'GET /api/manifest/dependencies',
     'GET /api/manifest/registry',
     'POST /api/deployment/apply',
     'POST /api/deployment/doctor',
@@ -166,6 +167,7 @@ test('deployment router supports validate and doctor endpoints', () => {
 test('deployment router supports manifest registry and edit endpoints', () => {
   const service = {
     registry: ({ scopeRoot }) => [{ id: 'review', kind: 'skills' }],
+    dependencies: ({ scopeRoot }) => ({ nodes: [{ id: 'review', kind: 'skills' }], links: [] }),
     planEdit: ({ scopeRoot, mutations }) => ({ planId: 'edit-plan-1', mutations }),
     applyEdit: ({ planId }) => ({ success: true })
   };
@@ -176,6 +178,12 @@ test('deployment router supports manifest registry and edit endpoints', () => {
   });
   assert.equal(registryRes.statusCode, 200);
   assert.equal(registryRes.body.registry[0].id, 'review');
+
+  const dependenciesRes = dispatch(router, 'GET', '/api/manifest/dependencies', {
+    query: { scope: 'project', projectPath: '/project' }
+  });
+  assert.equal(dependenciesRes.statusCode, 200);
+  assert.equal(dependenciesRes.body.nodes[0].id, 'review');
 
   const planEditRes = dispatch(router, 'POST', '/api/manifest/edit/plan', {
     body: { scope: 'project', projectPath: '/project', mutations: [] }

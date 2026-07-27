@@ -187,3 +187,21 @@ export async function applyManifestEdit(planId: string): Promise<{ success: bool
     body: JSON.stringify({ planId })
   }));
 }
+
+export interface DependencyGraph {
+  nodes: Array<{ id: string; kind: string; displayName: string }>;
+  links: Array<{ source: string; target: string; relation: string }>;
+}
+
+export async function fetchManifestDependencies(input: {
+  scope: 'global' | 'project';
+  projectPath?: string;
+  projectName?: string;
+}): Promise<DependencyGraph> {
+  const query = new URLSearchParams({
+    scope: input.scope,
+    projectPath: input.projectPath || '',
+    projectName: input.projectName || ''
+  });
+  return jsonOrError(await apiFetch(`/api/manifest/dependencies?${query}`));
+}
