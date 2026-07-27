@@ -58,20 +58,20 @@ tests, and user surface are linked here.
 
 | ID | Requirement | Design | Initial status |
 |---|---|---|---|
-| AK-D01 | Plan before mutation | Deployment lifecycle | Designed |
-| AK-D02 | Show diff before apply | Deployment lifecycle | Implemented for copy strategy |
+| AK-D01 | Plan before mutation | Deployment lifecycle | Implemented for copy and merge |
+| AK-D02 | Show diff before apply | Deployment lifecycle | Implemented for copy and merge |
 | AK-D03 | Support managed strategy | ADR-004 | Designed |
 | AK-D04 | Support merge strategy | ADR-004 | Implemented for JSON, TOML, and Markdown ownership units |
-| AK-D05 | Support copy strategy | ADR-004 | Designed |
+| AK-D05 | Support copy strategy | ADR-004 | Implemented |
 | AK-D06 | Support link strategy | ADR-004 | Designed |
 | AK-D07 | Support manual strategy | ADR-004 | Designed |
-| AK-D08 | Track managed fields, sections, blocks, and files | ADR-004 | Designed |
+| AK-D08 | Track managed fields, sections, blocks, and files | ADR-004 | Implemented for copy and merge |
 | AK-D09 | Preserve user-owned configuration | ADR-004 | Implemented for copy and structured merge |
-| AK-D10 | Detect ownership and stale-plan conflicts | Deployment lifecycle | Implemented for copy strategy |
-| AK-D11 | Backup and write atomically | Deployment lifecycle | Designed |
-| AK-D12 | Validate after apply | Deployment lifecycle | Implemented for copy strategy |
-| AK-D13 | Roll back multi-file and multi-client failure | Deployment lifecycle | Designed |
-| AK-D14 | Persist transaction history and rollback | Deployment lifecycle | Designed |
+| AK-D10 | Detect ownership and stale-plan conflicts | Deployment lifecycle | Implemented for copy and merge |
+| AK-D11 | Backup and write atomically | Deployment lifecycle | Implemented for copy and merge |
+| AK-D12 | Validate after apply | Deployment lifecycle | Implemented for copy and merge |
+| AK-D13 | Roll back multi-file and multi-client failure | Deployment lifecycle | Implemented in common coordinator |
+| AK-D14 | Persist transaction history and rollback | Deployment lifecycle | Implemented for committed apply transactions |
 | AK-D15 | Retain self-target and symlink escape prevention | AGENTS.md, baseline | Designed |
 | AK-D16 | Never store or display literal credentials | Asset and policy models | Manifest input implemented and tested |
 | AK-D17 | Account for JSON, JSONC, TOML, YAML, and Markdown formats | Deployment lifecycle | Designed |

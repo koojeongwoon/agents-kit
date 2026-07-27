@@ -33,3 +33,18 @@ test('committed snapshot can be restored by the deployment coordinator', () => {
   FileTransaction.restore(snapshot);
   assert.equal(fs.readFileSync(target, 'utf8'), 'before');
 });
+
+test('remove participates in rollback and rejects directories', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-file-remove-'));
+  const target = path.join(root, 'managed.txt');
+  fs.writeFileSync(target, 'before');
+  const transaction = new FileTransaction();
+  transaction.remove(target);
+  assert.equal(fs.existsSync(target), false);
+  transaction.rollback();
+  assert.equal(fs.readFileSync(target, 'utf8'), 'before');
+
+  const directory = path.join(root, 'directory');
+  fs.mkdirSync(directory);
+  assert.throws(() => new FileTransaction().remove(directory), /cannot remove a directory/);
+});
