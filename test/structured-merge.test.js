@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import test from 'node:test';
 import { mergeStructuredDocument } from '../lib/domain/structured-merge.js';
 
@@ -108,4 +109,62 @@ test('Markdown merge detects edits inside an owned block', () => {
   });
   assert.equal(result.conflicts[0].reason, 'OWNED_CONTENT_MODIFIED_EXTERNALLY');
   assert.equal(result.content, changed);
+});
+
+test('YAML merge preserves comments and modifies only owned values', () => {
+  const current = `
+# Server settings
+server:
+  # Hostname
+  host: localhost
+  # Port mapping
+  port: 8080 # default
+`;
+  const desired = `
+server:
+  port: 9000
+`;
+
+  // Calculate initial hash of the port value
+  const initialHash = crypto.createHash('sha256').update(JSON.stringify(8080)).digest('hex');
+
+  const result = mergeStructuredDocument({
+    format: 'yaml',
+    current,
+    desired,
+    assetId: 'yaml-test',
+    previousUnits: {
+      '/server/port': { hash: initialHash }
+    }
+  });
+
+  assert.match(result.content, /# Server settings/);
+  assert.match(result.content, /# Hostname/);
+  assert.match(result.content, /port: 9000 # default/);
+  assert.equal(result.units['/server/port'] !== undefined, true);
+});
+
+test('JSONC merge preserves line and block comments', () => {
+  const current = `{
+    // authentication active
+    "auth": true,
+    /* target port */
+    "port": 8080
+  }`;
+  const desired = `{"port": 9000}`;
+  const initialHash = crypto.createHash('sha256').update(JSON.stringify(8080)).digest('hex');
+
+  const result = mergeStructuredDocument({
+    format: 'jsonc',
+    current,
+    desired,
+    assetId: 'jsonc-test',
+    previousUnits: {
+      '/port': { hash: initialHash }
+    }
+  });
+
+  assert.match(result.content, /\/\/ authentication active/);
+  assert.match(result.content, /\/\* target port \*\//);
+  assert.match(result.content, /"port": 9000/);
 });
