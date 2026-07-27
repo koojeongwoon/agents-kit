@@ -8,31 +8,44 @@ capabilities:
   - id: instructions-project
     assetKind: instructions
     scope: project
-    path: .windsurfrules
+    path: AGENTS.md
     format: markdown
     strategy: merge
     status: stable
-    evidence: &windsurf-evidence
+    evidence: &windsurf-rules
       state: verified
-      source: https://docs.codeium.com/windsurf/rules
+      source: https://docs.windsurf.com/windsurf/cascade/memories
       verifiedAt: 2026-07-27
-  - id: mcp-project
+  - id: mcp-global
     assetKind: mcp
-    scope: project
-    path: .windsurf/mcp.json
+    scope: global
+    path: ~/.codeium/windsurf/mcp_config.json
     format: json
     strategy: merge
     status: stable
-    evidence: *windsurf-evidence
+    evidence:
+      state: verified
+      source: https://docs.windsurf.com/windsurf/cascade/mcp
+      verifiedAt: 2026-07-27
   - id: skills-project
     assetKind: skills
     scope: project
-    path: ""
+    path: .windsurf/skills/{assetId}
     format: directory
-    strategy: manual
-    status: unsupported
-    evidence:
-      state: unverified
+    strategy: copy
+    status: stable
+    evidence: &windsurf-skills
+      state: verified
+      source: https://docs.windsurf.com/windsurf/cascade/skills
+      verifiedAt: 2026-07-27
+  - id: skills-global
+    assetKind: skills
+    scope: global
+    path: ~/.codeium/windsurf/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: *windsurf-skills
   - id: agents-project
     assetKind: agents
     scope: project
@@ -42,21 +55,33 @@ capabilities:
     status: unsupported
     evidence:
       state: unverified
+  - id: workflows-project
+    assetKind: workflows
+    scope: project
+    path: .windsurf/workflows/{assetId}.md
+    format: markdown
+    strategy: copy
+    status: stable
+    evidence: &windsurf-workflows
+      state: verified
+      source: https://docs.windsurf.com/windsurf/cascade/workflows
+      verifiedAt: 2026-07-27
   - id: workflows-global
     assetKind: workflows
     scope: global
-    path: ""
-    format: yaml
-    strategy: manual
-    status: unsupported
-    evidence:
-      state: unverified
+    path: ~/.codeium/windsurf/global_workflows/{assetId}.md
+    format: markdown
+    strategy: copy
+    status: stable
+    evidence: *windsurf-workflows
   - id: memory-global
     assetKind: memory
     scope: global
     path: ""
     format: markdown
     strategy: manual
-    status: unsupported
+    status: ui-only
     evidence:
-      state: unverified
+      state: verified
+      source: https://docs.windsurf.com/windsurf/cascade/memories
+      verifiedAt: 2026-07-27

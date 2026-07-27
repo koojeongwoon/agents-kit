@@ -8,54 +8,69 @@ capabilities:
   - id: instructions-global
     assetKind: instructions
     scope: global
-    path: ~/.cursor/rules/instructions.md
+    path: ""
     format: markdown
-    strategy: merge
-    status: version-dependent
-    version:
-      min: "0.45.0"
-    evidence: &cursor-evidence
+    strategy: manual
+    status: ui-only
+    evidence: &cursor-rules
       state: verified
-      source: https://cursor.com/blog/agent-best-practices
+      source: https://docs.cursor.com/context/rules
       verifiedAt: 2026-07-27
   - id: instructions-project
     assetKind: instructions
     scope: project
-    path: .cursorrules
+    path: .cursor/rules/{assetId}.mdc
     format: markdown
-    strategy: merge
+    strategy: copy
     status: stable
-    evidence: *cursor-evidence
+    evidence: *cursor-rules
   - id: skills-project
     assetKind: skills
     scope: project
     path: .cursor/skills/{assetId}
     format: directory
     strategy: copy
-    status: version-dependent
-    version:
-      min: "0.45.0"
-    evidence: *cursor-evidence
+    status: stable
+    evidence: &cursor-skills
+      state: verified
+      source: https://docs.cursor.com/context/skills
+      verifiedAt: 2026-07-27
+  - id: skills-global
+    assetKind: skills
+    scope: global
+    path: ~/.cursor/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: *cursor-skills
   - id: mcp-project
     assetKind: mcp
     scope: project
     path: .cursor/mcp.json
     format: json
     strategy: merge
-    status: version-dependent
-    version:
-      min: "0.45.0"
-    evidence: *cursor-evidence
+    status: stable
+    evidence: &cursor-mcp
+      state: verified
+      source: https://docs.cursor.com/context/model-context-protocol
+      verifiedAt: 2026-07-27
+  - id: mcp-global
+    assetKind: mcp
+    scope: global
+    path: ~/.cursor/mcp.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *cursor-mcp
   - id: agents-project
     assetKind: agents
     scope: project
-    path: .cursor/agents
-    format: directory
-    strategy: copy
-    status: version-dependent
-    version:
-      min: "0.45.0"
-    evidence: *cursor-evidence
+    path: ""
+    format: markdown
+    strategy: manual
+    status: unverified
+    evidence:
+      state: unverified
   - id: workflows-global
     assetKind: workflows
     scope: global

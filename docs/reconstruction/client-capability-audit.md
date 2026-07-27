@@ -94,27 +94,36 @@ Current Agent Kit outputs include:
 - `.cursor/rules/global_memory.md`
 - `.cursor/permissions.json`
 
-Audit status: `version-dependent`.
+Audit status: `verified per capability`.
 
-First-party Cursor material confirms rules, skills, subagents, hooks, plugins,
-and JSON-based MCP assets, but current support varies by release and channel.
-The legacy `.cursorrules` path and every custom memory/permission mapping need
-separate verification.
+The definition uses `.cursor/rules/{assetId}.mdc` for project Rules and treats
+global User Rules as UI-only. The deprecated `.cursorrules` path is not an
+automatic deployment target. Project and global Skills use `.cursor/skills`,
+and MCP uses `.cursor/mcp.json` at the corresponding scope. Custom Agent file
+deployment remains unverified rather than inferring a path.
 
 Evidence:
 
-- <https://cursor.com/changelog/2-4>
-- <https://cursor.com/changelog/2-5>
-- <https://cursor.com/blog/agent-best-practices>
+- <https://docs.cursor.com/context/rules>
+- <https://docs.cursor.com/context/skills>
+- <https://docs.cursor.com/context/model-context-protocol>
 
 ### Google Antigravity
 
 Current Agent Kit outputs include plugin-scoped rules, hooks, skills, agents,
 loops, plugin metadata, MCP configuration, permissions, and memory.
 
-Audit status: `unverified`.
+Audit status: `verified per capability`.
 
-All file contracts and supported scopes require first-party verification.
+Antigravity CLI reads project `AGENTS.md`, project Skills from
+`.agents/skills`, and project MCP servers from `.agents/mcp_config.json`.
+Global instructions use `~/.gemini/GEMINI.md`; global Skills and MCP use the
+Antigravity CLI directories documented by the migration contract. Custom Agent
+file deployment remains unverified.
+
+Evidence:
+
+- <https://antigravity.google/docs/gcli-migration>
 
 ### Claude Desktop
 
@@ -130,12 +139,28 @@ No Claude Code capability should be inherited implicitly by Claude Desktop.
 
 The reconstruction roadmap also requires separate definitions for:
 
-- Windsurf
 - GitHub Copilot / VS Code
 
-They must be added only after first-party capability audits. VS Code settings,
+VS Code must be completed only after a first-party capability audit. VS Code settings,
 VS Code MCP configuration, Copilot instructions, prompts, agents, and skills
 must remain separate asset contracts even when they share a workspace.
+
+### Windsurf
+
+Audit status: `verified per capability`.
+
+Windsurf reads project instructions from `AGENTS.md`, project Skills from
+`.windsurf/skills`, and Workflows from `.windsurf/workflows`. Global Skills and
+Workflows use their documented `~/.codeium/windsurf` locations. MCP is a global
+configuration in `~/.codeium/windsurf/mcp_config.json`; the undocumented
+`.windsurf/mcp.json` mapping is not used.
+
+Evidence:
+
+- <https://docs.windsurf.com/windsurf/cascade/memories>
+- <https://docs.windsurf.com/windsurf/cascade/skills>
+- <https://docs.windsurf.com/windsurf/cascade/workflows>
+- <https://docs.windsurf.com/windsurf/cascade/mcp>
 
 ## Required evidence per capability
 
@@ -159,9 +184,9 @@ Every future client capability entry must record:
 - [x] Unverified mappings are not presented as stable contracts.
 - [x] Claude Code and Cursor have initial first-party evidence.
 - [x] Codex mappings are verified individually.
-- [ ] Antigravity mappings are verified individually.
+- [x] Antigravity mappings are verified individually.
 - [ ] Claude Desktop mappings are verified independently of Claude Code.
-- [ ] Windsurf capability inventory is added.
+- [x] Windsurf capability inventory is added.
 - [ ] GitHub Copilot / VS Code capability inventory is added.
 
 The unchecked items intentionally carry into Phase 1 and the client-definition

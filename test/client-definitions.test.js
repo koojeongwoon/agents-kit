@@ -137,6 +137,65 @@ test('official Codex and Claude Code definitions load with corrected mappings', 
   }).reason, 'CAPABILITY_UNVERIFIED');
 });
 
+test('Cursor, Antigravity, and Windsurf use current documented paths', () => {
+  const definitions = loadClientDefinitions({
+    definitionsDir: path.join(repositoryRoot, 'clients')
+  });
+
+  const cursor = definitions.get('cursor');
+  assert.equal(resolveClientCapability(cursor, {
+    assetKind: 'instructions',
+    scope: 'project'
+  }).capability.path, '.cursor/rules/{assetId}.mdc');
+  assert.equal(resolveClientCapability(cursor, {
+    assetKind: 'instructions',
+    scope: 'global'
+  }).reason, 'CAPABILITY_UI_ONLY');
+  assert.equal(resolveClientCapability(cursor, {
+    assetKind: 'mcp',
+    scope: 'global'
+  }).capability.path, '~/.cursor/mcp.json');
+  assert.ok(!cursor.capabilities.some(item => item.path === '.cursorrules'));
+
+  const antigravity = definitions.get('antigravity');
+  assert.equal(resolveClientCapability(antigravity, {
+    assetKind: 'instructions',
+    scope: 'global'
+  }).capability.path, '~/.gemini/GEMINI.md');
+  assert.equal(resolveClientCapability(antigravity, {
+    assetKind: 'skills',
+    scope: 'project'
+  }).capability.path, '.agents/skills/{assetId}');
+  assert.equal(resolveClientCapability(antigravity, {
+    assetKind: 'mcp',
+    scope: 'project'
+  }).capability.path, '.agents/mcp_config.json');
+  assert.equal(resolveClientCapability(antigravity, {
+    assetKind: 'agents',
+    scope: 'project'
+  }).reason, 'CAPABILITY_UNVERIFIED');
+
+  const windsurf = definitions.get('windsurf');
+  assert.equal(resolveClientCapability(windsurf, {
+    assetKind: 'instructions',
+    scope: 'project'
+  }).capability.path, 'AGENTS.md');
+  assert.equal(resolveClientCapability(windsurf, {
+    assetKind: 'mcp',
+    scope: 'global'
+  }).capability.path, '~/.codeium/windsurf/mcp_config.json');
+  assert.equal(resolveClientCapability(windsurf, {
+    assetKind: 'skills',
+    scope: 'project'
+  }).capability.path, '.windsurf/skills/{assetId}');
+  assert.equal(resolveClientCapability(windsurf, {
+    assetKind: 'workflows',
+    scope: 'project'
+  }).capability.path, '.windsurf/workflows/{assetId}.md');
+  assert.ok(!windsurf.capabilities.some(item => item.path === '.windsurfrules'));
+  assert.ok(!windsurf.capabilities.some(item => item.path === '.windsurf/mcp.json'));
+});
+
 test('loader rejects duplicate client definition IDs', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-clients-'));
   const source = fs.readFileSync(path.join(repositoryRoot, 'clients', 'codex.yaml'), 'utf8');

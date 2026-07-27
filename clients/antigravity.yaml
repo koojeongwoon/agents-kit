@@ -8,13 +8,13 @@ capabilities:
   - id: instructions-global
     assetKind: instructions
     scope: global
-    path: ~/.gemini/antigravity-cli/AGENTS.md
+    path: ~/.gemini/GEMINI.md
     format: markdown
     strategy: merge
     status: stable
     evidence: &agy-evidence
       state: verified
-      source: https://google.github.io/antigravity/docs/config
+      source: https://antigravity.google/docs/gcli-migration
       verifiedAt: 2026-07-27
   - id: instructions-project
     assetKind: instructions
@@ -27,7 +27,15 @@ capabilities:
   - id: skills-project
     assetKind: skills
     scope: project
-    path: .gemini/skills/{assetId}
+    path: .agents/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: *agy-evidence
+  - id: skills-global
+    assetKind: skills
+    scope: global
+    path: ~/.gemini/antigravity-cli/skills/{assetId}
     format: directory
     strategy: copy
     status: stable
@@ -35,7 +43,15 @@ capabilities:
   - id: mcp-project
     assetKind: mcp
     scope: project
-    path: .gemini/mcp.json
+    path: .agents/mcp_config.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *agy-evidence
+  - id: mcp-global
+    assetKind: mcp
+    scope: global
+    path: ~/.gemini/antigravity-cli/mcp_config.json
     format: json
     strategy: merge
     status: stable
@@ -43,11 +59,12 @@ capabilities:
   - id: agents-project
     assetKind: agents
     scope: project
-    path: .gemini/agents/{assetId}.md
+    path: ""
     format: markdown
-    strategy: copy
-    status: stable
-    evidence: *agy-evidence
+    strategy: manual
+    status: unverified
+    evidence:
+      state: unverified
   - id: workflows-global
     assetKind: workflows
     scope: global
