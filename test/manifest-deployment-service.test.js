@@ -223,7 +223,8 @@ test('application service retrieves resource registry and handles mutations', ()
   assert.ok(deps.nodes.some(n => n.id === 'reviewer-agent'));
   assert.ok(deps.links.some(l => l.source === 'reviewer-agent' && l.target === 'new-skill'));
 
-  const forceDeletePlan = subject.service.planEdit({
+  // Attempting force delete should now be blocked as we removed force support.
+  assert.throws(() => subject.service.planEdit({
     scopeRoot: subject.scopeRoot,
     mutations: [{
       type: 'delete',
@@ -231,8 +232,31 @@ test('application service retrieves resource registry and handles mutations', ()
       assetId: 'new-skill',
       force: true
     }]
+  }), error => error.code === 'DELETE_BLOCKED_BY_REFERENCES');
+
+  // Verify that an atomic edit plan which updates the referencing asset (removing the reference)
+  // and deletes the target skill successfully plans.
+  const atomicPlan = subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [
+      {
+        type: 'update',
+        kind: 'agents',
+        assetId: 'reviewer-agent',
+        asset: {
+          id: 'reviewer-agent',
+          source: 'agents/reviewer/AGENT.md',
+          dependsOn: { skills: [] } // Remove reference to 'new-skill'
+        }
+      },
+      {
+        type: 'delete',
+        kind: 'skills',
+        assetId: 'new-skill'
+      }
+    ]
   });
-  assert.ok(forceDeletePlan.planId);
+  assert.ok(atomicPlan.planId);
 });
 
 test('doctor diagnostics reports resolvable and unresolvable environment secret references', () => {

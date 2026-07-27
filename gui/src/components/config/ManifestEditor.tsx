@@ -363,16 +363,15 @@ export function ManifestEditor({
   const confirmDeletionMutation = () => {
     if (!deletionTarget) return;
     const downstream = getDownstreamImpact(deletionTarget.id);
-    if (downstream.length > 0 && !deleteConfirmed) {
-      setError('다운스트림 영향 검증 확인이 필요합니다.');
+    if (downstream.length > 0) {
+      setError('다른 자원이 이 자원을 참조하고 있어 삭제할 수 없습니다. 참조를 먼저 제거하세요.');
       return;
     }
 
     const mutation = {
       type: 'delete',
       kind: deletionTarget.kind,
-      assetId: deletionTarget.id,
-      force: downstream.length > 0
+      assetId: deletionTarget.id
     };
 
     addOrUpdateMutation(mutation);
@@ -533,7 +532,7 @@ export function ManifestEditor({
                   <div className="p-4 border border-rose-500/30 bg-rose-500/5 rounded-2xl">
                     <div className="flex gap-2 text-rose-700 dark:text-rose-400 text-xs font-bold items-center">
                       <AlertTriangle className="h-4 w-4" />
-                      <span>중요 경고: 삭제 시 깨지는 다운스트림 파급 효과 (Transitive Downstream Impact)</span>
+                      <span>삭제 불가: 다운스트림 파급 효과가 감지되었습니다.</span>
                     </div>
                     <ul className="mt-3 space-y-1.5 text-xs text-rose-650 dark:text-rose-350 list-disc list-inside font-mono">
                       {downstream.map(depId => (
@@ -541,17 +540,8 @@ export function ManifestEditor({
                       ))}
                     </ul>
                     <p className="text-[11px] text-slate-500 mt-3 leading-5">
-                      위의 리소스들이 {deletionTarget.id}에 직간접적으로 의존하고 있습니다. 삭제를 계속 진행하려면 반드시 아래 동의 확인란을 체크해야 합니다.
+                      위의 리소스들이 {deletionTarget.id}에 의존하고 있습니다. 삭제를 계획하려면 이 참조들을 먼저 제거하거나 수정해야 합니다. (강제 삭제 우회는 더 이상 지원되지 않습니다)
                     </p>
-                    <label className="flex items-center gap-2 mt-4 text-xs font-bold text-rose-700 dark:text-rose-300 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={deleteConfirmed}
-                        onChange={e => setDeleteConfirmed(e.target.checked)}
-                        className="rounded border-rose-300 text-rose-600 focus:ring-rose-500"
-                      />
-                      네, 위 리소스들이 손상되는 것을 인지하였으며 강제 삭제 처리에 동의합니다.
-                    </label>
                   </div>
                 ) : (
                   <div className="p-4 border border-emerald-500/20 bg-emerald-500/5 rounded-2xl text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-semibold">
@@ -564,9 +554,9 @@ export function ManifestEditor({
                   <button onClick={() => { setIsDeleting(false); setDeletionTarget(null); }} className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-700">취소</button>
                   <button
                     onClick={confirmDeletionMutation}
-                    disabled={downstream.length > 0 && !deleteConfirmed}
+                    disabled={downstream.length > 0}
                     className={`rounded-xl px-5 py-2 text-sm font-bold text-white transition-colors ${
-                      downstream.length > 0 && !deleteConfirmed ? 'bg-slate-400 cursor-not-allowed' : 'bg-rose-600 hover:bg-rose-500'
+                      downstream.length > 0 ? 'bg-slate-400 cursor-not-allowed' : 'bg-rose-600 hover:bg-rose-500'
                     }`}
                   >
                     삭제 계획 추가

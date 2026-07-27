@@ -493,6 +493,13 @@ without adding client-name branches to deployment code.
 4. Add one data-driven definition and its tests.
 5. Verify plan/apply/rollback in an isolated temporary profile or fixture.
 6. Update the capability audit and traceability row only for that client.
+7. [TODO] **Implement strict capability-by-capability official evidence checks** in `client-definition.js`:
+   - Require independent evidence for each capability.
+   - Restrict `evidence.source` to official provider domains (e.g., matching a whitelist: `*.anthropic.com`, `*.cursor.com`, `*.github.com`, `*.visualstudio.com`, etc.).
+   - Require documented anchor/title, target client version, support verification method (`docs`, `runtime`, or `both`), supported OS, fallback strategy, and a re-verification date that is not in the future.
+8. [TODO] **Verify actual capability support for modern editors**:
+   - **VS Code / GitHub Copilot**: Document configuration directories, prompt instructions files location, and how custom skills/rules map to `.github/copilot-instructions.md` or settings.
+   - **Windsurf**: Validate official paths (e.g. `~/.windsurf`), rules structure, and write contracts.
 
 **Acceptance criteria:**
 
@@ -502,6 +509,8 @@ without adding client-name branches to deployment code.
 - Unsupported resources block or produce an explicit manual plan.
 - An uninstalled client is diagnosed, not treated as a broken Manifest.
 - Evidence and automated tests accompany the definition.
+- [TODO] Evaluated capability evidence matches official domains and has specific version/OS boundaries verified (verifiedAt is in the past, source is HTTPS official page, etc.).
+- [TODO] VS Code/Copilot and Windsurf configurations are verified against real runtime behavior.
 
 **Suggested commits:**
 

@@ -180,8 +180,10 @@ test('Loaded Manifest enforces kind-specific materialization contracts', () => {
 
 test('Loaded Manifest rejects malformed typed references and Tool declarations', () => {
   const root = fixture();
-  const manifestPath = path.join(root, 'invalid-reference.json');
-  fs.writeFileSync(manifestPath, JSON.stringify({
+  
+  // Test case 1: requires.tools contains a malformed tool ID
+  const manifestPath1 = path.join(root, 'invalid-reference-requires.json');
+  fs.writeFileSync(manifestPath1, JSON.stringify({
     schemaVersion: 1,
     kit: { id: 'backend-kit' },
     assets: {
@@ -193,9 +195,47 @@ test('Loaded Manifest rejects malformed typed references and Tool declarations',
     }
   }));
   assert.throws(
-    () => loadManifestFile({ manifestPath, scopeRoot: root }),
+    () => loadManifestFile({ manifestPath: manifestPath1, scopeRoot: root }),
     error => error instanceof DomainError && error.code === 'INVALID_TOOL_REQUIREMENT'
   );
+
+  // Test case 2: uses.tools contains a malformed tool ID even if requires.tools is empty/missing
+  const manifestPath2 = path.join(root, 'invalid-reference-uses.json');
+  fs.writeFileSync(manifestPath2, JSON.stringify({
+    schemaVersion: 1,
+    kit: { id: 'backend-kit' },
+    assets: {
+      skills: [{
+        id: 'review-uses',
+        source: 'skills/review',
+        uses: { tools: [{ id: 'bad/tool-name' }] }
+      }]
+    }
+  }));
+  assert.throws(
+    () => loadManifestFile({ manifestPath: manifestPath2, scopeRoot: root }),
+    error => error instanceof DomainError && error.code === 'INVALID_TOOL_REQUIREMENT'
+  );
+
+  // Test case 3: Both requires.tools and uses.tools exist, and the invalid one is in uses.tools
+  const manifestPath3 = path.join(root, 'invalid-reference-both.json');
+  fs.writeFileSync(manifestPath3, JSON.stringify({
+    schemaVersion: 1,
+    kit: { id: 'backend-kit' },
+    assets: {
+      skills: [{
+        id: 'review-both',
+        source: 'skills/review',
+        requires: { tools: ['valid-tool'] },
+        uses: { tools: [{ id: 'bad/tool-name' }] }
+      }]
+    }
+  }));
+  assert.throws(
+    () => loadManifestFile({ manifestPath: manifestPath3, scopeRoot: root }),
+    error => error instanceof DomainError && error.code === 'INVALID_TOOL_REQUIREMENT'
+  );
+
   fs.rmSync(root, { recursive: true, force: true });
 });
 
