@@ -1,0 +1,143 @@
+schemaVersion: 1
+id: codex
+displayName: Codex
+detection:
+  commands: [codex]
+  userRoot: ~/.codex
+capabilities:
+  - id: instructions-global
+    assetKind: instructions
+    scope: global
+    path: ~/.codex/AGENTS.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: &codex-agents
+      state: verified
+      source: https://learn.chatgpt.com/docs/agent-configuration/agents-md
+      verifiedAt: 2026-07-27
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: AGENTS.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: *codex-agents
+  - id: skills-global
+    assetKind: skills
+    scope: global
+    path: ~/.agents/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: &codex-skills
+      state: verified
+      source: https://learn.chatgpt.com/docs/build-skills
+      verifiedAt: 2026-07-27
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: .agents/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: *codex-skills
+  - id: settings-global
+    assetKind: settings
+    scope: global
+    path: ~/.codex/config.toml
+    format: toml
+    strategy: merge
+    status: stable
+    evidence: &codex-config
+      state: verified
+      source: https://learn.chatgpt.com/docs/config-file/config-advanced
+      verifiedAt: 2026-07-27
+  - id: settings-project
+    assetKind: settings
+    scope: project
+    path: .codex/config.toml
+    format: toml
+    strategy: merge
+    status: stable
+    constraints: [trusted-project]
+    evidence: *codex-config
+  - id: mcp-global
+    assetKind: mcp
+    scope: global
+    path: ~/.codex/config.toml
+    format: toml-section
+    strategy: merge
+    status: stable
+    evidence: &codex-mcp
+      state: verified
+      source: https://learn.chatgpt.com/docs/extend/mcp
+      verifiedAt: 2026-07-27
+  - id: mcp-project
+    assetKind: mcp
+    scope: project
+    path: .codex/config.toml
+    format: toml-section
+    strategy: merge
+    status: stable
+    constraints: [trusted-project]
+    evidence: *codex-mcp
+  - id: agents-global
+    assetKind: agents
+    scope: global
+    path: ~/.codex/config.toml
+    format: toml-section
+    strategy: merge
+    status: stable
+    evidence: &codex-subagents
+      state: verified
+      source: https://learn.chatgpt.com/docs/agent-configuration/subagents
+      verifiedAt: 2026-07-27
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: .codex/config.toml
+    format: toml-section
+    strategy: merge
+    status: stable
+    constraints: [trusted-project]
+    evidence: *codex-subagents
+  - id: hooks-global
+    assetKind: harness
+    scope: global
+    path: ~/.codex/hooks.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: &codex-hooks
+      state: verified
+      source: https://learn.chatgpt.com/docs/hooks
+      verifiedAt: 2026-07-27
+  - id: hooks-project
+    assetKind: harness
+    scope: project
+    path: .codex/hooks.json
+    format: json
+    strategy: merge
+    status: stable
+    constraints: [trusted-project]
+    evidence: *codex-hooks
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unverified
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: ui-only
+    evidence:
+      state: unverified

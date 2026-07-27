@@ -107,3 +107,16 @@ npm run test:all
 ```
 
 플랫폼 지원 범위는 [SUPPORT.md](./SUPPORT.md), 배포 절차는 [RELEASE.md](./RELEASE.md)를 참고하세요.
+
+## 재구축 설계
+
+멀티클라이언트 공통 Manifest와 안전한 Plan/Diff/Apply 구조로 전환하는
+재구축은 다음 문서를 기준으로 진행합니다.
+
+- [제품 정의](./docs/product/agent-kit-definition.md)
+- [목표 아키텍처](./docs/architecture/overview.md)
+- [자원 참조와 의존성 모델](./docs/architecture/resource-reference-model.md)
+- [Manifest 전체 예제](./docs/examples/agent-kit.yaml)
+- [요구사항 추적표](./docs/traceability/shared-conversation-requirements.md)
+- [현재 기준선](./docs/reconstruction/phase-0-baseline.md)
+- [클라이언트 Capability 감사](./docs/reconstruction/client-capability-audit.md)

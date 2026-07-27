@@ -1,0 +1,117 @@
+schemaVersion: 1
+
+kit:
+  id: backend-agent-kit
+  name: Backend Agent Kit
+
+assets:
+  instructions:
+    - id: project-instructions
+      source: harness/AGENTS.md
+
+  skills:
+    - id: incident-analysis
+      source: skills/incident-analysis
+      requires:
+        tools:
+          - id: logs.query
+            capability: logs.read
+          - id: github.search-commits
+            capability: repository.read
+
+    - id: incident-summary
+      source: skills/incident-summary
+      dependsOn:
+        skills:
+          - incident-analysis
+
+  agents:
+    - id: incident-responder
+      source: agents/incident-responder.md
+      uses:
+        skills:
+          - incident-analysis
+          - incident-summary
+      policies:
+        - incident-read-only
+
+  mcpServers:
+    - id: observability-mcp
+      provides:
+        tools:
+          - logs.query
+      environment:
+        OBSERVABILITY_TOKEN:
+          source: environment
+          name: OBSERVABILITY_TOKEN
+
+    - id: github-mcp
+      provides:
+        tools:
+          - github.search-commits
+      environment:
+        GITHUB_TOKEN:
+          source: environment
+          name: GITHUB_TOKEN
+
+  policies:
+    - id: incident-read-only
+      allow:
+        capabilities:
+          - logs.read
+          - repository.read
+      deny:
+        capabilities:
+          - repository.write
+
+  memory:
+    - id: incident-history
+      source: memory/incident-history.md
+      access:
+        readers:
+          agents:
+            - incident-responder
+        writers:
+          skills:
+            - incident-summary
+      promotion:
+        requiresApproval: true
+
+  workflows:
+    - id: daily-incident-review
+      steps:
+        - id: collect
+          use:
+            tool: logs.query
+          capability: logs.read
+
+        - id: respond
+          use:
+            agent: incident-responder
+
+        - id: summarize
+          use:
+            skill: incident-summary
+
+  harness:
+    - id: default-harness
+      enables:
+        agents:
+          - incident-responder
+        workflows:
+          - daily-incident-review
+      policy:
+        allow:
+          capabilities:
+            - logs.read
+            - repository.read
+        deny:
+          capabilities:
+            - repository.write
+
+targets:
+  codex:
+    enabled: true
+  claude-code:
+    enabled: true
+

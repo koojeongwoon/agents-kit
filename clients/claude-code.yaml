@@ -1,0 +1,142 @@
+schemaVersion: 1
+id: claude-code
+displayName: Claude Code
+detection:
+  commands: [claude]
+  userRoot: ~/.claude
+capabilities:
+  - id: instructions-global
+    assetKind: instructions
+    scope: global
+    path: ~/.claude/CLAUDE.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: &claude-settings
+      state: verified
+      source: https://code.claude.com/docs/en/settings
+      verifiedAt: 2026-07-27
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: CLAUDE.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
+  - id: settings-global
+    assetKind: settings
+    scope: global
+    path: ~/.claude/settings.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
+  - id: settings-project
+    assetKind: settings
+    scope: project
+    path: .claude/settings.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
+  - id: settings-local
+    assetKind: settings
+    scope: local
+    path: .claude/settings.local.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
+  - id: skills-global
+    assetKind: skills
+    scope: global
+    path: ~/.claude/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: &claude-skills
+      state: verified
+      source: https://code.claude.com/docs/en/skills
+      verifiedAt: 2026-07-27
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: .claude/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: *claude-skills
+  - id: agents-global
+    assetKind: agents
+    scope: global
+    path: ~/.claude/agents/{assetId}.md
+    format: markdown
+    strategy: copy
+    status: stable
+    evidence: &claude-agents
+      state: verified
+      source: https://code.claude.com/docs/en/sub-agents
+      verifiedAt: 2026-07-27
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: .claude/agents/{assetId}.md
+    format: markdown
+    strategy: copy
+    status: stable
+    evidence: *claude-agents
+  - id: mcp-global
+    assetKind: mcp
+    scope: global
+    path: ~/.claude.json
+    format: json-section
+    strategy: merge
+    status: stable
+    evidence: &claude-mcp
+      state: verified
+      source: https://code.claude.com/docs/en/mcp
+      verifiedAt: 2026-07-27
+  - id: mcp-project
+    assetKind: mcp
+    scope: project
+    path: .mcp.json
+    format: json
+    strategy: merge
+    status: stable
+    constraints: [project-mcp-approval]
+    evidence: *claude-mcp
+  - id: hooks-global
+    assetKind: harness
+    scope: global
+    path: ~/.claude/settings.json
+    format: json-section
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
+  - id: hooks-project
+    assetKind: harness
+    scope: project
+    path: .claude/settings.json
+    format: json-section
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: ui-only
+    evidence:
+      state: unverified
