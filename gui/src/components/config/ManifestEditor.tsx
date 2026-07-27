@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, Shield, Tool, Layers} from 'lucide-react';
+import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, Shield, Tool, Layers, Settings, FileText, Cpu, Database, Clipboard} from 'lucide-react';
 import {
   fetchManifestRegistry,
   planManifestEdit,
@@ -35,21 +35,44 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  // Editing forms state
+  // Editing states
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Form fields
+  // General fields
   const [editId, setEditId] = useState('');
   const [editKind, setEditKind] = useState('skills');
   const [editDisplayName, setEditDisplayName] = useState('');
   const [editSource, setEditSource] = useState('');
 
-  // Rich Skill Form Fields
-  const [skillDependsOn, setSkillDependsOn] = useState<string[]>([]);
-  const [skillRequiredTools, setSkillRequiredTools] = useState<any[]>([]);
+  // Specific Form states
+  // 1. Skill/Agent dependencies
+  const [selectedDependsSkills, setSelectedDependsSkills] = useState<string[]>([]);
+  const [requiredTools, setRequiredTools] = useState<any[]>([]);
+  const [selectedPolicies, setSelectedPolicies] = useState<string[]>([]);
 
-  // Raw Content Editor (for non-skill or advanced edits)
+  // 2. Harness enables
+  const [harnessAgents, setHarnessAgents] = useState<string[]>([]);
+  const [harnessSkills, setHarnessSkills] = useState<string[]>([]);
+  const [harnessWorkflows, setHarnessWorkflows] = useState<string[]>([]);
+  const [harnessAllowedCaps, setHarnessAllowedCaps] = useState<string>('');
+  const [harnessDeniedCaps, setHarnessDeniedCaps] = useState<string>('');
+
+  // 3. Workflow steps
+  const [workflowSteps, setWorkflowSteps] = useState<any[]>([]);
+
+  // 4. Policy rules
+  const [policyAllowCaps, setPolicyAllowCaps] = useState<string>('');
+  const [policyDenyCaps, setPolicyDenyCaps] = useState<string>('');
+
+  // 5. Memory readers/writers
+  const [memoryReaderAgents, setMemoryReaderAgents] = useState<string[]>([]);
+  const [memoryReaderSkills, setMemoryReaderSkills] = useState<string[]>([]);
+  const [memoryWriterAgents, setMemoryWriterAgents] = useState<string[]>([]);
+  const [memoryWriterSkills, setMemoryWriterSkills] = useState<string[]>([]);
+  const [memoryRequiresApproval, setMemoryRequiresApproval] = useState<boolean>(true);
+
+  // Raw Content fallback
   const [rawAssetContent, setRawAssetContent] = useState('');
 
   const targetReady = scope === 'global' || projectPath.trim().length > 0;
@@ -75,7 +98,7 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     loadRegistry().catch(console.error);
   }, [scope, projectName, projectPath]);
 
-  // Extract all available tools from mcpServers in registry
+  // Extract all tools
   const availableTools = registry
     .filter(r => r.kind === 'mcpServers')
     .flatMap(mcp => mcp.providedTools.map(t => ({
@@ -84,7 +107,6 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
       scope: mcp.scope?.type || 'global'
     })));
 
-  // Extract all policies to check denied capabilities
   const deniedCapabilities = registry
     .filter(r => r.kind === 'policies')
     .flatMap(p => (p as any).deny?.capabilities || []);
@@ -114,6 +136,9 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     if (['instructions', 'skills', 'agents', 'hooks', 'memory', 'clientSettings'].includes(editKind)) {
       newAsset.source = editSource.trim();
     }
+    if (editKind === 'memory') {
+      newAsset.promotion = { requiresApproval: true };
+    }
 
     const mutation = {
       type: 'create',
@@ -128,20 +153,52 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     setMessage('생성 변경 사항이 임시 저장되었습니다.');
   };
 
+  // Helper to filter referenced assets based on "global asset cannot select project asset" rule
+  const filterReferencable = (kind: string) => {
+    return registry.filter(r => {
+      if (r.kind !== kind) return false;
+      if (r.id === editId) return false;
+      if (scope === 'global') return r.scope?.type === 'global';
+      return true;
+    });
+  };
+
   const handleStartEdit = (resource: RegistryResource) => {
     setIsEditing(true);
     setEditId(resource.id);
     setEditKind(resource.kind);
     setEditDisplayName(resource.displayName || '');
     setEditSource((resource as any).source || '');
+    clearEditForm();
 
+    // Load kind-specific fields
     if (resource.kind === 'skills') {
-      const depends = (resource as any).dependsOn?.skills || [];
-      setSkillDependsOn(depends);
+      setSelectedDependsSkills((resource as any).dependsOn?.skills || []);
       const reqTools = (resource as any).requires?.tools || [];
-      setSkillRequiredTools(reqTools.map((t: any) => typeof t === 'string' ? { id: t } : t));
+      setRequiredTools(reqTools.map((t: any) => typeof t === 'string' ? { id: t } : t));
+    } else if (resource.kind === 'agents') {
+      setSelectedDependsSkills((resource as any).uses?.skills || []);
+      setSelectedPolicies((resource as any).policies || []);
+      const reqTools = (resource as any).requires?.tools || [];
+      setRequiredTools(reqTools.map((t: any) => typeof t === 'string' ? { id: t } : t));
+    } else if (resource.kind === 'harness') {
+      setHarnessAgents((resource as any).enables?.agents || []);
+      setHarnessSkills((resource as any).enables?.skills || []);
+      setHarnessWorkflows((resource as any).enables?.workflows || []);
+      setHarnessAllowedCaps(((resource as any).policy?.allow?.capabilities || []).join(', '));
+      setHarnessDeniedCaps(((resource as any).policy?.deny?.capabilities || []).join(', '));
+    } else if (resource.kind === 'workflows') {
+      setWorkflowSteps((resource as any).steps || []);
+    } else if (resource.kind === 'policies') {
+      setPolicyAllowCaps(((resource as any).allow?.capabilities || []).join(', '));
+      setPolicyDenyCaps(((resource as any).deny?.capabilities || []).join(', '));
+    } else if (resource.kind === 'memory') {
+      setMemoryReaderAgents((resource as any).access?.readers?.agents || []);
+      setMemoryReaderSkills((resource as any).access?.readers?.skills || []);
+      setMemoryWriterAgents((resource as any).access?.writers?.agents || []);
+      setMemoryWriterSkills((resource as any).access?.writers?.skills || []);
+      setMemoryRequiresApproval((resource as any).promotion?.requiresApproval !== false);
     } else {
-      // For other kinds, allow editing raw JSON definition
       const { providedTools, requiredTools, references, ...rawFields } = resource;
       setRawAssetContent(JSON.stringify(rawFields, null, 2));
     }
@@ -152,15 +209,36 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
       scope,
       displayName: editDisplayName.trim() || undefined
     };
+    if (editSource.trim()) updatedAsset.source = editSource.trim();
 
     if (editKind === 'skills') {
-      if (editSource.trim()) updatedAsset.source = editSource.trim();
-      if (skillDependsOn.length > 0) {
-        updatedAsset.dependsOn = { skills: skillDependsOn };
-      }
-      if (skillRequiredTools.length > 0) {
-        updatedAsset.requires = { tools: skillRequiredTools };
-      }
+      if (selectedDependsSkills.length > 0) updatedAsset.dependsOn = { skills: selectedDependsSkills };
+      if (requiredTools.length > 0) updatedAsset.requires = { tools: requiredTools };
+    } else if (editKind === 'agents') {
+      if (selectedDependsSkills.length > 0) updatedAsset.uses = { skills: selectedDependsSkills };
+      if (selectedPolicies.length > 0) updatedAsset.policies = selectedPolicies;
+      if (requiredTools.length > 0) updatedAsset.requires = { tools: requiredTools };
+    } else if (editKind === 'harness') {
+      updatedAsset.enables = {
+        agents: harnessAgents,
+        skills: harnessSkills,
+        workflows: harnessWorkflows
+      };
+      updatedAsset.policy = {
+        allow: { capabilities: harnessAllowedCaps.split(',').map(s => s.trim()).filter(Boolean) },
+        deny: { capabilities: harnessDeniedCaps.split(',').map(s => s.trim()).filter(Boolean) }
+      };
+    } else if (editKind === 'workflows') {
+      updatedAsset.steps = workflowSteps;
+    } else if (editKind === 'policies') {
+      updatedAsset.allow = { capabilities: policyAllowCaps.split(',').map(s => s.trim()).filter(Boolean) };
+      updatedAsset.deny = { capabilities: policyDenyCaps.split(',').map(s => s.trim()).filter(Boolean) };
+    } else if (editKind === 'memory') {
+      updatedAsset.access = {
+        readers: { agents: memoryReaderAgents, skills: memoryReaderSkills },
+        writers: { agents: memoryWriterAgents, skills: memoryWriterSkills }
+      };
+      updatedAsset.promotion = { requiresApproval: memoryRequiresApproval };
     } else {
       try {
         const parsed = JSON.parse(rawAssetContent);
@@ -200,8 +278,23 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
     setEditId('');
     setEditDisplayName('');
     setEditSource('');
-    setSkillDependsOn([]);
-    setSkillRequiredTools([]);
+    setSelectedDependsSkills([]);
+    setRequiredTools([]);
+    setSelectedPolicies([]);
+    setHarnessAgents([]);
+    setHarnessSkills([]);
+    setHarnessWorkflows([]);
+    setHarnessAllowedCaps('');
+    setHarnessDeniedCaps('');
+    setWorkflowSteps([]);
+    setPolicyAllowCaps('');
+    setPolicyDenyCaps('');
+    setMemoryReaderAgents([]);
+    setMemoryReaderSkills([]);
+    setMemoryWriterAgents([]);
+    setMemoryWriterSkills([]);
+    setMemoryRequiresApproval(true);
+    setRawAssetContent('');
   };
 
   const discardMutations = () => {
@@ -329,19 +422,45 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
               </label>
             </div>
 
-            {/* Custom Interactive UI for Skill editing */}
-            {editKind === 'skills' ? (
+            {/* Custom Interactive UI for Skill/Agent editing */}
+            {['skills', 'agents'].includes(editKind) && (
               <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
-                {/* Skill Dependencies Selection */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Depends On Skills (하위 스킬 의존성)</h4>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Depends On / Uses Skills</h4>
                   <div className="flex flex-wrap gap-2">
-                    {registry
-                      .filter(r => r.kind === 'skills' && r.id !== editId)
-                      .map(skill => {
-                        const isChecked = skillDependsOn.includes(skill.id);
+                    {filterReferencable('skills').map(skill => {
+                      const isChecked = selectedDependsSkills.includes(skill.id);
+                      return (
+                        <label key={skill.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs cursor-pointer transition-colors ${
+                          isChecked ? 'border-blue-500 bg-blue-500/5 text-blue-700 dark:text-blue-400' : 'border-slate-250 dark:border-slate-750'
+                        }`}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={e => {
+                              if (e.target.checked) {
+                                setSelectedDependsSkills([...selectedDependsSkills, skill.id]);
+                              } else {
+                                setSelectedDependsSkills(selectedDependsSkills.filter(id => id !== skill.id));
+                              }
+                            }}
+                            className="sr-only"
+                          />
+                          {skill.displayName || skill.id}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {editKind === 'agents' && (
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Attached Policies</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {filterReferencable('policies').map(policy => {
+                        const isChecked = selectedPolicies.includes(policy.id);
                         return (
-                          <label key={skill.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs cursor-pointer transition-colors ${
+                          <label key={policy.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs cursor-pointer transition-colors ${
                             isChecked ? 'border-blue-500 bg-blue-500/5 text-blue-700 dark:text-blue-400' : 'border-slate-250 dark:border-slate-750'
                           }`}>
                             <input
@@ -349,29 +468,26 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                               checked={isChecked}
                               onChange={e => {
                                 if (e.target.checked) {
-                                  setSkillDependsOn([...skillDependsOn, skill.id]);
+                                  setSelectedPolicies([...selectedPolicies, policy.id]);
                                 } else {
-                                  setSkillDependsOn(skillDependsOn.filter(id => id !== skill.id));
+                                  setSelectedPolicies(selectedPolicies.filter(id => id !== policy.id));
                                 }
                               }}
                               className="sr-only"
                             />
-                            {skill.displayName || skill.id}
+                            {policy.displayName || policy.id}
                           </label>
                         );
                       })}
-                    {registry.filter(r => r.kind === 'skills' && r.id !== editId).length === 0 && (
-                      <p className="text-xs text-slate-400">의존성을 구성할 다른 스킬이 매니페스트에 정의되어 있지 않습니다.</p>
-                    )}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Logical Tools Selection */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Required Tools (필요 도구 세부 선택)</h4>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Required Tools</h4>
                     <button
-                      onClick={() => setSkillRequiredTools([...skillRequiredTools, { id: '', capability: '', optional: false }])}
+                      onClick={() => setRequiredTools([...requiredTools, { id: '', capability: '', optional: false }])}
                       className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-500"
                     >
                       <Plus className="h-3 w-3" /> 도구 추가
@@ -379,22 +495,20 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                   </div>
 
                   <div className="space-y-2">
-                    {skillRequiredTools.map((reqTool, index) => {
-                      // Find tool in available tools list
+                    {requiredTools.map((reqTool, index) => {
                       const matchingTools = availableTools.filter(t => t.id === reqTool.id);
                       const isToolAvailable = matchingTools.length > 0;
                       const isDenied = reqTool.capability && deniedCapabilities.includes(reqTool.capability);
 
                       return (
                         <div key={index} className="flex flex-wrap items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
-                          {/* Tool ID Selection */}
                           <div className="flex-1 min-w-[200px]">
                             <select
                               value={reqTool.id}
                               onChange={e => {
-                                const updated = [...skillRequiredTools];
+                                const updated = [...requiredTools];
                                 updated[index].id = e.target.value;
-                                setSkillRequiredTools(updated);
+                                setRequiredTools(updated);
                               }}
                               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
                             >
@@ -407,86 +521,366 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
                             </select>
                           </div>
 
-                          {/* Capability */}
                           <div className="min-w-[120px]">
                             <input
                               value={reqTool.capability || ''}
                               onChange={e => {
-                                const updated = [...skillRequiredTools];
+                                const updated = [...requiredTools];
                                 updated[index].capability = e.target.value;
-                                setSkillRequiredTools(updated);
+                                setRequiredTools(updated);
                               }}
-                              placeholder="Capability (예: repository.read)"
+                              placeholder="Capability"
                               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
                             />
                           </div>
 
-                          {/* Preferred Provider ID */}
                           <div className="min-w-[120px]">
                             <input
                               value={reqTool.providerId || ''}
                               onChange={e => {
-                                const updated = [...skillRequiredTools];
+                                const updated = [...requiredTools];
                                 updated[index].providerId = e.target.value;
-                                setSkillRequiredTools(updated);
+                                setRequiredTools(updated);
                               }}
-                              placeholder="선호 Provider ID"
+                              placeholder="Provider ID"
                               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
                             />
                           </div>
 
-                          {/* Optional */}
                           <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
                             <input
                               type="checkbox"
                               checked={reqTool.optional || false}
                               onChange={e => {
-                                const updated = [...skillRequiredTools];
+                                const updated = [...requiredTools];
                                 updated[index].optional = e.target.checked;
-                                setSkillRequiredTools(updated);
+                                setRequiredTools(updated);
                               }}
                               className="rounded border-slate-300 text-blue-600"
                             />
                             Optional
                           </label>
 
-                          {/* Delete req tool */}
                           <button
-                            onClick={() => setSkillRequiredTools(skillRequiredTools.filter((_, idx) => idx !== index))}
+                            onClick={() => setRequiredTools(requiredTools.filter((_, idx) => idx !== index))}
                             className="p-1.5 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
 
-                          {/* Diagnostics & Help Warnings */}
                           {reqTool.id && (
                             <div className="w-full text-[11px] mt-1 pt-1 border-t border-slate-200/50 dark:border-slate-800/50">
                               {!isToolAvailable ? (
-                                <span className="text-rose-500 font-semibold flex items-center gap-1">
-                                  ⚠️ 경고: 이 도구를 제공하는 활성 MCP 서버가 없습니다 (Missing Provider).
-                                </span>
+                                <span className="text-rose-550 font-semibold flex items-center gap-1">⚠️ 경고: 이 도구를 제공하는 MCP 서버가 없습니다 (Missing Provider).</span>
                               ) : isDenied ? (
-                                <span className="text-rose-500 font-semibold flex items-center gap-1">
-                                  🚫 차단됨: 이 도구의 capability({reqTool.capability})는 현재 정책(Harness/Policy)에 의해 차단되었습니다 (Policy Denied).
-                                </span>
+                                <span className="text-rose-550 font-semibold flex items-center gap-1">🚫 차단됨: 도구의 capability({reqTool.capability})가 차단되었습니다 (Policy Denied).</span>
                               ) : (
-                                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                                  ✓ 사용 가능: {matchingTools.map(t => `${t.providerId} (${t.scope})`).join(', ')}
-                                </span>
+                                <span className="text-emerald-600 dark:text-emerald-400">✓ 사용 가능: {matchingTools.map(t => `${t.providerId}`).join(', ')}</span>
                               )}
                             </div>
                           )}
                         </div>
                       );
                     })}
-                    {skillRequiredTools.length === 0 && (
-                      <p className="text-xs text-slate-400">필요한 도구를 여기에 추가하세요.</p>
-                    )}
                   </div>
                 </div>
               </div>
-            ) : (
-              /* Raw JSON/YAML attributes editor for other resources */
+            )}
+
+            {/* Harness Editor Form */}
+            {editKind === 'harness' && (
+              <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Enable Agents</h4>
+                    <div className="space-y-1">
+                      {filterReferencable('agents').map(agent => (
+                        <label key={agent.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={harnessAgents.includes(agent.id)}
+                            onChange={e => {
+                              if (e.target.checked) setHarnessAgents([...harnessAgents, agent.id]);
+                              else setHarnessAgents(harnessAgents.filter(id => id !== agent.id));
+                            }}
+                          />
+                          {agent.id}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Enable Skills</h4>
+                    <div className="space-y-1">
+                      {filterReferencable('skills').map(skill => (
+                        <label key={skill.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={harnessSkills.includes(skill.id)}
+                            onChange={e => {
+                              if (e.target.checked) setHarnessSkills([...harnessSkills, skill.id]);
+                              else setHarnessSkills(harnessSkills.filter(id => id !== skill.id));
+                            }}
+                          />
+                          {skill.id}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Enable Workflows</h4>
+                    <div className="space-y-1">
+                      {filterReferencable('workflows').map(wf => (
+                        <label key={wf.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={harnessWorkflows.includes(wf.id)}
+                            onChange={e => {
+                              if (e.target.checked) setHarnessWorkflows([...harnessWorkflows, wf.id]);
+                              else setHarnessWorkflows(harnessWorkflows.filter(id => id !== wf.id));
+                            }}
+                          />
+                          {wf.id}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                    Harness Allowed Capabilities (comma separated)
+                    <input value={harnessAllowedCaps} onChange={e => setHarnessAllowedCaps(e.target.value)} placeholder="e.g. repository.read, logs.read" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                  </label>
+                  <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                    Harness Denied Capabilities (comma separated)
+                    <input value={harnessDeniedCaps} onChange={e => setHarnessDeniedCaps(e.target.value)} placeholder="e.g. repository.write" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Workflow Step Editor Form */}
+            {editKind === 'workflows' && (
+              <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Workflow Steps (순차 실행 단계 정의)</h4>
+                  <button
+                    onClick={() => setWorkflowSteps([...workflowSteps, { id: '', use: {} }])}
+                    className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-500"
+                  >
+                    <Plus className="h-3 w-3" /> 단계 추가
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {workflowSteps.map((step, index) => {
+                    const stepType = step.use?.agent ? 'agent' : step.use?.skill ? 'skill' : 'tool';
+                    const targetId = step.use?.[stepType] || '';
+                    return (
+                      <div key={index} className="flex flex-wrap items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                        {/* Step ID */}
+                        <div className="min-w-[100px]">
+                          <input
+                            value={step.id || ''}
+                            onChange={e => {
+                              const updated = [...workflowSteps];
+                              updated[index].id = e.target.value;
+                              setWorkflowSteps(updated);
+                            }}
+                            placeholder="Step ID"
+                            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                          />
+                        </div>
+
+                        {/* Step Target Kind */}
+                        <div>
+                          <select
+                            value={stepType}
+                            onChange={e => {
+                              const updated = [...workflowSteps];
+                              const newType = e.target.value;
+                              updated[index].use = { [newType]: '' };
+                              setWorkflowSteps(updated);
+                            }}
+                            className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                          >
+                            <option value="agent">Agent</option>
+                            <option value="skill">Skill</option>
+                            <option value="tool">Tool</option>
+                          </select>
+                        </div>
+
+                        {/* Target ID Selection */}
+                        <div className="flex-1 min-w-[150px]">
+                          {stepType === 'tool' ? (
+                            <select
+                              value={targetId}
+                              onChange={e => {
+                                const updated = [...workflowSteps];
+                                updated[index].use = { tool: e.target.value };
+                                setWorkflowSteps(updated);
+                              }}
+                              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                            >
+                              <option value="">도구 선택...</option>
+                              {availableTools.map(t => (
+                                <option key={t.id} value={t.id}>{t.id}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <select
+                              value={targetId}
+                              onChange={e => {
+                                const updated = [...workflowSteps];
+                                updated[index].use = { [stepType]: e.target.value };
+                                setWorkflowSteps(updated);
+                              }}
+                              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                            >
+                              <option value="">대상 리소스 선택...</option>
+                              {filterReferencable(stepType + 's').map(r => (
+                                <option key={r.id} value={r.id}>{r.id}</option>
+                              ))}
+                            </select>
+                          )}
+                        </div>
+
+                        {/* Capability for Tool steps */}
+                        {stepType === 'tool' && (
+                          <div className="min-w-[120px]">
+                            <input
+                              value={step.capability || ''}
+                              onChange={e => {
+                                const updated = [...workflowSteps];
+                                updated[index].capability = e.target.value;
+                                setWorkflowSteps(updated);
+                              }}
+                              placeholder="Capability"
+                              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                            />
+                          </div>
+                        )}
+
+                        {/* Delete step */}
+                        <button
+                          onClick={() => setWorkflowSteps(workflowSteps.filter((_, idx) => idx !== index))}
+                          className="p-1.5 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Policy Editor Form */}
+            {editKind === 'policies' && (
+              <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                    Policy Allowed Capabilities (comma separated)
+                    <input value={policyAllowCaps} onChange={e => setPolicyAllowCaps(e.target.value)} placeholder="e.g. logs.read, repository.read" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                  </label>
+                  <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                    Policy Denied Capabilities (comma separated)
+                    <input value={policyDenyCaps} onChange={e => setPolicyDenyCaps(e.target.value)} placeholder="e.g. repository.write" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Memory Editor Form */}
+            {editKind === 'memory' && (
+              <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Memory Readers</h4>
+                    <div className="space-y-2 border p-3 rounded-2xl dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                      <span className="text-[10px] font-bold text-slate-400 block mb-1">AGENTS</span>
+                      {filterReferencable('agents').map(agent => (
+                        <label key={agent.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={memoryReaderAgents.includes(agent.id)}
+                            onChange={e => {
+                              if (e.target.checked) setMemoryReaderAgents([...memoryReaderAgents, agent.id]);
+                              else setMemoryReaderAgents(memoryReaderAgents.filter(id => id !== agent.id));
+                            }}
+                          />
+                          {agent.id}
+                        </label>
+                      ))}
+                      <span className="text-[10px] font-bold text-slate-400 block mt-2 mb-1">SKILLS</span>
+                      {filterReferencable('skills').map(skill => (
+                        <label key={skill.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={memoryReaderSkills.includes(skill.id)}
+                            onChange={e => {
+                              if (e.target.checked) setMemoryReaderSkills([...memoryReaderSkills, skill.id]);
+                              else setMemoryReaderSkills(memoryReaderSkills.filter(id => id !== skill.id));
+                            }}
+                          />
+                          {skill.id}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Memory Writers</h4>
+                    <div className="space-y-2 border p-3 rounded-2xl dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                      <span className="text-[10px] font-bold text-slate-400 block mb-1">AGENTS</span>
+                      {filterReferencable('agents').map(agent => (
+                        <label key={agent.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={memoryWriterAgents.includes(agent.id)}
+                            onChange={e => {
+                              if (e.target.checked) setMemoryWriterAgents([...memoryWriterAgents, agent.id]);
+                              else setMemoryWriterAgents(memoryWriterAgents.filter(id => id !== agent.id));
+                            }}
+                          />
+                          {agent.id}
+                        </label>
+                      ))}
+                      <span className="text-[10px] font-bold text-slate-400 block mt-2 mb-1">SKILLS</span>
+                      {filterReferencable('skills').map(skill => (
+                        <label key={skill.id} className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={memoryWriterSkills.includes(skill.id)}
+                            onChange={e => {
+                              if (e.target.checked) setMemoryWriterSkills([...memoryWriterSkills, skill.id]);
+                              else setMemoryWriterSkills(memoryWriterSkills.filter(id => id !== skill.id));
+                            }}
+                          />
+                          {skill.id}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={memoryRequiresApproval}
+                      onChange={e => setMemoryRequiresApproval(e.target.checked)}
+                      className="rounded border-slate-300 text-blue-600"
+                    />
+                    Requires approval for promotion (장기 기억 승인 수동 검증 필수화)
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Raw JSON fallback editor */}
+            {!['skills', 'agents', 'harness', 'workflows', 'policies', 'memory'].includes(editKind) && (
               <div className="space-y-1.5 border-t border-slate-200 pt-4 dark:border-slate-800">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">
                   JSON Definition Attributes (세부 속성 구조 정의)
