@@ -42,7 +42,16 @@ export async function apiFetch(input: RequestInfo | URL, init: RequestInit = {})
   const method = (init.method || 'GET').toUpperCase();
   if (['GET', 'HEAD', 'OPTIONS'].includes(method)) return await fetchWithStartupRetry(resolvedInput, init);
 
-  const headers = new Headers(init.headers);
-  headers.set('X-Agents-Kit-Token', await getApiToken());
-  return await fetchWithStartupRetry(resolvedInput, { ...init, headers });
+  const send = async () => {
+    const headers = new Headers(init.headers);
+    headers.set('X-Agents-Kit-Token', await getApiToken());
+    return await fetchWithStartupRetry(resolvedInput, {...init, headers});
+  };
+
+  let response = await send();
+  if (response.status === 403) {
+    apiTokenPromise = null;
+    response = await send();
+  }
+  return response;
 }

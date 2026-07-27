@@ -3,15 +3,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import {fileURLToPath} from 'node:url';
 import request from 'supertest';
 import {createControlPlaneApp} from '../app.js';
 import {createAppContext} from '../context.js';
-
-const repositoryRoot = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../../..'
-);
 
 test('HTTP control plane completes plan, apply, history, and rollback', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-http-e2e-'));
@@ -36,9 +30,7 @@ assets:
 
   const context = createAppContext({
     homeDir,
-    kitRoot,
-    projectRoot: repositoryRoot,
-    definitionsDir: path.join(repositoryRoot, 'clients')
+    kitRoot
   });
   const {app, apiToken} = createControlPlaneApp({
     context,
