@@ -74,6 +74,13 @@ export function ManifestEditor({
   const [requiredTools, setRequiredTools] = useState<any[]>([]);
   const [selectedPolicies, setSelectedPolicies] = useState<string[]>([]);
 
+  // MCP Server form states
+  const [mcpCommand, setMcpCommand] = useState('');
+  const [mcpArgs, setMcpArgs] = useState<string[]>([]);
+  const [mcpUrl, setMcpUrl] = useState('');
+  const [mcpProvidesTools, setMcpProvidesTools] = useState<string[]>([]);
+  const [mcpEnvVars, setMcpEnvVars] = useState<Array<{ key: string; valueName: string }>>([]);
+
   // Harness enables
   const [harnessAgents, setHarnessAgents] = useState<string[]>([]);
   const [harnessSkills, setHarnessSkills] = useState<string[]>([]);
@@ -250,6 +257,17 @@ export function ManifestEditor({
       setMemoryWriterAgents((resource as any).access?.writers?.agents || []);
       setMemoryWriterSkills((resource as any).access?.writers?.skills || []);
       setMemoryRequiresApproval((resource as any).promotion?.requiresApproval !== false);
+    } else if (resource.kind === 'mcpServers') {
+      setMcpCommand((resource as any).command || '');
+      setMcpArgs((resource as any).args || []);
+      setMcpUrl((resource as any).url || '');
+      setMcpProvidesTools((resource as any).provides?.tools || []);
+      const env = (resource as any).environment || {};
+      const envList = Object.entries(env).map(([k, v]: any) => ({
+        key: k,
+        valueName: v?.name || ''
+      }));
+      setMcpEnvVars(envList);
     } else {
       const { providedTools, requiredTools, references, ...rawFields } = resource;
       setRawAssetContent(JSON.stringify(rawFields, null, 2));
@@ -291,6 +309,29 @@ export function ManifestEditor({
         writers: { agents: memoryWriterAgents, skills: memoryWriterSkills }
       };
       updatedAsset.promotion = { requiresApproval: memoryRequiresApproval };
+    } else if (editKind === 'mcpServers') {
+      if (mcpCommand.trim()) updatedAsset.command = mcpCommand.trim();
+      if (mcpArgs.length > 0) updatedAsset.args = mcpArgs;
+      if (mcpUrl.trim()) updatedAsset.url = mcpUrl.trim();
+      if (mcpProvidesTools.length > 0) {
+        updatedAsset.provides = { tools: mcpProvidesTools };
+      }
+      if (mcpEnvVars.length > 0) {
+        const envObj: any = {};
+        for (const ev of mcpEnvVars) {
+          if (!ev.key.trim() || !ev.valueName.trim()) continue;
+          const SECRET_VALUE = /^(gh[pousr]_|github_pat_|sk-(?:ant-)?|AIza)[A-Za-z0-9_-]{8,}$/;
+          if (SECRET_VALUE.test(ev.valueName.trim()) || SECRET_VALUE.test(ev.key.trim())) {
+            setError('보안 차단: 매니페스트 환경 설정에 비밀번호/토큰의 실제 값(ghp_ 등)을 기록할 수 없습니다. 오직 환경변수 이름(예: GITHUB_TOKEN)으로 참조하십시오.');
+            return;
+          }
+          envObj[ev.key.trim()] = {
+            source: 'environment',
+            name: ev.valueName.trim()
+          };
+        }
+        updatedAsset.environment = envObj;
+      }
     } else {
       try {
         const parsed = JSON.parse(rawAssetContent);
@@ -360,6 +401,11 @@ export function ManifestEditor({
     setMemoryWriterAgents([]);
     setMemoryWriterSkills([]);
     setMemoryRequiresApproval(true);
+    setMcpCommand('');
+    setMcpArgs([]);
+    setMcpUrl('');
+    setMcpProvidesTools([]);
+    setMcpEnvVars([]);
     setRawAssetContent('');
   };
 
@@ -818,6 +864,107 @@ export function ManifestEditor({
                     Harness Denied Capabilities (comma separated)
                     <input value={harnessDeniedCaps} onChange={e => setHarnessDeniedCaps(e.target.value)} placeholder="e.g. repository.write" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                   </label>
+                </div>
+              </div>
+            )}
+
+            {/* MCP Server Editor Form */}
+            {editKind === 'mcpServers' && (
+              <div className="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                    MCP Server Command
+                    <input value={mcpCommand} onChange={e => setMcpCommand(e.target.value)} placeholder="e.g. npx" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                  </label>
+                  <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                    MCP Server URL (Optional)
+                    <input value={mcpUrl} onChange={e => setMcpUrl(e.target.value)} placeholder="e.g. http://localhost:8080/mcp" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                  </label>
+                  <label className="sm:col-span-2 space-y-1.5 text-xs font-semibold text-slate-500">
+                    Arguments (공백 구분)
+                    <input
+                      value={mcpArgs.join(' ')}
+                      onChange={e => setMcpArgs(e.target.value.split(' ').filter(Boolean))}
+                      placeholder="e.g. -y @modelcontextprotocol/server-postgres"
+                      className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                    />
+                  </label>
+                </div>
+
+                {/* Environment secret references */}
+                <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-850">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Environment & Secret References</h4>
+                      <p className="text-[10px] text-slate-500 mt-1">⚠️ Agent Kit은 자격증명 실체값(ghp_ 등)을 직접 저장하지 않으며, 호스트 환경변수명을 참조하도록 기록합니다.</p>
+                    </div>
+                    <button
+                      onClick={() => setMcpEnvVars([...mcpEnvVars, { key: '', valueName: '' }])}
+                      className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-500"
+                    >
+                      <Plus className="h-3 w-3" /> 참조 추가
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {mcpEnvVars.map((ev, index) => {
+                      const isLiteralSecret = /^(gh[pousr]_|github_pat_|sk-(?:ant-)?|AIza)[A-Za-z0-9_-]{8,}$/.test(ev.valueName.trim()) || /^(gh[pousr]_|github_pat_|sk-(?:ant-)?|AIza)[A-Za-z0-9_-]{8,}$/.test(ev.key.trim());
+                      return (
+                        <div key={index} className="flex flex-wrap items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                          <div className="min-w-[150px]">
+                            <input
+                              value={ev.key}
+                              onChange={e => {
+                                const updated = [...mcpEnvVars];
+                                updated[index].key = e.target.value;
+                                setMcpEnvVars(updated);
+                              }}
+                              placeholder="Env Var Key (e.g. GITHUB_TOKEN)"
+                              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                            />
+                          </div>
+
+                          <div className="flex items-center text-xs text-slate-400">
+                            <ArrowRight className="h-3.5 w-3.5" />
+                          </div>
+
+                          <div className="flex-1 min-w-[200px]">
+                            <input
+                              value={ev.valueName}
+                              onChange={e => {
+                                const updated = [...mcpEnvVars];
+                                updated[index].valueName = e.target.value;
+                                setMcpEnvVars(updated);
+                              }}
+                              placeholder="Host Env Var Name (e.g. GITHUB_TOKEN)"
+                              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                            />
+                          </div>
+
+                          <button
+                            onClick={() => setMcpEnvVars(mcpEnvVars.filter((_, idx) => idx !== index))}
+                            className="p-1.5 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+
+                          {ev.valueName.trim() && (
+                            <div className="w-full text-[10px] mt-1">
+                              {isLiteralSecret ? (
+                                <span className="text-rose-500 font-bold flex items-center gap-1">
+                                  🚫 차단됨: 실제 비밀 토큰 값(ghp_ 등)이 감지되었습니다. 이곳에는 환경변수의 이름(예: GITHUB_TOKEN)만 입력해 주십시오.
+                                </span>
+                              ) : (
+                                <span className="text-slate-500 flex items-center gap-1">
+                                  🔒 안전함: 이 값은 런타임에 호스트 환경변수 `{ev.valueName}`에서 동적 조회됩니다.
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}

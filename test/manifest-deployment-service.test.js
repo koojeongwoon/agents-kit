@@ -234,3 +234,46 @@ test('application service retrieves resource registry and handles mutations', ()
   });
   assert.ok(forceDeletePlan.planId);
 });
+
+test('doctor diagnostics reports resolvable and unresolvable environment secret references', () => {
+  const subject = fixture();
+
+  process.env.TEST_RESOLVABLE_SECRET = 'active';
+
+  const editPlan = subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [{
+      type: 'create',
+      kind: 'mcpServers',
+      assetId: 'postgres-mcp',
+      asset: {
+        command: 'npx',
+        environment: {
+          DATABASE_URL: { source: 'environment', name: 'TEST_RESOLVABLE_SECRET' },
+          API_KEY: { source: 'environment', name: 'TEST_UNRESOLVABLE_SECRET' }
+        }
+      }
+    }]
+  });
+  subject.service.applyEdit({ planId: editPlan.planId });
+
+  const doc = subject.service.doctor({
+    scopeRoot: subject.scopeRoot,
+    clientId: 'codex',
+    scope: 'project',
+    targetRoot: subject.targetRoot
+  });
+
+  const resolvable = doc.checks.find(c => c.id === 'env-postgres-mcp-DATABASE_URL');
+  const unresolvable = doc.checks.find(c => c.id === 'env-postgres-mcp-API_KEY');
+
+  assert.ok(resolvable);
+  assert.equal(resolvable.status, 'healthy');
+  assert.equal(resolvable.code, 'SECRET_RESOLVABLE');
+
+  assert.ok(unresolvable);
+  assert.equal(unresolvable.status, 'warning');
+  assert.equal(unresolvable.code, 'SECRET_NOT_RESOLVABLE');
+
+  delete process.env.TEST_RESOLVABLE_SECRET;
+});
