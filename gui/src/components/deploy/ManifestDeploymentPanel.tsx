@@ -1,12 +1,14 @@
 import {useEffect, useState} from 'react';
-import {AlertTriangle, CheckCircle2, Clock3, History, Play, RotateCcw, ShieldCheck} from 'lucide-react';
+import {AlertTriangle, CheckCircle2, Clock3, History, Play, RotateCcw, ShieldCheck, Activity} from 'lucide-react';
 import {
   applyManifestDeployment,
   applyManifestRollback,
   fetchManifestDeploymentHistory,
   ManifestDeploymentPlan,
   planManifestDeployment,
-  planManifestRollback
+  planManifestRollback,
+  validateManifest,
+  runDoctorDiagnostics
 } from '../../api/deploy';
 
 interface Transaction {
@@ -23,11 +25,15 @@ export function ManifestDeploymentPanel() {
   const [clientId, setClientId] = useState('codex');
   const [projectName, setProjectName] = useState('default');
   const [projectPath, setProjectPath] = useState('');
+  const [clientVersion, setClientVersion] = useState('');
   const [plan, setPlan] = useState<ManifestDeploymentPlan | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [doctorResult, setDoctorResult] = useState<any>(null);
+  const [validationResult, setValidationResult] = useState<any>(null);
+  const [diagnosticsLoading, setDiagnosticsLoading] = useState(false);
 
   const request = {
     clientId,
@@ -54,8 +60,29 @@ export function ManifestDeploymentPanel() {
     setPlan(null);
     setError('');
     setMessage('');
+    setDoctorResult(null);
+    setValidationResult(null);
     refreshHistory().catch(console.error);
-  }, [scope, clientId, projectName, projectPath]);
+  }, [scope, clientId, projectName, projectPath, clientVersion]);
+
+  const runDiagnostics = async () => {
+    setDiagnosticsLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const doc = await runDoctorDiagnostics({ ...request, clientVersion });
+      setDoctorResult(doc);
+
+      const val = await validateManifest(request);
+      setValidationResult(val);
+
+      setMessage('진단 및 유효성 검사가 완료되었습니다.');
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : '진단에 실패했습니다.');
+    } finally {
+      setDiagnosticsLoading(false);
+    }
+  };
 
   const createPlan = async () => {
     setLoading(true);
@@ -124,7 +151,7 @@ export function ManifestDeploymentPanel() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           <label htmlFor="deployment-scope" className="space-y-1.5 text-xs font-semibold text-slate-500">
             Scope
             <select id="deployment-scope" value={scope} onChange={event => setScope(event.target.value as 'global' | 'project')} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
@@ -139,6 +166,10 @@ export function ManifestDeploymentPanel() {
               <option value="claude-code">Claude Code</option>
             </select>
           </label>
+          <label htmlFor="deployment-client-version" className="space-y-1.5 text-xs font-semibold text-slate-500">
+            Client Version (Optional)
+            <input id="deployment-client-version" value={clientVersion} onChange={event => setClientVersion(event.target.value)} placeholder="e.g. 1.0.0" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+          </label>
           <label htmlFor="deployment-manifest" className="space-y-1.5 text-xs font-semibold text-slate-500">
             Manifest
             <input id="deployment-manifest" value={projectName} onChange={event => setProjectName(event.target.value)} disabled={scope === 'global'} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
@@ -151,14 +182,89 @@ export function ManifestDeploymentPanel() {
 
         <div className="mt-5 flex items-center justify-between gap-4 border-t border-slate-200 pt-5 dark:border-slate-800">
           <p className="text-xs text-slate-500">계획은 5분 동안 한 번만 적용할 수 있습니다.</p>
-          <button onClick={createPlan} disabled={loading || !targetReady} className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40">
-            <Play className="h-4 w-4" /> {loading ? '검증 중…' : '배포 계획 만들기'}
-          </button>
+          <div className="flex gap-3">
+            <button onClick={runDiagnostics} disabled={diagnosticsLoading || !targetReady} className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-[#0B0F17] dark:text-slate-300 dark:hover:bg-slate-800">
+              <Activity className="h-4 w-4" /> {diagnosticsLoading ? '진단 중…' : '시스템 진단 (Doctor)'}
+            </button>
+            <button onClick={createPlan} disabled={loading || !targetReady} className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40">
+              <Play className="h-4 w-4" /> {loading ? '검증 중…' : '배포 계획 만들기'}
+            </button>
+          </div>
         </div>
       </section>
 
       {error && <div className="flex items-start gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-300"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div>}
       {message && <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{message}</div>}
+
+      {(doctorResult || validationResult) && (
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-indigo-500" /> 시스템 진단 및 검증 (Doctor & Validate)
+          </h3>
+
+          <div className="mt-4 space-y-4">
+            {/* Manifest Validation Result */}
+            {validationResult && (
+              <div className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                <h4 className="text-sm font-bold flex items-center gap-2">
+                  Manifest 유효성 검사:
+                  {validationResult.valid ? (
+                    <span className="text-xs text-emerald-500 font-semibold flex items-center gap-1"><CheckCircle2 className="h-4 w-4" /> 유효함</span>
+                  ) : (
+                    <span className="text-xs text-rose-500 font-semibold flex items-center gap-1"><AlertTriangle className="h-4 w-4" /> 오류 발견</span>
+                  )}
+                </h4>
+                {validationResult.issues.length > 0 ? (
+                  <div className="mt-2 space-y-2">
+                    {validationResult.issues.map((issue: any, index: number) => (
+                      <div key={index} className="text-xs border-l-2 border-rose-500 pl-2 py-0.5">
+                        <p className="font-semibold text-rose-700 dark:text-rose-400">[{issue.code}] {issue.sourceAssetId ? `Asset: ${issue.sourceAssetId}` : ''}</p>
+                        <p className="text-slate-600 dark:text-slate-400">{issue.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-1 text-xs text-slate-500">Manifest 구조 및 관계 정의가 완벽합니다.</p>
+                )}
+              </div>
+            )}
+
+            {/* Doctor Checks */}
+            {doctorResult && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-bold">로컬 배포 진단 (Doctor Checks)</h4>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {doctorResult.checks.map((check: any) => {
+                    const isHealthy = check.status === 'healthy';
+                    const isWarning = check.status === 'warning';
+                    return (
+                      <div key={check.id} className={`rounded-2xl border p-4 flex flex-col justify-between ${
+                        isHealthy ? 'border-emerald-500/20 bg-emerald-500/5' :
+                        isWarning ? 'border-amber-500/25 bg-amber-500/5' : 'border-rose-500/25 bg-rose-500/5'
+                      }`}>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            {isHealthy ? <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" /> :
+                             isWarning ? <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" /> :
+                             <AlertTriangle className="h-4 w-4 text-rose-500 shrink-0" />}
+                            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">{check.id}</span>
+                          </div>
+                          <p className="mt-2 text-xs font-semibold text-slate-800 dark:text-slate-200">{check.message}</p>
+                          {check.remediation && (
+                            <p className="mt-1 text-[11px] text-slate-500 border-t border-slate-200/50 dark:border-slate-800/50 pt-1 mt-2">
+                              💡 {check.remediation}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {plan && (
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">

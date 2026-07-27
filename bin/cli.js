@@ -33,11 +33,13 @@ Commands:
   apply      Plan and apply one Manifest to one client
   history    Show committed deployment transactions
   rollback   Plan and apply rollback for one transaction
+  validate   Validate Manifest file and resolve dependencies
+  doctor     Inspect local configuration and client diagnostics
   help       Show this help
 
 Options:
-  --kit <dir>          Kit root (default: ~/.agents-kit/kit)
-  --project <dir>      Use project scope and deploy to this directory
+  --kit <ul>          Kit root (default: ~/.agents-kit/kit)
+  --project <ul>      Use project scope and deploy to this directory
   --project-name <id>  Project Manifest directory (default: default)
   --client <id>        Target client definition (required for deployment)
   --dry-run            Show a plan without changing target files
@@ -122,6 +124,43 @@ if (command === 'help' || args.includes('-h') || args.includes('--help')) {
       }
     } catch (error) {
       fail(`Rollback failed: ${error.message}`);
+    }
+  } else if (command === 'validate') {
+    try {
+      const projectName = argument('--project-name') || 'default';
+      const projectPath = argument('--project');
+      const scope = projectPath ? 'project' : 'global';
+      const scopeRoot = resolveKitScopeDir(kitRoot, scope, projectName);
+      const service = createManifestDeploymentService({definitionsDir, homeDir});
+      const result = service.validate({ scopeRoot });
+      console.log(JSON.stringify(result, null, 2));
+      if (!result.valid) {
+        process.exitCode = 1;
+      }
+    } catch (error) {
+      fail(`Validation failed: ${error.message}`);
+    }
+  } else if (command === 'doctor') {
+    try {
+      const projectName = argument('--project-name') || 'default';
+      const projectPath = argument('--project');
+      const scope = projectPath ? 'project' : 'global';
+      const scopeRoot = resolveKitScopeDir(kitRoot, scope, projectName);
+      const clientId = argument('--client');
+      const targetRoot = scope === 'project' ? (projectPath ? path.resolve(projectPath) : undefined) : homeDir;
+      const service = createManifestDeploymentService({definitionsDir, homeDir});
+      const result = service.doctor({
+        scopeRoot,
+        targetRoot,
+        clientId,
+        scope
+      });
+      console.log(JSON.stringify(result, null, 2));
+      if (!result.healthy) {
+        process.exitCode = 1;
+      }
+    } catch (error) {
+      fail(`Doctor failed: ${error.message}`);
     }
   } else {
     fail(`Unknown command '${command}'. Run 'agents-kit help'.`);

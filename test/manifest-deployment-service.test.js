@@ -121,3 +121,38 @@ test('application service requires an explicit manifest and matching scope asset
     scope: 'project'
   }), error => error.code === 'MANIFEST_REQUIRED');
 });
+
+test('application service validates manifest successfully and reports invalid state', () => {
+  const subject = fixture();
+
+  const validRes = subject.service.validate({ scopeRoot: subject.scopeRoot });
+  assert.equal(validRes.valid, true);
+  assert.equal(validRes.issues.length, 0);
+
+  fs.unlinkSync(path.join(subject.scopeRoot, 'agent-kit.yaml'));
+  const invalidRes = subject.service.validate({ scopeRoot: subject.scopeRoot });
+  assert.equal(invalidRes.valid, false);
+  assert.equal(invalidRes.issues[0].code, 'MANIFEST_REQUIRED');
+});
+
+test('application service runs doctor diagnostics', () => {
+  const subject = fixture();
+
+  const healthyRes = subject.service.doctor({
+    scopeRoot: subject.scopeRoot,
+    targetRoot: subject.targetRoot,
+    clientId: 'example',
+    scope: 'project'
+  });
+  assert.equal(healthyRes.healthy, true);
+  assert.equal(healthyRes.checks.some(c => c.id === 'manifest-load' && c.status === 'healthy'), true);
+
+  const badTargetRes = subject.service.doctor({
+    scopeRoot: subject.scopeRoot,
+    targetRoot: path.join(subject.root, 'non-existent-directory'),
+    clientId: 'example',
+    scope: 'project'
+  });
+  assert.equal(badTargetRes.healthy, false);
+  assert.equal(badTargetRes.checks.some(c => c.id === 'target-path' && c.status === 'error'), true);
+});

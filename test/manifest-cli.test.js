@@ -79,3 +79,27 @@ test('CLI initializes only Manifest starter scopes and rejects legacy surfaces',
   assert.equal(result.status, 1);
   assert.match(result.stderr, /select assets in the Manifest/);
 });
+
+test('CLI supports validate and doctor commands', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-cli-validate-doctor-'));
+  const kitRoot = path.join(root, 'kit');
+  const scopeRoot = path.join(kitRoot, 'projects/default');
+  const targetRoot = path.join(root, 'project');
+  fs.mkdirSync(scopeRoot, { recursive: true });
+  fs.mkdirSync(targetRoot);
+  fs.writeFileSync(path.join(scopeRoot, 'agent-kit.yaml'), `
+schemaVersion: 1
+kit:
+  id: cli-test
+assets:
+  skills: []
+`);
+
+  let result = run(['validate', '--kit', kitRoot, '--project', targetRoot]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /"valid": true/);
+
+  result = run(['doctor', '--kit', kitRoot, '--project', targetRoot, '--client', 'codex']);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /"healthy": true/);
+});

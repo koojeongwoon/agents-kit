@@ -26,9 +26,11 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
   assert.deepEqual(routes, [
     'GET /api/deployment/history',
     'POST /api/deployment/apply',
+    'POST /api/deployment/doctor',
     'POST /api/deployment/plan',
     'POST /api/deployment/rollback',
-    'POST /api/deployment/rollback-plan'
+    'POST /api/deployment/rollback-plan',
+    'POST /api/deployment/validate'
   ]);
 });
 
@@ -136,4 +138,24 @@ test('manifest deployment API returns stable plan lookup errors', async () => {
     code: 'DEPLOYMENT_PLAN_NOT_FOUND',
     requestId: 'request-test'
   });
+});
+
+test('deployment router supports validate and doctor endpoints', () => {
+  const service = {
+    validate: ({ scopeRoot }) => ({ valid: true, issues: [] }),
+    doctor: ({ scopeRoot, targetRoot, clientId, scope, clientVersion }) => ({ healthy: true, checks: [] })
+  };
+  const router = routerWith(service);
+
+  const validateRes = dispatch(router, 'POST', '/api/deployment/validate', {
+    body: { scope: 'project', projectPath: '/project' }
+  });
+  assert.equal(validateRes.statusCode, 200);
+  assert.equal(validateRes.body.valid, true);
+
+  const doctorRes = dispatch(router, 'POST', '/api/deployment/doctor', {
+    body: { clientId: 'codex', scope: 'project', projectPath: '/project' }
+  });
+  assert.equal(doctorRes.statusCode, 200);
+  assert.equal(doctorRes.body.healthy, true);
 });

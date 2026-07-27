@@ -88,3 +88,53 @@ export async function applyManifestRollback(planId: string) {
     body: JSON.stringify({ planId })
   }));
 }
+
+export interface ManifestValidationResult {
+  valid: boolean;
+  issues: Array<{
+    code: string;
+    severity: 'error' | 'warning';
+    sourceAssetId?: string;
+    message?: string;
+    details?: any;
+  }>;
+}
+
+export interface DoctorCheck {
+  id: string;
+  status: 'healthy' | 'warning' | 'error';
+  code?: string;
+  message: string;
+  remediation?: string;
+}
+
+export interface DoctorResult {
+  healthy: boolean;
+  checks: DoctorCheck[];
+}
+
+export async function validateManifest(input: {
+  scope: 'global' | 'project';
+  projectPath?: string;
+  projectName?: string;
+}): Promise<ManifestValidationResult> {
+  return jsonOrError(await apiFetch('/api/deployment/validate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input)
+  }));
+}
+
+export async function runDoctorDiagnostics(input: {
+  clientId: string;
+  scope: 'global' | 'project';
+  projectPath?: string;
+  projectName?: string;
+  clientVersion?: string;
+}): Promise<DoctorResult> {
+  return jsonOrError(await apiFetch('/api/deployment/doctor', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input)
+  }));
+}
