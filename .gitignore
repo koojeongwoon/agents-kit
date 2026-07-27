@@ -16,7 +16,7 @@ gui/src-tauri/resources/backend.mjs
 # Rust / Tauri build output
 target/
 
-# setup-symlinks.sh 백업 (기존 파일 덮어쓸 때 생성)
+# Transaction or manual backup artifacts
 *.bak
 
 # 로컬 전용 override (공용 repo에 올리지 않음)
@@ -25,16 +25,9 @@ target/
 *.override.md
 AGENTS.override.md
 
-# 시크릿 (혹시 adapter에 실수로 넣는 경우 방지)
+# Secrets
 .env
 .env.*
 !.env.example
 *.pem
 credentials.json
-
-# MCP resolved output lives inside kit/
-kit/**/.env
-**/mcp-servers.local.json
-
-# 루프 실행 이력 — 로컬 only로 두려면 아래 주석 해제
-# loops/*/memory.md

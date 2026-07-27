@@ -12,11 +12,10 @@ change independently across client versions.
 
 Store paths, scopes, formats, detection rules, and capability evidence in
 versioned client definitions. Keep only semantic rendering and validation logic
-in client adapters.
+in data-driven client definitions.
 
 ## Consequences
 
 - Path updates usually change data rather than application control flow.
 - Capability status must include version and evidence.
 - Unverified support cannot be marked stable.
-

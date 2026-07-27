@@ -10,12 +10,12 @@ tests, and user surface are linked here.
 
 | ID | Requirement | Design owner | Initial status |
 |---|---|---|---|
-| AK-P01 | Manage client-neutral agent assets | Product definition, ADR-002 | Designed |
+| AK-P01 | Manage client-neutral agent assets | Product definition, ADR-002 | Implemented |
 | AK-P02 | Separate Configuration Plane from optional Runtime | ADR-001 | Designed |
-| AK-P03 | Preserve existing implementation where safe | Phase 0 baseline | Designed |
-| AK-P04 | Keep client path and capability data outside control-flow branches | ADR-003 | Designed |
-| AK-P05 | Support global and project scopes | Asset model | Designed |
-| AK-P06 | Keep CLI and GUI behavior aligned | ADR-006 | Designed |
+| AK-P03 | Start from the Manifest contract without directory compatibility inference | Product reset | Implemented |
+| AK-P04 | Keep client path and capability data outside control-flow branches | ADR-003 | Implemented for Codex and Claude Code |
+| AK-P05 | Support global and project scopes | Asset model | Implemented |
+| AK-P06 | Keep CLI and GUI behavior aligned | ADR-006 | Implemented through shared service |
 
 ## Asset coverage
 
@@ -43,8 +43,8 @@ tests, and user surface are linked here.
 
 | ID | Requirement | Design | Initial status |
 |---|---|---|---|
-| AK-C01 | Claude Code definition | Client capability audit | Audit pending |
-| AK-C02 | Codex definition | Client capability audit | Audit pending |
+| AK-C01 | Claude Code definition | Client capability audit | Implemented and tested |
+| AK-C02 | Codex definition | Client capability audit | Implemented and tested |
 | AK-C03 | Cursor definition | Client capability audit | Audit pending |
 | AK-C04 | Windsurf definition | Client capability audit | Audit pending |
 | AK-C05 | GitHub Copilot and VS Code definitions | Client capability audit | Audit pending |
@@ -88,18 +88,18 @@ tests, and user surface are linked here.
 
 | ID | Requirement | User surface | Initial status |
 |---|---|---|---|
-| AK-U01 | `plan` workflow | CLI and GUI | Pending |
-| AK-U02 | `apply` workflow | CLI and GUI | Shared backend and CLI contract implemented; React UI pending |
-| AK-U03 | `diff` workflow | CLI and GUI | Partial |
+| AK-U01 | `plan` workflow | CLI and GUI | Implemented as dry-run and plan preview |
+| AK-U02 | `apply` workflow | CLI and GUI | Implemented through shared service |
+| AK-U03 | `diff` workflow | CLI and GUI | Implemented as operation and conflict preview |
 | AK-U04 | `validate` workflow | CLI and GUI | Pending |
 | AK-U05 | `doctor` workflow | CLI and GUI | Pending |
-| AK-U06 | `rollback` workflow | CLI and GUI | Shared backend and CLI contract implemented; React UI pending |
-| AK-U07 | Capability and version warnings | Clients UI | Pending |
-| AK-U08 | Conflict resolution | Conflicts UI | Pending |
-| AK-U09 | Ownership display | Plan and asset UI | Pending |
-| AK-U10 | Transaction history and rollback | History UI | Backend contract implemented; React UI pending |
+| AK-U06 | `rollback` workflow | CLI and GUI | Implemented |
+| AK-U07 | Capability and version warnings | Plan UI | Implemented as blocked plan reasons |
+| AK-U08 | Conflict resolution | Plan UI | Detection implemented; interactive resolution deferred |
+| AK-U09 | Ownership display | Plan UI | Implemented |
+| AK-U10 | Transaction history and rollback | History UI | Implemented |
 | AK-U11 | Secret reference input without secret disclosure | Settings UI | Pending |
-| AK-U12 | Reuse existing asset, marketplace, project, and Git workflows | Existing GUI | Existing |
+| AK-U12 | Manifest-native marketplace and Git workflows | Future extension | Deferred; legacy direct mutation removed |
 | AK-U13 | Select compatible Tools when creating a Skill | Skill editor | Pending |
 | AK-U14 | Select Skills, Tools, Policies, and Memory for an Agent | Agent editor | Pending |
 | AK-U15 | Show dependency graph and deletion impact | Dependency UI | Pending |

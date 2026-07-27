@@ -4,41 +4,47 @@
 
 agents-kit uses semantic versioning:
 
-- patch: fixes without changing CLI or asset contracts
-- minor: backward-compatible commands, adapters, or resource categories
-- major: incompatible CLI, master-kit layout, or deployment behavior
+- patch: fixes without changing Manifest, client-definition, or CLI contracts
+- minor: backward-compatible capabilities or deployment behavior
+- major: incompatible Manifest, CLI, ownership, or deployment behavior
 
-Keep the versions in `package.json`, `gui/package.json`, `gui/src-tauri/Cargo.toml`, and `gui/src-tauri/tauri.conf.json` identical.
+Keep versions in `package.json`, `gui/package.json`,
+`gui/src-tauri/Cargo.toml`, and `gui/src-tauri/tauri.conf.json` identical.
 
 ## Pre-release
 
-1. Confirm [README.md](./README.md), [SUPPORT.md](./SUPPORT.md), [LICENSE](./LICENSE) match the implementation.
-2. Inspect `git status` and ensure generated files, secrets, `.env`, `dist`, `target`, and `backend.mjs` are not staged.
-3. Run the complete verification:
+1. Confirm README, SUPPORT, LICENSE, examples, and client definitions match the implementation.
+2. Ensure generated files, secrets, `.env`, `dist`, `target`, and `backend.mjs` are not staged.
+3. Run:
 
    ```bash
+   npm ci
    npm ci --prefix gui
    npm run test:all
    git diff --check
    ```
 
-4. Build the installable desktop artifacts:
+4. Build installable desktop artifacts:
 
    ```bash
    npm --prefix gui run tauri:build
    ```
 
-5. Install the generated artifact on a clean macOS account with Node.js 20+ and verify:
+5. On a clean macOS account with Node.js 20+, verify:
 
    - the app starts without Vite;
-   - the bundled backend listens only on `127.0.0.1:3710`;
-   - GitHub CLI installation and browser login state are reported correctly;
-   - global and named-project dry-runs use the selected master-kit scope;
-   - a test deployment can be rolled back and does not overwrite an existing `.bak`;
+   - the backend listens only on `127.0.0.1:3710`;
+   - a missing Manifest fails closed;
+   - project and global plans show exact operations and blocked reasons;
+   - apply requires a prior unexpired plan;
+   - a committed transaction can be rolled back;
+   - unknown target content is not overwritten;
    - quitting the app terminates its backend process.
 
-6. Tag the verified commit as `v<version>` and attach the platform artifact plus checksums.
+6. Tag the verified commit as `v<version>` and attach artifacts and checksums.
 
-## Known packaging boundary
+## Packaging boundary
 
-The backend JavaScript is packaged into the desktop resources, but the Node.js runtime is not embedded. A future release can replace this with a platform-specific Node SEA or a native Rust backend after signing, update, and binary-size tradeoffs are evaluated.
+The backend JavaScript is packaged into desktop resources, but Node.js itself
+is not embedded. A future release may replace this with a platform-specific
+runtime after signing, update, and binary-size tradeoffs are evaluated.

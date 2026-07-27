@@ -44,7 +44,7 @@ This is the initial core product:
 - asset registry
 - client definitions
 - capability matrix
-- client adapters
+- data-driven client definitions and capability-aware materializers
 - deployment planning and diff
 - managed, merge, copy, link, and manual strategies
 - state and ownership tracking

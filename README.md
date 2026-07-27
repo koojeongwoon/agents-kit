@@ -1,139 +1,117 @@
 # agents-kit
 
-Cursor, Antigravity, Codex, Claude Code, Claude Desktop에서 사용하는 에이전트 자원을 하나의 마스터 킷으로 관리하고 배포하는 CLI 및 데스크톱 GUI입니다.
+여러 LLM 클라이언트의 에이전트 자원을 하나의 Manifest로 정의하고,
+변경 계획을 검토한 뒤 트랜잭션으로 배포하는 CLI 및 데스크톱 앱입니다.
 
-Markdown/JSON 자원을 클라이언트별 어댑터가 각 제품의 경로와 형식으로 변환합니다. LangChain이나 LangGraph 없이 symlink, 설정 변환, Node.js CLI, React/Tauri GUI로 동작합니다.
+Manifest가 유일한 desired state입니다. 디렉터리 구조를 추측하거나,
+Manifest에 없는 공통 자원을 자동 생성·가져오기·배포하지 않습니다.
 
-## 핵심 기능 및 특징
+## 현재 지원 범위
 
-- **글로벌 최신 명세 지원**: Agentic AI Foundation (AAIF)의 `AGENTS.md` 및 `agentskills.io` Open Spec 100% 준수
-- **✨ 1-Click AI 전문가 자동 고도화**: 자원 카테고리별(Skills, Agents, Harness, Loops, Memory) 사전 정의 메타 프롬프트를 기반으로 버튼 클릭 한 번에 고품질 규격 작성
-- **🛡️ 3중 프롬프트 인젝션 방어**: XML 태그 격리(`<user_existing_content>`), 시스템 가드레일, 토큰 바운더리 캡핑으로 프롬프트 탈옥 차단
-- **📁 시각적 디렉터리 탐색기**: 프로젝트 이식 및 신규 프로젝트 킷 생성 시 마우스 클릭으로 디렉터리 트리 브라우징
-- **🔑 GUI 기반 Multi-LLM API Key 관리**: `~/.agents-kit/config/config.yaml`에 OpenAI(GPT-4o), Gemini, Claude 키 보안 관리
-- **🐙 Git 1클릭 브라우저 인증**: GitHub CLI 기반 브라우저 1클릭 로그인 및 마스터 킷 Git 백업/동기화 지원
+- 자원: Instructions, Skills, Agents, MCP, Memory, Policies, Harness, Workflows, Settings
+- 참조: Skill 의존성, Agent의 Skill/Tool/Policy/Memory 참조, MCP Tool provider, Workflow step
+- 클라이언트 정의: Codex, Claude Code
+- 전략: copy, structured merge, managed file, safe link, manual
+- 흐름: plan → explicit apply → validation → history → rollback
+- 범위: global, named project
+- 표면: 동일한 애플리케이션 서비스를 사용하는 CLI와 데스크톱 GUI
 
-## 관리 자원
+지원 여부는 디렉터리 존재가 아니라 `clients/*.yaml`의 capability와 검증
+근거로 판단합니다. 지원되지 않거나 검증되지 않은 기능은 fail-closed로
+차단됩니다.
 
-agents-kit은 다음 6개 자원 범주를 관리합니다.
+## Kit 구조
 
-- `harness`: `AGENTS.md`, 허용 명령, 실행 자가검증 규칙 등
-- `skills`: `agentskills.io` 표준 규격의 재사용 가능한 `SKILL.md` 묶음
-- `mcp`: MCP 서버 템플릿과 로컬 보안 환경변수
-- `agents`: 역할별 서브에이전트 지침
-- `loops`: 반복 작업 정의와 클라이언트별 자동화 형식
-- `memory`: 전역 또는 프로젝트 메모리 지식베이스
-
-## 마스터 킷 위치와 구조
-
-기본 마스터 킷은 저장소 안이 아니라 사용자 홈의 `~/.agents-kit/kit`에 생성됩니다. 환경 설정은 `~/.agents-kit/config/config.yaml`에 저장됩니다.
+기본 Kit은 `~/.agents-kit/kit`에 생성됩니다.
 
 ```text
-~/.agents-kit/
-├── config/
-│   └── config.yaml          # Multi-LLM API Keys & 글로벌 설정
-└── kit/                     # 마스터 자원 킷
-    ├── global/
-    │   ├── harness/
-    │   ├── skills/
-    │   ├── mcp/
-    │   ├── agents/
-    │   ├── loops/
-    │   └── memory/
-    └── projects/
-        └── <project-name>/
-            ├── harness/
-            ├── skills/
-            └── ...
+~/.agents-kit/kit/
+├── global/
+│   ├── agent-kit.yaml
+│   └── assets/
+└── projects/
+    └── default/
+        ├── agent-kit.yaml
+        └── assets/
 ```
 
-- `global`: 사용자 PC 전체에 공통으로 배포할 자원
-- `projects/<name>`: 프로젝트별로 관리하는 마스터 자원
+각 scope에는 `agent-kit.yaml`, `agent-kit.yml`, `agent-kit.json` 중 하나가
+필수입니다. 자원 파일은 Manifest의 `source`로 명시해야 합니다.
 
-## 지원 클라이언트
+전체 형식은 [Manifest 예제](./docs/examples/agent-kit.yaml)와
+[자원 참조 모델](./docs/architecture/resource-reference-model.md)을
+참고하세요.
 
-| 클라이언트 | 표시 이름 | 전역 설정 위치 | 프로젝트 배포 위치 |
-|---|---|---|---|
-| Antigravity | Antigravity | `~/.gemini/config` | `<project>/.agents` |
-| Cursor | Cursor | `~/.cursor` | `<project>/.cursor`, `<project>/.cursorrules` |
-| Codex | Codex | `~/.codex` | `<project>/.codex` |
-| Claude Code | Claude Code | `~/.claude` | `<project>/.claude`, `<project>/.mcp.json` |
-| Claude Desktop | Claude Desktop | 사용자 Claude 설정 | 프로젝트 스코프 미지원 자원 제외 |
+## 설치 및 검증
 
-## 설치와 GUI/CLI 사용법
-
-Node.js 18 이상이 필요합니다.
+Node.js 20 이상이 필요합니다.
 
 ```bash
 npm install
-npm test
-
-# GUI 데스크톱 앱 실행 (Tauri / React)
-npm run gui
-
-# CLI 전역 배포
-node bin/cli.js apply
-node bin/cli.js apply --dry-run
-node bin/cli.js apply --client codex
-
-# 프로젝트 배포
-node bin/cli.js apply --project /path/to/project
-```
-
-범위 디렉터리에 `agent-kit.yaml`, `agent-kit.yml`, 또는 `agent-kit.json`이
-있으면 CLI는 Manifest 배포 엔진을 사용합니다. 이 모드에서는 대상
-클라이언트를 명시하고, `--dry-run`으로 계획을 먼저 확인할 수 있습니다.
-
-```bash
-agents-kit apply --project /path/to/project --client codex --dry-run
-agents-kit apply --project /path/to/project --client codex
-agents-kit history --project /path/to/project --client codex
-agents-kit rollback --project /path/to/project --client codex \
-  --transaction <transaction-id> --dry-run
-agents-kit rollback --project /path/to/project --client codex \
-  --transaction <transaction-id>
-```
-
-Manifest는 필수입니다. Manifest가 없으면 계획과 배포가 중단되며 기존
-디렉터리 구조를 자동으로 추측하거나 변환하지 않습니다.
-
-`npm link`로 설치하면 `node bin/cli.js` 대신 `agents-kit` 명령어로 실행할 수 있습니다.
-
-## Multi-LLM API Key 설정 (GUI & YAML)
-
-상단 헤더의 **`🔑 API 키 설정`** 버튼을 눌러 OpenAI, Gemini, Anthropic Key를 등록하면 `~/.agents-kit/config/config.yaml` 파일에 안전하게 저장되며 AI 자동 고도화 호출 시 즉시 적용됩니다.
-
-```yaml
-llm:
-  provider: openai
-  keys:
-    openai: "sk-..."
-    gemini: "AIza..."
-    anthropic: "sk-ant-..."
-```
-
-## skills.sh 마켓 & Smithery MCP 병합
-
-- **skills.sh 스킬 마켓**: `Skills` 탭에서 마켓을 열어 공개 커뮤니티 스킬을 클릭 한 번으로 마스터 킷에 다운로드 및 배포합니다.
-- **Smithery MCP 마켓**: `MCP` 탭에서 Smithery 원격 MCP 서버를 검색하고 로컬 환경변수(`.env`)와 함께 안전하게 병합합니다.
-
-## 개발 검증
-
-```bash
+npm ci --prefix gui
 npm run test:all
 ```
 
-플랫폼 지원 범위는 [SUPPORT.md](./SUPPORT.md), 배포 절차는 [RELEASE.md](./RELEASE.md)를 참고하세요.
+## CLI
 
-## 재구축 설계
+```bash
+# starter Manifest 생성
+node bin/cli.js init
 
-멀티클라이언트 공통 Manifest와 안전한 Plan/Diff/Apply 구조로 전환하는
-재구축은 다음 문서를 기준으로 진행합니다.
+# global 계획 및 적용
+node bin/cli.js apply --client codex --dry-run
+node bin/cli.js apply --client codex
+
+# project 계획 및 적용
+node bin/cli.js apply \
+  --project /path/to/project \
+  --project-name default \
+  --client claude-code \
+  --dry-run
+
+# 이력과 rollback
+node bin/cli.js history --project /path/to/project --client codex
+node bin/cli.js rollback \
+  --project /path/to/project \
+  --client codex \
+  --transaction <transaction-id> \
+  --dry-run
+```
+
+`npm link` 후에는 `node bin/cli.js` 대신 `agents-kit`을 사용할 수 있습니다.
+
+CLI 명령은 `init`, `apply`, `history`, `rollback`, `help`만 제공합니다.
+자원 선택은 `--resource`나 `--file`이 아니라 Manifest에서 수행합니다.
+
+## 데스크톱 GUI
+
+```bash
+npm run gui
+```
+
+GUI는 scope, client, Manifest와 대상 프로젝트를 선택하여 계획을 만들고,
+차단 사유와 변경 대상을 확인한 뒤 명시적으로 적용합니다. 완료된
+트랜잭션은 같은 화면에서 rollback 계획을 만들 수 있습니다.
+
+로컬 백엔드는 `127.0.0.1:3710`에만 바인딩되며, 변경 요청은 세션 토큰과
+허용 origin 검사를 통과해야 합니다.
+
+## 안전성
+
+- Manifest 없는 scope 거부
+- 절대 경로, traversal, symlink escape source 거부
+- 미확인 capability와 모호한 Tool provider 거부
+- unknown ownership 및 외부 변경 충돌 거부
+- 계획 만료와 재사용 거부
+- 트랜잭션 백업, 원자적 적용, 검증 실패 rollback
+- Manifest에 literal secret 저장 거부
+
+## 문서
 
 - [제품 정의](./docs/product/agent-kit-definition.md)
-- [목표 아키텍처](./docs/architecture/overview.md)
-- [자원 참조와 의존성 모델](./docs/architecture/resource-reference-model.md)
-- [Manifest 전체 예제](./docs/examples/agent-kit.yaml)
-- [요구사항 추적표](./docs/traceability/shared-conversation-requirements.md)
-- [현재 기준선](./docs/reconstruction/phase-0-baseline.md)
-- [클라이언트 Capability 감사](./docs/reconstruction/client-capability-audit.md)
+- [아키텍처](./docs/architecture/overview.md)
+- [배포 수명주기](./docs/architecture/deployment-lifecycle.md)
+- [자원 참조 모델](./docs/architecture/resource-reference-model.md)
+- [플랫폼 지원](./SUPPORT.md)
+- [릴리스 절차](./RELEASE.md)
+- [재구축 단계](./docs/reconstruction/)

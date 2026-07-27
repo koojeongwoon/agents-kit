@@ -78,7 +78,7 @@ binding hint rather than connection ownership.
 
 ## Graph validation
 
-Validation occurs before adapter rendering:
+Validation occurs before capability-aware materialization:
 
 - referenced asset exists and has the expected kind
 - reference scope is legal
