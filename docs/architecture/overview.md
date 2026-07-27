@@ -12,7 +12,7 @@ Configuration and Distribution Plane
     -> Dependency Graph and Reference Validator
     -> Client Definition Registry
     -> Capability Resolver
-    -> Client Adapter
+    -> Capability-aware Materializer
     -> Deployment Planner
     -> Diff and Conflict Analysis
     -> Apply Coordinator
@@ -36,7 +36,7 @@ CLI --------\
              -> Application Services -> Domain <- Infrastructure
 GUI API ----/
 
-Client adapters -> Domain contracts
+Client definitions -> Domain contracts
 Runtime --------> Shared asset contracts
 Domain -X-> GUI, filesystem, MCP, or specific clients
 Configuration Plane -X-> Managed Runtime
@@ -44,37 +44,31 @@ Configuration Plane -X-> Managed Runtime
 
 `-X->` indicates a forbidden dependency.
 
-## Proposed module boundaries
-
-The existing JavaScript layout should evolve incrementally:
+## Module boundaries
 
 ```text
 lib/
   domain/
-    manifest/
-    assets/
-    clients/
-    deployment/
-    policy/
+    manifest.js
+    client-definition.js
+    scope.js
+    structured-merge.js
   application/
-    load-kit.js
-    plan-deployment.js
+    manifest-deployment-service.js
+    plan-client-deployment.js
+    prepare-*-deployment.js
     apply-deployment.js
-    validate-deployment.js
     rollback-deployment.js
-    doctor.js
-  adapters/
-    clients/
   infrastructure/
-    manifests/
-    client-definitions/
-    merge/
-    state/
-    filesystem/
+    manifest-loader.js
+    client-definition-loader.js
+    deployment-state-store.js
+    deployment-backup-store.js
+    file-transaction.js
 ```
 
-Existing modules stay in place until tests prove that the new application
-services can replace their behavior.
+Client-specific behavior is data in `clients/*.yaml`, not executable adapter
+classes.
 
 ## Main configuration flow
 
