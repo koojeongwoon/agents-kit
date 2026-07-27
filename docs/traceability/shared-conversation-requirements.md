@@ -92,15 +92,15 @@ tests, and user surface are linked here.
 | ID | Requirement | User surface | Initial status |
 |---|---|---|---|
 | AK-U01 | `plan` workflow | CLI and GUI | Pending |
-| AK-U02 | `apply` workflow | CLI and GUI | Existing, redesign pending |
+| AK-U02 | `apply` workflow | CLI and GUI | Shared backend and CLI contract implemented; React UI pending |
 | AK-U03 | `diff` workflow | CLI and GUI | Partial |
 | AK-U04 | `validate` workflow | CLI and GUI | Pending |
 | AK-U05 | `doctor` workflow | CLI and GUI | Pending |
-| AK-U06 | `rollback` workflow | CLI and GUI | Pending |
+| AK-U06 | `rollback` workflow | CLI and GUI | Shared backend and CLI contract implemented; React UI pending |
 | AK-U07 | Capability and version warnings | Clients UI | Pending |
 | AK-U08 | Conflict resolution | Conflicts UI | Pending |
 | AK-U09 | Ownership display | Plan and asset UI | Pending |
-| AK-U10 | Transaction history and rollback | History UI | Pending |
+| AK-U10 | Transaction history and rollback | History UI | Backend contract implemented; React UI pending |
 | AK-U11 | Secret reference input without secret disclosure | Settings UI | Pending |
 | AK-U12 | Reuse existing asset, marketplace, project, and Git workflows | Existing GUI | Existing |
 | AK-U13 | Select compatible Tools when creating a Skill | Skill editor | Pending |

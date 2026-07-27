@@ -7,7 +7,88 @@ import {sendBadRequest, sendServerError} from '../../../lib/interfaces/http/erro
 
 export function createDeployRouter(ctx) {
   const router = express.Router();
-  const { homeDir, kitRoot, permissionsFilePath, approvedProjectRoots, globalClientRoots, isKnownLinkPair, resolveMcpConfigForDeploy, assertSafeProjectTarget, existsBrokenSymlink, checkSymlink } = ctx;
+  const { homeDir, kitRoot, permissionsFilePath, approvedProjectRoots, globalClientRoots, isKnownLinkPair, resolveMcpConfigForDeploy, assertSafeProjectTarget, existsBrokenSymlink, checkSymlink, manifestDeploymentService, sendApiError, resolveKitScopeDir } = ctx;
+
+  function manifestLocations({ scope = 'project', projectPath = '', projectName = '' }) {
+    if (scope === 'project') {
+      if (!projectPath?.trim()) {
+        const error = new Error('Project path is required');
+        error.code = 'PROJECT_PATH_REQUIRED';
+        throw error;
+      }
+      assertSafeProjectTarget(projectPath);
+    }
+    return {
+      scopeRoot: resolveKitScopeDir(kitRoot, scope, projectName),
+      targetRoot: scope === 'global' ? homeDir : path.resolve(projectPath)
+    };
+  }
+
+  router.post('/api/deployment/plan', (req, res) => {
+    const { clientId, scope = 'project', projectPath = '', projectName = '', clientVersion, previewOptIn = false } = req.body;
+    try {
+      const locations = manifestLocations({ scope, projectPath, projectName });
+      const plan = manifestDeploymentService.plan({
+        ...locations,
+        clientId,
+        scope,
+        clientVersion,
+        previewOptIn
+      });
+      res.json({ success: true, ...plan });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.post('/api/deployment/apply', (req, res) => {
+    try {
+      const result = manifestDeploymentService.apply({ planId: req.body?.planId });
+      res.json({ success: true, ...result });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.get('/api/deployment/history', (req, res) => {
+    const { clientId, scope = 'project', projectPath = '', projectName = '' } = req.query;
+    try {
+      const locations = manifestLocations({ scope, projectPath, projectName });
+      const transactions = manifestDeploymentService.history({
+        scope,
+        targetRoot: locations.targetRoot,
+        clientId
+      });
+      res.json({ success: true, transactions });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.post('/api/deployment/rollback-plan', (req, res) => {
+    const { transactionId, clientId, scope = 'project', projectPath = '', projectName = '' } = req.body;
+    try {
+      const locations = manifestLocations({ scope, projectPath, projectName });
+      const plan = manifestDeploymentService.planRollback({
+        transactionId,
+        clientId,
+        scope,
+        targetRoot: locations.targetRoot
+      });
+      res.json({ success: true, ...plan });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.post('/api/deployment/rollback', (req, res) => {
+    try {
+      const result = manifestDeploymentService.rollback({ planId: req.body?.planId });
+      res.json({ success: true, ...result });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
 
   // POST /api/deploy-single-asset — Deploy single resource or specific file
   router.post('/api/deploy-single-asset', (req, res) => {

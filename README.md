@@ -80,6 +80,22 @@ node bin/cli.js apply --client codex
 node bin/cli.js apply --project /path/to/project
 ```
 
+범위 디렉터리에 `agent-kit.yaml`, `agent-kit.yml`, 또는 `agent-kit.json`이
+있으면 CLI는 Manifest 배포 엔진을 사용합니다. 이 모드에서는 대상
+클라이언트를 명시하고, `--dry-run`으로 계획을 먼저 확인할 수 있습니다.
+
+```bash
+agents-kit apply --project /path/to/project --client codex --dry-run
+agents-kit apply --project /path/to/project --client codex
+agents-kit history --project /path/to/project --client codex
+agents-kit rollback --project /path/to/project --client codex \
+  --transaction <transaction-id> --dry-run
+agents-kit rollback --project /path/to/project --client codex \
+  --transaction <transaction-id>
+```
+
+Manifest가 없는 기존 Kit은 기존 어댑터 배포 동작을 유지합니다.
+
 `npm link`로 설치하면 `node bin/cli.js` 대신 `agents-kit` 명령어로 실행할 수 있습니다.
 
 ## Multi-LLM API Key 설정 (GUI & YAML)

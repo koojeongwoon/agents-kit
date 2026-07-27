@@ -8,14 +8,16 @@ import { execFileSync } from 'child_process';
 import { validateRepositoryName } from '../lib/git-security.js';
 import { CLIENT_IDS, RESOURCE_IDS } from '../lib/catalog.js';
 import { buildResolvedMcpConfig } from '../lib/mcp-env.js';
-import { resolveKitRoot, kitPaths, ensureUserKitBootstrapped } from '../lib/kit-paths.js';
+import { resolveKitRoot, resolveKitScopeDir, kitPaths, ensureUserKitBootstrapped } from '../lib/kit-paths.js';
 import { getAdapters, deployAllAdapters, importFromAdapter } from '../lib/adapters/index.js';
 import { generateExpertAsset } from '../lib/utils/llm-client.js';
+import { createManifestDeploymentService } from '../lib/application/manifest-deployment-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '../');
 const homeDir = os.homedir();
+const definitionsDir = path.join(projectRoot, 'clients');
 
 const args = process.argv.slice(2);
 const command = args[0] || 'apply';
@@ -49,6 +51,8 @@ Commands:
   init, import       Bootstrap master kit (default template or import from an existing client)
   generate, AI       Use AI to generate master kit assets (harness, subagent, skill)
   status             Check detection and link status of AI clients
+  history            Show Manifest deployment transaction history
+  rollback           Roll back one committed Manifest transaction
   git                Run git sync operations on kit directory (push/pull)
   help               Show this help message
 
@@ -65,6 +69,7 @@ Options:
   --push             Git commit & push kit assets
   --pull             Git pull kit assets
   --dry-run          Preview apply changes without modifying client files
+  --transaction <id> Transaction ID for rollback
 
 Examples:
   npx agents-kit init                        # Initialize default master kit template at ~/.agents-kit/kit
@@ -73,6 +78,7 @@ Examples:
   npx agents-kit apply                       # Apply master kit to global clients
   npx agents-kit apply --project ./my-app    # Apply project kit to ./my-app
   npx agents-kit apply --dry-run              # Preview global deployment changes
+  npx agents-kit rollback --transaction <id> --client codex --project ./my-app
   npx agents-kit status                      # View current link status
 `);
 }
@@ -219,6 +225,56 @@ if (command === 'generate' || command === 'ai') {
   } catch (err) {
     console.error('❌ Git operation failed:', err.message);
   }
+} else if (command === 'history' || command === 'rollback') {
+  const customPath = getArgValue('--project');
+  const scope = customPath ? 'project' : 'global';
+  const targetClient = getArgValue('--client');
+  const targetLocation = scope === 'project' ? path.resolve(customPath) : homeDir;
+  if (!targetClient) {
+    console.error('❌ --client is required for Manifest deployment history and rollback.');
+    process.exit(1);
+  }
+  const service = createManifestDeploymentService({ definitionsDir, homeDir });
+  try {
+    if (command === 'history') {
+      const transactions = service.history({
+        scope,
+        targetRoot: targetLocation,
+        clientId: targetClient
+      });
+      console.log(JSON.stringify({ transactions }, null, 2));
+    } else {
+      const transactionId = getArgValue('--transaction');
+      if (!transactionId) {
+        console.error('❌ --transaction is required for rollback.');
+        process.exit(1);
+      }
+      const plan = service.planRollback({
+        transactionId,
+        scope,
+        targetRoot: targetLocation,
+        clientId: targetClient
+      });
+      console.log('\n📋 Rollback plan:');
+      for (const operation of plan.operations) {
+        console.log(`   ${operation.operation}: ${operation.target} (${operation.reason})`);
+      }
+      if (plan.blocked.length > 0) {
+        for (const blocked of plan.blocked) {
+          console.log(`   BLOCKED: ${blocked.target} (${blocked.reason})`);
+        }
+      }
+      if (args.includes('--dry-run')) {
+        console.log('\n✅ Rollback dry run complete; no files changed.\n');
+      } else {
+        const result = service.rollback({ planId: plan.planId });
+        console.log(`\n✅ Rolled back ${result.targets.length} targets in ${result.transactionId}.\n`);
+      }
+    }
+  } catch (err) {
+    console.error(`\n❌ ${command} failed:`, err.message);
+    process.exit(1);
+  }
 } else if (command === 'apply' || command === 'sync') {
   let scope = 'global';
   let customPath = getArgValue('--project');
@@ -229,6 +285,9 @@ if (command === 'generate' || command === 'ai') {
   const fileFilter = getArgValue('--file');
   const dryRun = args.includes('--dry-run');
   const targetLocation = scope === 'project' ? path.resolve(customPath) : homeDir;
+  const scopeRoot = resolveKitScopeDir(kitRoot, scope);
+  const manifestMode = ['agent-kit.yaml', 'agent-kit.yml', 'agent-kit.json']
+    .some(name => fs.existsSync(path.join(scopeRoot, name)));
 
   console.log(`\n📦 Kit Root: ${kitRoot}`);
   console.log(`⚡ Scope: ${scope.toUpperCase()} (source: ${scope === 'project' ? 'projects/default' : 'global'})`);
@@ -238,6 +297,35 @@ if (command === 'generate' || command === 'ai') {
   console.log(`🎯 Applying to ${scope === 'project' ? `project (${targetLocation})` : 'global (~/)'}...`);
 
   try {
+    if (manifestMode) {
+      if (!targetClient) {
+        throw new Error('--client is required when applying an Agent Kit Manifest');
+      }
+      if (resourceFilter || fileFilter) {
+        throw new Error('--resource and --file are not supported by Manifest deployment yet');
+      }
+      const service = createManifestDeploymentService({ definitionsDir, homeDir });
+      const plan = service.plan({
+        scopeRoot,
+        targetRoot: targetLocation,
+        clientId: targetClient,
+        scope
+      });
+      console.log('\n📋 Manifest deployment plan:');
+      for (const operation of plan.operations) {
+        console.log(`   [${operation.clientId}] ${operation.operation}: ${operation.target} (${operation.reason})`);
+      }
+      for (const blocked of plan.blocked) {
+        console.log(`   [${blocked.clientId}] BLOCKED: ${blocked.assetId} (${blocked.reason})`);
+      }
+      if (dryRun) {
+        console.log(`\n✅ Dry run complete. ${plan.operations.length} operations planned; no files changed.\n`);
+      } else {
+        const result = service.apply({ planId: plan.planId });
+        console.log(`\n✅ Manifest transaction ${result.transactionId} applied ${result.applied.length} targets.`);
+        console.log(`🎯 Client: ${targetClient}\n`);
+      }
+    } else {
     if (!dryRun && (!resourceFilter || resourceFilter.toLowerCase() === 'mcp')) {
       resolveMcpConfigForDeploy(scope);
     }
@@ -261,6 +349,7 @@ if (command === 'generate' || command === 'ai') {
     } else {
       console.log(`\n✅ Done! Connected ${result.totalAppliedLinks} symlinks & synced ${result.totalSyncedCommands} allowed commands.`);
       console.log(`🎯 Targets: ${result.deployedTargets.join(', ')}\n`);
+    }
     }
   } catch (err) {
     console.error('\n❌ Deployment failed:', err.message);

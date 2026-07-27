@@ -141,7 +141,7 @@ test('state commit failure restores deployed files', () => {
   assert.equal(fs.existsSync(plan.operations[0].target), false);
 });
 
-test('non-copy strategies remain blocked until their ownership-aware renderer exists', () => {
+test('copy preparation ignores strategies handled by other preparation services', () => {
   const subject = fixture();
   const plan = prepareCopyDeployment({
     capabilityPlan: {
@@ -153,6 +153,7 @@ test('non-copy strategies remain blocked until their ownership-aware renderer ex
     homeDir: path.join(subject.root, 'home'),
     state: subject.stateStore.load()
   });
-  assert.equal(plan.automatic, false);
-  assert.equal(plan.blocked[0].reason, 'STRATEGY_EXECUTOR_NOT_IMPLEMENTED');
+  assert.equal(plan.automatic, true);
+  assert.equal(plan.operations.length, 0);
+  assert.equal(plan.blocked.length, 0);
 });

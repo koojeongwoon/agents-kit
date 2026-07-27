@@ -6,6 +6,8 @@ import { errorResponse, httpStatusForError } from '../lib/interfaces/http/error-
 test('HTTP error mapper preserves stable domain status contracts', () => {
   assert.equal(httpStatusForError(new DomainError('INVALID_SCOPE', 'bad scope')), 400);
   assert.equal(httpStatusForError(new DomainError('MCP_ALIAS_COLLISION', 'exists')), 409);
+  assert.equal(httpStatusForError(new DomainError('STALE_DEPLOYMENT_PLAN', 'stale')), 409);
+  assert.equal(httpStatusForError(new DomainError('DEPLOYMENT_PLAN_NOT_FOUND', 'missing')), 404);
   assert.equal(httpStatusForError(new DomainError('EXTERNAL_UNAVAILABLE', 'offline')), 502);
   assert.equal(httpStatusForError(new Error('unexpected')), 500);
 });

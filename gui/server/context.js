@@ -3,10 +3,11 @@ import path from 'path';
 import os from 'os';
 import {fileURLToPath} from 'url';
 import {buildResolvedMcpConfig} from '../../lib/mcp-env.js';
-import {kitPaths, resolveKitRoot} from '../../lib/kit-paths.js';
+import {kitPaths, resolveKitRoot, resolveKitScopeDir} from '../../lib/kit-paths.js';
 import {getAdapters} from '../../lib/adapters/index.js';
 import {isWithinRoot, resolveForAuthorization} from '../../lib/security-boundary.js';
 import {errorResponse, httpStatusForError} from '../../lib/interfaces/http/error-mapper.js';
+import {createManifestDeploymentService} from '../../lib/application/manifest-deployment-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +19,10 @@ export function createAppContext() {
   const kit = kitPaths(kitRoot);
   const permissionsFilePath = kit.permissionsFile;
   const approvedProjectRoots = new Set();
+  const manifestDeploymentService = createManifestDeploymentService({
+    definitionsDir: path.join(projectRoot, 'clients'),
+    homeDir
+  });
 
   function globalClientRoots() {
     return getAdapters({ scope: 'global', kitRoot }).map(adapter => adapter.detectedPath);
@@ -171,6 +176,7 @@ export function createAppContext() {
     homeDir, projectRoot, kitRoot, kit, permissionsFilePath, approvedProjectRoots,
     globalClientRoots, readableRoots, isKnownLinkPair, resolveMcpConfigForDeploy,
     assertSafeProjectTarget, resolveDocumentPath, getClientConfigs,
-    exists, existsBrokenSymlink, checkSymlink, sendApiError
+    exists, existsBrokenSymlink, checkSymlink, sendApiError,
+    manifestDeploymentService, resolveKitScopeDir
   };
 }
