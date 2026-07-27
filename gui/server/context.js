@@ -9,12 +9,12 @@ import {createManifestDeploymentService} from '../../lib/application/manifest-de
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export function createAppContext() {
-  const homeDir = os.homedir();
-  const projectRoot = path.resolve(__dirname, '../../../');
-  const kitRoot = resolveKitRoot(projectRoot);
+export function createAppContext(options = {}) {
+  const homeDir = options.homeDir || os.homedir();
+  const projectRoot = options.projectRoot || path.resolve(__dirname, '../../../');
+  const kitRoot = options.kitRoot || resolveKitRoot(projectRoot);
   const manifestDeploymentService = createManifestDeploymentService({
-    definitionsDir: path.join(projectRoot, 'clients'),
+    definitionsDir: options.definitionsDir || path.join(projectRoot, 'clients'),
     homeDir
   });
 

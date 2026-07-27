@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:backend": "esbuild server/index.js --bundle --platform=node --format=esm --banner:js=\"import { createRequire } from 'module'; const require = createRequire(import.meta.url);\" --outfile=src-tauri/resources/backend.mjs",
     "build:desktop": "npm run build && npm run build:backend",
-    "test:server": "node --test server/test/deployment-routes.test.js",
+    "test:server": "node --test server/test/deployment-routes.test.js server/test/control-plane-e2e.test.js",
     "preview": "vite preview",
     "server": "node server/index.js",
     "start": "node server/index.js & vite",
