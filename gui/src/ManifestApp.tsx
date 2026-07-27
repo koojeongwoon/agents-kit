@@ -17,6 +17,14 @@ export default function ManifestApp() {
   const [projectPath, setProjectPath] = useState('');
   const [clientVersion, setClientVersion] = useState('');
 
+  // Navigation state for editor
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+
+  const handleNavigateToAsset = (assetId: string) => {
+    setSelectedAssetId(assetId);
+    setActiveTab('editor');
+  };
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('theme', theme);
@@ -83,12 +91,15 @@ export default function ManifestApp() {
             setProjectPath={setProjectPath}
             clientVersion={clientVersion}
             setClientVersion={setClientVersion}
+            onNavigateToAsset={handleNavigateToAsset}
           />
         ) : (
           <ManifestEditor
             scope={scope}
             projectName={projectName}
             projectPath={projectPath}
+            selectedAssetId={selectedAssetId}
+            setSelectedAssetId={setSelectedAssetId}
           />
         )}
       </main>

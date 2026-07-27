@@ -26,9 +26,17 @@ interface ManifestEditorProps {
   scope: 'global' | 'project';
   projectName: string;
   projectPath: string;
+  selectedAssetId: string | null;
+  setSelectedAssetId: (id: string | null) => void;
 }
 
-export function ManifestEditor({ scope, projectName, projectPath }: ManifestEditorProps) {
+export function ManifestEditor({
+  scope,
+  projectName,
+  projectPath,
+  selectedAssetId,
+  setSelectedAssetId
+}: ManifestEditorProps) {
   const [registry, setRegistry] = useState<RegistryResource[]>([]);
   const [dependencyGraph, setDependencyGraph] = useState<DependencyGraph>({ nodes: [], links: [] });
   const [filterKind, setFilterKind] = useState<string>('all');
@@ -37,6 +45,18 @@ export function ManifestEditor({ scope, projectName, projectPath }: ManifestEdit
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (selectedAssetId) {
+      const match = registry.find(r => r.id === selectedAssetId);
+      if (match) {
+        setSelectedResource(match);
+        setFilterKind('all');
+        // Clear the state so it doesn't loop or block further clicks
+        setSelectedAssetId(null);
+      }
+    }
+  }, [selectedAssetId, registry, setSelectedAssetId]);
 
   // Editing states
   const [isCreating, setIsCreating] = useState(false);

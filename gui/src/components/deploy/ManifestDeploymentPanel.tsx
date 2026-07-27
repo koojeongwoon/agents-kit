@@ -11,6 +11,8 @@ import {
   runDoctorDiagnostics
 } from '../../api/deploy';
 
+import { ActionableErrorResolution } from '../common/ActionableErrorResolution';
+
 interface Transaction {
   id: string;
   type: 'apply' | 'rollback';
@@ -31,6 +33,7 @@ interface ManifestDeploymentPanelProps {
   setProjectPath: (projectPath: string) => void;
   clientVersion: string;
   setClientVersion: (clientVersion: string) => void;
+  onNavigateToAsset?: (assetId: string) => void;
 }
 
 export function ManifestDeploymentPanel({
@@ -43,12 +46,14 @@ export function ManifestDeploymentPanel({
   projectPath,
   setProjectPath,
   clientVersion,
-  setClientVersion
+  setClientVersion,
+  onNavigateToAsset
 }: ManifestDeploymentPanelProps) {
   const [plan, setPlan] = useState<ManifestDeploymentPlan | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [lastErrorCode, setLastErrorCode] = useState('');
   const [message, setMessage] = useState('');
   const [doctorResult, setDoctorResult] = useState<any>(null);
   const [validationResult, setValidationResult] = useState<any>(null);
@@ -78,6 +83,7 @@ export function ManifestDeploymentPanel({
   useEffect(() => {
     setPlan(null);
     setError('');
+    setLastErrorCode('');
     setMessage('');
     setDoctorResult(null);
     setValidationResult(null);
@@ -96,8 +102,9 @@ export function ManifestDeploymentPanel({
       setValidationResult(val);
 
       setMessage('진단 및 유효성 검사가 완료되었습니다.');
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '진단에 실패했습니다.');
+    } catch (cause: any) {
+      setError(cause.message || '진단에 실패했습니다.');
+      setLastErrorCode(cause.code || 'DIAGNOSTICS_ERROR');
     } finally {
       setDiagnosticsLoading(false);
     }
@@ -106,11 +113,13 @@ export function ManifestDeploymentPanel({
   const createPlan = async () => {
     setLoading(true);
     setError('');
+    setLastErrorCode('');
     setMessage('');
     try {
       setPlan(await planManifestDeployment(request));
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '계획을 만들지 못했습니다.');
+    } catch (cause: any) {
+      setError(cause.message || '계획을 만들지 못했습니다.');
+      setLastErrorCode(cause.code || 'PLAN_ERROR');
     } finally {
       setLoading(false);
     }
@@ -120,6 +129,7 @@ export function ManifestDeploymentPanel({
     if (!plan) return;
     setLoading(true);
     setError('');
+    setLastErrorCode('');
     try {
       const result = plan.kind === 'rollback'
         ? await applyManifestRollback(plan.planId)
@@ -129,8 +139,9 @@ export function ManifestDeploymentPanel({
         : `배포 완료: ${result.transactionId}`);
       setPlan(null);
       await refreshHistory();
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '적용하지 못했습니다.');
+    } catch (cause: any) {
+      setError(cause.message || '적용하지 못했습니다.');
+      setLastErrorCode(cause.code || 'APPLY_ERROR');
     } finally {
       setLoading(false);
     }
@@ -139,11 +150,13 @@ export function ManifestDeploymentPanel({
   const createRollbackPlan = async (transactionId: string) => {
     setLoading(true);
     setError('');
+    setLastErrorCode('');
     setMessage('');
     try {
       setPlan(await planManifestRollback({...request, transactionId}));
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Rollback 계획을 만들지 못했습니다.');
+    } catch (cause: any) {
+      setError(cause.message || 'Rollback 계획을 만들지 못했습니다.');
+      setLastErrorCode(cause.code || 'ROLLBACK_PLAN_ERROR');
     } finally {
       setLoading(false);
     }
@@ -212,7 +225,21 @@ export function ManifestDeploymentPanel({
         </div>
       </section>
 
-      {error && <div className="flex items-start gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-300"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div>}
+      {error && (
+        lastErrorCode ? (
+          <ActionableErrorResolution
+            errorCode={lastErrorCode}
+            message={error}
+            onCancelPlan={() => { setPlan(null); setError(''); setLastErrorCode(''); }}
+            onRePlan={createPlan}
+          />
+        ) : (
+          <div className="flex items-start gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-300">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )
+      )}
       {message && <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{message}</div>}
 
       {(doctorResult || validationResult) && (
@@ -236,10 +263,13 @@ export function ManifestDeploymentPanel({
                 {validationResult.issues.length > 0 ? (
                   <div className="mt-2 space-y-2">
                     {validationResult.issues.map((issue: any, index: number) => (
-                      <div key={index} className="text-xs border-l-2 border-rose-500 pl-2 py-0.5">
-                        <p className="font-semibold text-rose-700 dark:text-rose-400">[{issue.code}] {issue.sourceAssetId ? `Asset: ${issue.sourceAssetId}` : ''}</p>
-                        <p className="text-slate-600 dark:text-slate-400">{issue.message}</p>
-                      </div>
+                      <ActionableErrorResolution
+                        key={index}
+                        errorCode={issue.code}
+                        message={issue.message}
+                        sourceAssetId={issue.sourceAssetId}
+                        onNavigate={onNavigateToAsset}
+                      />
                     ))}
                   </div>
                 ) : (
