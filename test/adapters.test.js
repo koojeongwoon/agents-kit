@@ -384,14 +384,14 @@ assert.strictEqual(mergeEnvExample('# BROWSERBASE_AUTH_TOKEN=\n', ['BROWSERBASE_
 assert.throws(() => buildSmitheryMcpEntry({ detail: { ...smitheryDetail, connections: [{ type: 'http', deploymentUrl: 'http://unsafe.example' }] }, alias: 'unsafe', configValues: {} }), /HTTPS/);
 console.log('   ✅ Smithery MCP merge helper tests passed.');
 
-// 13. Test CLI with the isolated HOME and kit
-console.log('1️⃣3️⃣ Testing Isolated CLI Status & Dry-run...');
+// 13. Test removed CLI status and Manifest-required apply
+console.log('1️⃣3️⃣ Testing Manifest-only CLI Boundaries...');
 const cliEnv = { ...process.env, HOME: suiteHome, AGENTS_KIT_DIR: kitRoot };
 const cliStatus = spawnSync(process.execPath, ['bin/cli.js', 'status'], {
   cwd: projectRoot, env: cliEnv, encoding: 'utf-8'
 });
-assert.strictEqual(cliStatus.status, 0, cliStatus.stderr);
-assert.ok(cliStatus.stdout.includes(kitRoot));
+assert.strictEqual(cliStatus.status, 1);
+assert.ok(cliStatus.stderr.includes("Unknown command 'status'"));
 const cliProject = path.join(suiteRoot, 'cli-project');
 fs.mkdirSync(cliProject);
 const cliWithoutManifest = spawnSync(process.execPath, [
@@ -400,6 +400,6 @@ const cliWithoutManifest = spawnSync(process.execPath, [
 assert.strictEqual(cliWithoutManifest.status, 1);
 assert.ok(cliWithoutManifest.stderr.includes('agent-kit.yaml'));
 assert.strictEqual(fs.existsSync(path.join(cliProject, '.cursor')), false);
-console.log('   ✅ Isolated CLI status and Manifest-required tests passed.');
+console.log('   ✅ Manifest-only CLI boundary tests passed.');
 
 console.log('\n🎉 All test suites passed successfully!\n');

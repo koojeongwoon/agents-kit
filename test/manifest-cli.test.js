@@ -37,13 +37,13 @@ assets:
   const common = ['--kit', kitRoot, '--project', targetRoot, '--client', 'codex'];
   let result = run(['apply', ...common, '--dry-run']);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Manifest deployment plan/);
+  assert.match(result.stdout, /"kind": "apply"/);
   assert.equal(fs.existsSync(path.join(targetRoot, '.agents/skills/review/SKILL.md')), false);
 
   result = run(['apply', ...common]);
   assert.equal(result.status, 0, result.stderr);
   assert.equal(fs.readFileSync(path.join(targetRoot, '.agents/skills/review/SKILL.md'), 'utf8'), '# Review\n');
-  const transactionId = result.stdout.match(/transaction (tx-[A-Za-z0-9-]+)/)?.[1];
+  const transactionId = result.stdout.match(/"transactionId": "(tx-[A-Za-z0-9-]+)"/)?.[1];
   assert.ok(transactionId);
 
   result = run(['history', ...common]);
@@ -52,10 +52,30 @@ assets:
 
   result = run(['rollback', ...common, '--transaction', transactionId, '--dry-run']);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Rollback plan/);
+  assert.match(result.stdout, /"kind": "rollback"/);
   assert.equal(fs.existsSync(path.join(targetRoot, '.agents/skills/review/SKILL.md')), true);
 
   result = run(['rollback', ...common, '--transaction', transactionId]);
   assert.equal(result.status, 0, result.stderr);
   assert.equal(fs.existsSync(path.join(targetRoot, '.agents/skills/review/SKILL.md')), false);
+});
+
+test('CLI initializes only Manifest starter scopes and rejects legacy surfaces', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-cli-init-'));
+  const kitRoot = path.join(root, 'kit');
+
+  let result = run(['init', '--kit', kitRoot]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(fs.existsSync(path.join(kitRoot, 'global/agent-kit.yaml')), true);
+  assert.equal(fs.existsSync(path.join(kitRoot, 'projects/default/agent-kit.yaml')), true);
+  assert.equal(fs.existsSync(path.join(kitRoot, 'global/harness')), false);
+  assert.equal(fs.existsSync(path.join(kitRoot, '.git')), false);
+
+  result = run(['status', '--kit', kitRoot]);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Unknown command 'status'/);
+
+  result = run(['apply', '--kit', kitRoot, '--client', 'codex', '--resource', 'skills']);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /select assets in the Manifest/);
 });
