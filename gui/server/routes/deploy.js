@@ -121,5 +121,37 @@ export function createDeployRouter(ctx) {
     }
   });
 
+  router.get('/api/manifest/registry', (req, res) => {
+    const { scope = 'project', projectPath = '', projectName = '' } = req.query;
+    try {
+      const resolved = locations({scope, projectPath: projectPath.toString(), projectName: projectName.toString()});
+      const data = manifestDeploymentService.registry({ scopeRoot: resolved.scopeRoot });
+      res.json({ success: true, registry: data });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.post('/api/manifest/edit/plan', (req, res) => {
+    const { scope = 'project', projectPath = '', projectName = '', mutations } = req.body;
+    try {
+      const resolved = locations({scope, projectPath, projectName});
+      const plan = manifestDeploymentService.planEdit({ scopeRoot: resolved.scopeRoot, mutations });
+      res.json({ success: true, ...plan });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.post('/api/manifest/edit/apply', (req, res) => {
+    const { planId } = req.body;
+    try {
+      const result = manifestDeploymentService.applyEdit({ planId });
+      res.json({ success: true, ...result });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
   return router;
 }

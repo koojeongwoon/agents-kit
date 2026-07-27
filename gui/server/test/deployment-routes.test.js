@@ -25,12 +25,15 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
 
   assert.deepEqual(routes, [
     'GET /api/deployment/history',
+    'GET /api/manifest/registry',
     'POST /api/deployment/apply',
     'POST /api/deployment/doctor',
     'POST /api/deployment/plan',
     'POST /api/deployment/rollback',
     'POST /api/deployment/rollback-plan',
-    'POST /api/deployment/validate'
+    'POST /api/deployment/validate',
+    'POST /api/manifest/edit/apply',
+    'POST /api/manifest/edit/plan'
   ]);
 });
 
@@ -158,4 +161,31 @@ test('deployment router supports validate and doctor endpoints', () => {
   });
   assert.equal(doctorRes.statusCode, 200);
   assert.equal(doctorRes.body.healthy, true);
+});
+
+test('deployment router supports manifest registry and edit endpoints', () => {
+  const service = {
+    registry: ({ scopeRoot }) => [{ id: 'review', kind: 'skills' }],
+    planEdit: ({ scopeRoot, mutations }) => ({ planId: 'edit-plan-1', mutations }),
+    applyEdit: ({ planId }) => ({ success: true })
+  };
+  const router = routerWith(service);
+
+  const registryRes = dispatch(router, 'GET', '/api/manifest/registry', {
+    query: { scope: 'project', projectPath: '/project' }
+  });
+  assert.equal(registryRes.statusCode, 200);
+  assert.equal(registryRes.body.registry[0].id, 'review');
+
+  const planEditRes = dispatch(router, 'POST', '/api/manifest/edit/plan', {
+    body: { scope: 'project', projectPath: '/project', mutations: [] }
+  });
+  assert.equal(planEditRes.statusCode, 200);
+  assert.equal(planEditRes.body.planId, 'edit-plan-1');
+
+  const applyEditRes = dispatch(router, 'POST', '/api/manifest/edit/apply', {
+    body: { planId: 'edit-plan-1' }
+  });
+  assert.equal(applyEditRes.statusCode, 200);
+  assert.equal(applyEditRes.body.success, true);
 });

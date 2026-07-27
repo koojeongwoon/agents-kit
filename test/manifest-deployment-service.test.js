@@ -156,3 +156,66 @@ test('application service runs doctor diagnostics', () => {
   assert.equal(badTargetRes.healthy, false);
   assert.equal(badTargetRes.checks.some(c => c.id === 'target-path' && c.status === 'error'), true);
 });
+
+test('application service retrieves resource registry and handles mutations', () => {
+  const subject = fixture();
+
+  const registry = subject.service.registry({ scopeRoot: subject.scopeRoot });
+  assert.equal(registry.length, 1);
+  assert.equal(registry[0].id, 'review');
+  assert.equal(registry[0].kind, 'skills');
+
+  fs.mkdirSync(path.join(subject.scopeRoot, 'skills/new'), { recursive: true });
+
+  const plan1 = subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [{
+      type: 'create',
+      kind: 'skills',
+      assetId: 'new-skill',
+      asset: { source: 'skills/new', scope: 'project' }
+    }]
+  });
+  assert.equal(plan1.mutations.length, 1);
+  assert.ok(plan1.planId);
+
+  const apply1 = subject.service.applyEdit({ planId: plan1.planId });
+  assert.equal(apply1.success, true);
+
+  const reg2 = subject.service.registry({ scopeRoot: subject.scopeRoot });
+  assert.equal(reg2.length, 2);
+  assert.ok(reg2.some(a => a.id === 'new-skill'));
+
+  assert.throws(() => subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [{
+      type: 'create',
+      kind: 'skills',
+      assetId: 'new-skill',
+      asset: { source: 'skills/new', scope: 'project' }
+    }]
+  }), error => error.code === 'DUPLICATE_ASSET_ID');
+
+  fs.mkdirSync(path.join(subject.scopeRoot, 'agents/reviewer'), { recursive: true });
+  const planAgent = subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [
+      {
+        type: 'create',
+        kind: 'agents',
+        assetId: 'reviewer-agent',
+        asset: { source: 'agents/reviewer', scope: 'project', uses: { skills: ['new-skill'] } }
+      }
+    ]
+  });
+  subject.service.applyEdit({ planId: planAgent.planId });
+
+  assert.throws(() => subject.service.planEdit({
+    scopeRoot: subject.scopeRoot,
+    mutations: [{
+      type: 'delete',
+      kind: 'skills',
+      assetId: 'new-skill'
+    }]
+  }), error => error.code === 'DELETE_BLOCKED_BY_REFERENCES');
+});

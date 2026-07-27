@@ -138,3 +138,52 @@ export async function runDoctorDiagnostics(input: {
     body: JSON.stringify(input)
   }));
 }
+
+export interface RegistryResource {
+  id: string;
+  kind: string;
+  displayName: string;
+  scope: any;
+  providedTools: string[];
+  requiredTools: string[];
+  references: Array<{ id: string; expectedKind: string }>;
+}
+
+export async function fetchManifestRegistry(input: {
+  scope: 'global' | 'project';
+  projectPath?: string;
+  projectName?: string;
+}): Promise<{ registry: RegistryResource[] }> {
+  const query = new URLSearchParams({
+    scope: input.scope,
+    projectPath: input.projectPath || '',
+    projectName: input.projectName || ''
+  });
+  return jsonOrError(await apiFetch(`/api/manifest/registry?${query}`));
+}
+
+export async function planManifestEdit(input: {
+  scope: 'global' | 'project';
+  projectPath?: string;
+  projectName?: string;
+  mutations: Array<{
+    type: 'create' | 'update' | 'delete';
+    kind: string;
+    assetId: string;
+    asset?: any;
+  }>;
+}): Promise<{ planId: string; expiresAt: string; preconditionHash: string; mutations: any[] }> {
+  return jsonOrError(await apiFetch('/api/manifest/edit/plan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input)
+  }));
+}
+
+export async function applyManifestEdit(planId: string): Promise<{ success: boolean; hash: string }> {
+  return jsonOrError(await apiFetch('/api/manifest/edit/apply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ planId })
+  }));
+}

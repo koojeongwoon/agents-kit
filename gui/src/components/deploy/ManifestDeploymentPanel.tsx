@@ -20,12 +20,31 @@ interface Transaction {
   operations?: {target: string}[];
 }
 
-export function ManifestDeploymentPanel() {
-  const [scope, setScope] = useState<'global' | 'project'>('project');
-  const [clientId, setClientId] = useState('codex');
-  const [projectName, setProjectName] = useState('default');
-  const [projectPath, setProjectPath] = useState('');
-  const [clientVersion, setClientVersion] = useState('');
+interface ManifestDeploymentPanelProps {
+  scope: 'global' | 'project';
+  setScope: (scope: 'global' | 'project') => void;
+  clientId: string;
+  setClientId: (clientId: string) => void;
+  projectName: string;
+  setProjectName: (projectName: string) => void;
+  projectPath: string;
+  setProjectPath: (projectPath: string) => void;
+  clientVersion: string;
+  setClientVersion: (clientVersion: string) => void;
+}
+
+export function ManifestDeploymentPanel({
+  scope,
+  setScope,
+  clientId,
+  setClientId,
+  projectName,
+  setProjectName,
+  projectPath,
+  setProjectPath,
+  clientVersion,
+  setClientVersion
+}: ManifestDeploymentPanelProps) {
   const [plan, setPlan] = useState<ManifestDeploymentPlan | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
