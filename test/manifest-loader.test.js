@@ -232,6 +232,39 @@ test('Loaded Manifest validates Workflow step, Memory approval, and Harness poli
         }]
       },
       code: 'INVALID_CAPABILITY'
+    },
+    {
+      name: 'package-source-missing',
+      assets: {
+        packages: [{
+          id: 'test-package',
+          version: '1.0.0',
+          integrity: 'sha256-hash'
+        }]
+      },
+      code: 'PACKAGE_SOURCE_REQUIRED'
+    },
+    {
+      name: 'package-version-missing',
+      assets: {
+        packages: [{
+          id: 'test-package',
+          source: 'git::https://github.com/org/kit.git',
+          integrity: 'sha256-hash'
+        }]
+      },
+      code: 'PACKAGE_VERSION_REQUIRED'
+    },
+    {
+      name: 'package-integrity-missing',
+      assets: {
+        packages: [{
+          id: 'test-package',
+          source: 'git::https://github.com/org/kit.git',
+          version: '1.0.0'
+        }]
+      },
+      code: 'PACKAGE_INTEGRITY_REQUIRED'
     }
   ];
 
