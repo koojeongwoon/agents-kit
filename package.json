@@ -11,7 +11,7 @@
     "gui": "./scripts/run-gui.sh",
     "apply": "node ./bin/cli.js apply",
     "status": "node ./bin/cli.js status",
-    "test": "node --test test/domain-contracts.test.js test/manifest-references.test.js test/manifest-loader.test.js test/manifest-example.test.js test/legacy-manifest-projector.test.js test/client-definitions.test.js test/structured-merge.test.js test/copy-deployment.test.js test/merge-deployment.test.js test/managed-link-deployment.test.js test/deployment-coordinator.test.js test/manifest-deployment-service.test.js test/manifest-cli.test.js test/merge-smithery-mcp.test.js test/fs-mcp-kit-store.test.js test/http-error-mapper.test.js test/install-skill.test.js test/catalog-ranking.test.js test/file-transaction.test.js && node test/adapters.test.js",
+    "test": "node --test test/domain-contracts.test.js test/manifest-references.test.js test/manifest-loader.test.js test/manifest-example.test.js test/client-definitions.test.js test/structured-merge.test.js test/copy-deployment.test.js test/merge-deployment.test.js test/managed-link-deployment.test.js test/deployment-coordinator.test.js test/manifest-deployment-service.test.js test/manifest-cli.test.js test/merge-smithery-mcp.test.js test/fs-mcp-kit-store.test.js test/http-error-mapper.test.js test/install-skill.test.js test/catalog-ranking.test.js test/file-transaction.test.js && node test/adapters.test.js",
     "test:all": "npm test && npm --prefix gui run test:server && npm --prefix gui run build:desktop && cargo check --manifest-path gui/src-tauri/Cargo.toml",
     "tauri:dev": "npm --prefix gui run tauri:dev",
     "tauri:build": "npm --prefix gui run tauri:build"

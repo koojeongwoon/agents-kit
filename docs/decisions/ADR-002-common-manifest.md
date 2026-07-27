@@ -11,12 +11,12 @@ prove.
 
 ## Decision
 
-Introduce a versioned `AgentKitManifest` with stable asset IDs. Existing kit
-directories remain readable through a compatibility loader until migrated.
+Use a versioned `AgentKitManifest` with stable asset IDs as the only desired
+state entry point. Directory-only Kits are not inferred or migrated
+automatically.
 
 ## Consequences
 
 - Desired state becomes schema-validatable and traceable.
 - Client output paths do not appear as the portable meaning of an asset.
 - Schema migrations require explicit dry-run and apply operations.
-

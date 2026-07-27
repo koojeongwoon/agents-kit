@@ -7,13 +7,9 @@ assets and deployment targets; it does not contain resolved credentials or
 client-specific output files.
 
 The loader discovers `agent-kit.yaml`, `agent-kit.yml`, or `agent-kit.json` at
-the Kit scope root, in that priority order. If none exists, the current
-directory-based Kit is exposed as a non-mutating legacy projection.
-
-The projection assigns stable IDs and source references to existing
-Instructions, Skills, Agents, MCP aliases, Policies, Hooks, Workflows, and
-Memory files. It does not copy resolved MCP connection values into the
-projected Manifest.
+the Kit scope root, in that priority order. If none exists, loading fails
+closed with `MANIFEST_REQUIRED`. Directory structure is never treated as
+implicit desired state.
 
 ```text
 AgentKitManifest

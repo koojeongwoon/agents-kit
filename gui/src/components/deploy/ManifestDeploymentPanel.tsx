@@ -1,0 +1,223 @@
+import {useEffect, useState} from 'react';
+import {AlertTriangle, CheckCircle2, Clock3, History, Play, RotateCcw, ShieldCheck} from 'lucide-react';
+import {
+  applyManifestDeployment,
+  applyManifestRollback,
+  fetchManifestDeploymentHistory,
+  ManifestDeploymentPlan,
+  planManifestDeployment,
+  planManifestRollback
+} from '../../api/deploy';
+
+interface Transaction {
+  id: string;
+  type: 'apply' | 'rollback';
+  status: string;
+  createdAt: string;
+  clientIds?: string[];
+  operations?: {target: string}[];
+}
+
+export function ManifestDeploymentPanel() {
+  const [scope, setScope] = useState<'global' | 'project'>('project');
+  const [clientId, setClientId] = useState('codex');
+  const [projectName, setProjectName] = useState('default');
+  const [projectPath, setProjectPath] = useState('');
+  const [plan, setPlan] = useState<ManifestDeploymentPlan | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+
+  const request = {
+    clientId,
+    scope,
+    projectName,
+    projectPath: scope === 'project' ? projectPath.trim() : ''
+  };
+  const targetReady = scope === 'global' || projectPath.trim().length > 0;
+
+  const refreshHistory = async () => {
+    if (!targetReady) {
+      setTransactions([]);
+      return;
+    }
+    try {
+      const data = await fetchManifestDeploymentHistory(request);
+      setTransactions(data.transactions || []);
+    } catch {
+      setTransactions([]);
+    }
+  };
+
+  useEffect(() => {
+    setPlan(null);
+    setError('');
+    setMessage('');
+    refreshHistory().catch(console.error);
+  }, [scope, clientId, projectName, projectPath]);
+
+  const createPlan = async () => {
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      setPlan(await planManifestDeployment(request));
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : '계획을 만들지 못했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const applyPlan = async () => {
+    if (!plan) return;
+    setLoading(true);
+    setError('');
+    try {
+      const result = plan.kind === 'rollback'
+        ? await applyManifestRollback(plan.planId)
+        : await applyManifestDeployment(plan.planId);
+      setMessage(plan.kind === 'rollback'
+        ? `Rollback 완료: ${result.transactionId}`
+        : `배포 완료: ${result.transactionId}`);
+      setPlan(null);
+      await refreshHistory();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : '적용하지 못했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createRollbackPlan = async (transactionId: string) => {
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      setPlan(await planManifestRollback({...request, transactionId}));
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Rollback 계획을 만들지 못했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+              <ShieldCheck className="h-5 w-5" />
+              <span className="text-xs font-bold uppercase tracking-[0.2em]">Manifest Control Plane</span>
+            </div>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">계획을 확인한 뒤 안전하게 적용하세요</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+              Manifest와 클라이언트 capability를 검증하고, 소유권 충돌과 변경 내용을 먼저 보여줍니다.
+              계획 승인 전에는 대상 파일을 변경하지 않습니다.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-700 dark:text-emerald-300">
+            <div className="flex items-center gap-2 font-semibold"><CheckCircle2 className="h-4 w-4" /> Transactional apply</div>
+            <p className="mt-1 text-emerald-700/70 dark:text-emerald-300/70">백업 · 검증 · rollback 기록</p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <label htmlFor="deployment-scope" className="space-y-1.5 text-xs font-semibold text-slate-500">
+            Scope
+            <select id="deployment-scope" value={scope} onChange={event => setScope(event.target.value as 'global' | 'project')} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+              <option value="project">Project</option>
+              <option value="global">Global</option>
+            </select>
+          </label>
+          <label htmlFor="deployment-client" className="space-y-1.5 text-xs font-semibold text-slate-500">
+            Client
+            <select id="deployment-client" value={clientId} onChange={event => setClientId(event.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+              <option value="codex">Codex</option>
+              <option value="claude-code">Claude Code</option>
+            </select>
+          </label>
+          <label htmlFor="deployment-manifest" className="space-y-1.5 text-xs font-semibold text-slate-500">
+            Manifest
+            <input id="deployment-manifest" value={projectName} onChange={event => setProjectName(event.target.value)} disabled={scope === 'global'} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+          </label>
+          <label htmlFor="deployment-target" className="space-y-1.5 text-xs font-semibold text-slate-500">
+            Target project
+            <input id="deployment-target" value={projectPath} onChange={event => setProjectPath(event.target.value)} disabled={scope === 'global'} placeholder="/path/to/project" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+          </label>
+        </div>
+
+        <div className="mt-5 flex items-center justify-between gap-4 border-t border-slate-200 pt-5 dark:border-slate-800">
+          <p className="text-xs text-slate-500">계획은 5분 동안 한 번만 적용할 수 있습니다.</p>
+          <button onClick={createPlan} disabled={loading || !targetReady} className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40">
+            <Play className="h-4 w-4" /> {loading ? '검증 중…' : '배포 계획 만들기'}
+          </button>
+        </div>
+      </section>
+
+      {error && <div className="flex items-start gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-300"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div>}
+      {message && <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{message}</div>}
+
+      {plan && (
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-500"><Clock3 className="h-4 w-4" /> {new Date(plan.expiresAt).toLocaleTimeString()}까지 유효</div>
+              <h3 className="mt-1 text-lg font-bold">{plan.kind === 'rollback' ? 'Rollback 계획' : '배포 계획'}</h3>
+            </div>
+            <span className={`rounded-full px-3 py-1 text-xs font-bold ${plan.automatic ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-rose-500/10 text-rose-600 dark:text-rose-300'}`}>
+              {plan.automatic ? '적용 가능' : `${plan.blocked.length}개 차단`}
+            </span>
+          </div>
+          <div className="mt-5 max-h-80 space-y-2 overflow-y-auto pr-1">
+            {[...plan.operations, ...plan.blocked].map((operation, index) => {
+              const blocked = index >= plan.operations.length;
+              return (
+                <div key={`${operation.target}-${index}`} className={`rounded-2xl border p-4 ${blocked ? 'border-rose-500/25 bg-rose-500/5' : 'border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60'}`}>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs font-bold uppercase tracking-wide">{blocked ? 'BLOCKED' : operation.operation}</span>
+                    <span className="text-[11px] text-slate-500">{operation.strategy || operation.ownership}</span>
+                  </div>
+                  <p className="mt-2 break-all font-mono text-xs text-slate-700 dark:text-slate-300">{operation.target || operation.assetId}</p>
+                  <p className={`mt-1 text-xs ${blocked ? 'text-rose-600 dark:text-rose-300' : 'text-slate-500'}`}>{operation.reason}</p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-5 flex justify-end gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
+            <button onClick={() => setPlan(null)} className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-700">취소</button>
+            <button onClick={applyPlan} disabled={loading || !plan.automatic} className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-40">
+              {plan.kind === 'rollback' ? 'Rollback 승인' : '적용 승인'}
+            </button>
+          </div>
+        </section>
+      )}
+
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2"><History className="h-5 w-5 text-violet-500" /><h3 className="text-lg font-bold">트랜잭션 이력</h3></div>
+          <button onClick={() => refreshHistory().catch(console.error)} disabled={!targetReady} className="text-xs font-semibold text-blue-600 disabled:opacity-40 dark:text-blue-400">새로고침</button>
+        </div>
+        <div className="mt-4 space-y-2">
+          {transactions.length === 0 && <p className="rounded-2xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700">아직 기록된 트랜잭션이 없습니다.</p>}
+          {[...transactions].reverse().map(transaction => (
+            <div key={transaction.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+              <div>
+                <div className="flex items-center gap-2"><span className="text-xs font-bold uppercase">{transaction.type}</span><span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-500 dark:bg-slate-800">{transaction.status}</span></div>
+                <p className="mt-1 font-mono text-xs text-slate-600 dark:text-slate-400">{transaction.id}</p>
+                <p className="mt-1 text-[11px] text-slate-500">{transaction.createdAt} · {transaction.operations?.length || 0} targets</p>
+              </div>
+              {transaction.type === 'apply' && transaction.status === 'committed' && (
+                <button onClick={() => createRollbackPlan(transaction.id)} disabled={loading} className="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300">
+                  <RotateCcw className="h-3.5 w-3.5" /> Rollback 계획
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

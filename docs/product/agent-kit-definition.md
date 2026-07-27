@@ -80,11 +80,12 @@ depend on the runtime.
 - Storing credentials in the repository or Manifest.
 - Silently overwriting unknown user configuration.
 
-## Compatibility promise
+## Product reset
 
-Existing CLI commands, GUI workflows, master-kit directories, and adapter
-behavior remain supported until a documented migration exists. Compatibility
-does not make an unverified client path a stable product contract.
+Agent Kit starts from its versioned Manifest contract. Directory-only Kits,
+legacy adapter mappings, and legacy GUI deployment workflows are not supported
+or inferred. Existing target files remain protected by ownership and conflict
+rules, but compatibility with the former Kit layout is not a product goal.
 
 ## Success criteria
 
@@ -96,4 +97,3 @@ does not make an unverified client path a stable product contract.
 - User-owned settings survive Agent Kit updates.
 - A failed multi-file or multi-client apply restores the previous state.
 - The UI never promises more support than the capability matrix can prove.
-

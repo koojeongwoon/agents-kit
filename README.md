@@ -94,7 +94,8 @@ agents-kit rollback --project /path/to/project --client codex \
   --transaction <transaction-id>
 ```
 
-Manifest가 없는 기존 Kit은 기존 어댑터 배포 동작을 유지합니다.
+Manifest는 필수입니다. Manifest가 없으면 계획과 배포가 중단되며 기존
+디렉터리 구조를 자동으로 추측하거나 변환하지 않습니다.
 
 `npm link`로 설치하면 `node bin/cli.js` 대신 `agents-kit` 명령어로 실행할 수 있습니다.
 

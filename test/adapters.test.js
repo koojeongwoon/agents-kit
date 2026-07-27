@@ -394,12 +394,12 @@ assert.strictEqual(cliStatus.status, 0, cliStatus.stderr);
 assert.ok(cliStatus.stdout.includes(kitRoot));
 const cliProject = path.join(suiteRoot, 'cli-project');
 fs.mkdirSync(cliProject);
-const cliDryRun = spawnSync(process.execPath, [
+const cliWithoutManifest = spawnSync(process.execPath, [
   'bin/cli.js', 'apply', '--project', cliProject, '--client', 'cursor', '--dry-run'
 ], { cwd: projectRoot, env: cliEnv, encoding: 'utf-8' });
-assert.strictEqual(cliDryRun.status, 0, cliDryRun.stderr);
-assert.ok(cliDryRun.stdout.includes('Dry run complete'));
+assert.strictEqual(cliWithoutManifest.status, 1);
+assert.ok(cliWithoutManifest.stderr.includes('agent-kit.yaml'));
 assert.strictEqual(fs.existsSync(path.join(cliProject, '.cursor')), false);
-console.log('   ✅ Isolated CLI status and dry-run tests passed.');
+console.log('   ✅ Isolated CLI status and Manifest-required tests passed.');
 
 console.log('\n🎉 All test suites passed successfully!\n');

@@ -15,7 +15,7 @@
 - CLI Manifest apply, dry-run, history, and rollback use the shared service.
 - GUI backend exposes separate plan/apply and rollback-plan/rollback endpoints
   using the same service.
-- Existing Kit directories without a Manifest continue using legacy adapters.
+- Missing Manifests fail closed; no legacy directory projection is attempted.
 - Read-only plan resolution no longer creates a missing named project Kit.
 
 ## HTTP endpoints

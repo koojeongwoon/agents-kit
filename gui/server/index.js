@@ -4,15 +4,7 @@ import crypto from 'crypto';
 import {createMutationTokenMiddleware, createOriginValidator} from '../../lib/gui-security.js';
 import {sendServerError} from '../../lib/interfaces/http/error-mapper.js';
 import {createAppContext} from './context.js';
-import {createStatusRouter} from './routes/status.js';
-import {createFilesRouter} from './routes/files.js';
 import {createDeployRouter} from './routes/deploy.js';
-import {createAssetsRouter} from './routes/assets.js';
-import {createMcpRouter} from './routes/mcp.js';
-import {createSkillsRouter} from './routes/skills.js';
-import {createProjectsRouter} from './routes/projects.js';
-import {createConfigRouter} from './routes/config.js';
-import {createGitRouter} from './routes/git.js';
 
 const app = express();
 
@@ -49,15 +41,7 @@ app.get('/api/session', (req, res) => {
 app.use('/api', createMutationTokenMiddleware(API_TOKEN));
 
 const ctx = createAppContext();
-app.use(createStatusRouter(ctx));
-app.use(createFilesRouter(ctx));
 app.use(createDeployRouter(ctx));
-app.use(createAssetsRouter(ctx));
-app.use(createMcpRouter(ctx));
-app.use(createSkillsRouter(ctx));
-app.use(createProjectsRouter(ctx));
-app.use(createConfigRouter(ctx));
-app.use(createGitRouter(ctx));
 
 // Global Express Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -76,4 +60,3 @@ server.on('error', (err) => {
     process.exit(0);
   }
 });
-

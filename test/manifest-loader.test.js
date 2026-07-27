@@ -115,16 +115,12 @@ assets:
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('Discovery prefers YAML and falls back to legacy mode without mutating the Kit', () => {
+test('Discovery requires a Manifest and prefers YAML without creating compatibility state', () => {
   const root = fixture();
-  const legacy = discoverAndLoadManifest({ scopeRoot: root });
-  assert.deepEqual(legacy, {
-    mode: 'legacy',
-    manifestPath: '',
-    manifest: null,
-    format: '',
-    sources: new Map()
-  });
+  assert.throws(
+    () => discoverAndLoadManifest({ scopeRoot: root }),
+    error => error.code === 'MANIFEST_REQUIRED'
+  );
   assert.equal(fs.existsSync(path.join(root, 'agent-kit.yaml')), false);
 
   fs.writeFileSync(path.join(root, 'agent-kit.json'), JSON.stringify({

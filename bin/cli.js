@@ -9,7 +9,7 @@ import { validateRepositoryName } from '../lib/git-security.js';
 import { CLIENT_IDS, RESOURCE_IDS } from '../lib/catalog.js';
 import { buildResolvedMcpConfig } from '../lib/mcp-env.js';
 import { resolveKitRoot, resolveKitScopeDir, kitPaths, ensureUserKitBootstrapped } from '../lib/kit-paths.js';
-import { getAdapters, deployAllAdapters, importFromAdapter } from '../lib/adapters/index.js';
+import { getAdapters, importFromAdapter } from '../lib/adapters/index.js';
 import { generateExpertAsset } from '../lib/utils/llm-client.js';
 import { createManifestDeploymentService } from '../lib/application/manifest-deployment-service.js';
 
@@ -286,8 +286,6 @@ if (command === 'generate' || command === 'ai') {
   const dryRun = args.includes('--dry-run');
   const targetLocation = scope === 'project' ? path.resolve(customPath) : homeDir;
   const scopeRoot = resolveKitScopeDir(kitRoot, scope);
-  const manifestMode = ['agent-kit.yaml', 'agent-kit.yml', 'agent-kit.json']
-    .some(name => fs.existsSync(path.join(scopeRoot, name)));
 
   console.log(`\n📦 Kit Root: ${kitRoot}`);
   console.log(`⚡ Scope: ${scope.toUpperCase()} (source: ${scope === 'project' ? 'projects/default' : 'global'})`);
@@ -297,7 +295,7 @@ if (command === 'generate' || command === 'ai') {
   console.log(`🎯 Applying to ${scope === 'project' ? `project (${targetLocation})` : 'global (~/)'}...`);
 
   try {
-    if (manifestMode) {
+    {
       if (!targetClient) {
         throw new Error('--client is required when applying an Agent Kit Manifest');
       }
@@ -325,31 +323,6 @@ if (command === 'generate' || command === 'ai') {
         console.log(`\n✅ Manifest transaction ${result.transactionId} applied ${result.applied.length} targets.`);
         console.log(`🎯 Client: ${targetClient}\n`);
       }
-    } else {
-    if (!dryRun && (!resourceFilter || resourceFilter.toLowerCase() === 'mcp')) {
-      resolveMcpConfigForDeploy(scope);
-    }
-
-    const result = deployAllAdapters({
-      scope,
-      kitRoot,
-      clientFilter: targetClient,
-      resourceFilter,
-      fileFilter,
-      customProjectPath: customPath,
-      dryRun
-    });
-
-    if (dryRun) {
-      console.log('\n📋 Planned changes:');
-      for (const change of result.changes) {
-        console.log(`   [${change.clientId}] ${change.action}: ${change.target} <- ${change.source}`);
-      }
-      console.log(`\n✅ Dry run complete. ${result.changes.length} entries inspected; no files changed.\n`);
-    } else {
-      console.log(`\n✅ Done! Connected ${result.totalAppliedLinks} symlinks & synced ${result.totalSyncedCommands} allowed commands.`);
-      console.log(`🎯 Targets: ${result.deployedTargets.join(', ')}\n`);
-    }
     }
   } catch (err) {
     console.error('\n❌ Deployment failed:', err.message);

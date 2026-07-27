@@ -38,7 +38,6 @@ tests, and user surface are linked here.
 | AK-A15 | Memory declares readers, writers, and approval | `MemoryAccessReference` | Implemented and tested |
 | AK-A16 | Load versioned YAML or JSON Manifest files | Manifest loader | Implemented and tested |
 | AK-A17 | Enforce kind-specific materialization contracts | Manifest domain | Implemented and tested |
-| AK-A18 | Project legacy directory Kits into a common Manifest view | Legacy projector | Implemented and tested |
 
 ## Client capability
 
@@ -83,8 +82,6 @@ tests, and user surface are linked here.
 | AK-D23 | Reject policy-denied Tool requirements | Effective policy | Implemented and tested |
 | AK-D24 | Detect dependency cycles | Dependency graph | Implemented and tested |
 | AK-D25 | Reject absolute, missing, traversal, and symlink-escaping sources | Manifest loader | Implemented and tested |
-| AK-D26 | Preserve existing directory Kits when no Manifest exists | Legacy projection | Implemented and tested |
-| AK-D27 | Do not copy resolved legacy MCP values into projected Manifest | Legacy projection | Implemented |
 | AK-D28 | Apply selected Harness Capability denial to nested dependencies | Effective Harness policy | Implemented and tested |
 
 ## CLI and GUI
