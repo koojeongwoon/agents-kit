@@ -6,14 +6,7 @@ function routerWith(service) {
   return createDeployRouter({
     homeDir: '/home/test',
     kitRoot: '/kit',
-    permissionsFilePath: '/kit/permissions.json',
-    approvedProjectRoots: new Set(),
-    globalClientRoots: () => [],
-    isKnownLinkPair: () => false,
-    resolveMcpConfigForDeploy: () => ({}),
     assertSafeProjectTarget: () => {},
-    existsBrokenSymlink: () => false,
-    checkSymlink: () => false,
     resolveKitScopeDir: () => '/kit/projects/default',
     manifestDeploymentService: service,
     sendApiError: (req, res, error) => res.status(error.code === 'DEPLOYMENT_PLAN_NOT_FOUND' ? 404 : 400).json({
@@ -22,6 +15,22 @@ function routerWith(service) {
     })
   });
 }
+
+test('deployment router exposes only the Manifest control-plane surface', () => {
+  const service = {};
+  const routes = routerWith(service).stack
+    .filter(layer => layer.route)
+    .map(layer => `${Object.keys(layer.route.methods)[0].toUpperCase()} ${layer.route.path}`)
+    .sort();
+
+  assert.deepEqual(routes, [
+    'GET /api/deployment/history',
+    'POST /api/deployment/apply',
+    'POST /api/deployment/plan',
+    'POST /api/deployment/rollback',
+    'POST /api/deployment/rollback-plan'
+  ]);
+});
 
 function dispatch(router, method, routePath, { body = {}, query = {} } = {}) {
   const layer = router.stack.find(item => (
