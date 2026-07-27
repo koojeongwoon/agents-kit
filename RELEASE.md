@@ -15,22 +15,17 @@ Keep versions in `package.json`, `gui/package.json`,
 
 1. Confirm README, SUPPORT, LICENSE, examples, and client definitions match the implementation.
 2. Ensure generated files, secrets, `.env`, `dist`, `target`, and `backend.mjs` are not staged.
-3. Run:
+3. Run the complete local release checks:
 
    ```bash
    npm ci
    npm ci --prefix gui
    npm run test:all
+   npm run tauri:build
    git diff --check
    ```
 
-4. Build installable desktop artifacts:
-
-   ```bash
-   npm --prefix gui run tauri:build
-   ```
-
-5. On a clean macOS account with Node.js 20+, verify:
+4. On a clean macOS account with Node.js 20+, verify:
 
    - the app starts without Vite;
    - the backend listens only on `127.0.0.1:3710`;
@@ -41,7 +36,7 @@ Keep versions in `package.json`, `gui/package.json`,
    - unknown target content is not overwritten;
    - quitting the app terminates its backend process.
 
-6. Tag the verified commit as `v<version>` and attach artifacts and checksums.
+5. Tag the verified commit as `v<version>` and attach artifacts and checksums.
 
 ## Packaging boundary
 

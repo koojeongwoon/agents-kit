@@ -115,3 +115,4 @@ GUI는 scope, client, Manifest와 대상 프로젝트를 선택하여 계획을 
 - [플랫폼 지원](./SUPPORT.md)
 - [릴리스 절차](./RELEASE.md)
 - [재구축 단계](./docs/reconstruction/)
+- [남은 작업 인계 지시서](./docs/handoff/remaining-work-orders.md)
