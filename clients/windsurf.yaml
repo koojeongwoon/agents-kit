@@ -1,0 +1,62 @@
+schemaVersion: 1
+id: windsurf
+displayName: Windsurf
+detection:
+  commands: [windsurf]
+  userRoot: ~/.codeium/windsurf
+capabilities:
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: .windsurfrules
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: &windsurf-evidence
+      state: verified
+      source: https://docs.codeium.com/windsurf/rules
+      verifiedAt: 2026-07-27
+  - id: mcp-project
+    assetKind: mcp
+    scope: project
+    path: .windsurf/mcp.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *windsurf-evidence
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: ""
+    format: directory
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: ""
+    format: directory
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified

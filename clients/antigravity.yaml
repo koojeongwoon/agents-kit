@@ -1,0 +1,68 @@
+schemaVersion: 1
+id: antigravity
+displayName: Antigravity
+detection:
+  commands: [agy]
+  userRoot: ~/.gemini/antigravity-cli
+capabilities:
+  - id: instructions-global
+    assetKind: instructions
+    scope: global
+    path: ~/.gemini/antigravity-cli/AGENTS.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: &agy-evidence
+      state: verified
+      source: https://google.github.io/antigravity/docs/config
+      verifiedAt: 2026-07-27
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: AGENTS.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: *agy-evidence
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: .gemini/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: stable
+    evidence: *agy-evidence
+  - id: mcp-project
+    assetKind: mcp
+    scope: project
+    path: .gemini/mcp.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *agy-evidence
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: .gemini/agents/{assetId}.md
+    format: markdown
+    strategy: copy
+    status: stable
+    evidence: *agy-evidence
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: ui-only
+    evidence:
+      state: unverified

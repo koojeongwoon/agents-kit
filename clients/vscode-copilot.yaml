@@ -1,0 +1,61 @@
+schemaVersion: 1
+id: vscode-copilot
+displayName: VS Code / GitHub Copilot
+detection:
+  userRoot: ~/.vscode
+capabilities:
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: .github/copilot-instructions.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: &vscode-evidence
+      state: verified
+      source: https://code.visualstudio.com/docs/copilot/copilot-customization
+      verifiedAt: 2026-07-27
+  - id: settings-project
+    assetKind: settings
+    scope: project
+    path: .vscode/settings.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence: *vscode-evidence
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: ""
+    format: directory
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: ""
+    format: directory
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified

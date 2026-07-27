@@ -1,0 +1,76 @@
+schemaVersion: 1
+id: cursor
+displayName: Cursor
+detection:
+  commands: [cursor]
+  userRoot: ~/.cursor
+capabilities:
+  - id: instructions-global
+    assetKind: instructions
+    scope: global
+    path: ~/.cursor/rules/instructions.md
+    format: markdown
+    strategy: merge
+    status: version-dependent
+    version:
+      min: "0.45.0"
+    evidence: &cursor-evidence
+      state: verified
+      source: https://cursor.com/blog/agent-best-practices
+      verifiedAt: 2026-07-27
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: .cursorrules
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: *cursor-evidence
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: .cursor/skills/{assetId}
+    format: directory
+    strategy: copy
+    status: version-dependent
+    version:
+      min: "0.45.0"
+    evidence: *cursor-evidence
+  - id: mcp-project
+    assetKind: mcp
+    scope: project
+    path: .cursor/mcp.json
+    format: json
+    strategy: merge
+    status: version-dependent
+    version:
+      min: "0.45.0"
+    evidence: *cursor-evidence
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: .cursor/agents
+    format: directory
+    strategy: copy
+    status: version-dependent
+    version:
+      min: "0.45.0"
+    evidence: *cursor-evidence
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: ui-only
+    evidence:
+      state: unverified

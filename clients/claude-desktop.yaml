@@ -1,0 +1,62 @@
+schemaVersion: 1
+id: claude-desktop
+displayName: Claude Desktop
+detection:
+  userRoot: ~/Library/Application Support/Claude
+capabilities:
+  - id: mcp-global
+    assetKind: mcp
+    scope: global
+    path: ~/Library/Application Support/Claude/claude_desktop_config.json
+    format: json
+    strategy: merge
+    status: stable
+    evidence:
+      state: verified
+      source: https://modelcontextprotocol.io/docs/quickstart/user
+      verifiedAt: 2026-07-27
+  - id: instructions-project
+    assetKind: instructions
+    scope: project
+    path: ""
+    format: markdown
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: skills-project
+    assetKind: skills
+    scope: project
+    path: ""
+    format: directory
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: agents-project
+    assetKind: agents
+    scope: project
+    path: ""
+    format: directory
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: workflows-global
+    assetKind: workflows
+    scope: global
+    path: ""
+    format: yaml
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
+  - id: memory-global
+    assetKind: memory
+    scope: global
+    path: ""
+    format: markdown
+    strategy: manual
+    status: unsupported
+    evidence:
+      state: unverified
