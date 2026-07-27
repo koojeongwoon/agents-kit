@@ -186,14 +186,14 @@ export function ManifestDeploymentPanel({
         <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           <label htmlFor="deployment-scope" className="space-y-1.5 text-xs font-semibold text-slate-500">
             Scope
-            <select id="deployment-scope" value={scope} onChange={event => setScope(event.target.value as 'global' | 'project')} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+            <select id="deployment-scope" value={scope} onChange={event => setScope(event.target.value as 'global' | 'project')} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 h-[46px] text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
               <option value="project">Project</option>
               <option value="global">Global</option>
             </select>
           </label>
           <label htmlFor="deployment-client" className="space-y-1.5 text-xs font-semibold text-slate-500">
             Client
-            <select id="deployment-client" value={clientId} onChange={event => setClientId(event.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+            <select id="deployment-client" value={clientId} onChange={event => setClientId(event.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 h-[46px] text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
               <option value="codex">Codex</option>
               <option value="claude-code">Claude Code</option>
             </select>

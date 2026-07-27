@@ -121,10 +121,6 @@ export function ManifestEditor({
       setRegistry(data.registry || []);
       const graph = await fetchManifestDependencies({ scope, projectName, projectPath });
       setDependencyGraph(graph);
-      setSelectedResource(null);
-      setMutations([]);
-      setIsEditing(false);
-      setIsDeleting(false);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Registry 로드 실패');
     } finally {
@@ -173,6 +169,7 @@ export function ManifestEditor({
   };
 
   const addOrUpdateMutation = (mutation: any) => {
+    console.log('[ManifestEditor] addOrUpdateMutation:', mutation);
     const existingIdx = mutations.findIndex(
       m => m.assetId === mutation.assetId && m.type === mutation.type
     );
@@ -186,7 +183,9 @@ export function ManifestEditor({
   };
 
   const addCreateMutation = () => {
+    console.log('[ManifestEditor] addCreateMutation started, editId:', editId, 'kind:', editKind);
     if (!editId.trim()) {
+      console.warn('[ManifestEditor] addCreateMutation validation failed: ID is empty');
       setError('ID가 필요합니다.');
       return;
     }
@@ -199,6 +198,28 @@ export function ManifestEditor({
     }
     if (editKind === 'memory') {
       newAsset.promotion = { requiresApproval: true };
+    }
+    if (editKind === 'mcpServers') {
+      const commandVal = mcpCommand.trim();
+      const urlVal = mcpUrl.trim();
+      if (!commandVal && !urlVal) {
+        setError('MCP 서버는 실행 명령어(Command) 또는 원격 주소(URL) 중 최소 하나가 필요합니다.');
+        return;
+      }
+      if (commandVal) newAsset.command = commandVal;
+      if (urlVal) newAsset.url = urlVal;
+      newAsset.provides = { tools: [] };
+    }
+    if (editKind === 'policies') {
+      newAsset.allow = { capabilities: [] };
+      newAsset.deny = { capabilities: [] };
+    }
+    if (editKind === 'workflows') {
+      newAsset.steps = [];
+    }
+    if (editKind === 'harness') {
+      newAsset.enables = { agents: [], skills: [], workflows: [] };
+      newAsset.policy = { allow: { capabilities: [] }, deny: { capabilities: [] } };
     }
 
     const mutation = {
@@ -224,13 +245,20 @@ export function ManifestEditor({
   };
 
   const handleStartEdit = (resource: RegistryResource) => {
+    console.log('[ManifestEditor] handleStartEdit target:', resource.id, 'kind:', resource.kind);
+    // Clear everything first to prevent old values leaking
+    clearEditForm();
+    
+    // Then set the actual edit target values
     setIsEditing(true);
+    setIsCreating(false);
+    setIsDeleting(false);
     setEditId(resource.id);
     setEditKind(resource.kind);
     setEditDisplayName(resource.displayName || '');
     setEditSource((resource as any).source || '');
-    clearEditForm();
-
+    
+    // Prevent UI loop issues by ensuring isEditing is set correctly
     if (resource.kind === 'skills') {
       setSelectedDependsSkills((resource as any).dependsOn?.skills || []);
       const reqTools = (resource as any).requires?.tools || [];
@@ -381,6 +409,7 @@ export function ManifestEditor({
   };
 
   const clearEditForm = () => {
+    console.log('[ManifestEditor] clearEditForm triggered');
     setEditId('');
     setEditDisplayName('');
     setEditSource('');
@@ -442,6 +471,8 @@ export function ManifestEditor({
     return notDeleted && matchesKind;
   });
 
+  console.log('[ManifestEditor] Render State:', { isCreating, isEditing, isDeleting, mutationsCount: mutations.length, targetReady, loading, editId, editKind });
+
   return (
     <div className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
@@ -464,7 +495,7 @@ export function ManifestEditor({
             <button onClick={loadRegistry} disabled={loading || !targetReady} className="flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950">
               <RefreshCw className="h-3.5 w-3.5" /> 새로고침
             </button>
-            <button onClick={() => { setIsCreating(true); setIsEditing(false); setIsDeleting(false); }} disabled={loading || !targetReady} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500">
+            <button onClick={() => { clearEditForm(); setIsCreating(true); setIsEditing(false); setIsDeleting(false); }} disabled={loading || !targetReady} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500">
               <Plus className="h-3.5 w-3.5" /> 리소스 추가
             </button>
           </div>
@@ -581,7 +612,7 @@ export function ManifestEditor({
             </label>
             <label className="space-y-1.5 text-xs font-semibold text-slate-500">
               Kind
-              <select value={editKind} onChange={e => setEditKind(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+              <select value={editKind} onChange={e => setEditKind(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 h-[42px] text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
                 {ASSET_KINDS.map(k => <option key={k} value={k}>{k}</option>)}
               </select>
             </label>
@@ -589,10 +620,24 @@ export function ManifestEditor({
               Display Name (Optional)
               <input value={editDisplayName} onChange={e => setEditDisplayName(e.target.value)} placeholder="e.g. Search Skill" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
             </label>
-            <label className="space-y-1.5 text-xs font-semibold text-slate-500">
-              Source Path (e.g. skills/search)
-              <input value={editSource} onChange={e => setEditSource(e.target.value)} placeholder="e.g. skills/search" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
-            </label>
+            {['instructions', 'skills', 'agents', 'hooks', 'memory', 'clientSettings'].includes(editKind) && (
+              <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                Source Path (e.g. skills/search)
+                <input value={editSource} onChange={e => setEditSource(e.target.value)} placeholder="e.g. skills/search" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+              </label>
+            )}
+            {editKind === 'mcpServers' && (
+              <>
+                <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                  Command (for Local MCP, e.g. node, npx)
+                  <input value={mcpCommand} onChange={e => setMcpCommand(e.target.value)} placeholder="e.g. npx" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                </label>
+                <label className="space-y-1.5 text-xs font-semibold text-slate-500">
+                  URL (for Remote MCP, e.g. https://...)
+                  <input value={mcpUrl} onChange={e => setMcpUrl(e.target.value)} placeholder="e.g. https://mcp.example.com" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                </label>
+              </>
+            )}
           </div>
           <div className="mt-5 flex justify-end gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
             <button onClick={() => setIsCreating(false)} className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-700">취소</button>
@@ -1200,7 +1245,7 @@ export function ManifestEditor({
         <section className="md:col-span-1 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
           <div className="space-y-3">
             <h3 className="text-sm font-bold">리소스 목록</h3>
-            <select value={filterKind} onChange={e => setFilterKind(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+            <select value={filterKind} onChange={e => setFilterKind(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 h-[38px] text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
               <option value="all">모든 종류 (All Kinds)</option>
               {ASSET_KINDS.map(k => <option key={k} value={k}>{k}</option>)}
             </select>
