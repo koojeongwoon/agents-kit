@@ -339,8 +339,9 @@ export default function App() {
         masterContent: data.masterContent || '',
         hasExisting: data.hasExisting
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert(`Diff 대조 로딩 실패: ${err.message || '알 수 없는 서버 에러가 발생했습니다. 권한 또는 디렉토리 경로 범위를 확인해 주세요.'}`);
     }
   };
 
@@ -486,7 +487,7 @@ export default function App() {
                     <span>Registered {assetSubTab} Assets ({(kits[assetSubTab] || []).length})</span>
                   </h3>
 
-                  {assetSubTab !== 'skills' && assetSubTab !== 'mcp' && (
+                  {assetSubTab !== 'mcp' && (
                     <button
                       onClick={() => {
                         setNewAssetNameInput('');
@@ -797,7 +798,7 @@ export default function App() {
 
       <AssetPreviewEditModal
         isOpen={!!previewModal}
-        onClose={() => setPreviewModal(null)}
+        onClose={() => setDiffModal ? setPreviewModal(null) : setPreviewModal(null)}
         previewModal={previewModal}
         editContent={editContent}
         setEditContent={setEditContent}
@@ -811,6 +812,7 @@ export default function App() {
         setAiProvider={setAiProvider}
         isAiGenerating={isAiGenerating}
         handleAiAssistGenerate={handleAiAssistGenerate}
+        kits={kits}
       />
 
       <AssetCreateModal
@@ -830,6 +832,7 @@ export default function App() {
         selectedProjectName={selectedProjectName}
         handleCreateAssetSubmit={handleCreateAssetSubmit}
         apiFetch={apiFetch}
+        kits={kits}
       />
 
       <AssetDeleteModal
