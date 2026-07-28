@@ -129,6 +129,7 @@ export default function ManifestApp() {
       return (
         <ControlCenterHome
           clients={clients}
+          localDiscovery={localDiscovery}
           resources={resources}
           targetReady={targetReady}
           scope={scope}
@@ -142,6 +143,7 @@ export default function ManifestApp() {
         <ResourceWorkspace
           view={activeView as ResourceView}
           clients={clients}
+          localDiscovery={localDiscovery}
           resources={resources}
           targetReady={targetReady}
           loading={resourcesLoading}

@@ -1,11 +1,12 @@
 import {useState} from 'react';
 import {AlertCircle, ArrowUpRight, Bot, Boxes, Network, Plus, Search, Sparkles, Wrench} from 'lucide-react';
-import type {ClientSummary, RegistryResource} from '../../api/deploy';
+import type {ClientSummary, LocalClientDiscovery, RegistryResource} from '../../api/deploy';
 import type {ResourceView} from '../shell/ControlCenterShell';
 
 interface ResourceWorkspaceProps {
   view: ResourceView;
   clients: ClientSummary[];
+  localDiscovery: LocalClientDiscovery[];
   resources: RegistryResource[];
   targetReady: boolean;
   loading: boolean;
@@ -70,6 +71,7 @@ function capabilityLabel(client: ClientSummary, assetKind: string) {
 export function ResourceWorkspace({
   view,
   clients,
+  localDiscovery,
   resources,
   targetReady,
   loading,
@@ -81,15 +83,56 @@ export function ResourceWorkspace({
   const config = workspaceConfig[view];
   const Icon = config.icon;
   const normalizedQuery = query.trim().toLowerCase();
-  const filtered = resources
+  const clientNames = new Map([
+    ...clients.map(client => [client.id, client.displayName] as const),
+    ...localDiscovery.map(client => [client.id, client.displayName] as const)
+  ]);
+  const rows = new Map<string, {
+    id: string;
+    displayName: string;
+    registered?: RegistryResource;
+    discoveredClientIds: string[];
+    sourcePaths: string[];
+  }>();
+
+  resources
     .filter(resource => resource.kind === config.kind)
-    .filter(resource => {
+    .forEach(resource => {
+      rows.set(resource.id, {
+        id: resource.id,
+        displayName: resource.displayName || resource.id,
+        registered: resource,
+        discoveredClientIds: [],
+        sourcePaths: []
+      });
+    });
+
+  localDiscovery.forEach(client => {
+    client.assets
+      .filter(asset => asset.kind === config.kind)
+      .forEach(asset => {
+        const row = rows.get(asset.id) || {
+          id: asset.id,
+          displayName: asset.id,
+          discoveredClientIds: [],
+          sourcePaths: []
+        };
+        if (!row.discoveredClientIds.includes(client.id)) row.discoveredClientIds.push(client.id);
+        if (!row.sourcePaths.includes(asset.sourcePath)) row.sourcePaths.push(asset.sourcePath);
+        rows.set(asset.id, row);
+      });
+  });
+
+  const filtered = [...rows.values()]
+    .filter(row => {
       if (!normalizedQuery) return true;
       return [
-        resource.id,
-        resource.displayName,
-        ...resource.providedTools,
-        ...resource.requiredTools
+        row.id,
+        row.displayName,
+        ...(row.registered?.providedTools || []),
+        ...(row.registered?.requiredTools || []),
+        ...row.discoveredClientIds.map(clientId => clientNames.get(clientId) || clientId),
+        ...row.sourcePaths
       ].some(value => String(value || '').toLowerCase().includes(normalizedQuery));
     });
 
@@ -160,39 +203,81 @@ export function ResourceWorkspace({
 
       {targetReady && !loading && !error && filtered.length > 0 && (
         <section className="grid gap-4 xl:grid-cols-2" aria-label={`${config.title} 목록`}>
-          {filtered.map(resource => (
-            <article key={resource.id} className="rounded-3xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900/60">
+          {filtered.map(row => (
+            <article
+              key={row.id}
+              aria-label={`${row.displayName} 리소스`}
+              className="rounded-3xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900/60"
+            >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-bold text-slate-950 dark:text-white">{resource.displayName || resource.id}</h2>
-                    <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-300">
-                      관리 중
-                    </span>
+                  <h2 className="font-bold text-slate-950 dark:text-white">{row.displayName}</h2>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {row.discoveredClientIds.length > 0 && (
+                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-300">
+                        PC에서 발견
+                      </span>
+                    )}
+                    {row.registered && (
+                      <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-300">
+                        Agent Kit 등록됨
+                      </span>
+                    )}
+                    {!row.registered && (
+                      <span className="rounded-full bg-slate-500/10 px-2 py-0.5 text-[10px] font-bold text-slate-500">
+                        읽기 전용
+                      </span>
+                    )}
                   </div>
-                  <p className="mt-1 font-mono text-[11px] text-slate-500">{resource.id}</p>
+                  <p className="mt-2 font-mono text-[11px] text-slate-500">{row.id}</p>
                 </div>
-                <span className="rounded-lg border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-500 dark:border-slate-700">
-                  {resource.scope?.type === 'global' ? '전역' : '프로젝트'}
-                </span>
+                {row.registered && (
+                  <span className="rounded-lg border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-500 dark:border-slate-700">
+                    {row.registered.scope?.type === 'global' ? '전역' : '프로젝트'}
+                  </span>
+                )}
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                {resource.providedTools.map(tool => (
+                {(row.registered?.providedTools || []).map(tool => (
                   <span key={tool} className="rounded-lg bg-violet-500/10 px-2 py-1 font-mono text-[10px] text-violet-600 dark:text-violet-300">
                     {tool}
                   </span>
                 ))}
-                {resource.requiredTools.map(tool => (
+                {(row.registered?.requiredTools || []).map(tool => (
                   <span key={tool} className="rounded-lg bg-cyan-500/10 px-2 py-1 font-mono text-[10px] text-cyan-600 dark:text-cyan-300">
                     필요: {tool}
                   </span>
                 ))}
-                {resource.providedTools.length === 0 && resource.requiredTools.length === 0 && (
+                {row.sourcePaths.map(sourcePath => (
+                  <span key={sourcePath} className="rounded-lg bg-slate-500/10 px-2 py-1 font-mono text-[10px] text-slate-500">
+                    {sourcePath}
+                  </span>
+                ))}
+                {(row.registered?.providedTools.length || 0) === 0
+                  && (row.registered?.requiredTools.length || 0) === 0
+                  && row.sourcePaths.length === 0 && (
                   <span className="text-xs text-slate-500">직접 연결된 Tool 없음</span>
                 )}
               </div>
 
+              {row.discoveredClientIds.length > 0 && (
+                <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">PC에서 발견한 환경</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {row.discoveredClientIds.map(clientId => (
+                      <span
+                        key={clientId}
+                        className="rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-300"
+                      >
+                        {clientNames.get(clientId) || clientId}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {row.registered && (
               <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">환경 호환성</p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -206,23 +291,26 @@ export function ResourceWorkspace({
                   })}
                 </div>
               </div>
+              )}
 
-              <div className="mt-5 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => onOpenEditor(resource.id)}
-                  className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold hover:border-blue-400 hover:text-blue-600 dark:border-slate-700"
-                >
-                  편집
-                </button>
-                <button
-                  type="button"
-                  onClick={onOpenDeploy}
-                  className="flex items-center gap-1 rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold hover:border-blue-400 hover:text-blue-600 dark:border-slate-700"
-                >
-                  배포 검토 <ArrowUpRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
+              {row.registered && (
+                <div className="mt-5 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onOpenEditor(row.id)}
+                    className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold hover:border-blue-400 hover:text-blue-600 dark:border-slate-700"
+                  >
+                    편집
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onOpenDeploy}
+                    className="flex items-center gap-1 rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold hover:border-blue-400 hover:text-blue-600 dark:border-slate-700"
+                  >
+                    배포 검토 <ArrowUpRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
             </article>
           ))}
         </section>
