@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from 'vitest';
 import {render, screen, within} from '@testing-library/react';
 import {ControlCenterHome} from './ControlCenterHome';
-import type {ClientSummary, LocalClientDiscovery} from '../../api/deploy';
+import type {ClientSummary, LocalClientDiscovery, RegistryResource} from '../../api/deploy';
 
 const clients: ClientSummary[] = [
   {
@@ -81,5 +81,40 @@ describe('ControlCenterHome', () => {
     expect(screen.getByText('일부 설정을 읽지 못했습니다')).toBeInTheDocument();
     expect(screen.getByText('~/.cursor/mcp.json')).toBeInTheDocument();
     expect(document.body.textContent).not.toContain('/Users/');
+  });
+
+  it('counts the union of PC discovery and Agent Kit resources without duplicates', () => {
+    const discoveryWithAssets: LocalClientDiscovery[] = [{
+      ...localDiscovery[0],
+      assets: [
+        {id: 'context7', kind: 'mcpServers', clientId: 'codex', sourcePath: '~/.codex/config.toml'},
+        {id: 'playwright', kind: 'mcpServers', clientId: 'codex', sourcePath: '~/.codex/config.toml'},
+        {id: 'review', kind: 'skills', clientId: 'codex', sourcePath: '~/.agents/skills'}
+      ]
+    }];
+    const registered: RegistryResource[] = [{
+      id: 'context7',
+      kind: 'mcpServers',
+      displayName: 'Context7',
+      scope: {type: 'global'},
+      providedTools: [],
+      requiredTools: [],
+      references: []
+    }];
+
+    render(
+      <ControlCenterHome
+        clients={clients}
+        localDiscovery={discoveryWithAssets}
+        resources={registered}
+        targetReady
+        scope="global"
+        onOpenMcp={vi.fn()}
+        onOpenDeploy={vi.fn()}
+      />
+    );
+
+    expect(within(screen.getByRole('article', {name: 'MCP 자산 요약'})).getByText('2')).toBeInTheDocument();
+    expect(within(screen.getByRole('article', {name: 'Skill 자산 요약'})).getByText('1')).toBeInTheDocument();
   });
 });

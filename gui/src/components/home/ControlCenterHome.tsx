@@ -22,9 +22,14 @@ export function ControlCenterHome({
 }: ControlCenterHomeProps) {
   const discoveryByClient = new Map(localDiscovery.map(result => [result.id, result]));
   const discoveryIssues = localDiscovery.flatMap(result => result.issues);
+  const discoveredAssets = localDiscovery.flatMap(result => result.assets);
+  const countAssetUnion = (kind: string) => new Set([
+    ...resources.filter(resource => resource.kind === kind).map(resource => resource.id),
+    ...discoveredAssets.filter(asset => asset.kind === kind).map(asset => asset.id)
+  ]).size;
   const resourceCounts = {
-    mcp: resources.filter(resource => resource.kind === 'mcpServers').length,
-    skills: resources.filter(resource => resource.kind === 'skills').length,
+    mcp: countAssetUnion('mcpServers'),
+    skills: countAssetUnion('skills'),
     agents: resources.filter(resource => resource.kind === 'agents').length,
     harness: resources.filter(resource => resource.kind === 'harness').length
   };
@@ -90,7 +95,11 @@ export function ControlCenterHome({
           {label: 'Agent', value: resourceCounts.agents, description: '역할과 조합'},
           {label: 'Harness', value: resourceCounts.harness, description: '환경 프로필'}
         ].map(item => (
-          <article key={item.label} className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900/60">
+          <article
+            key={item.label}
+            aria-label={`${item.label} 자산 요약`}
+            className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900/60"
+          >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">{item.label}</span>
               <Boxes className="h-4 w-4 text-slate-400" />
