@@ -75,6 +75,21 @@ test('application service projects client definitions without exposing target pa
   ]);
 });
 
+test('application service exposes adapter-driven local discovery without running clients', () => {
+  const subject = fixture();
+  const binDir = path.join(subject.root, 'bin');
+  fs.mkdirSync(binDir);
+  fs.writeFileSync(path.join(binDir, 'example'), '#!/bin/sh\n');
+  fs.chmodSync(path.join(binDir, 'example'), 0o755);
+
+  const discovery = subject.service.localDiscovery({pathValue: binDir});
+  const client = discovery.find(item => item.id === 'example');
+
+  assert.equal(client.installed, true);
+  assert.deepEqual(client.signals.commands, ['example']);
+  assert.deepEqual(client.assets, []);
+});
+
 test('application service plans, applies, lists history, and rolls back one manifest flow', () => {
   const subject = fixture();
   const plan = subject.service.plan({

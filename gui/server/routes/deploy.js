@@ -40,6 +40,14 @@ export function createDeployRouter(ctx) {
     }
   });
 
+  router.get('/api/local-discovery', (req, res) => {
+    try {
+      res.json({ success: true, clients: manifestDeploymentService.localDiscovery() });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
   router.post('/api/deployment/plan', (req, res) => {
     const {clientId, scope = 'project', projectPath = '', projectName = '', clientVersion, previewOptIn = false} = req.body;
     try {

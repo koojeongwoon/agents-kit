@@ -26,6 +26,7 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
   assert.deepEqual(routes, [
     'GET /api/clients',
     'GET /api/deployment/history',
+    'GET /api/local-discovery',
     'GET /api/manifest/dependencies',
     'GET /api/manifest/registry',
     'GET /api/manifest/resources/:assetId',
@@ -114,6 +115,34 @@ test('client catalog API exposes read-only client summaries', () => {
       detection: { commands: ['codex'], userRoot: '~/.codex' },
       capabilities: [{ assetKind: 'mcp', scope: 'global', status: 'stable' }]
     }]
+  });
+});
+
+test('local discovery API exposes only sanitized read-only projections', () => {
+  const service = {
+    localDiscovery: () => [{
+      id: 'codex',
+      displayName: 'Codex',
+      supported: true,
+      installed: true,
+      configured: true,
+      signals: {commands: ['codex'], userRootExists: true},
+      assets: [{
+        id: 'context7',
+        kind: 'mcpServers',
+        clientId: 'codex',
+        sourcePath: '~/.codex/config.toml'
+      }],
+      issues: []
+    }]
+  };
+
+  const response = dispatch(routerWith(service), 'GET', '/api/local-discovery');
+
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(response.body, {
+    success: true,
+    clients: service.localDiscovery()
   });
 });
 
