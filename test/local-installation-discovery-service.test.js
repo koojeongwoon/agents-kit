@@ -40,6 +40,10 @@ SECRET_TOKEN = "must-not-leak"
 `);
   writeFile(path.join(homeDir, '.agents', 'skills', 'review', 'SKILL.md'), '# Review\n');
   writeFile(path.join(homeDir, '.claude', 'skills', 'summary', 'SKILL.md'), '# Summary\n');
+  writeFile(path.join(homeDir, '.claude', 'skills', 'review.skill'), 'packaged skill');
+  writeFile(path.join(homeDir, '.claude', 'skills', 'summary.skill'), 'duplicate package');
+  writeFile(path.join(homeDir, '.claude', 'skills', 'summary-notes.md'), '# Not a Skill\n');
+  writeFile(path.join(homeDir, '.claude', 'skills', '.DS_Store'), 'finder metadata');
   writeFile(path.join(homeDir, '.claude.json'), JSON.stringify({
     mcpServers: {
       playwright: {
@@ -70,7 +74,7 @@ SECRET_TOKEN = "must-not-leak"
   assert.equal(claude.configured, true);
   assert.deepEqual(
     claude.assets.map(asset => [asset.kind, asset.id]),
-    [['mcpServers', 'playwright'], ['skills', 'summary']]
+    [['mcpServers', 'playwright'], ['skills', 'review'], ['skills', 'summary']]
   );
 
   const serialized = JSON.stringify(result);
