@@ -41,6 +41,8 @@ capabilities:
     path: ~/.cursor/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
     status: stable
     evidence: *cursor-skills
   - id: mcp-project
@@ -60,6 +62,9 @@ capabilities:
     path: ~/.cursor/mcp.json
     format: json
     strategy: merge
+    discovery:
+      reader: json-object-keys
+      selector: mcpServers
     status: stable
     evidence: *cursor-mcp
   - id: agents-project

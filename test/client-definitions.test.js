@@ -109,6 +109,28 @@ test('invalid evidence and duplicate capability IDs are rejected', () => {
   }), error => error.code === 'DUPLICATE_CLIENT_CAPABILITY');
 });
 
+test('client capabilities validate read-only discovery adapters', () => {
+  const definition = definitionWith({
+    discovery: { reader: 'directory-entries' }
+  });
+  assert.deepEqual(definition.capabilities[0].discovery, {
+    reader: 'directory-entries'
+  });
+  assert.equal(Object.isFrozen(definition.capabilities[0].discovery), true);
+
+  assert.throws(() => definitionWith({
+    discovery: { reader: 'json-object-keys' }
+  }), error => error.code === 'INVALID_CLIENT_DISCOVERY');
+
+  assert.throws(() => definitionWith({
+    discovery: { reader: 'directory-entries', selector: 'mcpServers' }
+  }), error => error.code === 'INVALID_CLIENT_DISCOVERY');
+
+  assert.throws(() => definitionWith({
+    discovery: { reader: 'client-specific-reader' }
+  }), error => error.code === 'INVALID_CLIENT_DISCOVERY');
+});
+
 test('official Codex and Claude Code definitions load with corrected mappings', () => {
   const definitions = loadClientDefinitions({
     definitionsDir: path.join(repositoryRoot, 'clients')
@@ -135,6 +157,47 @@ test('official Codex and Claude Code definitions load with corrected mappings', 
     assetKind: 'workflows',
     scope: 'global'
   }).reason, 'CAPABILITY_UNVERIFIED');
+});
+
+test('official client definitions declare adapter-driven MCP and Skill discovery', () => {
+  const definitions = loadClientDefinitions({
+    definitionsDir: path.join(repositoryRoot, 'clients')
+  });
+  const expected = {
+    antigravity: {
+      mcp: { reader: 'json-object-keys', selector: 'mcpServers' },
+      skills: { reader: 'directory-entries' }
+    },
+    'claude-code': {
+      mcp: { reader: 'json-object-keys', selector: 'mcpServers' },
+      skills: { reader: 'directory-entries' }
+    },
+    'claude-desktop': {
+      mcp: { reader: 'json-object-keys', selector: 'mcpServers' }
+    },
+    codex: {
+      mcp: { reader: 'toml-table-prefix', selector: 'mcp_servers' },
+      skills: { reader: 'directory-entries' }
+    },
+    cursor: {
+      mcp: { reader: 'json-object-keys', selector: 'mcpServers' },
+      skills: { reader: 'directory-entries' }
+    },
+    windsurf: {
+      mcp: { reader: 'json-object-keys', selector: 'mcpServers' },
+      skills: { reader: 'directory-entries' }
+    }
+  };
+
+  for (const [clientId, discoveryByKind] of Object.entries(expected)) {
+    const definition = definitions.get(clientId);
+    for (const [assetKind, discovery] of Object.entries(discoveryByKind)) {
+      const capability = definition.capabilities.find(item => (
+        item.scope === 'global' && item.assetKind === assetKind
+      ));
+      assert.deepEqual(capability.discovery, discovery, `${clientId}/${assetKind}`);
+    }
+  }
 });
 
 test('Cursor, Antigravity, and Windsurf use current documented paths', () => {

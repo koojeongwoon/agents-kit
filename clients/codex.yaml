@@ -30,6 +30,8 @@ capabilities:
     path: ~/.agents/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
     status: stable
     evidence: &codex-skills
       state: verified
@@ -69,6 +71,9 @@ capabilities:
     path: ~/.codex/config.toml
     format: toml-section
     strategy: merge
+    discovery:
+      reader: toml-table-prefix
+      selector: mcp_servers
     status: stable
     evidence: &codex-mcp
       state: verified

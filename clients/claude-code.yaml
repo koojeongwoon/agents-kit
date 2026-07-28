@@ -54,6 +54,8 @@ capabilities:
     path: ~/.claude/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
     status: stable
     evidence: &claude-skills
       state: verified
@@ -92,6 +94,9 @@ capabilities:
     path: ~/.claude.json
     format: json-section
     strategy: merge
+    discovery:
+      reader: json-object-keys
+      selector: mcpServers
     status: stable
     evidence: &claude-mcp
       state: verified

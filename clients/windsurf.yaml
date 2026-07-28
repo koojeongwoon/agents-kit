@@ -22,6 +22,9 @@ capabilities:
     path: ~/.codeium/windsurf/mcp_config.json
     format: json
     strategy: merge
+    discovery:
+      reader: json-object-keys
+      selector: mcpServers
     status: stable
     evidence:
       state: verified
@@ -44,6 +47,8 @@ capabilities:
     path: ~/.codeium/windsurf/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
     status: stable
     evidence: *windsurf-skills
   - id: agents-project

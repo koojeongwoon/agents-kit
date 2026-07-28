@@ -38,6 +38,8 @@ capabilities:
     path: ~/.gemini/antigravity-cli/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
     status: stable
     evidence: *agy-evidence
   - id: mcp-project
@@ -54,6 +56,9 @@ capabilities:
     path: ~/.gemini/antigravity-cli/mcp_config.json
     format: json
     strategy: merge
+    discovery:
+      reader: json-object-keys
+      selector: mcpServers
     status: stable
     evidence: *agy-evidence
   - id: agents-project
