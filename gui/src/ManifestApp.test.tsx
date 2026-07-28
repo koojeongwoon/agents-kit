@@ -26,6 +26,44 @@ function clientCatalogResponse() {
   });
 }
 
+function localDiscoveryResponse() {
+  return new Response(JSON.stringify({
+    success: true,
+    clients: [
+      {
+        id: 'codex',
+        displayName: 'Codex',
+        supported: true,
+        installed: true,
+        configured: true,
+        signals: {commands: ['codex'], userRootExists: true},
+        assets: [],
+        issues: []
+      },
+      {
+        id: 'antigravity',
+        displayName: 'Antigravity',
+        supported: true,
+        installed: false,
+        configured: false,
+        signals: {commands: [], userRootExists: false},
+        assets: [],
+        issues: []
+      }
+    ]
+  }), {
+    status: 200,
+    headers: {'Content-Type': 'application/json'}
+  });
+}
+
+function mockControlCenterApis() {
+  return vi.spyOn(window, 'fetch').mockImplementation(async input => {
+    if (String(input).includes('/api/local-discovery')) return localDiscoveryResponse();
+    return clientCatalogResponse();
+  });
+}
+
 describe('Agent Kit control center shell', () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -33,7 +71,7 @@ describe('Agent Kit control center shell', () => {
   });
 
   it('uses semantic MCP, Skill, Agent, and Harness navigation', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(clientCatalogResponse());
+    mockControlCenterApis();
     const user = userEvent.setup();
 
     render(<ManifestApp />);
@@ -51,17 +89,30 @@ describe('Agent Kit control center shell', () => {
   });
 
   it('shows every data-driven client instead of a hard-coded client pair', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(clientCatalogResponse());
+    mockControlCenterApis();
 
     render(<ManifestApp />);
 
     const environments = await screen.findByLabelText('지원 환경');
-    expect(within(environments).getByText('Codex')).toBeInTheDocument();
-    expect(within(environments).getByText('Antigravity')).toBeInTheDocument();
+    expect(await within(environments).findByText('Codex · PC에 설치됨')).toBeInTheDocument();
+    expect(await within(environments).findByText('Antigravity · 지원만 됨')).toBeInTheDocument();
+  });
+
+  it('distinguishes installed clients from clients that are only supported', async () => {
+    const fetchSpy = mockControlCenterApis();
+
+    render(<ManifestApp />);
+
+    const environments = await screen.findByLabelText('지원 환경');
+    expect(await within(environments).findByText('Codex · PC에 설치됨')).toBeInTheDocument();
+    expect(await within(environments).findByText('Antigravity · 지원만 됨')).toBeInTheDocument();
+    expect(fetchSpy.mock.calls.filter(([input]) => (
+      String(input).includes('/api/local-discovery')
+    ))).toHaveLength(1);
   });
 
   it('keeps deployment target controls in the shared context instead of duplicating them', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(clientCatalogResponse());
+    mockControlCenterApis();
     const user = userEvent.setup();
     render(<ManifestApp />);
 

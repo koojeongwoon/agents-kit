@@ -11,7 +11,7 @@ import {
   Sun,
   Wrench
 } from 'lucide-react';
-import type {ClientSummary} from '../../api/deploy';
+import type {ClientSummary, LocalClientDiscovery} from '../../api/deploy';
 
 export type ResourceView = 'mcp' | 'skills' | 'agents' | 'harness';
 export type AppView = 'home' | ResourceView | 'deploy' | 'editor';
@@ -24,6 +24,9 @@ interface ControlCenterShellProps {
   clients: ClientSummary[];
   clientsLoading: boolean;
   clientsError: string;
+  localDiscovery: LocalClientDiscovery[];
+  localDiscoveryLoading: boolean;
+  localDiscoveryError: string;
   clientId: string;
   setClientId: (clientId: string) => void;
   scope: 'global' | 'project';
@@ -50,6 +53,9 @@ export function ControlCenterShell({
   clients,
   clientsLoading,
   clientsError,
+  localDiscovery,
+  localDiscoveryLoading,
+  localDiscoveryError,
   clientId,
   setClientId,
   scope,
@@ -199,17 +205,22 @@ export function ControlCenterShell({
 
           <div className="mx-auto flex max-w-[1480px] items-center gap-2 overflow-x-auto px-6 pb-3" aria-label="지원 환경">
             <span className="min-w-fit text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">지원 환경</span>
-            {clientsLoading && <span className="text-xs text-slate-500">클라이언트 정의를 불러오는 중…</span>}
+            {(clientsLoading || localDiscoveryLoading) && <span className="text-xs text-slate-500">설치 상태를 확인하는 중…</span>}
             {clientsError && <span role="alert" className="text-xs text-rose-600">{clientsError}</span>}
-            {clients.map(client => (
-              <span
-                key={client.id}
-                className="flex min-w-fit items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                {client.displayName}
-              </span>
-            ))}
+            {localDiscoveryError && <span role="alert" className="text-xs text-rose-600">{localDiscoveryError}</span>}
+            {clients.map(client => {
+              const discovery = localDiscovery.find(item => item.id === client.id);
+              const installed = discovery?.installed === true;
+              return (
+                <span
+                  key={client.id}
+                  className="flex min-w-fit items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${installed ? 'bg-emerald-500' : 'bg-slate-400'}`} aria-hidden="true" />
+                  {client.displayName} · {installed ? 'PC에 설치됨' : '지원만 됨'}
+                </span>
+              );
+            })}
           </div>
         </div>
       </header>

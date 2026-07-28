@@ -1,8 +1,10 @@
 import {useEffect, useState} from 'react';
 import {
   fetchClients,
+  fetchLocalDiscovery,
   fetchManifestRegistry,
   type ClientSummary,
+  type LocalClientDiscovery,
   type RegistryResource
 } from './api/deploy';
 import {ManifestEditor} from './components/config/ManifestEditor';
@@ -29,6 +31,9 @@ export default function ManifestApp() {
   const [clients, setClients] = useState<ClientSummary[]>([]);
   const [clientsLoading, setClientsLoading] = useState(true);
   const [clientsError, setClientsError] = useState('');
+  const [localDiscovery, setLocalDiscovery] = useState<LocalClientDiscovery[]>([]);
+  const [localDiscoveryLoading, setLocalDiscoveryLoading] = useState(true);
+  const [localDiscoveryError, setLocalDiscoveryError] = useState('');
   const [resources, setResources] = useState<RegistryResource[]>([]);
   const [resourcesLoading, setResourcesLoading] = useState(false);
   const [resourcesError, setResourcesError] = useState('');
@@ -57,6 +62,28 @@ export default function ManifestApp() {
       })
       .finally(() => {
         if (current) setClientsLoading(false);
+      });
+    return () => {
+      current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let current = true;
+    setLocalDiscoveryLoading(true);
+    setLocalDiscoveryError('');
+    fetchLocalDiscovery()
+      .then(data => {
+        if (current) setLocalDiscovery(data.clients || []);
+      })
+      .catch(error => {
+        if (current) {
+          setLocalDiscovery([]);
+          setLocalDiscoveryError(error instanceof Error ? error.message : 'PC 설치 상태를 불러오지 못했습니다.');
+        }
+      })
+      .finally(() => {
+        if (current) setLocalDiscoveryLoading(false);
       });
     return () => {
       current = false;
@@ -158,6 +185,9 @@ export default function ManifestApp() {
       clients={clients}
       clientsLoading={clientsLoading}
       clientsError={clientsError}
+      localDiscovery={localDiscovery}
+      localDiscoveryLoading={localDiscoveryLoading}
+      localDiscoveryError={localDiscoveryError}
       clientId={clientId}
       setClientId={setClientId}
       scope={scope}

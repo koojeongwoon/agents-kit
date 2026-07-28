@@ -14,6 +14,30 @@ export interface ClientSummary {
   }>;
 }
 
+export interface LocalDiscoveryAsset {
+  id: string;
+  kind: 'mcpServers' | 'skills';
+  clientId: string;
+  sourcePath: string;
+}
+
+export interface LocalClientDiscovery {
+  id: string;
+  displayName: string;
+  supported: true;
+  installed: boolean;
+  configured: boolean;
+  signals: {
+    commands: string[];
+    userRootExists: boolean;
+  };
+  assets: LocalDiscoveryAsset[];
+  issues: Array<{
+    code: string;
+    sourcePath: string;
+  }>;
+}
+
 export interface ManifestPlanOperation {
   clientId?: string;
   assetId?: string;
@@ -65,6 +89,10 @@ async function jsonOrError(response: Response) {
 
 export async function fetchClients(): Promise<{ clients: ClientSummary[] }> {
   return jsonOrError(await apiFetch('/api/clients'));
+}
+
+export async function fetchLocalDiscovery(): Promise<{ clients: LocalClientDiscovery[] }> {
+  return jsonOrError(await apiFetch('/api/local-discovery'));
 }
 
 export async function planManifestDeployment(input: {
