@@ -103,3 +103,30 @@ assets:
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /"healthy": true/);
 });
+
+test('CLI rejects --project targeting forbidden self-target paths', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-cli-self-target-'));
+  const kitRoot = path.join(root, 'kit');
+  const repoRoot = repositoryRoot;
+  const homeDir = os.homedir();
+
+  // Try deploying to kitRoot
+  let result = run(['apply', '--kit', kitRoot, '--project', kitRoot, '--client', 'codex']);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Agent Kit cannot deploy into a filesystem root, home, repository, or Kit directory/);
+
+  // Try deploying to repoRoot
+  result = run(['apply', '--kit', kitRoot, '--project', repoRoot, '--client', 'codex']);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Agent Kit cannot deploy into a filesystem root, home, repository, or Kit directory/);
+
+  // Try deploying to homeDir
+  result = run(['apply', '--kit', kitRoot, '--project', homeDir, '--client', 'codex']);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Agent Kit cannot deploy into a filesystem root, home, repository, or Kit directory/);
+
+  // Try doctor with kitRoot as project path
+  result = run(['doctor', '--kit', kitRoot, '--project', kitRoot, '--client', 'codex']);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Agent Kit cannot deploy into a filesystem root, home, repository, or Kit directory/);
+});

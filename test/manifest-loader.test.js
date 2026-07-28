@@ -115,6 +115,66 @@ assets:
   fs.rmSync(root, { recursive: true, force: true });
 });
 
+test('Manifest secret detection handles templates, high-entropy values, and Bearer/Basic headers', () => {
+  const root = fixture();
+
+  // 1. Accepts placeholder values on secret fields
+  const placeholderPath = path.join(root, 'placeholder.yaml');
+  fs.writeFileSync(placeholderPath, `
+schemaVersion: 1
+kit:
+  id: placeholder-kit
+assets:
+  mcpServers:
+    - id: test-mcp
+      connection:
+        command: "node"
+      apiToken: "\${GITHUB_TOKEN}"
+      password: "env:MY_PASSWORD"
+`);
+  const loadedPlaceholder = loadManifestFile({ manifestPath: placeholderPath, scopeRoot: root });
+  assert.equal(loadedPlaceholder.manifest.assets.mcpServers[0].id, 'test-mcp');
+
+  // 2. Rejects Bearer / Basic prefixed values on any field
+  const bearerPath = path.join(root, 'bearer.yaml');
+  fs.writeFileSync(bearerPath, `
+schemaVersion: 1
+kit:
+  id: bearer-kit
+assets:
+  mcpServers:
+    - id: test-mcp
+      connection:
+        command: "node"
+      customField: "Bearer abcd1234efgh5678"
+`);
+  assert.throws(
+    () => loadManifestFile({ manifestPath: bearerPath, scopeRoot: root }),
+    error => error instanceof DomainError && error.code === 'LITERAL_SECRET' && error.message.includes('authorization')
+  );
+
+  // 3. Rejects high-entropy values on secret fields
+  const entropyPath = path.join(root, 'entropy.yaml');
+  fs.writeFileSync(entropyPath, `
+schemaVersion: 1
+kit:
+  id: entropy-kit
+assets:
+  mcpServers:
+    - id: test-mcp
+      connection:
+        command: "node"
+      apiToken: "abcdef1234567890abcdef"
+`);
+  assert.throws(
+    () => loadManifestFile({ manifestPath: entropyPath, scopeRoot: root }),
+    error => error instanceof DomainError && error.code === 'LITERAL_SECRET'
+  );
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+
 test('Discovery requires a Manifest and prefers YAML without creating compatibility state', () => {
   const root = fixture();
   assert.throws(

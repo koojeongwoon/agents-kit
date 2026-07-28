@@ -164,6 +164,54 @@ test('deployment router supports validate and doctor endpoints', () => {
   assert.equal(doctorRes.body.healthy, true);
 });
 
+test('deployment router rejects missing or forbidden project path in doctor and validate', () => {
+  const service = {
+    validate: () => ({ valid: true }),
+    doctor: () => ({ healthy: true })
+  };
+
+  // 1. Missing projectPath for validate
+  const router = routerWith(service);
+  const validateResMissing = dispatch(router, 'POST', '/api/deployment/validate', {
+    body: { scope: 'project', projectPath: '' }
+  });
+  assert.equal(validateResMissing.statusCode, 400);
+  assert.equal(validateResMissing.body.code, 'PROJECT_PATH_REQUIRED');
+
+  // 2. Missing projectPath for doctor
+  const doctorResMissing = dispatch(router, 'POST', '/api/deployment/doctor', {
+    body: { clientId: 'codex', scope: 'project', projectPath: '' }
+  });
+  assert.equal(doctorResMissing.statusCode, 400);
+  assert.equal(doctorResMissing.body.code, 'PROJECT_PATH_REQUIRED');
+
+  // 3. Forbidden projectPath for doctor (mock assertSafeProjectTarget to throw)
+  const routerForbidden = createDeployRouter({
+    homeDir: '/home/test',
+    kitRoot: '/kit',
+    assertSafeProjectTarget: (dir) => {
+      if (dir === '/forbidden') {
+        const err = new Error('forbidden');
+        err.code = 'FORBIDDEN_PATH';
+        throw err;
+      }
+    },
+    resolveKitScopeDir: () => '/kit/projects/default',
+    manifestDeploymentService: service,
+    sendApiError: (req, res, error) => res.status(400).json({
+      code: error.code || 'ERROR',
+      message: error.message
+    })
+  });
+
+  const doctorResForbidden = dispatch(routerForbidden, 'POST', '/api/deployment/doctor', {
+    body: { clientId: 'codex', scope: 'project', projectPath: '/forbidden' }
+  });
+  assert.equal(doctorResForbidden.statusCode, 400);
+  assert.equal(doctorResForbidden.body.message, 'forbidden');
+});
+
+
 test('deployment router supports manifest registry and edit endpoints', () => {
   const service = {
     registry: ({ scopeRoot }) => [{ id: 'review', kind: 'skills' }],

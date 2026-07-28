@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import {createMutationTokenMiddleware, createOriginValidator} from '../lib/gui-security.js';
-import {assertWithinRoots, isWithinRoot, resolveForAuthorization} from '../lib/security-boundary.js';
+import {assertWithinRoots, isWithinRoot, resolveForAuthorization, assertSafeProjectTarget} from '../lib/security-boundary.js';
 
 test('filesystem authorization rejects traversal and symlink escapes', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-security-'));
@@ -61,4 +61,73 @@ test('GUI origin and mutation token boundaries fail closed', () => {
     allowed += 1;
   });
   assert.equal(allowed, 2);
+});
+
+test('assertSafeProjectTarget validates target against forbidden roots', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-self-target-'));
+  const homeDir = path.join(root, 'home');
+  const projectRoot = path.join(root, 'repo');
+  const kitRoot = path.join(root, 'kit');
+  fs.mkdirSync(homeDir);
+  fs.mkdirSync(projectRoot);
+  fs.mkdirSync(kitRoot);
+
+  const options = { homeDir, projectRoot, kitRoot };
+
+  // 1. Valid project subdirectory under a temp root
+  const validDir = path.join(root, 'my-project');
+  fs.mkdirSync(validDir);
+  assert.doesNotThrow(() => assertSafeProjectTarget({ targetDir: validDir, ...options }));
+
+  // 2. Direct match on forbidden roots
+  // Home
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: homeDir, ...options }),
+    /cannot deploy into a filesystem root, home, repository, or Kit directory/
+  );
+  // Repo
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: projectRoot, ...options }),
+    /cannot deploy into a filesystem root, home, repository, or Kit directory/
+  );
+  // Kit
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: kitRoot, ...options }),
+    /cannot deploy into a filesystem root, home, repository, or Kit directory/
+  );
+  // Filesystem root
+  const fsRoot = path.parse(validDir).root;
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: fsRoot, ...options }),
+    /cannot deploy into a filesystem root, home, repository, or Kit directory/
+  );
+
+  // 3. Path inside kit/repo via normal path
+  const insideRepo = path.join(projectRoot, 'some-dir');
+  fs.mkdirSync(insideRepo);
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: insideRepo, ...options }),
+    /cannot deploy inside its own repository or Kit directory/
+  );
+
+  const insideKit = path.join(kitRoot, 'some-dir');
+  fs.mkdirSync(insideKit);
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: insideKit, ...options }),
+    /cannot deploy inside its own repository or Kit directory/
+  );
+
+  // 4. Path inside kit/repo via symlink escape
+  const linkDir = path.join(validDir, 'link-to-repo');
+  fs.symlinkSync(projectRoot, linkDir);
+  // Direct target of symlink to repo is equal to repo itself
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: linkDir, ...options }),
+    /cannot deploy into a filesystem root, home, repository, or Kit directory/
+  );
+  // Nested target inside symlink to repo is inside repo
+  assert.throws(
+    () => assertSafeProjectTarget({ targetDir: path.join(linkDir, 'nested'), ...options }),
+    /cannot deploy inside its own repository or Kit directory/
+  );
 });

@@ -2,7 +2,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {resolveKitRoot, resolveKitScopeDir} from '../../lib/kit-paths.js';
-import {isWithinRoot, resolveForAuthorization} from '../../lib/security-boundary.js';
+import {isWithinRoot, resolveForAuthorization, assertSafeProjectTarget as assertSafeProjectTargetShared} from '../../lib/security-boundary.js';
 import {errorResponse, httpStatusForError} from '../../lib/interfaces/http/error-mapper.js';
 import {createManifestDeploymentService} from '../../lib/application/manifest-deployment-service.js';
 
@@ -19,15 +19,7 @@ export function createAppContext(options = {}) {
   });
 
   function assertSafeProjectTarget(targetDir) {
-    const resolved = resolveForAuthorization(targetDir);
-    const filesystemRoot = path.parse(resolved).root;
-    const forbiddenRoots = [filesystemRoot, homeDir, projectRoot, kitRoot];
-    if (forbiddenRoots.some(root => isWithinRoot(resolved, root) && isWithinRoot(root, resolved))) {
-      throw new Error('Agent Kit cannot deploy into a filesystem root, home, repository, or Kit directory');
-    }
-    if (isWithinRoot(resolved, kitRoot) || isWithinRoot(resolved, projectRoot)) {
-      throw new Error('Agent Kit cannot deploy inside its own repository or Kit directory');
-    }
+    assertSafeProjectTargetShared({ targetDir, homeDir, projectRoot, kitRoot });
   }
 
   function sendApiError(req, res, error) {

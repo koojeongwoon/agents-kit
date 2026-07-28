@@ -71,7 +71,7 @@ tests, and user surface are linked here.
 | AK-D12 | Validate after apply | Deployment lifecycle | Implemented for copy and merge |
 | AK-D13 | Roll back multi-file and multi-client failure | Deployment lifecycle | Implemented in common coordinator |
 | AK-D14 | Persist transaction history and rollback | Deployment lifecycle | Implemented for committed apply transactions |
-| AK-D15 | Retain self-target and symlink escape prevention | AGENTS.md, baseline | Designed |
+| AK-D15 | Retain self-target and symlink escape prevention | AGENTS.md, baseline | Implemented (see [security-boundary.js](file:///Users/in07375_etc23a00026_mac/__dev/agents-kit/lib/security-boundary.js); tested in [security-boundaries.test.js](file:///Users/in07375_etc23a00026_mac/__dev/agents-kit/test/security-boundaries.test.js) and [manifest-cli.test.js](file:///Users/in07375_etc23a00026_mac/__dev/agents-kit/test/manifest-cli.test.js)) |
 | AK-D16 | Never store or display literal credentials | Asset and policy models | Manifest input implemented and tested |
 | AK-D17 | Account for JSON, JSONC, TOML, YAML, and Markdown formats | Deployment lifecycle | Designed |
 | AK-D18 | Do not silently fall back from link to copy | Deployment lifecycle | Implemented |

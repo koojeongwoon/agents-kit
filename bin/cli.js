@@ -9,6 +9,7 @@ import {
   resolveKitRoot,
   resolveKitScopeDir
 } from '../lib/kit-paths.js';
+import { assertSafeProjectTarget } from '../lib/security-boundary.js';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const definitionsDir = path.join(repositoryRoot, 'clients');
@@ -58,6 +59,15 @@ function deploymentInput(kitRoot) {
   const scope = projectPath ? 'project' : 'global';
   const clientId = argument('--client');
   if (!clientId) throw new Error('--client is required');
+
+  if (scope === 'project') {
+    assertSafeProjectTarget({
+      targetDir: projectPath,
+      homeDir,
+      projectRoot: repositoryRoot,
+      kitRoot
+    });
+  }
 
   return {
     clientId,
@@ -148,6 +158,14 @@ if (command === 'help' || args.includes('-h') || args.includes('--help')) {
       const scopeRoot = resolveKitScopeDir(kitRoot, scope, projectName);
       const clientId = argument('--client');
       const targetRoot = scope === 'project' ? (projectPath ? path.resolve(projectPath) : undefined) : homeDir;
+      if (scope === 'project') {
+        assertSafeProjectTarget({
+          targetDir: projectPath,
+          homeDir,
+          projectRoot: repositoryRoot,
+          kitRoot
+        });
+      }
       const service = createManifestDeploymentService({definitionsDir, homeDir});
       const result = service.doctor({
         scopeRoot,

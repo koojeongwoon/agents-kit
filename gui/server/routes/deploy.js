@@ -101,13 +101,7 @@ export function createDeployRouter(ctx) {
   router.post('/api/deployment/doctor', (req, res) => {
     const { clientId, scope = 'project', projectPath = '', projectName = '', clientVersion } = req.body;
     try {
-      let resolved = { scopeRoot: resolveKitScopeDir(kitRoot, scope, projectName), targetRoot: undefined };
-      if (scope === 'project' && projectPath?.trim()) {
-        assertSafeProjectTarget(projectPath);
-        resolved.targetRoot = path.resolve(projectPath);
-      } else if (scope === 'global') {
-        resolved.targetRoot = homeDir;
-      }
+      const resolved = locations({ scope, projectPath, projectName });
       const result = manifestDeploymentService.doctor({
         scopeRoot: resolved.scopeRoot,
         targetRoot: resolved.targetRoot,

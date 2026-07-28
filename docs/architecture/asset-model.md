@@ -123,6 +123,13 @@ environment:
 Literal secret-looking values fail validation unless an explicitly supported,
 non-secret test fixture context is used.
 
+### Heuristic limits for secret detection
+
+To prevent accidental commit of credentials, the loader enforces static secret detection heuristics:
+1. **Secret Key Detection:** Keys matching keywords (such as `token`, `password`, `passwd`, `secret`, `api-key`, `credential`) cannot have literal string values unless they format as environment placeholders (e.g. `env:VAR`, `${VAR}`, `{{VAR}}`, or starting with `$`).
+2. **Entropy Verification:** Literal values on secret-key fields are parsed for Shannon entropy. Any non-placeholder value exceeding `12` characters with entropy greater than `3.0` is blocked.
+3. **Prefix Matching:** Values matching known prefix patterns (like `ghp_`, `github_pat_`, `sk-`, `AIza`) or starting with common authorization schemes (like `Bearer ` or `Basic `) are blocked on **any** field.
+
 Environment references use a structured object. Placeholder-looking strings do
 not count as verified secret references.
 

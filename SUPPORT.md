@@ -32,7 +32,9 @@ versioned client definition, capability evidence, and deployment tests.
 
 The local API binds only to `127.0.0.1:3710`, restricts browser origins, and
 requires an ephemeral session token for mutation requests. Do not expose this
-port through a reverse proxy or port-forward.
+port through a reverse proxy or port-forward (do not expose port 3710). The
+local control-plane API is not safe on shared machines with untrusted local
+processes.
 
 Manifest sources must remain inside their scope root. Credentials must be
 provided by their target runtime through environment references and must not be

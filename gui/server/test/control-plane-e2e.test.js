@@ -93,3 +93,45 @@ assets:
     false
   );
 });
+
+test('HTTP control plane self-target prevention returns 400 when projectPath is forbidden', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-http-security-'));
+  const homeDir = path.join(root, 'home');
+  const kitRoot = path.join(root, 'kit');
+  fs.mkdirSync(homeDir);
+  fs.mkdirSync(kitRoot);
+
+  const context = createAppContext({
+    homeDir,
+    kitRoot
+  });
+  const {app, apiToken} = createControlPlaneApp({
+    context,
+    apiToken: 'e'.repeat(64),
+    logRequest: () => {}
+  });
+
+  // Try planning into kit root
+  await request(app)
+    .post('/api/deployment/plan')
+    .set('X-Agents-Kit-Token', apiToken)
+    .send({
+      clientId: 'codex',
+      scope: 'project',
+      projectName: 'default',
+      projectPath: kitRoot
+    })
+    .expect(400);
+
+  // Try doctor with forbidden kit root
+  await request(app)
+    .post('/api/deployment/doctor')
+    .set('X-Agents-Kit-Token', apiToken)
+    .send({
+      clientId: 'codex',
+      scope: 'project',
+      projectName: 'default',
+      projectPath: kitRoot
+    })
+    .expect(400);
+});
