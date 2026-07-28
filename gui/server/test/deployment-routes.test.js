@@ -24,9 +24,11 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
     .sort();
 
   assert.deepEqual(routes, [
+    'GET /api/clients',
     'GET /api/deployment/history',
     'GET /api/manifest/dependencies',
     'GET /api/manifest/registry',
+    'GET /api/manifest/resources/:assetId',
     'POST /api/deployment/apply',
     'POST /api/deployment/doctor',
     'POST /api/deployment/plan',
@@ -38,7 +40,7 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
   ]);
 });
 
-function dispatch(router, method, routePath, { body = {}, query = {} } = {}) {
+function dispatch(router, method, routePath, { body = {}, query = {}, params = {} } = {}) {
   const layer = router.stack.find(item => (
     item.route?.path === routePath
     && item.route.methods[method.toLowerCase()]
@@ -55,7 +57,7 @@ function dispatch(router, method, routePath, { body = {}, query = {} } = {}) {
       return this;
     }
   };
-  layer.route.stack[0].handle({ body, query, requestId: 'request-test' }, res);
+  layer.route.stack[0].handle({ body, query, params, requestId: 'request-test' }, res);
   return response;
 }
 
@@ -89,6 +91,30 @@ test('manifest deployment API keeps plan and apply as separate requests', async 
   assert.equal(applied.statusCode, 200);
   assert.equal(applied.body.transactionId, 'tx-1');
   assert.equal(appliedPlanId, 'plan-1');
+});
+
+test('client catalog API exposes read-only client summaries', () => {
+  const service = {
+    clients: () => [{
+      id: 'codex',
+      displayName: 'Codex',
+      detection: { commands: ['codex'], userRoot: '~/.codex' },
+      capabilities: [{ assetKind: 'mcp', scope: 'global', status: 'stable' }]
+    }]
+  };
+
+  const response = dispatch(routerWith(service), 'GET', '/api/clients');
+
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(response.body, {
+    success: true,
+    clients: [{
+      id: 'codex',
+      displayName: 'Codex',
+      detection: { commands: ['codex'], userRoot: '~/.codex' },
+      capabilities: [{ assetKind: 'mcp', scope: 'global', status: 'stable' }]
+    }]
+  });
 });
 
 test('manifest deployment API exposes history and two-step rollback', async () => {
@@ -215,6 +241,12 @@ test('deployment router rejects missing or forbidden project path in doctor and 
 test('deployment router supports manifest registry and edit endpoints', () => {
   const service = {
     registry: ({ scopeRoot }) => [{ id: 'review', kind: 'skills' }],
+    resource: ({ scopeRoot, assetId }) => ({
+      id: assetId,
+      kind: 'skills',
+      source: 'skills/review',
+      scope: { type: 'project', projectName: 'default', key: 'project:default' }
+    }),
     dependencies: ({ scopeRoot }) => ({ nodes: [{ id: 'review', kind: 'skills' }], links: [] }),
     planEdit: ({ scopeRoot, mutations }) => ({ planId: 'edit-plan-1', mutations }),
     applyEdit: ({ planId }) => ({ success: true })
@@ -226,6 +258,18 @@ test('deployment router supports manifest registry and edit endpoints', () => {
   });
   assert.equal(registryRes.statusCode, 200);
   assert.equal(registryRes.body.registry[0].id, 'review');
+
+  const resourceRes = dispatch(router, 'GET', '/api/manifest/resources/:assetId', {
+    query: { scope: 'project', projectPath: '/project' },
+    params: { assetId: 'review' }
+  });
+  assert.equal(resourceRes.statusCode, 200);
+  assert.deepEqual(resourceRes.body.resource, {
+    id: 'review',
+    kind: 'skills',
+    source: 'skills/review',
+    scope: { type: 'project', projectName: 'default', key: 'project:default' }
+  });
 
   const dependenciesRes = dispatch(router, 'GET', '/api/manifest/dependencies', {
     query: { scope: 'project', projectPath: '/project' }

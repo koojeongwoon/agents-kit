@@ -1,10 +1,11 @@
-import {AlertTriangle, ArrowRight, ShieldAlert, RefreshCw, XCircle, FileEdit} from 'lucide-react';
+import {ShieldAlert, RefreshCw, FileEdit} from 'lucide-react';
 
 interface ErrorResolutionProps {
   errorCode: string;
   message?: string;
   sourceAssetId?: string;
-  details?: any;
+  requestId?: string;
+  remediation?: string;
   onNavigate?: (assetId: string, kind?: string) => void;
   onCancelPlan?: () => void;
   onRePlan?: () => void;
@@ -17,6 +18,11 @@ interface IssueMapping {
 }
 
 const ISSUE_MAPPINGS: Record<string, IssueMapping> = {
+  PROJECT_PATH_REQUIRED: {
+    title: '프로젝트 경로가 필요합니다',
+    description: '프로젝트 범위의 자산을 읽고 배포 계획을 만들려면 대상 프로젝트를 먼저 지정해야 합니다.',
+    remediation: '화면 상단의 프로젝트 경로에 관리할 폴더의 절대 경로를 입력하세요.'
+  },
   MISSING_REFERENCE: {
     title: '필수 참조 리소스 누락 (Missing Reference)',
     description: '선언된 리소스가 매니페스트에 존재하지 않는 다른 리소스를 가리키고 있습니다.',
@@ -68,7 +74,8 @@ export function ActionableErrorResolution({
   errorCode,
   message,
   sourceAssetId,
-  details,
+  requestId,
+  remediation,
   onNavigate,
   onCancelPlan,
   onRePlan
@@ -80,7 +87,7 @@ export function ActionableErrorResolution({
   };
 
   return (
-    <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4 text-xs dark:border-rose-950/30">
+    <div role="alert" className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4 text-xs dark:border-rose-950/30">
       <div className="flex items-start gap-3">
         <div className="rounded-lg bg-rose-500/10 p-2 text-rose-600 dark:text-rose-400">
           <ShieldAlert className="h-5 w-5" />
@@ -93,10 +100,15 @@ export function ActionableErrorResolution({
           {sourceAssetId && (
             <p className="text-[11px] text-slate-500 font-mono">발생 위치: asset {sourceAssetId}</p>
           )}
+          {requestId && (
+            <p className="text-[11px] text-slate-500">
+              요청 ID: <span className="font-mono">{requestId}</span>
+            </p>
+          )}
           <p className="text-slate-700 dark:text-slate-350">{mapping.description}</p>
           <div className="rounded-xl bg-slate-100 dark:bg-slate-900/60 p-3 mt-2 text-slate-600 dark:text-slate-400">
             <span className="font-bold text-[10px] text-slate-500 uppercase tracking-wide block mb-1">💡 권장 해결 행동 방안</span>
-            {mapping.remediation}
+            {remediation || mapping.remediation}
           </div>
 
           {/* Action buttons */}

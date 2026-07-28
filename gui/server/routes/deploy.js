@@ -32,6 +32,14 @@ export function createDeployRouter(ctx) {
     };
   }
 
+  router.get('/api/clients', (req, res) => {
+    try {
+      res.json({ success: true, clients: manifestDeploymentService.clients() });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
   router.post('/api/deployment/plan', (req, res) => {
     const {clientId, scope = 'project', projectPath = '', projectName = '', clientVersion, previewOptIn = false} = req.body;
     try {
@@ -121,6 +129,24 @@ export function createDeployRouter(ctx) {
       const resolved = locations({scope, projectPath: projectPath.toString(), projectName: projectName.toString()});
       const data = manifestDeploymentService.registry({ scopeRoot: resolved.scopeRoot });
       res.json({ success: true, registry: data });
+    } catch (error) {
+      sendApiError(req, res, error);
+    }
+  });
+
+  router.get('/api/manifest/resources/:assetId', (req, res) => {
+    const { scope = 'project', projectPath = '', projectName = '' } = req.query;
+    try {
+      const resolved = locations({
+        scope,
+        projectPath: projectPath.toString(),
+        projectName: projectName.toString()
+      });
+      const resource = manifestDeploymentService.resource({
+        scopeRoot: resolved.scopeRoot,
+        assetId: req.params.assetId
+      });
+      res.json({ success: true, resource });
     } catch (error) {
       sendApiError(req, res, error);
     }

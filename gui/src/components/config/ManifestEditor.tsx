@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, Shield, Tool, Layers, Settings, FileText, Cpu, Database, Clipboard, Info, ArrowRight, GitFork} from 'lucide-react';
+import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, ArrowRight, GitFork} from 'lucide-react';
 import {
   fetchManifestRegistry,
   planManifestEdit,
@@ -107,7 +107,6 @@ export function ManifestEditor({
 
   // Deletion Downstream confirmation
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
   const [deletionTarget, setDeletionTarget] = useState<RegistryResource | null>(null);
 
   const targetReady = scope === 'global' || projectPath.trim().length > 0;
@@ -385,7 +384,6 @@ export function ManifestEditor({
   const startDeletionPlanning = (resource: RegistryResource) => {
     setDeletionTarget(resource);
     setIsDeleting(true);
-    setDeleteConfirmed(false);
   };
 
   const confirmDeletionMutation = () => {

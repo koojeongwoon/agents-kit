@@ -28,6 +28,9 @@ assets:
 schemaVersion: 1
 id: example
 displayName: Example
+detection:
+  commands: [example]
+  userRoot: ~/.example
 capabilities:
   - id: skills-project
     assetKind: skills
@@ -49,6 +52,28 @@ capabilities:
   });
   return { root, scopeRoot, targetRoot, definitionsDir, service };
 }
+
+test('application service projects client definitions without exposing target paths or formats', () => {
+  const subject = fixture();
+
+  assert.deepEqual(subject.service.clients(), [
+    {
+      id: 'example',
+      displayName: 'Example',
+      detection: {
+        commands: ['example'],
+        userRoot: '~/.example'
+      },
+      capabilities: [
+        {
+          assetKind: 'skills',
+          scope: 'project',
+          status: 'stable'
+        }
+      ]
+    }
+  ]);
+});
 
 test('application service plans, applies, lists history, and rolls back one manifest flow', () => {
   const subject = fixture();
@@ -164,6 +189,24 @@ test('application service retrieves resource registry and handles mutations', ()
   assert.equal(registry.length, 1);
   assert.equal(registry[0].id, 'review');
   assert.equal(registry[0].kind, 'skills');
+
+  assert.deepEqual(subject.service.resource({
+    scopeRoot: subject.scopeRoot,
+    assetId: 'review'
+  }), {
+    id: 'review',
+    kind: 'skills',
+    source: 'skills/review',
+    scope: {
+      type: 'project',
+      projectName: 'default',
+      key: 'project:default'
+    }
+  });
+  assert.throws(() => subject.service.resource({
+    scopeRoot: subject.scopeRoot,
+    assetId: 'missing'
+  }), error => error.code === 'ASSET_NOT_FOUND' && error.details.assetId === 'missing');
 
   fs.mkdirSync(path.join(subject.scopeRoot, 'skills/new'), { recursive: true });
 

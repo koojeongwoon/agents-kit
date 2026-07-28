@@ -1,5 +1,19 @@
 import {apiFetch} from './client';
 
+export interface ClientSummary {
+  id: string;
+  displayName: string;
+  detection: {
+    commands: string[];
+    userRoot: string;
+  };
+  capabilities: Array<{
+    assetKind: string;
+    scope: 'global' | 'project' | 'local' | 'managed';
+    status: 'stable' | 'preview' | 'version-dependent' | 'unsupported' | 'ui-only' | 'unverified';
+  }>;
+}
+
 export interface ManifestPlanOperation {
   clientId?: string;
   assetId?: string;
@@ -23,10 +37,34 @@ export interface ManifestDeploymentPlan {
   blocked: ManifestPlanOperation[];
 }
 
+export class ApiRequestError extends Error {
+  readonly code: string;
+  readonly requestId: string;
+  readonly details?: unknown;
+  readonly remediation?: string;
+  readonly status: number;
+  readonly retryable: boolean;
+
+  constructor(response: Response, data: Record<string, unknown>) {
+    super(String(data.message || data.error || data.code || '요청을 처리하지 못했습니다.'));
+    this.name = 'ApiRequestError';
+    this.code = String(data.code || 'REQUEST_FAILED');
+    this.requestId = String(data.requestId || response.headers.get('X-Request-Id') || '');
+    this.details = data.details;
+    this.remediation = typeof data.remediation === 'string' ? data.remediation : undefined;
+    this.status = response.status;
+    this.retryable = data.retryable === true;
+  }
+}
+
 async function jsonOrError(response: Response) {
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || data.code || 'Deployment request failed');
+  const data = await response.json() as any;
+  if (!response.ok) throw new ApiRequestError(response, data);
   return data;
+}
+
+export async function fetchClients(): Promise<{ clients: ClientSummary[] }> {
+  return jsonOrError(await apiFetch('/api/clients'));
 }
 
 export async function planManifestDeployment(input: {
@@ -149,6 +187,18 @@ export interface RegistryResource {
   references: Array<{ id: string; expectedKind: string }>;
 }
 
+export interface ManifestResource extends Record<string, unknown> {
+  id: string;
+  kind: string;
+  displayName?: string;
+  source?: string;
+  scope: {
+    type: 'global' | 'project';
+    projectName: string;
+    key: string;
+  };
+}
+
 export async function fetchManifestRegistry(input: {
   scope: 'global' | 'project';
   projectPath?: string;
@@ -160,6 +210,20 @@ export async function fetchManifestRegistry(input: {
     projectName: input.projectName || ''
   });
   return jsonOrError(await apiFetch(`/api/manifest/registry?${query}`));
+}
+
+export async function fetchManifestResource(input: {
+  assetId: string;
+  scope: 'global' | 'project';
+  projectPath?: string;
+  projectName?: string;
+}): Promise<{ resource: ManifestResource }> {
+  const query = new URLSearchParams({
+    scope: input.scope,
+    projectPath: input.projectPath || '',
+    projectName: input.projectName || ''
+  });
+  return jsonOrError(await apiFetch(`/api/manifest/resources/${encodeURIComponent(input.assetId)}?${query}`));
 }
 
 export async function planManifestEdit(input: {

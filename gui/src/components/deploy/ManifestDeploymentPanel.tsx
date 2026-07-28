@@ -8,7 +8,8 @@ import {
   planManifestDeployment,
   planManifestRollback,
   validateManifest,
-  runDoctorDiagnostics
+  runDoctorDiagnostics,
+  type ClientSummary
 } from '../../api/deploy';
 
 import { ActionableErrorResolution } from '../common/ActionableErrorResolution';
@@ -24,13 +25,10 @@ interface Transaction {
 
 interface ManifestDeploymentPanelProps {
   scope: 'global' | 'project';
-  setScope: (scope: 'global' | 'project') => void;
   clientId: string;
-  setClientId: (clientId: string) => void;
+  clients: ClientSummary[];
   projectName: string;
-  setProjectName: (projectName: string) => void;
   projectPath: string;
-  setProjectPath: (projectPath: string) => void;
   clientVersion: string;
   setClientVersion: (clientVersion: string) => void;
   onNavigateToAsset?: (assetId: string) => void;
@@ -38,13 +36,10 @@ interface ManifestDeploymentPanelProps {
 
 export function ManifestDeploymentPanel({
   scope,
-  setScope,
   clientId,
-  setClientId,
+  clients,
   projectName,
-  setProjectName,
   projectPath,
-  setProjectPath,
   clientVersion,
   setClientVersion,
   onNavigateToAsset
@@ -54,6 +49,8 @@ export function ManifestDeploymentPanel({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [lastErrorCode, setLastErrorCode] = useState('');
+  const [lastRequestId, setLastRequestId] = useState('');
+  const [lastRemediation, setLastRemediation] = useState('');
   const [message, setMessage] = useState('');
   const [doctorResult, setDoctorResult] = useState<any>(null);
   const [validationResult, setValidationResult] = useState<any>(null);
@@ -63,9 +60,11 @@ export function ManifestDeploymentPanel({
     clientId,
     scope,
     projectName,
-    projectPath: scope === 'project' ? projectPath.trim() : ''
+    projectPath: scope === 'project' ? projectPath.trim() : '',
+    clientVersion: clientVersion.trim() || undefined
   };
   const targetReady = scope === 'global' || projectPath.trim().length > 0;
+  const currentClientName = clients.find(client => client.id === clientId)?.displayName || clientId;
 
   const refreshHistory = async () => {
     if (!targetReady) {
@@ -84,6 +83,8 @@ export function ManifestDeploymentPanel({
     setPlan(null);
     setError('');
     setLastErrorCode('');
+    setLastRequestId('');
+    setLastRemediation('');
     setMessage('');
     setDoctorResult(null);
     setValidationResult(null);
@@ -91,6 +92,13 @@ export function ManifestDeploymentPanel({
   }, [scope, clientId, projectName, projectPath, clientVersion]);
 
   const runDiagnostics = async () => {
+    if (!targetReady) {
+      setError('프로젝트 경로를 입력해야 시스템 진단을 실행할 수 있습니다.');
+      setLastErrorCode('PROJECT_PATH_REQUIRED');
+      setLastRequestId('');
+      setLastRemediation('');
+      return;
+    }
     setDiagnosticsLoading(true);
     setError('');
     setMessage('');
@@ -105,21 +113,34 @@ export function ManifestDeploymentPanel({
     } catch (cause: any) {
       setError(cause.message || '진단에 실패했습니다.');
       setLastErrorCode(cause.code || 'DIAGNOSTICS_ERROR');
+      setLastRequestId(cause.requestId || '');
+      setLastRemediation(cause.remediation || '');
     } finally {
       setDiagnosticsLoading(false);
     }
   };
 
   const createPlan = async () => {
+    if (!targetReady) {
+      setError('프로젝트 경로를 입력해야 배포 계획을 만들 수 있습니다.');
+      setLastErrorCode('PROJECT_PATH_REQUIRED');
+      setLastRequestId('');
+      setLastRemediation('');
+      return;
+    }
     setLoading(true);
     setError('');
     setLastErrorCode('');
+    setLastRequestId('');
+    setLastRemediation('');
     setMessage('');
     try {
       setPlan(await planManifestDeployment(request));
     } catch (cause: any) {
       setError(cause.message || '계획을 만들지 못했습니다.');
       setLastErrorCode(cause.code || 'PLAN_ERROR');
+      setLastRequestId(cause.requestId || '');
+      setLastRemediation(cause.remediation || '');
     } finally {
       setLoading(false);
     }
@@ -130,6 +151,8 @@ export function ManifestDeploymentPanel({
     setLoading(true);
     setError('');
     setLastErrorCode('');
+    setLastRequestId('');
+    setLastRemediation('');
     try {
       const result = plan.kind === 'rollback'
         ? await applyManifestRollback(plan.planId)
@@ -142,6 +165,8 @@ export function ManifestDeploymentPanel({
     } catch (cause: any) {
       setError(cause.message || '적용하지 못했습니다.');
       setLastErrorCode(cause.code || 'APPLY_ERROR');
+      setLastRequestId(cause.requestId || '');
+      setLastRemediation(cause.remediation || '');
     } finally {
       setLoading(false);
     }
@@ -151,12 +176,16 @@ export function ManifestDeploymentPanel({
     setLoading(true);
     setError('');
     setLastErrorCode('');
+    setLastRequestId('');
+    setLastRemediation('');
     setMessage('');
     try {
       setPlan(await planManifestRollback({...request, transactionId}));
     } catch (cause: any) {
       setError(cause.message || 'Rollback 계획을 만들지 못했습니다.');
       setLastErrorCode(cause.code || 'ROLLBACK_PLAN_ERROR');
+      setLastRequestId(cause.requestId || '');
+      setLastRemediation(cause.remediation || '');
     } finally {
       setLoading(false);
     }
@@ -183,42 +212,47 @@ export function ManifestDeploymentPanel({
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-          <label htmlFor="deployment-scope" className="space-y-1.5 text-xs font-semibold text-slate-500">
-            Scope
-            <select id="deployment-scope" value={scope} onChange={event => setScope(event.target.value as 'global' | 'project')} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 h-[46px] text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
-              <option value="project">Project</option>
-              <option value="global">Global</option>
-            </select>
-          </label>
-          <label htmlFor="deployment-client" className="space-y-1.5 text-xs font-semibold text-slate-500">
-            Client
-            <select id="deployment-client" value={clientId} onChange={event => setClientId(event.target.value)} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 h-[46px] text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
-              <option value="codex">Codex</option>
-              <option value="claude-code">Claude Code</option>
-            </select>
-          </label>
-          <label htmlFor="deployment-client-version" className="space-y-1.5 text-xs font-semibold text-slate-500">
-            Client Version (Optional)
-            <input id="deployment-client-version" value={clientVersion} onChange={event => setClientVersion(event.target.value)} placeholder="e.g. 1.0.0" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
-          </label>
-          <label htmlFor="deployment-manifest" className="space-y-1.5 text-xs font-semibold text-slate-500">
-            Manifest
-            <input id="deployment-manifest" value={projectName} onChange={event => setProjectName(event.target.value)} disabled={scope === 'global'} className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
-          </label>
-          <label htmlFor="deployment-target" className="space-y-1.5 text-xs font-semibold text-slate-500">
-            Target project
-            <input id="deployment-target" value={projectPath} onChange={event => setProjectPath(event.target.value)} disabled={scope === 'global'} placeholder="/path/to/project" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+        <div className="mt-6 grid gap-3 md:grid-cols-[1fr_1fr_240px]">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">관리 대상</p>
+            <p className="mt-2 text-sm font-bold">
+              {scope === 'global' ? '내 PC 전역' : `프로젝트 Kit · ${projectName}`}
+            </p>
+            <p className={`mt-1 truncate font-mono text-[11px] ${targetReady ? 'text-slate-500' : 'text-amber-600'}`}>
+              {scope === 'global' ? '사용자 전역 설정' : projectPath.trim() || '프로젝트 경로가 필요합니다'}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">배포 환경</p>
+            <p className="mt-2 text-sm font-bold">{currentClientName}</p>
+            <p className="mt-1 text-[11px] text-slate-500">상단 공통 컨텍스트에서 변경</p>
+          </div>
+          <label htmlFor="deployment-client-version" className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:border-slate-800 dark:bg-slate-950/60">
+            클라이언트 버전 (선택)
+            <input
+              id="deployment-client-version"
+              value={clientVersion}
+              onChange={event => setClientVersion(event.target.value)}
+              placeholder="예: 1.0.0"
+              className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs font-normal normal-case tracking-normal text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+            />
           </label>
         </div>
 
         <div className="mt-5 flex items-center justify-between gap-4 border-t border-slate-200 pt-5 dark:border-slate-800">
-          <p className="text-xs text-slate-500">계획은 5분 동안 한 번만 적용할 수 있습니다.</p>
+          <div>
+            <p className={`text-xs font-semibold ${targetReady ? 'text-emerald-600 dark:text-emerald-300' : 'text-amber-600 dark:text-amber-300'}`}>
+              {targetReady
+                ? '배포 계획을 만들 수 있습니다. 시스템 진단은 선택 사항입니다.'
+                : '프로젝트 경로를 입력하면 배포 계획과 선택 진단을 실행할 수 있습니다.'}
+            </p>
+            <p className="mt-1 text-[11px] text-slate-500">계획은 5분 동안 한 번만 적용할 수 있습니다.</p>
+          </div>
           <div className="flex gap-3">
-            <button onClick={runDiagnostics} disabled={diagnosticsLoading || !targetReady} className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-[#0B0F17] dark:text-slate-300 dark:hover:bg-slate-800">
-              <Activity className="h-4 w-4" /> {diagnosticsLoading ? '진단 중…' : '시스템 진단 (Doctor)'}
+            <button onClick={runDiagnostics} disabled={diagnosticsLoading} className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-[#0B0F17] dark:text-slate-300 dark:hover:bg-slate-800">
+              <Activity className="h-4 w-4" /> {diagnosticsLoading ? '진단 중…' : '선택 진단 (Doctor)'}
             </button>
-            <button onClick={createPlan} disabled={loading || !targetReady} className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40">
+            <button onClick={createPlan} disabled={loading} className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40">
               <Play className="h-4 w-4" /> {loading ? '검증 중…' : '배포 계획 만들기'}
             </button>
           </div>
@@ -230,7 +264,15 @@ export function ManifestDeploymentPanel({
           <ActionableErrorResolution
             errorCode={lastErrorCode}
             message={error}
-            onCancelPlan={() => { setPlan(null); setError(''); setLastErrorCode(''); }}
+            requestId={lastRequestId}
+            remediation={lastRemediation}
+            onCancelPlan={() => {
+              setPlan(null);
+              setError('');
+              setLastErrorCode('');
+              setLastRequestId('');
+              setLastRemediation('');
+            }}
             onRePlan={createPlan}
           />
         ) : (
