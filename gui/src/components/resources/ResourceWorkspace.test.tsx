@@ -55,6 +55,64 @@ describe('ResourceWorkspace', () => {
     expect(screen.queryByRole('heading', {name: 'Observability'})).not.toBeInTheDocument();
   });
 
+  it('clears the previous search when the asset tab changes', async () => {
+    const user = userEvent.setup();
+    const localDiscovery: LocalClientDiscovery[] = [{
+      id: 'claude',
+      displayName: 'Claude Code',
+      supported: true,
+      installed: true,
+      configured: true,
+      signals: {commands: ['claude'], userRootExists: true},
+      assets: [{
+        id: 'sales-service',
+        kind: 'skills',
+        clientId: 'claude',
+        sourcePath: '~/.claude/skills'
+      }],
+      issues: []
+    }];
+    const props = {
+      clients,
+      localDiscovery,
+      resources,
+      targetReady: true,
+      loading: false,
+      error: '',
+      onOpenEditor: vi.fn(),
+      onOpenDeploy: vi.fn()
+    };
+    const {rerender} = render(<ResourceWorkspace {...props} view="mcp" />);
+
+    await user.type(screen.getByRole('searchbox', {name: 'MCP 검색'}), 'playwright');
+    rerender(<ResourceWorkspace {...props} view="skills" />);
+
+    expect(screen.getByRole('searchbox', {name: 'Skill 검색'})).toHaveValue('');
+    expect(screen.getByRole('heading', {name: 'sales-service'})).toBeInTheDocument();
+  });
+
+  it('shows a search-specific empty state when no resource matches', async () => {
+    const user = userEvent.setup();
+    render(
+      <ResourceWorkspace
+        view="mcp"
+        clients={clients}
+        localDiscovery={[]}
+        resources={resources}
+        targetReady
+        loading={false}
+        error=""
+        onOpenEditor={vi.fn()}
+        onOpenDeploy={vi.fn()}
+      />
+    );
+
+    await user.type(screen.getByRole('searchbox', {name: 'MCP 검색'}), 'no-match');
+
+    expect(screen.getByRole('heading', {name: '검색 결과가 없습니다.'})).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: '이 Kit에 등록된 MCP 서버가 없습니다.'})).not.toBeInTheDocument();
+  });
+
   it('merges PC discovery with Agent Kit resources and keeps PC-only rows read-only', () => {
     const localDiscovery: LocalClientDiscovery[] = [{
       id: 'codex',
