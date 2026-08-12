@@ -4,7 +4,7 @@
 
 **Goal:** MCP, Skill, Agent, Harness 탭을 옮길 때 이전 탭의 검색어를 지우고, 검색 결과가 없는 상태를 실제 자산 미등록 상태와 구분한다.
 
-**Architecture:** `ResourceWorkspace`의 기존 `query` 상태는 유지하되 `view`가 바뀌면 `useEffect`로 빈 문자열을 설정한다. 빈 목록 화면은 `normalizedQuery` 유무에 따라 검색 결과 없음과 자산 미등록을 나눠 표시하며, 어댑터·로컬 탐지·배포 로직은 수정하지 않는다.
+**Architecture:** `ResourceWorkspace`의 기존 `query` 상태는 유지하되 `view`가 바뀌면 `useLayoutEffect`로 화면이 그려지기 전에 빈 문자열을 설정한다. 빈 목록 화면은 `normalizedQuery` 유무에 따라 검색 결과 없음과 자산 미등록을 나눠 표시하며, 어댑터·로컬 탐지·배포 로직은 수정하지 않는다.
 
 **Tech Stack:** React 18, TypeScript, Vitest, Testing Library, Vite
 
