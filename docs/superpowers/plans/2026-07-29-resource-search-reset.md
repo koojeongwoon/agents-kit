@@ -71,25 +71,25 @@ it('clears the previous search when the asset tab changes', async () => {
 
 - [ ] **Step 2: 회귀 테스트가 현재 구현에서 실패하는지 확인**
 
-Run: `npm test -- ResourceWorkspace.test.tsx`
+Run: `npm --prefix gui test -- ResourceWorkspace.test.tsx`
 
 Expected: `Skill 검색`의 값이 `playwright`로 남거나 `sales-service`가 보이지 않아 FAIL
 
 - [ ] **Step 3: 탭 전환 때 검색어를 초기화하는 최소 구현 추가**
 
-`ResourceWorkspace.tsx`에서 `useEffect`를 가져오고 `view` 변경을 감지한다.
+`ResourceWorkspace.tsx`에서 `useLayoutEffect`를 가져오고 `view` 변경을 감지한다. 새 탭이 화면에 그려지기 전에 검색어를 지워 이전 검색 결과가 잠깐 보이지 않게 한다.
 
 ```tsx
-import {useEffect, useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 
-useEffect(() => {
+useLayoutEffect(() => {
   setQuery('');
 }, [view]);
 ```
 
 - [ ] **Step 4: 탭 전환 회귀 테스트 통과 확인**
 
-Run: `npm test -- ResourceWorkspace.test.tsx`
+Run: `npm --prefix gui test -- ResourceWorkspace.test.tsx`
 
 Expected: 새 회귀 테스트와 기존 컴포넌트 테스트 모두 PASS
 
@@ -131,7 +131,7 @@ it('shows a search-specific empty state when no resource matches', async () => {
 
 - [ ] **Step 2: 검색 결과 안내 테스트가 현재 구현에서 실패하는지 확인**
 
-Run: `npm test -- ResourceWorkspace.test.tsx`
+Run: `npm --prefix gui test -- ResourceWorkspace.test.tsx`
 
 Expected: 기존 미등록 문구가 표시되어 FAIL
 
@@ -142,7 +142,7 @@ Expected: 기존 미등록 문구가 표시되어 FAIL
 ```tsx
 const emptyTitle = normalizedQuery ? '검색 결과가 없습니다.' : config.empty;
 const emptyDescription = normalizedQuery
-  ? '다른 이름, ID 또는 Tool로 검색해 보세요.'
+  ? '검색어를 바꾸거나 지워 보세요.'
   : '새 리소스를 추가하면 환경별 지원 상태와 의존성을 여기서 비교할 수 있습니다.';
 ```
 
@@ -150,7 +150,7 @@ const emptyDescription = normalizedQuery
 
 - [ ] **Step 4: 컴포넌트 테스트 통과 확인**
 
-Run: `npm test -- ResourceWorkspace.test.tsx`
+Run: `npm --prefix gui test -- ResourceWorkspace.test.tsx`
 
 Expected: 모든 `ResourceWorkspace` 테스트 PASS
 
@@ -167,12 +167,12 @@ Expected: 모든 `ResourceWorkspace` 테스트 PASS
 
 - [ ] **Step 1: GUI 전체 검사**
 
-Run:
+저장소 루트에서 실행:
 
 ```bash
-npm test
-npm run typecheck
-npm run build
+npm --prefix gui test
+npm --prefix gui run typecheck
+npm --prefix gui run build
 ```
 
 Expected: 테스트 실패 0건, 타입 오류 0건, 빌드 종료 코드 0

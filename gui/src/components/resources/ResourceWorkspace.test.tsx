@@ -89,6 +89,13 @@ describe('ResourceWorkspace', () => {
 
     expect(screen.getByRole('searchbox', {name: 'Skill 검색'})).toHaveValue('');
     expect(screen.getByRole('heading', {name: 'sales-service'})).toBeInTheDocument();
+
+    await user.type(screen.getByRole('searchbox', {name: 'Skill 검색'}), 'sales');
+    rerender(<ResourceWorkspace {...props} view="mcp" />);
+
+    expect(screen.getByRole('searchbox', {name: 'MCP 검색'})).toHaveValue('');
+    expect(screen.getByRole('heading', {name: 'GitHub MCP'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Observability'})).toBeInTheDocument();
   });
 
   it('shows a search-specific empty state when no resource matches', async () => {
@@ -110,7 +117,28 @@ describe('ResourceWorkspace', () => {
     await user.type(screen.getByRole('searchbox', {name: 'MCP 검색'}), 'no-match');
 
     expect(screen.getByRole('heading', {name: '검색 결과가 없습니다.'})).toBeInTheDocument();
+    expect(screen.getByText('검색어를 바꾸거나 지워 보세요.')).toBeInTheDocument();
     expect(screen.queryByRole('heading', {name: '이 Kit에 등록된 MCP 서버가 없습니다.'})).not.toBeInTheDocument();
+  });
+
+  it('keeps the asset-specific empty state when the registry is actually empty', () => {
+    render(
+      <ResourceWorkspace
+        view="mcp"
+        clients={clients}
+        localDiscovery={[]}
+        resources={[]}
+        targetReady
+        loading={false}
+        error=""
+        onOpenEditor={vi.fn()}
+        onOpenDeploy={vi.fn()}
+      />
+    );
+
+    expect(screen.getByRole('heading', {name: '이 Kit에 등록된 MCP 서버가 없습니다.'})).toBeInTheDocument();
+    expect(screen.getByText('새 리소스를 추가하면 환경별 지원 상태와 의존성을 여기서 비교할 수 있습니다.')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: '검색 결과가 없습니다.'})).not.toBeInTheDocument();
   });
 
   it('merges PC discovery with Agent Kit resources and keeps PC-only rows read-only', () => {

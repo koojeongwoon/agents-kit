@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 import {AlertCircle, ArrowUpRight, Bot, Boxes, Network, Plus, Search, Sparkles, Wrench} from 'lucide-react';
 import type {ClientSummary, LocalClientDiscovery, RegistryResource} from '../../api/deploy';
 import type {ResourceView} from '../shell/ControlCenterShell';
@@ -81,7 +81,7 @@ export function ResourceWorkspace({
 }: ResourceWorkspaceProps) {
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setQuery('');
   }, [view]);
 
@@ -90,7 +90,7 @@ export function ResourceWorkspace({
   const normalizedQuery = query.trim().toLowerCase();
   const emptyTitle = normalizedQuery ? '검색 결과가 없습니다.' : config.empty;
   const emptyDescription = normalizedQuery
-    ? '다른 이름, ID 또는 Tool로 검색해 보세요.'
+    ? '검색어를 바꾸거나 지워 보세요.'
     : '새 리소스를 추가하면 환경별 지원 상태와 의존성을 여기서 비교할 수 있습니다.';
   const clientNames = new Map([
     ...clients.map(client => [client.id, client.displayName] as const),
