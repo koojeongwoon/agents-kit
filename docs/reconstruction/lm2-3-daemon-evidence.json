@@ -1,0 +1,84 @@
+{
+  "phase": "LM2-3",
+  "date": "2026-09-25",
+  "scope": "macOS native daemon authentication; isolated IAM HTTPS integration",
+  "rust_tests": {
+    "total": 80,
+    "failed": 0,
+    "ignored": 0
+  },
+  "checks": [
+    "tls_redirect_not_followed",
+    "untrusted_tls_certificate_denied",
+    "tls_hostname_mismatch_denied",
+    "actual_iam_https_browser_pkce_dpop_enrollment_and_management_issue",
+    "cross_process_authentication_serialized",
+    "foreign_callback_does_not_consume_pending_login",
+    "separate_process_restart_same_key_and_rotating_refresh",
+    "macos_sandboxed_foreign_process_key_and_token_read_denied",
+    "denied_key_store_never_reports_connected",
+    "cli_and_error_output_contains_no_key_or_tokens",
+    "iam_revoke_rejects_refresh_and_clears_stored_credentials",
+    "revoked_session_requires_reauthentication_after_process_restart"
+  ],
+  "format": "passed",
+  "clippy": "passed with -D warnings",
+  "key_backend": "OS UID-protected software P-256 store; not Keychain or Secure Enclave",
+  "iam": "LM2-2 source snapshot; synthetic user and dedicated PostgreSQL/Redis; actual Spring HTTPS server",
+  "runtime": {
+    "os": "27.0",
+    "arch": "arm64"
+  },
+  "uid_trial": {
+    "platform": "macOS",
+    "daemon_fixture_uid": 501,
+    "foreign_worker_uid": 4294967294,
+    "key_read_write_denied": true,
+    "session_read_write_denied": true,
+    "account_or_service_changes": false
+  },
+  "not_performed": [
+    "production deployment or enrollment",
+    "customer IdP E2E",
+    "Gateway reporting and online authorization",
+    "direct MCP device binding",
+    "production dedicated service installation"
+  ],
+  "fixture_sha256": {
+    "examples.json": "03fd21fe88576b880321100d0439df6292f54e7a528a625bceb7103eb1444243",
+    "cases.json": "1037c226ec03eceabb51aaf9d2a9b03c82719953e5fc9c6e9332b1370d17ed72",
+    "profile.json": "a3f0795b25a3da404e0e4447d3fec555f243a26062ef21dd6aca9b443cbbe710"
+  },
+  "applied_files": 25,
+  "applied_source_sha256_verified": true,
+  "test_containers": "All three task-owned PostgreSQL/Redis containers stopped.",
+  "changed_file_sha256": {
+    "Cargo.toml": "d7030a7a05b7a3297eeb270c5005deebcdbf112c00b07fedb8d3c1e12051920d",
+    "Cargo.lock": "644ce70c4aad0da116f9fd2a9f2999cb4e6f3faaf57d03cf35d0c122fe03991e",
+    "README.md": "070efa8192162df43b23aaa76033e63fdbe7f2f23da30d1bdd27440596e131f4",
+    "docs/daemon-implementation-plan.md": "93ed8f28c70092ea9b4a62075633efa3f692909d937141109be139a95a53fa8c",
+    "docs/management-auth-v1.md": "82235b02e3a265c994c039096bfeed7e0ef0ded3519a48f1706702e28d6b01a1",
+    "src/main.rs": "00c06cd9823e85bb43cdadb3480faa5bd167699e2a327d60d2c4d5fb70296bdb",
+    "src/cli.rs": "a3107d19a6aed2b70f4b92e5e6ad8ba2d759955598a65e48dae2a8fb3cdbf583",
+    "experiments/management-auth/macos_uid_probe.py": "abe48602efa0b1306a7edec56e038c5ca7e9478d75b1594be87110891cba2500",
+    "experiments/management-auth/DeviceDaemonInteropTest.java": "529926c9c1d969ae4ad5958feb7a88b20859e7de41a6070c2665fd6529b7328f",
+    "experiments/management-auth/README.md": "36a8e265b280d31a039b7914c88a04bbaba5c9a8612d9c19dac52d856f06b4e7",
+    "experiments/management-auth/run_iam.py": "6597125efb19e811edbc7ed65bc5ef2f1b393eeec7c7d1878cf37a70f21c4dd7",
+    "experiments/management-auth/prepare_tls.py": "f305de9fbdd1edcc734754d000ff2c59c07d866a6e799e39710a8d065d94865b",
+    "tests/fixtures/daemon-management-v1/examples.json": "03fd21fe88576b880321100d0439df6292f54e7a528a625bceb7103eb1444243",
+    "tests/fixtures/daemon-management-v1/cases.json": "1037c226ec03eceabb51aaf9d2a9b03c82719953e5fc9c6e9332b1370d17ed72",
+    "tests/fixtures/daemon-management-v1/profile.json": "a3f0795b25a3da404e0e4447d3fec555f243a26062ef21dd6aca9b443cbbe710",
+    "docs/evidence/management-auth-2026-09-25.json": "fec87437cd7a672046f44c7eb91f24ed31ac809a8a77e49abe297f59ed763971",
+    "docs/evidence/management-auth-2026-09-25.md": "4a3ae99ee6bfd845eb82580b08dc51668bf94dbca54e53ffeb6cb08f89f85147",
+    "docs/contracts/daemon-management-v1/README.md": "c6584aa9f3200fab229aa7580e4d3e5ddca0b02747d79be04a7c2e8507d54e63",
+    "src/management_auth/protocol_tests.rs": "9f0ece2ceab5efc643ee79213ec462a2ea50609ef055de48fe10e0cabb955ceb",
+    "src/management_auth/protocol.rs": "94c412d60f242bab5ca573677893582230c845ceef1316e0137fdc43d6d878e3",
+    "src/management_auth/store.rs": "4280214b0a876e7467c24c44344771560038d8a467215cff82f7e8d764575949",
+    "src/management_auth/callback.rs": "81f72f9cc78ec0485f8ed03702d32d9f206cb4fc8055fe17e6efe2ed4a3455f9",
+    "src/management_auth/mod.rs": "c7d08a16436c81677774f3c6b4db87a5309302a0b2e50a7d97fc8642fc87ed83",
+    "src/management_auth/tests.rs": "1bcbac037c5f72083364b697f20a2fef7ab9448b2eb9d170e180d40be51a3145",
+    "src/management_auth/crypto.rs": "8e214a918f51c69d4aac3c93dff1f15e41f24782e4a8c9e7b452e830af8a2739"
+  },
+  "applied_directory_build": "mise exec -- cargo build --offline passed",
+  "temporary_credential_files": "Removed task-owned synthetic TLS certificates, private keys and credential stores after verification."
+}

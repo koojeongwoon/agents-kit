@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-7",
+  "observedAt": "2026-09-27T14:19:27.826Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "productionEvidencePromoted": true,
+  "scope": "reviewed-cli-slices-only",
+  "clients": [
+    {
+      "clientId": "codex",
+      "surface": "cli",
+      "version": "0.145.0",
+      "binarySha256": "1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590",
+      "binaryMatched": true,
+      "capabilities": [
+        {
+          "capabilityId": "instructions-project",
+          "source": "docs/reconstruction/ca04-2-cli-model-use-evidence.json"
+        },
+        {
+          "capabilityId": "skills-project",
+          "source": "docs/reconstruction/ca04-2-cli-model-use-evidence.json"
+        },
+        {
+          "capabilityId": "mcp-project",
+          "resourceProfile": "mcp-stdio-basic-v1",
+          "source": "docs/reconstruction/ca04-2-cli-model-use-evidence.json"
+        },
+        {
+          "capabilityId": "agents-project",
+          "resourceProfile": "agent-role-basic-v1",
+          "source": "docs/reconstruction/ca04-6-codex-agent-lifecycle-evidence.json"
+        },
+        {
+          "capabilityId": "skills-global",
+          "source": "docs/reconstruction/ca04-6-global-skills-original-path-evidence.json"
+        }
+      ]
+    },
+    {
+      "clientId": "antigravity",
+      "surface": "cli",
+      "version": "1.2.12",
+      "binarySha256": "6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3",
+      "binaryMatched": true,
+      "capabilities": [
+        {
+          "capabilityId": "instructions-project",
+          "source": "docs/reconstruction/ca04-4-antigravity-mcp-use-evidence.json"
+        },
+        {
+          "capabilityId": "skills-project",
+          "source": "docs/reconstruction/ca04-4-antigravity-mcp-use-evidence.json"
+        },
+        {
+          "capabilityId": "mcp-project",
+          "resourceProfile": "mcp-stdio-basic-v1",
+          "source": "docs/reconstruction/ca04-4-antigravity-mcp-use-evidence.json"
+        },
+        {
+          "capabilityId": "skills-global",
+          "source": "docs/reconstruction/ca04-6-antigravity-global-skill-evidence.json"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "core": {
+      "passed": 234,
+      "skipped": 0
+    },
+    "http": {
+      "passed": 22,
+      "skipped": 0
+    },
+    "deploymentPanel": {
+      "passed": 15
+    },
+    "typecheck": true,
+    "nativeClientModelInvoked": false,
+    "nativeUserConfigurationWritten": false,
+    "desktopBundleBuild": true,
+    "finalDomainRegression": {
+      "passed": 21,
+      "skipped": 0
+    }
+  }
+}

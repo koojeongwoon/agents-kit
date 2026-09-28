@@ -1,0 +1,130 @@
+{
+  "checks": [
+    "tls_redirect_not_followed",
+    "untrusted_tls_certificate_denied",
+    "tls_hostname_mismatch_denied",
+    "actual_iam_https_browser_pkce_dpop_enrollment_and_management_issue",
+    "cross_process_authentication_serialized",
+    "foreign_callback_does_not_consume_pending_login",
+    "actual_gateway_disconnect_preserves_registry_and_durable_job_after_restart",
+    "real_iam_org_admin_authority_gateway_signed_issue_and_dpop_delivery",
+    "real_native_inflight_reaped_and_new_execution_denied",
+    "duplicate_delivery_single_intent_cas",
+    "atomic_postgres_result_report_and_lost_receipt_retry_across_gateway_restart",
+    "confirmed_job_not_redelivered_and_owner_scoped_history",
+    "daemon_restart_preserves_revocation",
+    "actual_90_second_result_staleness_preserves_historical_observation",
+    "actual_iam_device_revocation_denies_jobs_and_reports_after_cache_bound"
+  ],
+  "count": 15,
+  "revoke_job_to_reaped_ms": 510,
+  "iam_revoke_denial_after_seconds": 15.3,
+  "pipeline": "real IAM HTTPS/OAuth/DPoP + real Gateway HTTPS/JWS/PostgreSQL + native macOS daemon/worker",
+  "dashboard_session": "seeded Redis session; actual current IAM ORG_ADMIN authority",
+  "deployment": "local-only",
+  "uid_profile": "native same-service-UID sandbox",
+  "schema_version": 1,
+  "date": "2026-09-26",
+  "stage": "LM3-4",
+  "status": "local LM3-4 verified: native real-channel integration and separate-UID OS boundary",
+  "tests": {
+    "rust": {
+      "passed": 99,
+      "failed": 0,
+      "skipped": 0
+    },
+    "gateway": {
+      "passed": 351,
+      "failed": 0,
+      "skipped": 4,
+      "skipped_scope": "existing userLifecycleIntegration suite; DB management suites executed"
+    },
+    "iam_https_interop": {
+      "passed": 1
+    },
+    "rust_fmt_clippy_build": "passed",
+    "gateway_typescript": "passed",
+    "dashboard": "actual HTML visually inspected using synthetic API responses"
+  },
+  "limitations": [
+    "Dashboard Redis SSO session is seeded; IAM login/enrollment and current ORG_ADMIN authority are real.",
+    "Native worker runs under daemon service UID with macOS sandbox.",
+    "15.3 second denial observation is not a measured worst-case warm-cache bound.",
+    "No production rollout, commit, push, or system account/service installation.",
+    "Real IAM/Gateway E2E uses native same-service-UID sandbox; separate-UID OS trial uses fixture IAM credentials and Gateway authority. These are separate verified profiles."
+  ],
+  "source_reflection": {
+    "daemon_files": 15,
+    "gateway_files": 11,
+    "hash_verified": true,
+    "iam_production_changes": false
+  },
+  "native_crash_regression": {
+    "schema_version": 1,
+    "profile": "macos-native-worker-local-https-fixture",
+    "runtime": "actual daemon, TLS and native sandbox; fixture IAM credentials and Gateway authority",
+    "checks": {
+      "signed_wrong_device_rejected": true,
+      "duplicate_single_cas": true,
+      "new_calls_blocked": true,
+      "running_process_reaped": true,
+      "revocation_survives_daemon_restart": true,
+      "sandbox_registry_read_and_directory_write_denied": true,
+      "sandbox_child_network_denied": true,
+      "result_report_retry_same_envelope": true,
+      "termination_confirmed": false,
+      "crash_remains_unknown": true
+    },
+    "revoke_to_reaped_ms": 34
+  },
+  "separate_uid_trial": {
+    "status": "passed; user-executed sudo run verified against local result file",
+    "native_result": {
+      "schema_version": 1,
+      "profile": "macos-separate-uid-worker-local-https-fixture",
+      "runtime": "actual daemon, TLS and native sandbox; fixture IAM credentials and Gateway authority",
+      "checks": {
+        "signed_wrong_device_rejected": true,
+        "duplicate_single_cas": true,
+        "new_calls_blocked": true,
+        "running_process_reaped": true,
+        "revocation_survives_daemon_restart": true,
+        "sandbox_registry_read_and_directory_write_denied": true,
+        "sandbox_child_network_denied": true,
+        "result_report_retry_same_envelope": true,
+        "termination_confirmed": true,
+        "crash_remains_unknown": false,
+        "unsandboxed_worker_cannot_read_or_write_registry_key_session": true
+      },
+      "revoke_to_reaped_ms": 137,
+      "uid_boundary_probe": {
+        "uid": 4294967294,
+        "denied": [
+          [
+            true,
+            true
+          ],
+          [
+            true,
+            true
+          ],
+          [
+            true,
+            true
+          ]
+        ]
+      }
+    },
+    "harness_fix": "Actual interpreter, isolated Python flags/environment, accessible cwd, bounded timeout, visible stderr, publish result only after all checks.",
+    "harness_regression_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "prior_attempt": {
+      "status": "probe failure before fix",
+      "revoke_to_reaped_ms": 151,
+      "failure": "Final unsandboxed Python probe exited 1; original harness did not preserve stderr."
+    },
+    "interpretation": "crash_remains_unknown=false means the normal completion variant ran; separate native_crash_regression proves unknown preservation."
+  }
+}

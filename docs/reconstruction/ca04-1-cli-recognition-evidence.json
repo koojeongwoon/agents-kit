@@ -1,0 +1,634 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-1",
+  "probeId": "f16744ea5f58",
+  "verifierSha256": "2baf9224a6c989fc8a3a0e6329fe2638e130623777778ad10e6a965f25253036",
+  "observedAt": "2026-09-27T03:53:16.455Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scopes": [
+    "project",
+    "global"
+  ],
+  "surface": "cli",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "isolation": {
+    "freshHome": true,
+    "credentialsCopied": false,
+    "modelTurnsRequested": false,
+    "rawTranscriptsStored": false
+  },
+  "clients": [
+    {
+      "clientId": "codex",
+      "scope": "project",
+      "version": "0.145.0",
+      "binarySha256": "1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590",
+      "stages": {
+        "baseline": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": false,
+            "descriptionMatches": false
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": false
+          }
+        },
+        "applied": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": true,
+            "descriptionMatches": true
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": true,
+            "markerMatched": true
+          }
+        },
+        "updated": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": true,
+            "descriptionMatches": true
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": true,
+            "markerMatched": true
+          }
+        },
+        "removed": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": false,
+            "descriptionMatches": false
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": false
+          }
+        },
+        "rollback": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": true,
+            "descriptionMatches": true
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": true,
+            "markerMatched": true
+          }
+        }
+      },
+      "recognition": {
+        "mcpLifecycle": true,
+        "skillLifecycle": true,
+        "agentLifecycle": false
+      },
+      "use": {
+        "instructions": "not-tested",
+        "skills": "not-tested",
+        "agents": "not-tested",
+        "mcp": "client-rpc-confirmed"
+      },
+      "definitionSha256": "e4a8d11dfb1da77a5ae42d518e6a10760f50148b65243a3d7eb66f13ee4a5f96",
+      "fileLifecycle": {
+        "allPlansApplicable": true,
+        "rollbackBytesMatch": true
+      },
+      "authentication": "login-required",
+      "remaining": [
+        "model instruction compliance",
+        "skill supporting-file use",
+        "custom agent execution",
+        "desktop and IDE"
+      ]
+    },
+    {
+      "clientId": "codex",
+      "scope": "global",
+      "version": "0.145.0",
+      "binarySha256": "1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590",
+      "stages": {
+        "baseline": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": false,
+            "descriptionMatches": false
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": false
+          }
+        },
+        "applied": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": true,
+            "descriptionMatches": true
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": true,
+            "markerMatched": true
+          }
+        },
+        "updated": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": true,
+            "descriptionMatches": true
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": true,
+            "markerMatched": true
+          }
+        },
+        "removed": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": false,
+            "descriptionMatches": false
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": false
+          }
+        },
+        "rollback": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "instruction-source-discovery",
+            "sourceListed": true
+          },
+          "skills": {
+            "status": "client-discovery",
+            "present": true,
+            "descriptionMatches": true
+          },
+          "agents": {
+            "status": "not-observed"
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "present": true,
+            "markerMatched": true
+          }
+        }
+      },
+      "recognition": {
+        "mcpLifecycle": true,
+        "skillLifecycle": true,
+        "agentLifecycle": false
+      },
+      "use": {
+        "instructions": "not-tested",
+        "skills": "not-tested",
+        "agents": "not-tested",
+        "mcp": "client-rpc-confirmed"
+      },
+      "definitionSha256": "e4a8d11dfb1da77a5ae42d518e6a10760f50148b65243a3d7eb66f13ee4a5f96",
+      "fileLifecycle": {
+        "allPlansApplicable": true,
+        "rollbackBytesMatch": true
+      },
+      "authentication": "login-required",
+      "remaining": [
+        "model instruction compliance",
+        "skill supporting-file use",
+        "custom agent execution",
+        "desktop and IDE"
+      ]
+    },
+    {
+      "clientId": "antigravity",
+      "scope": "project",
+      "version": "1.2.11",
+      "binarySha256": "42e76bedafb5896bc6a6eefb61902162f6ba08ddf59efd3357767102e3a59a0c",
+      "stages": {
+        "baseline": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        },
+        "applied": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        },
+        "updated": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        },
+        "removed": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        },
+        "rollback": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        }
+      },
+      "recognition": {
+        "mcpLifecycle": false,
+        "skillLifecycle": false,
+        "agentLifecycle": false
+      },
+      "use": {
+        "instructions": "not-tested",
+        "skills": "not-tested",
+        "agents": "not-tested",
+        "mcp": "not-tested"
+      },
+      "definitionSha256": "4cce8f9c276bb854a29c9549c758ba372e4ce9a2aad8425bd2ca0a55d81700fd",
+      "fileLifecycle": {
+        "allPlansApplicable": true,
+        "rollbackBytesMatch": true
+      },
+      "authentication": "not-tested",
+      "remaining": [
+        "model instruction compliance",
+        "skill supporting-file use",
+        "custom agent execution",
+        "desktop and IDE"
+      ]
+    },
+    {
+      "clientId": "antigravity",
+      "scope": "global",
+      "version": "1.2.11",
+      "binarySha256": "42e76bedafb5896bc6a6eefb61902162f6ba08ddf59efd3357767102e3a59a0c",
+      "stages": {
+        "baseline": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        },
+        "applied": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": true,
+            "globalControlPresent": true
+          }
+        },
+        "updated": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": true,
+            "globalControlPresent": true
+          }
+        },
+        "removed": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": false,
+            "agent": false
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": false,
+            "globalControlPresent": true
+          }
+        },
+        "rollback": {
+          "files": {
+            "instructionsUserTextPreserved": true,
+            "skill": true,
+            "agent": true
+          },
+          "instructions": {
+            "status": "not-observed"
+          },
+          "skills": {
+            "status": "not-observed"
+          },
+          "agents": {
+            "status": "agent-list",
+            "reason": "OK",
+            "present": false,
+            "globalMainAgentControlPresent": true
+          },
+          "mcp": {
+            "status": "configuration-list",
+            "reason": "OK",
+            "present": true,
+            "globalControlPresent": true
+          }
+        }
+      },
+      "recognition": {
+        "mcpLifecycle": true,
+        "skillLifecycle": false,
+        "agentLifecycle": false
+      },
+      "use": {
+        "instructions": "not-tested",
+        "skills": "not-tested",
+        "agents": "not-tested",
+        "mcp": "not-tested"
+      },
+      "definitionSha256": "4cce8f9c276bb854a29c9549c758ba372e4ce9a2aad8425bd2ca0a55d81700fd",
+      "fileLifecycle": {
+        "allPlansApplicable": true,
+        "rollbackBytesMatch": true
+      },
+      "authentication": "not-tested",
+      "remaining": [
+        "model instruction compliance",
+        "skill supporting-file use",
+        "custom agent execution",
+        "desktop and IDE"
+      ]
+    }
+  ]
+}

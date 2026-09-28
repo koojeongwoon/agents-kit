@@ -11,10 +11,16 @@
     "gui": "./scripts/run-gui.sh",
     "apply": "node ./bin/cli.js apply",
     "status": "node ./bin/cli.js status",
-    "test": "node --test test/domain-contracts.test.js test/manifest-references.test.js test/manifest-loader.test.js test/manifest-example.test.js test/client-definitions.test.js test/local-installation-discovery-service.test.js test/structured-merge.test.js test/copy-deployment.test.js test/merge-deployment.test.js test/managed-link-deployment.test.js test/deployment-coordinator.test.js test/manifest-deployment-service.test.js test/manifest-cli.test.js test/http-error-mapper.test.js test/file-transaction.test.js test/security-boundaries.test.js",
+    "test": "node --test test/domain-contracts.test.js test/manifest-references.test.js test/manifest-loader.test.js test/manifest-example.test.js test/client-definitions.test.js test/runtime-activation.test.js test/mcp-rendering.test.js test/agent-target-deployment.test.js test/common-assets.test.js test/shared-resource-deployment.test.js test/global-ledger-migration.test.js test/resource-removal.test.js test/persistent-deployment.test.js test/resource-bundle.test.js test/client-verification.test.js test/local-installation-discovery-service.test.js test/structured-merge.test.js test/copy-deployment.test.js test/merge-deployment.test.js test/managed-link-deployment.test.js test/deployment-coordinator.test.js test/manifest-deployment-service.test.js test/manifest-cli.test.js test/http-error-mapper.test.js test/file-transaction.test.js test/security-boundaries.test.js test/local-daemon-status-service.test.js test/device-auth-contract-fixtures.test.js test/management-job-contract-fixtures.test.js",
     "test:all": "npm test && npm --prefix gui run test:server && npm --prefix gui run build:desktop && cargo check --manifest-path gui/src-tauri/Cargo.toml",
     "tauri:dev": "npm --prefix gui run tauri:dev",
-    "tauri:build": "npm --prefix gui run tauri:build"
+    "tauri:build": "npm --prefix gui run tauri:build",
+    "verify:clients": "node scripts/verify-client-resources.mjs",
+    "test:device-contract": "node --test test/device-auth-contract-fixtures.test.js",
+    "test:management-job-contract": "node --test test/management-job-contract-fixtures.test.js",
+    "verify:client-use": "node scripts/verify-client-use.mjs",
+    "verify:client-agents": "node scripts/verify-client-agents.mjs",
+    "verify:global-skills": "node scripts/verify-global-skills.mjs"
   },
   "dependencies": {
     "yaml": "^2.8.3"

@@ -1,5 +1,6 @@
 import {AlertTriangle, ArrowRight, Boxes, CircleDot, Rocket, ShieldCheck, Wrench} from 'lucide-react';
 import type {ClientSummary, LocalClientDiscovery, RegistryResource} from '../../api/deploy';
+import {DaemonStatusPanel} from './DaemonStatusPanel';
 
 interface ControlCenterHomeProps {
   clients: ClientSummary[];
@@ -88,6 +89,8 @@ export function ControlCenterHome({
         </div>
       </section>
 
+      <DaemonStatusPanel />
+
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="자산 요약">
         {[
           {label: 'MCP', value: resourceCounts.mcp, description: 'Tool 제공자'},
@@ -114,7 +117,7 @@ export function ControlCenterHome({
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-bold">지원 환경</h2>
-            <p className="mt-1 text-xs text-slate-500">클라이언트별 검증된 capability 정의를 기반으로 표시합니다.</p>
+            <p className="mt-1 text-xs text-slate-500">파일 계약과 설치 흔적을 표시합니다. 실제 사용 검증은 별도입니다.</p>
           </div>
           <ArrowRight className="h-5 w-5 text-slate-400" />
         </div>
@@ -135,11 +138,11 @@ export function ControlCenterHome({
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="rounded-full bg-blue-500/10 px-2 py-1 text-[10px] font-bold text-blue-600 dark:text-blue-300">
-                  지원 정의됨
+                  {client.schemaVersion === 2 ? '파일 계약 정의됨' : '지원 정의됨'}
                 </span>
                 {discoveryByClient.get(client.id)?.installed && (
                   <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-300">
-                    PC에 설치됨
+                    {client.schemaVersion === 2 ? 'CLI 설치 흔적' : 'PC에 설치됨'}
                   </span>
                 )}
                 {discoveryByClient.get(client.id)?.configured && (
@@ -149,13 +152,20 @@ export function ControlCenterHome({
                 )}
                 {!discoveryByClient.get(client.id)?.installed && !discoveryByClient.get(client.id)?.configured && (
                   <span className="rounded-full bg-slate-500/10 px-2 py-1 text-[10px] font-bold text-slate-500">
-                    지원만 됨
+                    {client.schemaVersion === 2 ? '설치 미확인' : '지원만 됨'}
                   </span>
                 )}
               </div>
               <p className="mt-3 text-xs text-slate-500">
-                {new Set(client.capabilities.map(capability => capability.assetKind)).size}개 자산 유형 지원
+                {new Set(client.capabilities.map(capability => capability.assetKind)).size}개 자산 유형 {client.schemaVersion === 2
+                  ? client.surfaces?.some(surface => surface.id === 'cli' && surface.runtimeEvidence?.length)
+                    ? '계약 · CLI 일부 검증됨'
+                    : '계약 · 실기 미확인'
+                  : '지원'}
               </p>
+              {client.schemaVersion === 2 && client.surfaces?.some(surface => surface.id === 'cli' && surface.runtimeEvidence?.length) && (
+                <p className="mt-1 text-xs text-slate-500">검증된 버전·자원 범위가 있습니다. 현재 설치본은 배포 계획에서 확인합니다.</p>
+              )}
             </article>
           ))}
         </div>

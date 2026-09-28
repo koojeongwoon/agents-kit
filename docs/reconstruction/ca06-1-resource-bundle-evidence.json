@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA06-1",
+  "recordedAt": "2026-09-27T15:01:18.031Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "Kit immutable resource input and same-user fixed helper; no Gateway or protected daemon delivery",
+  "clients": [
+    {
+      "clientId": "codex",
+      "surface": "cli",
+      "version": "0.145.0",
+      "binarySha256": "1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590",
+      "observedAt": "2026-09-27T15:01:17.938Z"
+    },
+    {
+      "clientId": "antigravity",
+      "surface": "cli",
+      "version": "1.2.12",
+      "binarySha256": "6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3",
+      "observedAt": "2026-09-27T15:01:18.031Z"
+    }
+  ],
+  "tests": [
+    {
+      "command": "npm test",
+      "tests": 247,
+      "passed": 247,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "57605e7e6cba6f990fb54fb9f993f212db5d82be207cb3382e594a704114f7bd"
+    },
+    {
+      "command": "npm --prefix gui run test:server",
+      "tests": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "293c1cb8da0bdd4bc15adfe173e63c3a488c2fceb093e2bc684a8b7f76cff7aa"
+    }
+  ],
+  "build": {
+    "command": "npm --prefix gui run build:desktop",
+    "completed": true,
+    "nativeTauriCompilation": false,
+    "logSha256": "e37fc9c7364cee4c36b0aa3ae21f16826dc74145be3e10e8bff32f2a40602527"
+  },
+  "validation": {
+    "bundleTestsIncludedInCore": 13,
+    "realHelperProcesses": true,
+    "actualSigkillBeforeAndAfterCommit": true,
+    "projectClients": [
+      "codex",
+      "antigravity"
+    ],
+    "globalSkillsClients": [
+      "codex",
+      "antigravity"
+    ],
+    "nativeBinaryHashesObserved": true,
+    "sourceDeletedBeforeReplay": true,
+    "duplicateTransactionCount": 1,
+    "temporaryHomesAndProjectsOnly": true,
+    "clientInvocation": false,
+    "modelInvocation": false,
+    "clientRecognition": "unverified",
+    "fixtureCleanup": "test after hooks remove temporary roots"
+  },
+  "environmentIssue": {
+    "firstHttpAttempt": "sandbox listen EPERM, 11 HTTP listener failures",
+    "resolution": "Same 22 tests rerun with approved test listener access, all passed"
+  },
+  "implemented": [
+    "immutable bundle byte and per-file hashes",
+    "bounded UTF-8 snapshots and strict relative paths",
+    "local target and MCP recipe bindings",
+    "prepare/review receipt/apply through existing deployment service",
+    "stale input and runtime gates",
+    "exclusive replay claim and committed-result reconciliation",
+    "existing journal recovery for incomplete writes"
+  ],
+  "pending": [
+    "Gateway signed distribution job and approval exchange",
+    "tools-daemon admission and trusted same-user helper launcher",
+    "remote results correlation and UI status",
+    "production installation and two-device failure trials",
+    "native client recognition after delivered deployment"
+  ],
+  "fileHashes": {
+    "bin/resource-bundle-helper.js": "d692a4bf627c66fd1c9998f6081cf3524ed6b3b03e538b3aea60d273e8ca3fad",
+    "lib/infrastructure/resource-bundle.js": "2e4c1311abc95529739259f352358c9741c2be4975f1853671b21d08b6612b93",
+    "lib/application/resource-bundle-deployment-service.js": "82f67e0a500a5b1eeda63b3ca3932b1a7f99f0e94fa350c1157f93f0de7bc66b",
+    "test/resource-bundle.test.js": "22863237207f66c104b53381970e22c352ecdd25dbc6f1bc7e61a66af652c67e",
+    "test/helpers/crash-bundle-deployment.js": "0cacec8f2254609a62f99416780a671ba7de66f8e3a131cb8badfd4b3d6349c8",
+    "docs/contracts/resource-bundle-v1/example.bundle.json": "e1617aaad41233ab7414cd88302fab88cff97fa7c96df80927d104c057583531"
+  }
+}

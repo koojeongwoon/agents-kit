@@ -1,0 +1,104 @@
+{
+  "phase": "LM2-2",
+  "date": "2026-09-25",
+  "iam_starting_head": "e70902e90f8e3f4d2fa5582ea2229994b3ba39fe",
+  "scope": "IAM implementation and isolated local verification; daemon and Gateway integration pending",
+  "modules": {
+    "auth-common": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "auth-domain": {
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "auth-infra": {
+      "tests": 184,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "auth-app": {
+      "tests": 687,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "auth-batch": {
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "total_tests": 951,
+  "command": "./gradlew test :auth-app:bootJar --offline --console=plain",
+  "test_environment": {
+    "postgres": "dedicated postgres:17-alpine on 127.0.0.1:15432",
+    "redis": "dedicated redis:7-alpine on 127.0.0.1:16379 and 16380",
+    "cleanup": "All three task-owned temporary containers stopped after verification."
+  },
+  "restart_test": "fresh complete Spring server context, real loopback HTTP refresh of persisted grant; not an OS process restart or production key test",
+  "applied_files": 42,
+  "applied_source_sha256_verified": true,
+  "changed_file_sha256": {
+    "auth-domain/src/main/java/com/msa/auth/domain/audit/AuditAction.java": "5fba3542b5d3d1bc71ffea43d6e21ba8a9a9659024c17c3336e606d178a5a596",
+    "auth-domain/src/main/java/com/msa/auth/domain/device/DeviceIdentityRepository.java": "e0d85d08fa580ea730d45915175ecdfe6f56f4b719ae2dc396eeeb700bc43895",
+    "auth-domain/src/main/java/com/msa/auth/domain/device/RegisteredDevice.java": "79b24f6a9d3aec60f4650099ef17fc126581e4aa69d1293fb24df5fc0a936b9d",
+    "auth-infra/src/main/java/com/msa/auth/infra/db/device/JdbcDeviceProofStore.java": "bba492bcab671d469227c3e327e56d7dd050595796851a880ec5ee4fb2d2e18d",
+    "auth-infra/src/main/java/com/msa/auth/infra/db/device/JdbcDeviceIdentityRepository.java": "dff3c14450f5c6b2ebb094050b8f4b5ad6706e37bc404e5a81ca4a7d4c31929d",
+    "auth-app/src/test/resources/contracts/daemon-management-v1/examples.json": "03fd21fe88576b880321100d0439df6292f54e7a528a625bceb7103eb1444243",
+    "auth-app/src/test/resources/contracts/daemon-management-v1/cases.json": "1037c226ec03eceabb51aaf9d2a9b03c82719953e5fc9c6e9332b1370d17ed72",
+    "auth-app/src/test/resources/contracts/daemon-management-v1/profile.json": "a3f0795b25a3da404e0e4447d3fec555f243a26062ef21dd6aca9b443cbbe710",
+    "auth-app/src/test/java/com/msa/auth/app/config/OAuth2PersistenceConfigTest.java": "e620c71e452f5f684d26b22dce58dd0b7d0742026c36c83e7ac31bc4bbca07e6",
+    "auth-app/src/test/java/com/msa/auth/app/device/DeviceIdentityHttpTest.java": "b23b92d7d9af942e3006c57146b7e8414ce5504bce5398632dde99f64591ec1e",
+    "auth-app/src/test/java/com/msa/auth/app/device/DeviceProofVerifierTest.java": "2cc6ee002300bfd6321d92291afefc63e93868dd6c7cb03f97351834732b69ad",
+    "auth-app/src/test/java/com/msa/auth/app/authentication/TokenExchangeServiceAccessTest.java": "c12b2c280bf6d9c02326bd5b3c74e9028c0c2e3143b8aea6674f077eb0528284",
+    "auth-app/src/main/resources/schema.sql": "09630d52ad5ac1c4457362217b79374a212abd79653f26e2d8d71b960bc48848",
+    "auth-app/src/main/resources/schema-postgresql.sql": "15f3fa4439416dececd436655562c01ddfc4dadb2a30c7902c77051f08c73c92",
+    "auth-app/src/main/resources/templates/consent.html": "9646193b2f5e69321fe611e012b4c3f1a7149939ae84525e2c35330ff2a4ec9a",
+    "auth-app/src/main/java/com/msa/auth/app/config/SecurityConfig.java": "fa30f34dfecc6a455092b8e4800db2a777351463e7b4c2c20cfb71db1f4f844c",
+    "auth-app/src/main/java/com/msa/auth/app/config/TokenPolicyConfig.java": "5fde6e76c8e7ace438ef1c8511d050c9f27e4838f0ea0c6ebdef9fb48d9124ab",
+    "auth-app/src/main/java/com/msa/auth/app/config/OAuth2PersistenceConfig.java": "1d3ff391c6401aee9eca6c5dbfe7adf50c4eb4205d4b9ab0c1dff31a18dace0e",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceConsentFilter.java": "ed6164638ca052c9c9ad5849505d84069ea2f60813ec4caa96ed46db2fcd6adb",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceSecurityConfig.java": "035c86c83235cca970a8fa3cc8941b0c2fbbc5f5231cff2b5ce49137213e64c0",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceGrantPersistence.java": "bddbf7c6ae83333431208bf48f4a1e82bd49639d7fa6bdb5dca76e26d2fb8785",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceController.java": "7924fa53f2a586ab12cbdbcbdeedace2325261c6e8b687cc9f7b4c7ef998ec3a",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceOAuthProofFilter.java": "484d1dcb09ff69cbd9a3174985603d5f340da768c43ec2b47dc30aa908e27223",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceApiAuthenticationFilter.java": "1212da796a103ac8169a7cf071f465edebc1acae87b4c66950bb17f1dc69ed61",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceAuthProfile.java": "cb5fa708d1a24574d1b83f95f838f1beb44add2031b958db85e158cf3b03b244",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceProofVerifier.java": "4832659b4cb8697e709562e616fba7716016e1c80ac0b73aa6a89b712bc79ee9",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceAuthorizationValidator.java": "ce8056e497696f776cccfa86b6560c3339f550468ce0dd09cc236dedc3aef7ed",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceAuthException.java": "99baf8a130937df15c037565de14f09c7715a3b48506dd71137665f80ecfa620",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceTokenCustomizer.java": "4eca74e2c5e9eddc2e91f64a97d92414d5b2761c7db48b7f0f5dba581bfc037b",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceRefreshTokenGenerator.java": "2c77a71895a6c9f93d77f5bed4b70be44a720dcbe8966dada7eb868281bf0264",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceAccessPolicy.java": "c097062127ff8e63a63d7e35d07abbe29bbbbf8f193870baaea37d9facf053d9",
+    "auth-app/src/main/java/com/msa/auth/app/device/DeviceIdentityService.java": "4de4b20f713f4a4658887f3bfccf846f0fd1e6f38b0c902e6ca30e3668530238",
+    "auth-app/src/main/java/com/msa/auth/app/authentication/TokenIssuanceService.java": "3d9a4a3ac8b320d57311e482324d67250feb79fba5e3501fb49b06fcb0f7892f",
+    "auth-app/src/main/java/com/msa/auth/app/authentication/TokenExchangeService.java": "6ecb209d6b984c15fadb41467146b8b5c13acdb0b2b8d1a7b0846675b46f9d66",
+    "auth-app/src/main/java/com/msa/auth/app/security/web/CustomAuthenticationSuccessHandler.java": "59531e2f11e7856b179d7e4cb34f24e795c393e06758cfb94350789b71a24dbc",
+    "auth-app/src/main/java/com/msa/auth/app/security/oauth2/HashedJdbcOAuth2AuthorizationService.java": "d5285c9337a30f938bf18891ac6f6d8026487330c12d38c7af4b913c4616bf0d",
+    "auth-app/src/main/java/com/msa/auth/app/security/oauth2/McpPublicRefreshClientAuthenticationProvider.java": "e5b59a1b857c3341babd2291e8038b239e3e84e67b1b5ae46225b508d695e6d6",
+    "auth-app/src/main/java/com/msa/auth/app/controller/tenant/TenantDiscoveryController.java": "f7af77be556ad7b39f8cb1f6a409a8c2bb2e2305d5356d15289db5262e0dd45b",
+    "auth-app/src/main/java/com/msa/auth/app/controller/web/WebViewController.java": "b989cfb2a965259bd4cb1376d83d2a4316e0c0a814362f9eaaf44ba0803a82c7",
+    "docs/DEVICE_IDENTITY_V1.md": "ff0bf0878092095253dd3b3adf28cfab8863af6f7d765feb01d17cfe0acbc85f",
+    "docs/migrations/2026-09-25-device-identity.sql": "8b8844833fc4cfdbd470267aaabac3a7f25100c433b01179f2cdad73bfd0aaf7",
+    "docs/contracts/daemon-management-v1/README.md": "f7b35c9c4d445edff24e79be5e5318fb1740e6f46637e961a07695b04087502c"
+  },
+  "not_performed": [
+    "production deployment",
+    "production client provisioning",
+    "customer IdP reauthentication E2E",
+    "OS protected device key integration",
+    "Gateway management verifier",
+    "direct MCP device binding"
+  ],
+  "applied_directory_build": {
+    "command": "./gradlew :auth-app:bootJar --offline --console=plain",
+    "result": "BUILD SUCCESSFUL"
+  }
+}

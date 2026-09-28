@@ -1,0 +1,148 @@
+{
+  "phase": "LM3-2",
+  "date": "2026-09-25",
+  "status": "organization-authorized-job-issuance-persistence-delivery-implemented",
+  "validation": {
+    "iam_full_gradle": {
+      "tests": 953,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "iam_device_http_and_proof_tests": 28,
+    "gateway_build": "passed",
+    "gateway_vitest": {
+      "passed": 347,
+      "skipped": 4,
+      "skipped_suite": "existing user lifecycle integration requires separate database/Redis configuration"
+    },
+    "gateway_real_postgres_job_tests": 5,
+    "gateway_real_postgres_existing_report_tests": 4,
+    "concurrent_issue_requests": 12,
+    "stored_jobs_and_approvals": 1,
+    "unchanged_signed_contract_vectors": 58
+  },
+  "source_application": {
+    "method": "staging tests followed by original baseline hash check, per-file atomic replacement and resulting SHA-256 verification",
+    "files": [
+      {
+        "repository": "tools-gateway",
+        "path": "docs/daemon-management-jobs-v1.md",
+        "sha256": "dd87e0dae3e3780967958b85df5daa0a57c204cc8018466043bc20f97b6542b4"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/iamReader.ts",
+        "sha256": "641ca3b9bdb8a5980bbb3384b2795d30ded020fc65240420eddeab669c686bd9"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/jobs/routes.ts",
+        "sha256": "003a6b243b23db1b00f107d7d927d093eca518cab5f702f9536ec74b5c6a0c8a"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/jobs/service.ts",
+        "sha256": "6afbefd0ca11b49cf471295bf25a0f6ac24144fdf284242e86e676ef05cc96d2"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/jobs/signer.ts",
+        "sha256": "3fa2d3f19a429c78bcfa254c3f13634499288189d921b1417a6187844c464b7d"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/jobs/store.ts",
+        "sha256": "8b93438efa38b13452e037e6ae08026b2db32786b31070abcefff9820cebb6bf"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/verifier.ts",
+        "sha256": "4bbec93db42b85e340a353f15b0bddc520fb4b1687751aaf0b3f7368bfd0641c"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/database/migrations.ts",
+        "sha256": "d5eb10965815eb663b3aa86a1de1d79c0d2fdb8c737667ed31ae7715f9ab65aa"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/main.ts",
+        "sha256": "da3bfa5ee108be35e7cb1c09fc5fc14ee5c015b4ff2c36b1399ee39e783e40d9"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "test/daemonJobFixtures.ts",
+        "sha256": "2fcc5c1d05fbff0dc341da5ac06bb135bb1bef8228e1c1fe6e3732f4605512e8"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "test/daemonJobIssuance.test.ts",
+        "sha256": "19e591ea5773076648ac2b4c06c07b7e6c6bd5dadabd687008d82d22f570cebc"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "test/daemonJobsPostgres.test.ts",
+        "sha256": "dba06c45bed3e180c64c4afa957366445f12108f49a7c8759e6c636bba120f7b"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "test/daemonManagement.test.ts",
+        "sha256": "32d55c0da31f8f980a2b5a0265ae31b010306f5883f7733e7c6d20b9dc7d3ed3"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/controller/tenant/TenantDiscoveryController.java",
+        "sha256": "e78a2e38af7594ca10aa935f10abc29ee99e4a02f50e353eafa4c1407b1ccc07"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/device/DeviceAccessPolicy.java",
+        "sha256": "c5dce8003e7d1ff58a5ffb7f5d1b67e5769b2a91227a9dce1e545c4ac8028208"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/device/DeviceAuthProfile.java",
+        "sha256": "e59c9a6d3711ac9faf0684b99812ff1ed2772d498acdd00d759114a56fe50280"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/device/DeviceAuthorizationValidator.java",
+        "sha256": "90e1f41909ac6d3c469472602cae9a3953a092a379bc2b32b788da564b1b8a73"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/device/DeviceController.java",
+        "sha256": "5aa5304f6758546ca516136ab7bf5b9535bd816375710b0ab69d3360eb7731ef"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/device/DeviceRefreshTokenGenerator.java",
+        "sha256": "3c937709b9e0678e258cc51fa15368113792792859966f7605805d0db88a58b8"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/main/java/com/msa/auth/app/device/DeviceTokenCustomizer.java",
+        "sha256": "de8d761d64bf868e8dd1ae576cc871a88558fe2b1cce1c210f66963781472be5"
+      },
+      {
+        "repository": "iam-server",
+        "path": "auth-app/src/test/java/com/msa/auth/app/device/DeviceIdentityHttpTest.java",
+        "sha256": "5ff89e0a1764632db831d0979287408774ad39c65fa1e61168bea965fa21bd44"
+      },
+      {
+        "repository": "iam-server",
+        "path": "docs/daemon-management-jobs-v1.md",
+        "sha256": "ed3e1fa1e3b5ffa83ea7950f98973ce78d0d05b048938ae9adb94389af930a4a"
+      }
+    ]
+  },
+  "limitations": [
+    "IAM MockMvc tests and Gateway PostgreSQL/JOSE/HTTP tests exercise each real implementation; live IAM-to-Gateway HTTPS integration not run in this phase",
+    "Gateway SSO session and IAM authority responses are controlled test inputs in Gateway route/service tests",
+    "daemon consumption, durable local state CAS, process revocation and result reporting not implemented",
+    "production key provisioning, client scope registration and rollout not performed"
+  ],
+  "production_deployed": false,
+  "test_infrastructure_cleanup": "removed dedicated lm3-2-postgres, lm3-2-redis, lm3-2-stream containers"
+}

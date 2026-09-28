@@ -1,0 +1,643 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-2",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "runs": [
+    {
+      "purpose": "codex-project-lifecycle",
+      "evidence": {
+        "schemaVersion": 1,
+        "phase": "CA04-2",
+        "observedAt": "2026-09-27T09:33:06.981Z",
+        "platform": "darwin",
+        "arch": "arm64",
+        "scope": "project",
+        "surface": "cli",
+        "stagesRequested": "lifecycle",
+        "resources": [
+          "instructions",
+          "skill",
+          "mcp"
+        ],
+        "complete": false,
+        "productionEvidencePromoted": false,
+        "verifierSha256": "260c15f7f1ecc7232a29873c99de7e59f010a34497a43a21afcf0b255c17a824",
+        "markerServerSha256": "7efc5d0c529a176cd6863f316d19919fca062e1c112d5671736e1ad5e69f717f",
+        "collectorSha256": "3ba71971c32f0fd5231a45eccbe3388d084162c049c2d7e1956012c775943856",
+        "authentication": "existing-native-login",
+        "isolation": {
+          "temporaryProject": true,
+          "freshHome": false,
+          "credentialsCopied": false,
+          "userSettingsWritten": false,
+          "rawTranscriptsStoredByVerifier": false,
+          "nativeClientHistoryMayPersist": true
+        },
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.145.0",
+            "stages": {
+              "baseline": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": false,
+                "mcpToolCalled": false,
+                "completedTools": 0,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "toolKinds": [],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "applied": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": true,
+                "mcpToolCalled": true,
+                "completedTools": 3,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": false,
+                  "skill": false,
+                  "mcp": false
+                },
+                "toolKinds": [
+                  "command_execution",
+                  "ca04-marker/read_marker"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "command_execution",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "ca04-marker/read_marker",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": true
+                  },
+                  {
+                    "kind": "command_execution",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": true,
+                    "mcpMarkerReturned": false
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "updated": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": true,
+                "mcpToolCalled": true,
+                "completedTools": 2,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": false,
+                  "skill": false,
+                  "mcp": false
+                },
+                "toolKinds": [
+                  "command_execution",
+                  "ca04-marker/read_marker"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "command_execution",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": true,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "ca04-marker/read_marker",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": true
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "removed": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": false,
+                "mcpToolCalled": false,
+                "completedTools": 0,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "toolKinds": [],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "rollback": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": true,
+                "mcpToolCalled": true,
+                "completedTools": 2,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": false,
+                  "skill": false,
+                  "mcp": false
+                },
+                "toolKinds": [
+                  "command_execution",
+                  "ca04-marker/read_marker"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "command_execution",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": true,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "ca04-marker/read_marker",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": true
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              }
+            },
+            "customAgent": "not-tested",
+            "fullLifecycleConfirmed": true,
+            "binarySha256": "1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590",
+            "definitionSha256": "e4a8d11dfb1da77a5ae42d518e6a10760f50148b65243a3d7eb66f13ee4a5f96",
+            "userInstructionsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "purpose": "antigravity-project-instructions-skills-lifecycle",
+      "evidence": {
+        "schemaVersion": 1,
+        "phase": "CA04-2",
+        "observedAt": "2026-09-27T09:30:20.208Z",
+        "platform": "darwin",
+        "arch": "arm64",
+        "scope": "project",
+        "surface": "cli",
+        "stagesRequested": "lifecycle",
+        "resources": [
+          "instructions",
+          "skill"
+        ],
+        "complete": false,
+        "productionEvidencePromoted": false,
+        "verifierSha256": "260c15f7f1ecc7232a29873c99de7e59f010a34497a43a21afcf0b255c17a824",
+        "markerServerSha256": "7efc5d0c529a176cd6863f316d19919fca062e1c112d5671736e1ad5e69f717f",
+        "collectorSha256": "cc457582016f026896e34f815c2185eb2bc5cf3057d34185ef7eb924b263ce39",
+        "authentication": "existing-native-login",
+        "isolation": {
+          "temporaryProject": true,
+          "freshHome": false,
+          "credentialsCopied": false,
+          "userSettingsWritten": false,
+          "rawTranscriptsStoredByVerifier": false,
+          "nativeClientHistoryMayPersist": true
+        },
+        "clients": [
+          {
+            "clientId": "antigravity",
+            "version": "1.2.12",
+            "stages": {
+              "baseline": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": false,
+                "mcpToolCalled": false,
+                "completedTools": 0,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "toolKinds": [],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": true,
+                  "nonempty": true
+                },
+                "toolEvidence": [],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "applied": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": true,
+                "mcpToolCalled": false,
+                "completedTools": 2,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": false,
+                  "skill": false,
+                  "mcp": true
+                },
+                "toolKinds": [
+                  "view_file"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "updated": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": true,
+                "mcpToolCalled": false,
+                "completedTools": 2,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": false,
+                  "skill": false,
+                  "mcp": true
+                },
+                "toolKinds": [
+                  "view_file"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": true,
+                  "nonempty": true
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "removed": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": false,
+                "mcpToolCalled": false,
+                "completedTools": 0,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "toolKinds": [],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              },
+              "rollback": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {
+                  "instructions": true,
+                  "skill": true,
+                  "mcp": true
+                },
+                "skillFileRead": true,
+                "mcpToolCalled": false,
+                "completedTools": 2,
+                "finalParsed": true,
+                "reportedAbsent": {
+                  "instructions": false,
+                  "skill": false,
+                  "mcp": true
+                },
+                "toolKinds": [
+                  "view_file"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": true
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": true
+              }
+            },
+            "customAgent": "not-tested",
+            "fullLifecycleConfirmed": true,
+            "binarySha256": "6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3",
+            "definitionSha256": "4cce8f9c276bb854a29c9549c758ba372e4ce9a2aad8425bd2ca0a55d81700fd",
+            "userInstructionsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "purpose": "antigravity-project-mcp-unconfirmed",
+      "evidence": {
+        "schemaVersion": 1,
+        "phase": "CA04-2",
+        "observedAt": "2026-09-27T09:28:00.624Z",
+        "platform": "darwin",
+        "arch": "arm64",
+        "scope": "project",
+        "surface": "cli",
+        "stagesRequested": "applied",
+        "complete": false,
+        "productionEvidencePromoted": false,
+        "verifierSha256": "b7c89f25a51117d8beb0c36403a2516424c44e422efab92bd776f5acb26c42b8",
+        "collectorSha256": "cc457582016f026896e34f815c2185eb2bc5cf3057d34185ef7eb924b263ce39",
+        "authentication": "existing-native-login",
+        "isolation": {
+          "temporaryProject": true,
+          "freshHome": false,
+          "credentialsCopied": false,
+          "userSettingsWritten": false,
+          "rawTranscriptsStoredByVerifier": false,
+          "nativeClientHistoryMayPersist": true
+        },
+        "clients": [
+          {
+            "clientId": "antigravity",
+            "version": "1.2.12",
+            "stages": {
+              "applied": {
+                "code": 0,
+                "reason": "OK",
+                "terminalSuccess": true,
+                "final": {},
+                "skillFileRead": true,
+                "mcpToolCalled": false,
+                "completedTools": 2,
+                "finalParsed": false,
+                "reportedAbsent": {},
+                "toolKinds": [
+                  "view_file"
+                ],
+                "answerFormat": {
+                  "text": true,
+                  "fenced": false,
+                  "nonempty": false
+                },
+                "toolEvidence": [
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": false,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  },
+                  {
+                    "kind": "view_file",
+                    "success": true,
+                    "errorCategories": [],
+                    "outputNonempty": true,
+                    "supportingFileNamed": true,
+                    "skillMarkerReturned": false,
+                    "mcpMarkerReturned": false
+                  }
+                ],
+                "diagnostics": {
+                  "projectConfigDisabled": false,
+                  "mcpStartupFailed": false
+                },
+                "success": true,
+                "confirmed": false
+              }
+            },
+            "customAgent": "not-tested",
+            "fullLifecycleConfirmed": false,
+            "binarySha256": "6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3",
+            "definitionSha256": "4cce8f9c276bb854a29c9549c758ba372e4ce9a2aad8425bd2ca0a55d81700fd"
+          }
+        ],
+        "resources": [
+          "instructions",
+          "skill",
+          "mcp"
+        ]
+      }
+    }
+  ]
+}

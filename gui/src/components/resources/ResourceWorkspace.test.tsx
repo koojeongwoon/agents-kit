@@ -107,3 +107,11 @@ describe('ResourceWorkspace', () => {
     expect(within(pcOnly).queryByRole('button', {name: /배포 검토/})).not.toBeInTheDocument();
   });
 });
+
+it('does not promote schema 2 file contracts to resource runtime support', () => {
+  render(<ResourceWorkspace view="mcp" clients={[{...clients[0], schemaVersion: 2}]} localDiscovery={[]}
+    resources={[resources[0]]} targetReady loading={false} error="" onOpenEditor={vi.fn()} onOpenDeploy={vi.fn()} />);
+  expect(screen.getByText('Codex · 파일 계약')).toBeInTheDocument();
+  expect(screen.queryByText('Codex · 지원')).not.toBeInTheDocument();
+  expect(screen.getByText(/실제 적용 가능 여부는 실행 화면·설치본·자원 옵션을 배포 계획에서 확인/)).toBeInTheDocument();
+});

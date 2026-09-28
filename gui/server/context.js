@@ -5,6 +5,7 @@ import {resolveKitRoot, resolveKitScopeDir} from '../../lib/kit-paths.js';
 import {isWithinRoot, resolveForAuthorization, assertSafeProjectTarget as assertSafeProjectTargetShared} from '../../lib/security-boundary.js';
 import {errorResponse, httpStatusForError} from '../../lib/interfaces/http/error-mapper.js';
 import {createManifestDeploymentService} from '../../lib/application/manifest-deployment-service.js';
+import {createLocalDaemonStatusService} from '../../lib/application/local-daemon-status-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,8 @@ export function createAppContext(options = {}) {
   const kitRoot = options.kitRoot || resolveKitRoot(projectRoot);
   const manifestDeploymentService = createManifestDeploymentService({
     definitionsDir: options.definitionsDir || path.join(projectRoot, 'clients'),
-    homeDir
+    homeDir,
+    planStoreRoot: path.join(kitRoot, '.deployment-plans')
   });
 
   function assertSafeProjectTarget(targetDir) {
@@ -31,6 +33,7 @@ export function createAppContext(options = {}) {
     projectRoot,
     kitRoot,
     manifestDeploymentService,
+    localDaemonStatusService: options.localDaemonStatusService || createLocalDaemonStatusService(),
     resolveKitScopeDir,
     assertSafeProjectTarget,
     sendApiError

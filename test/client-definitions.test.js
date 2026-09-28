@@ -236,7 +236,7 @@ test('Cursor, Antigravity, and Windsurf use current documented paths', () => {
   assert.equal(resolveClientCapability(antigravity, {
     assetKind: 'agents',
     scope: 'project'
-  }).reason, 'CAPABILITY_UNVERIFIED');
+  }).reason, 'CLIENT_VERSION_REQUIRED');
 
   const windsurf = definitions.get('windsurf');
   assert.equal(resolveClientCapability(windsurf, {
@@ -295,11 +295,100 @@ test('deployment plan exposes manual items and rejects strict automatic apply', 
     definition: definitions.get('codex')
   });
   assert.equal(plan.automatic, false);
-  assert.equal(plan.operations[0].target, '.agents/skills/review');
-  assert.equal(plan.blocked[0].reason, 'CAPABILITY_UNVERIFIED');
+  assert.equal(plan.operations.length, 0);
+  assert.equal(plan.blocked.find(item => item.assetId === 'review').target, '.agents/skills/review');
+  assert.equal(plan.blocked.find(item => item.assetId === 'review').reason, 'CLIENT_VERSION_REQUIRED');
+  assert.equal(plan.blocked.find(item => item.assetId === 'history').reason, 'CAPABILITY_UNVERIFIED');
   assert.throws(() => planClientDeployment({
     manifest,
     definition: definitions.get('codex'),
     allowManual: false
   }), error => error.code === 'CLIENT_DEPLOYMENT_BLOCKED');
+});
+
+function profileFixture() {
+  const capability = definitionWith({}).capabilities[0];
+  return {
+    schemaVersion: 2, id: 'example', displayName: 'Example', defaultSurface: 'cli',
+    capabilities: [capability],
+    surfaces: [
+      { id: 'cli', displayName: 'CLI', configStore: 'example-local', capabilityIds: [capability.id],
+        runtimeEvidence: [{ capabilityId: capability.id, version: '1.2.3', platform: 'darwin', arch: 'arm64', verifiedAt: '2026-09-27', source: 'synthetic fixture' }] },
+      { id: 'desktop', displayName: 'App', configStore: 'example-local', capabilityIds: [capability.id], runtimeEvidence: [],
+        overrides: [{ id: capability.id, path: '.example-app/skills/{assetId}' }] }
+    ]
+  };
+}
+
+const profileQuery = { assetKind: 'skills', scope: 'project', platform: 'darwin', arch: 'arm64', clientVersion: '1.2.3' };
+
+test('schema 2 matches exact runtime evidence independently of documentation and shared store', () => {
+  const definition = createClientDefinition(profileFixture());
+  assert.equal(resolveClientCapability(definition, profileQuery).eligible, true);
+  for (const patch of [
+    { surface: 'desktop' }, { clientVersion: '1.2.4' }, { clientVersion: '1.2.3-preview.1' },
+    { platform: 'linux' }, { arch: 'x64' }, { platform: undefined }
+  ]) {
+    assert.equal(resolveClientCapability(definition, { ...profileQuery, ...patch }).reason, 'CLIENT_PROFILE_UNVERIFIED');
+  }
+  for (const clientVersion of [undefined, '', '1.2', '1.2.3 trailing', 123]) {
+    assert.equal(resolveClientCapability(definition, { ...profileQuery, clientVersion }).reason, 'CLIENT_VERSION_REQUIRED');
+  }
+  assert.equal(resolveClientCapability(definition, { ...profileQuery, clientVersion: 'v1.2.3' }).eligible, true);
+  const app = resolveClientCapability(definition, { ...profileQuery, surface: 'desktop' });
+  assert.equal(app.capability.path, '.example-app/skills/{assetId}');
+  assert.equal(resolveClientCapability(definition, { ...profileQuery, surface: 'cloud' }).reason, 'CLIENT_SURFACE_NOT_DEFINED');
+  assert.equal(resolveClientCapability(definitionWith({}), { ...profileQuery, surface: 'desktop' }).reason, 'CLIENT_SURFACE_NOT_DEFINED');
+});
+
+test('schema 2 rejects ambiguous surfaces, invalid overrides and fabricated incomplete evidence', () => {
+  for (const mutate of [
+    raw => { raw.defaultSurface = 'cloud'; },
+    raw => { raw.surfaces.push(raw.surfaces[0]); },
+    raw => { raw.surfaces[0].capabilityIds.push('missing'); },
+    raw => { raw.surfaces[0].overrides = [{ id: 'skills-project', scope: 'global' }]; },
+    raw => { raw.surfaces[0].runtimeEvidence[0].version = '1.2'; },
+    raw => { raw.surfaces[0].runtimeEvidence[0].source = ''; },
+    raw => { delete raw.surfaces[0].runtimeEvidence; },
+    raw => { raw.capabilities.push({ ...raw.capabilities[0], id: 'duplicate-kind' }); raw.surfaces[0].capabilityIds.push('duplicate-kind'); }
+  ]) {
+    const raw = profileFixture();
+    mutate(raw);
+    assert.throws(() => createClientDefinition(raw), error => ['INVALID_CLIENT_SURFACE', 'INVALID_CLIENT_RUNTIME_EVIDENCE'].includes(error.code));
+  }
+});
+
+test('reviewed Codex and Antigravity paths remain gated for unverified versions and surfaces', () => {
+  const definitions = loadClientDefinitions({ definitionsDir: path.join(repositoryRoot, 'clients') });
+  const codex = definitions.get('codex');
+  const agy = definitions.get('antigravity');
+  const query = { ...profileQuery, scope: 'global', assetKind: 'agents' };
+  assert.equal(resolveClientCapability(codex, query).capability.path, '~/.codex/agents/{assetId}.toml');
+  assert.equal(resolveClientCapability(codex, query).reason, 'CLIENT_PROFILE_UNVERIFIED');
+  assert.equal(resolveClientCapability(agy, { ...query, assetKind: 'mcp' }).capability.path, '~/.gemini/config/mcp_config.json');
+  assert.equal(resolveClientCapability(agy, { ...query, assetKind: 'skills' }).capability.path, '~/.gemini/config/skills/{assetId}');
+  assert.equal(resolveClientCapability(agy, { ...query, assetKind: 'skills' }).reason, 'CLIENT_PROFILE_UNVERIFIED');
+  assert.equal(agy.capabilities.find(item => item.id === 'skills-global').path, '~/.gemini/antigravity-cli/skills/{assetId}');
+  assert.equal(resolveClientCapability(agy, { ...query, assetKind: 'skills', surface: 'desktop' }).capability.path, '~/.gemini/config/skills/{assetId}');
+  const appMcp = resolveClientCapability(agy, { ...query, assetKind: 'mcp', surface: 'desktop' });
+  assert.equal(appMcp.reason, 'CAPABILITY_UI_ONLY');
+  assert.equal(appMcp.capability.path, '');
+  assert.equal(appMcp.capability.discovery, undefined);
+  assert.equal(resolveClientCapability(agy, { ...query, surface: 'ide' }).reason, 'CAPABILITY_UNVERIFIED');
+  for (const definition of [codex, agy]) {
+    for (const profile of definition.surfaces.filter(item => item.id !== 'cli')) assert.deepEqual(profile.runtimeEvidence, []);
+  }
+});
+
+test('runtime evidence cannot override unsupported, UI-only, manual, or unverified capabilities', () => {
+  for (const [patch, reason] of [
+    [{status: 'unsupported'}, 'CAPABILITY_UNSUPPORTED'],
+    [{status: 'ui-only'}, 'CAPABILITY_UI_ONLY'],
+    [{strategy: 'manual'}, 'CAPABILITY_UNVERIFIED'],
+    [{evidence: {state: 'unverified'}}, 'CAPABILITY_UNVERIFIED']
+  ]) {
+    const raw = profileFixture();
+    raw.capabilities[0] = {...raw.capabilities[0], ...patch};
+    assert.equal(resolveClientCapability(createClientDefinition(raw), profileQuery).reason, reason);
+  }
 });

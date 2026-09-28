@@ -1,0 +1,46 @@
+{
+  "checks": [
+    "tls_redirect_not_followed",
+    "untrusted_tls_certificate_denied",
+    "tls_hostname_mismatch_denied",
+    "actual_iam_https_browser_pkce_dpop_enrollment_and_management_issue",
+    "cross_process_authentication_serialized",
+    "foreign_callback_does_not_consume_pending_login",
+    "actual_native_policy_and_event_to_gateway_over_dpop_https",
+    "committed_receipt_loss_durable_same_report_retry_across_processes",
+    "owner_scoped_central_view_and_foreign_subject_empty",
+    "gateway_process_restart_preserves_latest_report_and_receipt",
+    "actual_90_second_heartbeat_loss_is_stale_not_healthy",
+    "actual_iam_revoke_new_report_denied_after_15_seconds",
+    "reports_receipts_ui_and_errors_contain_no_credentials"
+  ],
+  "count": 13,
+  "revoke_request_completed_after_seconds": 15.287,
+  "dashboard_session": "seeded Redis session; real OAuthSessionStore resolution",
+  "status_pipeline": "real IAM HTTPS + Rust native IPC + Gateway HTTPS + PostgreSQL",
+  "deployment": "local-only",
+  "phase": "LM2-4",
+  "date": "2026-09-25",
+  "gateway_tests": {
+    "passed": 259,
+    "skipped_existing_optional": 4,
+    "shared_vectors_passed": 30,
+    "original_signed_fixture_passed": true
+  },
+  "daemon_tests": {
+    "passed": 84
+  },
+  "gateway_typecheck": {
+    "focused": "pass",
+    "full": "blocked by 10 preexisting JEV diagnostics, confirmed on original baseline"
+  },
+  "ui_validation": "DOM test and real owner-scoped API; browser visual/interactive SSO unverified",
+  "follow_up_jev_typecheck": {
+    "date": "2026-09-25",
+    "previous_errors_resolved": 10,
+    "full_build": "pass",
+    "regression_tests_passed": 263,
+    "environment_dependent_tests_skipped": 8,
+    "record": "phase-jev-typecheck-fix.md"
+  }
+}

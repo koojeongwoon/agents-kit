@@ -5,6 +5,7 @@ import {createMutationTokenMiddleware, createOriginValidator} from '../../lib/gu
 import {sendServerError} from '../../lib/interfaces/http/error-mapper.js';
 import {createAppContext} from './context.js';
 import {createDeployRouter} from './routes/deploy.js';
+import {createDaemonRouter} from './routes/daemon.js';
 
 export function createControlPlaneApp({
   context = createAppContext(),
@@ -42,6 +43,7 @@ export function createControlPlaneApp({
   });
   app.use('/api', createMutationTokenMiddleware(apiToken));
   app.use(createDeployRouter(context));
+  app.use(createDaemonRouter(context));
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);
     return sendServerError(res, error);

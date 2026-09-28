@@ -24,6 +24,14 @@ capabilities:
     strategy: merge
     status: stable
     evidence: *claude-settings
+  - id: instructions-project-agents-md
+    assetKind: instructions
+    scope: project
+    path: AGENTS.md
+    format: markdown
+    strategy: merge
+    status: stable
+    evidence: *claude-settings
   - id: settings-global
     assetKind: settings
     scope: global

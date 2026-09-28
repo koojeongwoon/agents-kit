@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-5",
+  "observedAt": "2026-09-27T11:33:46.284Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "project",
+  "surface": "cli",
+  "resource": "agents",
+  "childResumeRequested": true,
+  "childCollectorSha256": "8c82ee3ffd2dcf150e7a5348d758acdd47086e16e480ab5ded0ac707325e69cb",
+  "codexTransport": "exec",
+  "rpcCollectorSha256": "c422afcacc6976b5c3362712b2ddd9b179bd392dc5276f71b0bacf25e972a60e",
+  "stagesRequested": "applied",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "33038b86811febe4810b92b0cb7232e3385523b1405a933f407e1b5d4bddbd6c",
+  "collectorSha256": "94da0d8083a965fd535c25796cb213a6d7b0a2889e16dc7852bda09a481fc672",
+  "runnerSha256": "8f384624a154f8685b45ab1f973f84e628c3f8b4c6384f47947605a14ce3fb27",
+  "authentication": "existing-native-login",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": false,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": true
+  },
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.2.12",
+      "stages": {
+        "applied": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "childMarkerReturned": false,
+          "roleObserved": true,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "parameters"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Subagents"
+              ]
+            },
+            {
+              "label": "subagent_parameters",
+              "keys": [
+                "Model",
+                "Prompt",
+                "Role",
+                "TypeName"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "conversation_id",
+                "initial_prompt",
+                "log_uri",
+                "role",
+                "type_name",
+                "workspace_uris"
+              ]
+            },
+            {
+              "label": "system_message",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "tool",
+            "subagent",
+            "system_message",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "success": true,
+          "childResume": {
+            "code": 0,
+            "reason": "OK",
+            "terminalSuccess": true,
+            "finalMatches": false,
+            "unexpectedTools": false,
+            "diagnostics": {
+              "projectConfigDisabled": false,
+              "mcpStartupFailed": false,
+              "permissionNotice": false,
+              "fixtureMcpPermissionNotice": false,
+              "mcpPermissionRequired": false
+            },
+            "success": true
+          },
+          "childEvidenceSource": "resumed-native-child-new-turn",
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": false,
+          "verificationReason": "CHILD_RESULT_NOT_EXPOSED"
+        }
+      },
+      "fullLifecycleConfirmed": false,
+      "roleEvidence": "subagent-type-name-and-final-marker; direct-child-result-required-for-full-proof",
+      "binarySha256": "6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3",
+      "definitionSha256": "4cce8f9c276bb854a29c9549c758ba372e4ce9a2aad8425bd2ca0a55d81700fd"
+    }
+  ]
+}

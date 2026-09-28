@@ -1,0 +1,52 @@
+schemaVersion: 1
+kit:
+  id: common-resources
+defaults:
+  mcpBindings:
+    schemaVersion: 1
+    endpoints:
+      docs:
+        url: https://docs.example.test/mcp
+assets:
+  instructions:
+    - id: shared-rules
+      scope: project
+      source: instructions.md
+      definition:
+        schemaVersion: 1
+        format: markdown
+  skills:
+    - id: source-review
+      scope: project
+      source: skills/source-review
+      definition:
+        schemaVersion: 1
+        format: agent-skills
+      requires:
+        tools: [docs.search]
+  agents:
+    - id: reviewer
+      scope: project
+      dependsOn:
+        skills: [source-review]
+      definition:
+        schemaVersion: 1
+        permissions: client-default
+        description: 코드 변경과 테스트를 검토합니다.
+        instructions: 변경의 호출 경로를 확인하고 근거와 함께 결과를 보고하세요.
+  mcpServers:
+    - id: docs
+      scope: project
+      provides:
+        tools:
+          - id: docs.search
+            nativeName: search_docs
+      definition:
+        schemaVersion: 1
+        transport: http
+        endpointId: docs
+targets:
+  codex:
+    assetIds: [shared-rules, reviewer]
+  antigravity:
+    assetIds: [shared-rules, reviewer]

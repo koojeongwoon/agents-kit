@@ -1,8 +1,9 @@
-schemaVersion: 1
+schemaVersion: 2
 id: antigravity
 displayName: Antigravity
 detection:
-  commands: [agy]
+  commands:
+    - agy
   userRoot: ~/.gemini/antigravity-cli
 capabilities:
   - id: instructions-global
@@ -12,10 +13,10 @@ capabilities:
     format: markdown
     strategy: merge
     status: stable
-    evidence: &agy-evidence
+    evidence:
       state: verified
-      source: https://antigravity.google/docs/gcli-migration
-      verifiedAt: 2026-07-27
+      source: https://antigravity.google/docs/rules/
+      verifiedAt: 2026-09-27
   - id: instructions-project
     assetKind: instructions
     scope: project
@@ -23,7 +24,10 @@ capabilities:
     format: markdown
     strategy: merge
     status: stable
-    evidence: *agy-evidence
+    evidence:
+      state: verified
+      source: https://antigravity.google/docs/rules/
+      verifiedAt: 2026-09-27
   - id: skills-project
     assetKind: skills
     scope: project
@@ -31,7 +35,10 @@ capabilities:
     format: directory
     strategy: copy
     status: stable
-    evidence: *agy-evidence
+    evidence:
+      state: verified
+      source: https://antigravity.google/docs/skills
+      verifiedAt: 2026-09-27
   - id: skills-global
     assetKind: skills
     scope: global
@@ -41,7 +48,10 @@ capabilities:
     discovery:
       reader: directory-entries
     status: stable
-    evidence: *agy-evidence
+    evidence:
+      state: verified
+      source: https://antigravity.google/docs/skills
+      verifiedAt: 2026-09-27
   - id: mcp-project
     assetKind: mcp
     scope: project
@@ -49,27 +59,35 @@ capabilities:
     format: json
     strategy: merge
     status: stable
-    evidence: *agy-evidence
+    evidence:
+      state: verified
+      source: https://antigravity.google/docs/mcp
+      verifiedAt: 2026-09-27
   - id: mcp-global
     assetKind: mcp
     scope: global
-    path: ~/.gemini/antigravity-cli/mcp_config.json
+    path: ~/.gemini/config/mcp_config.json
     format: json
     strategy: merge
     discovery:
       reader: json-object-keys
       selector: mcpServers
     status: stable
-    evidence: *agy-evidence
+    evidence:
+      state: verified
+      source: https://antigravity.google/docs/mcp
+      verifiedAt: 2026-09-27
   - id: agents-project
     assetKind: agents
     scope: project
-    path: ""
+    path: .agents/agents/{assetId}.md
     format: markdown
-    strategy: manual
-    status: unverified
+    strategy: copy
+    status: stable
     evidence:
-      state: unverified
+      state: verified
+      source: https://antigravity.google/docs/subagents
+      verifiedAt: 2026-09-27
   - id: workflows-global
     assetKind: workflows
     scope: global
@@ -88,3 +106,131 @@ capabilities:
     status: ui-only
     evidence:
       state: unverified
+  - id: agents-global
+    assetKind: agents
+    scope: global
+    path: ~/.gemini/config/agents/{assetId}.md
+    format: markdown
+    strategy: copy
+    status: stable
+    evidence:
+      state: verified
+      source: https://antigravity.google/docs/subagents
+      verifiedAt: 2026-09-27
+defaultSurface: cli
+surfaces:
+  - id: cli
+    displayName: Antigravity CLI
+    configStore: antigravity-local
+    detection:
+      commands:
+        - agy
+      userRoot: ~/.gemini/antigravity-cli
+    capabilityIds:
+      - instructions-global
+      - instructions-project
+      - skills-project
+      - skills-global
+      - mcp-project
+      - mcp-global
+      - agents-project
+      - workflows-global
+      - memory-global
+      - agents-global
+    overrides:
+      # CLI 1.2.12 consumes the shared path in live CA04-6 tests.
+      # The documented antigravity-cli path above remains the legacy baseline.
+      # Other versions stay blocked by the exact-version runtime evidence gate.
+      - id: skills-global
+        path: ~/.gemini/config/skills/{assetId}
+    # CA04-7: reviewed CLI slices only; app/IDE and other versions remain gated.
+    runtimeEvidence:
+      - capabilityId: instructions-project
+        version: 1.2.12
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-4-antigravity-mcp-use-evidence.json
+        binarySha256: 6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3
+      - capabilityId: skills-project
+        version: 1.2.12
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-4-antigravity-mcp-use-evidence.json
+        binarySha256: 6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3
+      - capabilityId: mcp-project
+        version: 1.2.12
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-4-antigravity-mcp-use-evidence.json
+        binarySha256: 6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: skills-global
+        version: 1.2.12
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-6-antigravity-global-skill-evidence.json
+        binarySha256: 6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3
+  - id: desktop
+    displayName: Antigravity 2.0 app
+    configStore: antigravity-local
+    detection: {}
+    capabilityIds:
+      - instructions-global
+      - instructions-project
+      - skills-project
+      - skills-global
+      - mcp-project
+      - mcp-global
+      - agents-project
+      - workflows-global
+      - memory-global
+      - agents-global
+    overrides:
+      - id: skills-global
+        path: ~/.gemini/config/skills/{assetId}
+      - id: mcp-global
+        path: ""
+        strategy: manual
+        status: ui-only
+        discovery: null
+      - id: mcp-project
+        path: ""
+        strategy: manual
+        status: ui-only
+        discovery: null
+    runtimeEvidence: []
+  - id: ide
+    displayName: Antigravity IDE
+    configStore: antigravity-local
+    detection: {}
+    capabilityIds:
+      - instructions-global
+      - instructions-project
+      - skills-project
+      - skills-global
+      - mcp-project
+      - mcp-global
+      - agents-project
+      - workflows-global
+      - memory-global
+      - agents-global
+    overrides:
+      - id: skills-global
+        path: ~/.gemini/config/skills/{assetId}
+      - id: agents-global
+        path: ""
+        strategy: manual
+        status: unverified
+        evidence:
+          state: unverified
+      - id: agents-project
+        path: ""
+        strategy: manual
+        status: unverified
+        evidence:
+          state: unverified
+    runtimeEvidence: []

@@ -26,15 +26,22 @@ test('deployment router exposes only the Manifest control-plane surface', () => 
   assert.deepEqual(routes, [
     'GET /api/clients',
     'GET /api/deployment/history',
+    'GET /api/deployment/saved-plans',
     'GET /api/local-discovery',
     'GET /api/manifest/dependencies',
     'GET /api/manifest/registry',
     'GET /api/manifest/resources/:assetId',
     'POST /api/deployment/apply',
     'POST /api/deployment/doctor',
+    'POST /api/deployment/migration-plan',
     'POST /api/deployment/plan',
+    'POST /api/deployment/recover',
+    'POST /api/deployment/recovery-plan',
+    'POST /api/deployment/removal-plan',
+    'POST /api/deployment/resume',
     'POST /api/deployment/rollback',
     'POST /api/deployment/rollback-plan',
+    'POST /api/deployment/save-plan',
     'POST /api/deployment/validate',
     'POST /api/manifest/edit/apply',
     'POST /api/manifest/edit/plan'
@@ -317,4 +324,32 @@ test('deployment router supports manifest registry and edit endpoints', () => {
   });
   assert.equal(applyEditRes.statusCode, 200);
   assert.equal(applyEditRes.body.success, true);
+});
+
+test('plan and doctor forward surface/version but never request-supplied runtime evidence or OS', () => {
+  const received = [];
+  const router = routerWith({plan: input => { received.push(input); return {}; }, doctor: input => { received.push(input); return {}; }});
+  for (const route of ['plan', 'doctor']) {
+    dispatch(router, 'POST', `/api/deployment/${route}`, {body: {
+      clientId: 'antigravity', surface: 'desktop', clientVersion: '1.2.3', scope: 'global',
+      platform: 'fake', runtimeEvidence: [{verified: true}]
+    }});
+  }
+  for (const input of received) {
+    assert.equal(input.surface, 'desktop');
+    assert.equal(input.clientVersion, '1.2.3');
+    assert.equal(input.runtimeEvidence, undefined);
+    assert.equal(input.platform, undefined);
+  }
+});
+
+test('migration route forwards only explicit mapping and scope to the shared application service', () => {
+  let received;
+  const router = routerWith({planMigration: input => { received = input; return {planId: 'migration-1', kind: 'migration'}; }});
+  const response = dispatch(router, 'POST', '/api/deployment/migration-plan', {body: {
+    scope: 'global', clientId: 'codex', surface: 'desktop', migration: 'shared-ownership', assetIds: ['rules'],
+    statePath: '/untrusted/state.json', runtimeEvidence: ['fake'], homeDir: '/untrusted'
+  }});
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(received, {scope: 'global', scopeRoot: '/kit/projects/default', targetRoot: '/home/test', clientId: 'codex', surface: 'desktop', migration: 'shared-ownership', assetIds: ['rules']});
 });

@@ -1,0 +1,16 @@
+{
+  "phase": "LM1",
+  "checks": [
+    "absent daemon returns structured unavailable",
+    "authenticated read returns version capabilities expiry events without state writes or worker launch",
+    "wrong peer UID and actual socket permission denial fail closed",
+    "SIGKILL outage clears status and restart recovers stale socket and event history",
+    "policy expires without file change while transport stays connected",
+    "revocation is connected but execution blocked",
+    "tampered policy is never ready",
+    "authenticated HTTP and CLI return the same read-only daemon projection",
+    "all status trials launch zero managed worker processes"
+  ],
+  "passed": 9,
+  "scope": "same-user macOS native daemon, Kit CLI and HTTP; no installation or organization enrollment"
+}

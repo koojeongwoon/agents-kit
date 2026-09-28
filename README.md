@@ -80,7 +80,8 @@ node bin/cli.js rollback \
 
 `npm link` 후에는 `node bin/cli.js` 대신 `agents-kit`을 사용할 수 있습니다.
 
-CLI 명령은 `init`, `apply`, `history`, `rollback`, `help`만 제공합니다.
+CLI 명령은 `init`, `apply`, `history`, `rollback`, `validate`, `doctor`,
+`daemon-status`, `help`를 제공합니다.
 자원 선택은 `--resource`나 `--file`이 아니라 Manifest에서 수행합니다.
 
 ## 데스크톱 GUI
@@ -91,11 +92,29 @@ npm run gui
 
 GUI는 scope, client, Manifest와 대상 프로젝트를 선택하여 계획을 만들고,
 차단 사유와 변경 대상을 확인한 뒤 명시적으로 적용합니다. 완료된
-트랜잭션은 같은 화면에서 rollback 계획을 만들 수 있습니다.
+트랜잭션은 같은 화면에서 rollback 계획을 만들 수 있습니다. 적용 가능한 일반 파일 계획은
+24시간 저장한 뒤 재개할 수 있으며, 중단 작업은 복구 계획을 검토한 뒤 복원합니다.
+CLI의 `--save-plan`, `saved-plans`, `resume`, `recover` 사용법과 제한은
+[저장 계획·복구 계약](docs/contracts/persistent-deployment-v1.md)을 참고하세요.
 
 로컬 백엔드는 `127.0.0.1:3710`에만 바인딩되며, 변경 요청은 세션 토큰과
 허용 origin 검사를 통과해야 합니다. 역방향 프록시나 포트 포워딩을 통해 3710 포트를 외부로 노출하지 마십시오.
 로컬 제어 평면 API는 신뢰할 수 없는 로컬 프로세스가 실행 중인 다중 사용자(shared) 기기 환경에서 사용하기에 적절하지 않습니다.
+
+## 로컬 데몬 상태 (LM1)
+
+홈 화면과 `node bin/cli.js daemon-status`에서 데몬 버전·지원 기능·정책 만료·최근
+이벤트를 조회합니다. 데몬이 없어도 기존 로컬 자원 관리와 배포는 동작합니다.
+
+실행 중인 `tools-daemon enforce-worker-listen`을 조회하려면 Kit 프로세스에
+`AGENTS_KIT_DAEMON_BINARY`(실행 파일 절대 경로), `AGENTS_KIT_DAEMON_SOCKET`(소켓 절대 경로),
+필요하면 `AGENTS_KIT_DAEMON_UID`(기대하는 non-root UID)를 설정합니다. 실행 파일은
+운영자가 신뢰하는 설치 경로여야 하며 데몬과 조회 어댑터는 같은 빌드를 사용합니다.
+조회 화면에서 실행 파일·소켓을 임의 지정하거나 정책을 변경할 수 없습니다.
+
+연결 성공은 도구 실행 허가가 아닙니다. 정책이 만료되면 연결 중에도 실행 차단으로
+표시하고, 호출마다 기존 실행 인가를 다시 검사합니다. 자동 설치와 IAM/Gateway
+조직 연동은 후속 단계입니다. 자세한 내용은 [조회 계약](docs/architecture/local-daemon-status-contract.md)을 참고하세요.
 
 ## 안전성
 
@@ -103,16 +122,22 @@ GUI는 scope, client, Manifest와 대상 프로젝트를 선택하여 계획을 
 - 절대 경로, traversal, symlink escape source 거부
 - 미확인 capability와 모호한 Tool provider 거부
 - unknown ownership 및 외부 변경 충돌 거부
-- 계획 만료와 재사용 거부
+- 계획 만료·검토 digest 검증, 완료된 저장 계획의 중복 실행 방지
 - 트랜잭션 백업, 원자적 적용, 검증 실패 rollback
 - Manifest에 literal secret 저장 거부
 
 ## 문서
 
 - [제품 정의](./docs/product/agent-kit-definition.md)
+- [클라이언트별 자원 관리·중앙 배포 계획](./docs/product/client-resource-management-plan.md)
+- [Codex·Antigravity 우선 구현 계획](./docs/product/codex-antigravity-implementation-plan.md)
 - [아키텍처](./docs/architecture/overview.md)
 - [배포 수명주기](./docs/architecture/deployment-lifecycle.md)
 - [자원 참조 모델](./docs/architecture/resource-reference-model.md)
+- [CLI 실기 검증과 현재 확인 범위](./docs/reconstruction/phase-ca04-1-cli-recognition.md)
+- [기존 로그인으로 실제 지침·Skill·MCP 사용 검증](./docs/reconstruction/phase-ca04-2-cli-model-use.md)
+- [Antigravity MCP 승인 차단과 다음 검증 조건](./docs/reconstruction/phase-ca04-3-antigravity-mcp-permission.md)
+- [승인된 Antigravity MCP 실제 사용·설정 원복](./docs/reconstruction/phase-ca04-4-antigravity-mcp-use.md)
 - [플랫폼 지원](./SUPPORT.md)
 - [릴리스 절차](./RELEASE.md)
 - [재구축 단계](./docs/reconstruction/)

@@ -60,6 +60,7 @@ const workspaceConfig: Record<ResourceView, {
 function capabilityLabel(client: ClientSummary, assetKind: string) {
   const matching = client.capabilities.filter(capability => capability.assetKind === assetKind);
   if (matching.some(capability => capability.status === 'stable')) {
+    if (client.schemaVersion === 2) return {label: '파일 계약', className: 'bg-blue-500/10 text-blue-600 dark:text-blue-300'};
     return {label: '지원', className: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'};
   }
   if (matching.length > 0) {
@@ -290,6 +291,9 @@ export function ResourceWorkspace({
                     );
                   })}
                 </div>
+                {clients.some(client => client.schemaVersion === 2) && (
+                  <p className="mt-2 text-xs text-slate-500">실제 적용 가능 여부는 실행 화면·설치본·자원 옵션을 배포 계획에서 확인합니다.</p>
+                )}
               </div>
               )}
 

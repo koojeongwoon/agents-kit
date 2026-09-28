@@ -157,3 +157,23 @@ command = "safe"
 
   assert.deepEqual(codex.assets.map(asset => asset.id), ['context7']);
 });
+
+test('schema 2 discovery never treats CLI presence or shared files as app installation or runtime proof', t => {
+  const {homeDir, binDir} = temporaryHome(t);
+  writeFile(path.join(binDir, 'agy'), '#!/bin/sh\nexit 1\n', 0o755);
+  writeFile(path.join(homeDir, '.gemini/config/mcp_config.json'), '{"mcpServers":{"fixture":{"command":"private"}}}');
+  writeFile(path.join(homeDir, '.gemini/config/skills/app-skill/SKILL.md'), '# App skill');
+  writeFile(path.join(homeDir, '.gemini/antigravity-cli/skills/cli-skill/SKILL.md'), '# CLI skill');
+  const agy = discoverLocalInstallations({definitions, homeDir, pathValue: binDir}).find(item => item.id === 'antigravity');
+  assert.equal(agy.definitionAvailable, true);
+  assert.equal(agy.supported, false);
+  assert.equal(agy.runtimeState, 'unverified');
+  assert.equal(agy.clientVersion, null);
+  const cli = agy.surfaces.find(item => item.id === 'cli');
+  const app = agy.surfaces.find(item => item.id === 'desktop');
+  assert.equal(cli.installationState, 'detected');
+  assert.equal(app.installationState, 'unknown');
+  assert.deepEqual(cli.assets.map(item => item.id), ['fixture', 'app-skill']);
+  assert.deepEqual(app.assets.map(item => item.id), ['app-skill']);
+  assert.equal(JSON.stringify(agy).includes('private'), false);
+});

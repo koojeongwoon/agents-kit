@@ -68,10 +68,12 @@ Audit status: `verified per capability`, with unsupported or unverified
 capabilities explicitly blocked.
 
 The data-driven definition in `clients/codex.yaml` records verified AGENTS.md,
-skills, config, MCP, subagent, and hook mappings. In particular, project skills
-use `.agents/skills`, MCP and agent roles are config sections, and project
-instructions use repository `AGENTS.md`. The current legacy adapter paths
-remain compatibility behavior only.
+skills, config, MCP, subagent, and hook mappings. As of CA01 (2026-09-27), the
+schema 2 contract uses `.agents/skills`, `mcp_servers` config sections and
+standalone `.codex/agents/{assetId}.toml` files. Project instructions use
+repository `AGENTS.md`. CLI and desktop share a logical store but do not share
+runtime evidence. No runtime profile is currently activated. Existing agent
+config sections are preserved; automatic migration is deferred to CA03.
 
 Evidence:
 
@@ -117,13 +119,22 @@ Audit status: `verified per capability`.
 
 Antigravity CLI reads project `AGENTS.md`, project Skills from
 `.agents/skills`, and project MCP servers from `.agents/mcp_config.json`.
-Global instructions use `~/.gemini/GEMINI.md`; global Skills and MCP use the
-Antigravity CLI directories documented by the migration contract. Custom Agent
-file deployment remains unverified.
+Global instructions use `~/.gemini/GEMINI.md`. CA01 (2026-09-27) corrects global
+MCP to `~/.gemini/config/mcp_config.json`. CLI Skills remain in
+`~/.gemini/antigravity-cli/skills`; app/IDE Skills use `~/.gemini/config/skills`.
+CA04-6 found CLI 1.2.12 actually consumes the shared config path too; the CLI
+surface override reflects that measured result while the documented baseline remains.
+CLI/app Agent contracts use `.agents/agents/*.md` and `~/.gemini/config/agents`.
+The app MCP file path and IDE Agent support are not inferred from CLI support.
+No schema 2 runtime profile is currently activated; the old MCP file is not
+moved or deleted. Its ownership-based migration belongs to CA03.
 
 Evidence:
 
-- <https://antigravity.google/docs/gcli-migration>
+- <https://antigravity.google/docs/mcp>
+- <https://antigravity.google/docs/skills>
+- <https://antigravity.google/docs/subagents>
+- <https://antigravity.google/docs/rules/>
 
 ### Claude Desktop
 
@@ -192,3 +203,36 @@ Every future client capability entry must record:
 The unchecked items intentionally carry into Phase 1 and the client-definition
 phase. They block a capability from becoming `stable`; they do not block
 documentation of the current baseline.
+
+## CA04-1 installed CLI observations (2026-09-27)
+
+Documentation evidence above is distinct from runtime support.
+[Measured results](phase-ca04-1-cli-recognition.md) record Codex 0.145.0 skill
+discovery and direct client MCP invocation, and Antigravity 1.2.11 global MCP
+listing on macOS arm64. Project MCP and subagent absence from Antigravity list
+commands is not proof of unsupported runtime behavior. No production runtime
+profile has been promoted. Follow-up [CA04-2 observations](phase-ca04-2-cli-model-use.md)
+verify project instructions/Skills with native authentication and Codex stdio MCP
+model use. [CA04-4](phase-ca04-4-antigravity-mcp-use.md) adds Antigravity 1.2.12
+project stdio MCP model use under an explicitly approved temporary permission.
+[CA04-5](phase-ca04-5-cli-agent-use.md) records custom Agent marker lifecycle
+and Antigravity role invocation; the latter's update repeat used an unexpected
+`schedule` tool and was rejected. Direct child completion remains unconfirmed
+in the observed public streams; production profiles remain inactive.
+
+## CA04-6 direct completion and global Skill observations (2026-09-27)
+
+[Evidence](phase-ca04-6-agent-completion-global-skills.md) confirms Codex project
+Agent completion by subscribing to the observed native child without loading
+history. Both CLI global Skills pass the five-stage lifecycle; Antigravity
+requires the corrected shared config path. Its original documented CLI path
+failed discovery during model use. Production runtimeEvidence remains empty.
+
+
+## CA04-7 reviewed CLI activation (2026-09-27)
+
+[CA04-7](phase-ca04-7-cli-activation.md) supersedes the historical empty-profile
+status above for nine CLI slices only. Exact native binary hash/version on darwin
+arm64 gates plans and apply. Basic typed stdio MCP excludes environment forwarding;
+basic typed Codex Agent roles exclude native defaults. Antigravity Agent, app/IDE,
+other builds/platforms and unverified global resources remain blocked.

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-5",
+  "scope": "global",
+  "mode": "plan-only",
+  "userFilesWritten": false,
+  "clients": [
+    {
+      "clientId": "codex",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "CREATE",
+          "target": "/Users/jw/.agents-kit/kit/global/agents/ca04-global-preflight.toml",
+          "reason": "TARGET_ABSENT"
+        }
+      ],
+      "blocked": []
+    },
+    {
+      "clientId": "antigravity",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "CREATE",
+          "target": "/Users/jw/.gemini/config/agents/ca04-global-preflight.md",
+          "reason": "TARGET_ABSENT"
+        }
+      ],
+      "blocked": []
+    }
+  ]
+}

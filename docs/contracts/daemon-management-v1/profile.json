@@ -1,0 +1,88 @@
+{
+  "contract": "lynply.daemon-management-auth",
+  "version": 1,
+  "implementation_status": "contract-only",
+  "client_ids": {
+    "daemon": "tools-daemon-management",
+    "gateway_service": "tools-gateway-service",
+    "status_reader": "tools-gateway-device-reader"
+  },
+  "resources": {
+    "enrollment": "{issuer}/api/v1/device-enrollment",
+    "management": "{gateway_origin}/api/v1/daemon-management",
+    "status": "{issuer}/api/v1/device-status"
+  },
+  "scopes": {
+    "enrollment": [
+      "openid",
+      "iam:device:enroll"
+    ],
+    "management": [
+      "openid",
+      "device:identity",
+      "gateway:daemon:report"
+    ],
+    "status": [
+      "iam:device-status:read"
+    ]
+  },
+  "device_claim": "https://lynply.com/claims/device",
+  "device_claim_version": 1,
+  "access_token": {
+    "typ": "at+jwt",
+    "alg": "RS256",
+    "token_type": "DPoP",
+    "ttl_seconds": 300
+  },
+  "proof": {
+    "typ": "dpop+jwt",
+    "alg": "ES256",
+    "kty": "EC",
+    "crv": "P-256",
+    "max_age_seconds": 60,
+    "future_skew_seconds": 5,
+    "nonce_ttl_seconds": 60,
+    "replay_retention_seconds": 120
+  },
+  "lifecycle": {
+    "challenge_ttl_seconds": 300,
+    "refresh_absolute_seconds": 86400,
+    "refresh_idle_seconds": 28800,
+    "status_cache_seconds": 15,
+    "reauth_max_age_seconds": 300
+  },
+  "device_states": [
+    "ACTIVE",
+    "REVOKED"
+  ],
+  "external_errors": {
+    "invalid_token": 401,
+    "invalid_dpop_proof": 401,
+    "use_dpop_nonce": 401,
+    "insufficient_scope": 403,
+    "device_not_authorized": 403,
+    "authorization_state_unavailable": 503,
+    "invalid_enrollment": 400,
+    "enrollment_already_used": 409
+  },
+  "token_errors": {
+    "invalid_dpop_proof": 400,
+    "use_dpop_nonce": 400,
+    "invalid_grant": 400,
+    "invalid_scope": 400,
+    "invalid_target": 400
+  },
+  "excluded": [
+    "direct-mcp-device-binding",
+    "hardware-attestation",
+    "in-place-key-rotation",
+    "device-token-exchange",
+    "offline-authorization"
+  ],
+  "status_reader_token": {
+    "token_type": "Bearer",
+    "ttl_seconds": 300,
+    "client_authentication": "client_secret_basic",
+    "refresh": false
+  }
+}

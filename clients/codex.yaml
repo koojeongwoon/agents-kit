@@ -1,8 +1,9 @@
-schemaVersion: 1
+schemaVersion: 2
 id: codex
 displayName: Codex
 detection:
-  commands: [codex]
+  commands:
+    - codex
   userRoot: ~/.codex
 capabilities:
   - id: instructions-global
@@ -12,7 +13,7 @@ capabilities:
     format: markdown
     strategy: merge
     status: stable
-    evidence: &codex-agents
+    evidence:
       state: verified
       source: https://learn.chatgpt.com/docs/agent-configuration/agents-md
       verifiedAt: 2026-07-27
@@ -23,7 +24,10 @@ capabilities:
     format: markdown
     strategy: merge
     status: stable
-    evidence: *codex-agents
+    evidence:
+      state: verified
+      source: https://learn.chatgpt.com/docs/agent-configuration/agents-md
+      verifiedAt: 2026-07-27
   - id: skills-global
     assetKind: skills
     scope: global
@@ -33,7 +37,7 @@ capabilities:
     discovery:
       reader: directory-entries
     status: stable
-    evidence: &codex-skills
+    evidence:
       state: verified
       source: https://learn.chatgpt.com/docs/build-skills
       verifiedAt: 2026-07-27
@@ -44,7 +48,10 @@ capabilities:
     format: directory
     strategy: copy
     status: stable
-    evidence: *codex-skills
+    evidence:
+      state: verified
+      source: https://learn.chatgpt.com/docs/build-skills
+      verifiedAt: 2026-07-27
   - id: settings-global
     assetKind: settings
     scope: global
@@ -52,7 +59,7 @@ capabilities:
     format: toml
     strategy: merge
     status: stable
-    evidence: &codex-config
+    evidence:
       state: verified
       source: https://learn.chatgpt.com/docs/config-file/config-advanced
       verifiedAt: 2026-07-27
@@ -63,8 +70,12 @@ capabilities:
     format: toml
     strategy: merge
     status: stable
-    constraints: [trusted-project]
-    evidence: *codex-config
+    constraints:
+      - trusted-project
+    evidence:
+      state: verified
+      source: https://learn.chatgpt.com/docs/config-file/config-advanced
+      verifiedAt: 2026-07-27
   - id: mcp-global
     assetKind: mcp
     scope: global
@@ -75,7 +86,7 @@ capabilities:
       reader: toml-table-prefix
       selector: mcp_servers
     status: stable
-    evidence: &codex-mcp
+    evidence:
       state: verified
       source: https://learn.chatgpt.com/docs/extend/mcp
       verifiedAt: 2026-07-27
@@ -86,28 +97,36 @@ capabilities:
     format: toml-section
     strategy: merge
     status: stable
-    constraints: [trusted-project]
-    evidence: *codex-mcp
+    constraints:
+      - trusted-project
+    evidence:
+      state: verified
+      source: https://learn.chatgpt.com/docs/extend/mcp
+      verifiedAt: 2026-07-27
   - id: agents-global
     assetKind: agents
     scope: global
-    path: ~/.codex/config.toml
-    format: toml-section
-    strategy: merge
+    path: ~/.codex/agents/{assetId}.toml
+    format: toml
+    strategy: copy
     status: stable
-    evidence: &codex-subagents
+    evidence:
       state: verified
       source: https://learn.chatgpt.com/docs/agent-configuration/subagents
-      verifiedAt: 2026-07-27
+      verifiedAt: 2026-09-27
   - id: agents-project
     assetKind: agents
     scope: project
-    path: .codex/config.toml
-    format: toml-section
-    strategy: merge
+    path: .codex/agents/{assetId}.toml
+    format: toml
+    strategy: copy
     status: stable
-    constraints: [trusted-project]
-    evidence: *codex-subagents
+    constraints:
+      - trusted-project
+    evidence:
+      state: verified
+      source: https://learn.chatgpt.com/docs/agent-configuration/subagents
+      verifiedAt: 2026-09-27
   - id: hooks-global
     assetKind: harness
     scope: global
@@ -115,7 +134,7 @@ capabilities:
     format: json
     strategy: merge
     status: stable
-    evidence: &codex-hooks
+    evidence:
       state: verified
       source: https://learn.chatgpt.com/docs/hooks
       verifiedAt: 2026-07-27
@@ -126,8 +145,12 @@ capabilities:
     format: json
     strategy: merge
     status: stable
-    constraints: [trusted-project]
-    evidence: *codex-hooks
+    constraints:
+      - trusted-project
+    evidence:
+      state: verified
+      source: https://learn.chatgpt.com/docs/hooks
+      verifiedAt: 2026-07-27
   - id: workflows-global
     assetKind: workflows
     scope: global
@@ -146,3 +169,86 @@ capabilities:
     status: ui-only
     evidence:
       state: unverified
+defaultSurface: cli
+surfaces:
+  - id: cli
+    displayName: Codex CLI
+    configStore: codex-local
+    detection:
+      commands:
+        - codex
+      userRoot: ~/.codex
+    capabilityIds:
+      - instructions-global
+      - instructions-project
+      - skills-global
+      - skills-project
+      - settings-global
+      - settings-project
+      - mcp-global
+      - mcp-project
+      - agents-global
+      - agents-project
+      - hooks-global
+      - hooks-project
+      - workflows-global
+      - memory-global
+    # CA04-7: reviewed CLI slices only; app/IDE and other versions remain gated.
+    runtimeEvidence:
+      - capabilityId: instructions-project
+        version: 0.145.0
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-2-cli-model-use-evidence.json
+        binarySha256: 1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590
+      - capabilityId: skills-project
+        version: 0.145.0
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-2-cli-model-use-evidence.json
+        binarySha256: 1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590
+      - capabilityId: mcp-project
+        version: 0.145.0
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-2-cli-model-use-evidence.json
+        binarySha256: 1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: agents-project
+        version: 0.145.0
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-6-codex-agent-lifecycle-evidence.json
+        binarySha256: 1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590
+        resourceProfile: agent-role-basic-v1
+      - capabilityId: skills-global
+        version: 0.145.0
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-09-27
+        source: docs/reconstruction/ca04-6-global-skills-original-path-evidence.json
+        binarySha256: 1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590
+  - id: desktop
+    displayName: Codex app (local)
+    configStore: codex-local
+    detection: {}
+    capabilityIds:
+      - instructions-global
+      - instructions-project
+      - skills-global
+      - skills-project
+      - settings-global
+      - settings-project
+      - mcp-global
+      - mcp-project
+      - agents-global
+      - agents-project
+      - hooks-global
+      - hooks-project
+      - workflows-global
+      - memory-global
+    runtimeEvidence: []

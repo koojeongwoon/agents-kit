@@ -1,0 +1,18 @@
+{
+  "contract": "lynply.daemon-management-jobs",
+  "version": 1,
+  "implementation_status": "verification-and-pure-planning-only",
+  "alg": "EdDSA",
+  "crv": "Ed25519",
+  "typ": "lynply-daemon-job+jws",
+  "audience": "urn:lynply:tools-daemon:management-jobs:v1",
+  "operations": [
+    "managed_worker.revoke"
+  ],
+  "max_compact_bytes": 16384,
+  "max_lifetime_seconds": 300,
+  "max_future_skew_seconds": 5,
+  "max_safe_integer": 9007199254740991,
+  "fixture_cases": 58,
+  "vectors_sha256": "2556057352bf230241f3ff951ba2701c7f22ba0cad9440cb428aa6c38333affc"
+}

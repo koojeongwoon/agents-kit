@@ -1,0 +1,35 @@
+# Copy to a Kit scope as agent-kit.yaml; no native source files are required.
+# Targets are planned separately; production runtime profiles are still blocked.
+schemaVersion: 1
+kit:
+  id: common-mcp-example
+defaults:
+  mcpBindings:
+    schemaVersion: 1
+    executables:
+      local-docs:
+        command: docs-mcp
+    endpoints:
+      remote-docs:
+        url: https://mcp.example.test/mcp
+assets:
+  mcpServers:
+    - id: local-docs
+      scope: project
+      definition:
+        schemaVersion: 1
+        transport: stdio
+        executableId: local-docs
+        args: [--read-only]
+      provides:
+        tools: [docs.search]
+    - id: remote-docs
+      scope: project
+      definition:
+        schemaVersion: 1
+        transport: http
+        endpointId: remote-docs
+        authentication:
+          type: client-oauth
+      provides:
+        tools: [docs.read]

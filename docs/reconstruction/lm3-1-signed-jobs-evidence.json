@@ -1,0 +1,88 @@
+{
+  "phase": "LM3-1",
+  "date": "2026-09-25",
+  "status": "signed-job-verification-and-pure-planning-complete",
+  "shared_vectors": 58,
+  "fixture_sha256": "2556057352bf230241f3ff951ba2701c7f22ba0cad9440cb428aa6c38333affc",
+  "validation": {
+    "gateway": {
+      "typescript_build": "passed",
+      "vitest_passed": 321,
+      "vitest_skipped": 8,
+      "skipped_reason": "existing external PostgreSQL/Redis integration prerequisites absent"
+    },
+    "daemon": {
+      "cargo_all_targets_passed": 85,
+      "shared_vectors_run_inside_one_test": 58,
+      "cargo_fmt_check": "passed",
+      "clippy_warnings_denied": "passed"
+    },
+    "kit": {
+      "npm_test_passed": 106
+    }
+  },
+  "source_application": {
+    "method": "staging tests followed by baseline-hash-guarded per-file atomic replacement and SHA-256 comparison",
+    "files": [
+      {
+        "repository": "tools-gateway",
+        "path": "docs/daemon-management-jobs-v1.md",
+        "sha256": "f023c05e15148c09d7e1f9f9c13608a64cb816ff987466d00f78818d261847bc"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "experiments/management-jobs/generate-fixtures.ts",
+        "sha256": "185b8ea71b71fd418bcb6f80b4cac411baa4952c346756e012b789d5f43fa57e"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "src/daemonManagement/jobs/contract.ts",
+        "sha256": "c0058c1c207c3574923ca582fc9c2e7b3b57253c268057784c3b0fac63f5492b"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "test/daemonJobs.test.ts",
+        "sha256": "fc4fda52b3641cb8af6c214ff746d382117b393d73a951b3696dd1d9231ccdf4"
+      },
+      {
+        "repository": "tools-gateway",
+        "path": "test/fixtures/daemon-jobs-v1/vectors.json",
+        "sha256": "2556057352bf230241f3ff951ba2701c7f22ba0cad9440cb428aa6c38333affc"
+      },
+      {
+        "repository": "tools-daemon",
+        "path": "docs/contracts/daemon-jobs-v1/vectors.json",
+        "sha256": "2556057352bf230241f3ff951ba2701c7f22ba0cad9440cb428aa6c38333affc"
+      },
+      {
+        "repository": "tools-daemon",
+        "path": "docs/daemon-management-jobs-v1.md",
+        "sha256": "8886091b5677cb5ba42babf0c1bd88e341e8ef3855abc4f51589717181ff651f"
+      },
+      {
+        "repository": "tools-daemon",
+        "path": "src/main.rs",
+        "sha256": "82d5acd5b4e9f04124d1e2357212a60ddeb6f3380ab599511de39a525a16833f"
+      },
+      {
+        "repository": "tools-daemon",
+        "path": "src/management_jobs/mod.rs",
+        "sha256": "425e920faca185dcf21ff22f73f5ab7e36b37a6c3b63f55515d78a909b273916"
+      },
+      {
+        "repository": "tools-daemon",
+        "path": "src/management_jobs/tests.rs",
+        "sha256": "84db74c342439d6fd6343fbf762f0f710022c2f9d8e431c993c12d0fcd16f8ec"
+      }
+    ]
+  },
+  "not_implemented": [
+    "organizational manager authorization",
+    "production signing-key provisioning and rotation",
+    "job issuance or delivery API",
+    "durable job ledger and resource state CAS",
+    "daemon polling and policy/worker enforcement",
+    "execution result reporting and live end-to-end revocation"
+  ],
+  "production_deployed": false
+}

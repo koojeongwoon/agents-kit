@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "profile": "immutable-local-input-not-a-signed-job",
+  "resource": {
+    "id": "review-resources",
+    "version": 1
+  },
+  "sha256": "e1617aaad41233ab7414cd88302fab88cff97fa7c96df80927d104c057583531",
+  "bytes": 582
+}

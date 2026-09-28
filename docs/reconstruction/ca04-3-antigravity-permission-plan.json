@@ -1,0 +1,14 @@
+{
+  "settingsPath": "/Users/jw/.gemini/antigravity-cli/settings.json",
+  "operation": "temporary-scoped-permission",
+  "add": {
+    "permissions.allow": [
+      "mcp(ca04-marker/read_marker)"
+    ]
+  },
+  "existingMatchingAllow": false,
+  "existingMatchingAskOrDeny": false,
+  "restoreAfterVerification": true,
+  "scope": "fixed local marker tool only",
+  "changesApplied": false
+}

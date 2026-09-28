@@ -118,3 +118,30 @@ describe('ControlCenterHome', () => {
     expect(within(screen.getByRole('article', {name: 'Skill 자산 요약'})).getByText('1')).toBeInTheDocument();
   });
 });
+
+it('does not label schema 2 documentation and CLI signals as verified app support', () => {
+  render(<ControlCenterHome clients={[{...clients[0], schemaVersion: 2}]}
+    localDiscovery={[{...localDiscovery[0], supported: false, runtimeState: 'unverified'}]}
+    resources={[]} targetReady scope="global" onOpenMcp={vi.fn()} onOpenDeploy={vi.fn()} />);
+  const codex = screen.getByRole('article', {name: 'Codex 환경 상태'});
+  expect(within(codex).getByText('파일 계약 정의됨')).toBeInTheDocument();
+  expect(within(codex).getByText('CLI 설치 흔적')).toBeInTheDocument();
+  expect(within(codex).getByText(/실기 미확인/)).toBeInTheDocument();
+  expect(within(codex).queryByText('PC에 설치됨')).not.toBeInTheDocument();
+});
+
+it('shows reviewed CLI scope separately from the current installation and app support', () => {
+  render(<ControlCenterHome clients={[{...clients[0], schemaVersion: 2, surfaces: [
+    {id: 'cli', displayName: 'Codex CLI', configStore: 'codex-local', runtimeState: 'partially-verified', runtimeEvidence: [
+      {capabilityId: 'skills-project', version: '0.145.0', platform: 'darwin', arch: 'arm64', verifiedAt: '2026-09-27', source: 'reviewed fixture'}
+    ]},
+    {id: 'desktop', displayName: 'Codex app', configStore: 'codex-local', runtimeState: 'unverified', runtimeEvidence: []}
+  ]}]}
+    localDiscovery={[]} resources={[]} targetReady scope="global" onOpenMcp={vi.fn()} onOpenDeploy={vi.fn()} />);
+  const codex = screen.getByRole('article', {name: 'Codex 환경 상태'});
+  expect(within(codex).getByText(/CLI 일부 검증됨/)).toBeInTheDocument();
+  expect(within(codex).getByText('설치 미확인')).toBeInTheDocument();
+  expect(within(codex).getByText(/현재 설치본은 배포 계획에서 확인/)).toBeInTheDocument();
+  expect(within(codex).queryByText(/실기 미확인/)).not.toBeInTheDocument();
+  expect(within(codex).queryByText('PC에 설치됨')).not.toBeInTheDocument();
+});

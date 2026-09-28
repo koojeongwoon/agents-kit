@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-6",
+  "observedAt": "2026-09-27T11:40:47.188Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "project",
+  "surface": "cli",
+  "resource": "agents",
+  "codexTransport": "app-server",
+  "rpcCollectorSha256": "72843bba3c24de5fc3b7b345b96b624fdc91e8911b5b2f9dff943ad7b46e4cd5",
+  "stagesRequested": "applied",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "bf798f5ba9d5607b409af0288e2e5a6beb69818c990e81dc1b8c54d1aa0741b6",
+  "collectorSha256": "94da0d8083a965fd535c25796cb213a6d7b0a2889e16dc7852bda09a481fc672",
+  "runnerSha256": "8f384624a154f8685b45ab1f973f84e628c3f8b4c6384f47947605a14ce3fb27",
+  "authentication": "existing-native-login",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": false,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": true
+  },
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.145.0",
+      "stages": {
+        "applied": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "roleObserved": true,
+          "childMarkerReturned": true,
+          "completedChildMarker": true,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "subAgentActivity",
+            "collabAgentToolCall",
+            "agentMessage"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-5.6-sol",
+          "childMetadataRoleMatches": true,
+          "childEvidenceSource": "live-public-child-events",
+          "reason": "OK",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        }
+      },
+      "fullLifecycleConfirmed": false,
+      "roleEvidence": "live-native-child-role-parent-and-completion",
+      "binarySha256": "1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590",
+      "definitionSha256": "e4a8d11dfb1da77a5ae42d518e6a10760f50148b65243a3d7eb66f13ee4a5f96"
+    }
+  ]
+}

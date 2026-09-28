@@ -1,0 +1,75 @@
+{
+  "phase": "LM3-3",
+  "date": "2026-09-26",
+  "status": "local-native-profile-verified",
+  "deployment": "not-performed",
+  "checks": {
+    "rust": {
+      "passed": 96,
+      "failed": 0,
+      "skipped": 0
+    },
+    "rust_fmt": "passed",
+    "rust_clippy": "passed -D warnings",
+    "rust_build": "bins and examples passed",
+    "kit_contract_tests": {
+      "passed": 10
+    },
+    "gateway_build": "passed",
+    "gateway_tests": {
+      "passed": 339,
+      "skipped": 13,
+      "failed": 0
+    }
+  },
+  "native_trial": {
+    "schema_version": 1,
+    "profile": "macos-native-worker-local-https-fixture",
+    "runtime": "actual daemon, TLS and native sandbox; fixture IAM credentials and Gateway authority",
+    "checks": {
+      "signed_wrong_device_rejected": true,
+      "duplicate_single_cas": true,
+      "new_calls_blocked": true,
+      "running_process_reaped": true,
+      "revocation_survives_daemon_restart": true,
+      "sandbox_registry_read_and_directory_write_denied": true,
+      "sandbox_child_network_denied": true,
+      "result_report_retry_same_envelope": true,
+      "termination_confirmed": true,
+      "crash_remains_unknown": false
+    },
+    "revoke_to_reaped_ms": 133
+  },
+  "crash_trial": {
+    "schema_version": 1,
+    "profile": "macos-native-worker-local-https-fixture",
+    "runtime": "actual daemon, TLS and native sandbox; fixture IAM credentials and Gateway authority",
+    "checks": {
+      "signed_wrong_device_rejected": true,
+      "duplicate_single_cas": true,
+      "new_calls_blocked": true,
+      "running_process_reaped": true,
+      "revocation_survives_daemon_restart": true,
+      "sandbox_registry_read_and_directory_write_denied": true,
+      "sandbox_child_network_denied": true,
+      "result_report_retry_same_envelope": true,
+      "termination_confirmed": false,
+      "crash_remains_unknown": true
+    },
+    "revoke_to_reaped_ms": 29
+  },
+  "not_verified": [
+    "Live IAM -> Gateway -> daemon HTTPS E2E",
+    "Gateway DB integration in this run",
+    "Separate-account v4 cancellation confirmation",
+    "Central job result reconciliation/UI",
+    "Production installation/deployment"
+  ],
+  "source_reflection": {
+    "daemon_files": 18,
+    "gateway_files": 2,
+    "prewrite_baseline_verified": true,
+    "postwrite_hashes_verified": true,
+    "backup": "/private/tmp/lm3-3-original-backup"
+  }
+}

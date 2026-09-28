@@ -49,16 +49,32 @@ export function createDeployRouter(ctx) {
   });
 
   router.post('/api/deployment/plan', (req, res) => {
-    const {clientId, scope = 'project', projectPath = '', projectName = '', clientVersion, previewOptIn = false} = req.body;
+    const {clientId, targets, scope = 'project', projectPath = '', projectName = '', clientVersion, surface, previewOptIn = false} = req.body;
     try {
       const resolved = locations({scope, projectPath, projectName});
       const plan = manifestDeploymentService.plan({
-        ...resolved, clientId, scope, clientVersion, previewOptIn
+        ...resolved, clientId, scope, clientVersion, surface, previewOptIn, ...(targets !== undefined ? {targets} : {})
       });
       res.json({success: true, ...plan});
     } catch (error) {
       sendApiError(req, res, error);
     }
+  });
+
+  router.post('/api/deployment/removal-plan', (req, res) => {
+    const {clientId, surface, assetIds, scope = 'project', projectPath = '', projectName = ''} = req.body;
+    try {
+      const resolved = locations({scope, projectPath, projectName});
+      res.json({success: true, ...manifestDeploymentService.planRemoval({...resolved, clientId, surface, assetIds, scope})});
+    } catch (error) { sendApiError(req, res, error); }
+  });
+
+  router.post('/api/deployment/migration-plan', (req, res) => {
+    const {clientId, surface, assetIds, migration, scope = 'project', projectPath = '', projectName = ''} = req.body;
+    try {
+      const resolved = locations({scope, projectPath, projectName});
+      res.json({success: true, ...manifestDeploymentService.planMigration({...resolved, clientId, surface, assetIds, migration, scope})});
+    } catch (error) { sendApiError(req, res, error); }
   });
 
   router.post('/api/deployment/apply', (req, res) => {
@@ -67,6 +83,34 @@ export function createDeployRouter(ctx) {
     } catch (error) {
       sendApiError(req, res, error);
     }
+  });
+
+  router.get('/api/deployment/saved-plans', (req, res) => {
+    try { res.json({success: true, plans: manifestDeploymentService.savedPlans()}); }
+    catch (error) { sendApiError(req, res, error); }
+  });
+
+  router.post('/api/deployment/save-plan', (req, res) => {
+    try { res.json({success: true, ...manifestDeploymentService.savePlan({planId: req.body?.planId})}); }
+    catch (error) { sendApiError(req, res, error); }
+  });
+
+  router.post('/api/deployment/resume', (req, res) => {
+    try { res.json({success: true, ...manifestDeploymentService.resumeSavedPlan({planId: req.body?.planId, digest: req.body?.digest})}); }
+    catch (error) { sendApiError(req, res, error); }
+  });
+
+  router.post('/api/deployment/recovery-plan', (req, res) => {
+    try {
+      const {scope = 'project', clientId} = req.body;
+      const resolved = locations(req.body);
+      res.json({success: true, ...manifestDeploymentService.planRecovery({...resolved, scope, clientId})});
+    } catch (error) { sendApiError(req, res, error); }
+  });
+
+  router.post('/api/deployment/recover', (req, res) => {
+    try { res.json({success: true, ...manifestDeploymentService.recover({planId: req.body?.planId})}); }
+    catch (error) { sendApiError(req, res, error); }
   });
 
   router.get('/api/deployment/history', (req, res) => {
@@ -115,7 +159,7 @@ export function createDeployRouter(ctx) {
   });
 
   router.post('/api/deployment/doctor', (req, res) => {
-    const { clientId, scope = 'project', projectPath = '', projectName = '', clientVersion } = req.body;
+    const { clientId, scope = 'project', projectPath = '', projectName = '', clientVersion, surface } = req.body;
     try {
       const resolved = locations({ scope, projectPath, projectName });
       const result = manifestDeploymentService.doctor({
@@ -123,7 +167,8 @@ export function createDeployRouter(ctx) {
         targetRoot: resolved.targetRoot,
         clientId,
         scope,
-        clientVersion
+        clientVersion,
+        surface
       });
       res.json({ success: true, ...result });
     } catch (error) {

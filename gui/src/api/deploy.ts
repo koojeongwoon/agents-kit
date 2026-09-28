@@ -1,6 +1,12 @@
 import {apiFetch} from './client';
 
 export interface ClientSummary {
+  schemaVersion?: number;
+  defaultSurface?: string;
+  surfaces?: Array<{ id: string; displayName: string; configStore: string; runtimeState: string;
+    runtimeEvidence?: Array<{capabilityId: string; version: string; platform: string; arch: string;
+      verifiedAt: string; source: string; resourceProfile?: string; binarySha256?: string}>;
+  }>;
   id: string;
   displayName: string;
   detection: {
@@ -24,7 +30,10 @@ export interface LocalDiscoveryAsset {
 export interface LocalClientDiscovery {
   id: string;
   displayName: string;
-  supported: true;
+  supported: boolean;
+  definitionAvailable?: boolean;
+  runtimeState?: string;
+  clientVersion?: string | null;
   installed: boolean;
   configured: boolean;
   signals: {
@@ -50,11 +59,27 @@ export interface ManifestPlanOperation {
   beforeHash?: string | null;
   expectedHash?: string | null;
   ownership?: string;
+  consumers?: string[];
+  metadataOnly?: boolean;
+  changes?: Array<{assetId: string; selectors?: string[]; selector?: string; desiredHash?: string}>;
 }
 
 export interface ManifestDeploymentPlan {
+  stateUpgrade?: {from: number; to: number};
+  previews?: Array<{
+    clientId?: string;
+    assetId: string; target: string; format: string; desired: string;
+    previewOnly: boolean; supportReason: string; operation: string;
+    notices?: string[];
+    changes: Array<{assetId: string; selector: string; desiredHash: string}>;
+    conflicts: Array<{reason: string; selector?: string}>;
+  }>;
+  targetProfile?: {surface: string | null; configStore: string | null; clientVersion: string | null; versionSource: string};
   planId: string;
-  kind: 'apply' | 'rollback';
+  kind: 'apply' | 'rollback' | 'remove' | 'migration' | 'recovery';
+  outcome?: 'keep-committed' | 'restore-original';
+  migration?: 'global-ledger' | 'shared-ownership';
+  migratedClients?: string[];
   automatic: boolean;
   expiresAt: string;
   operations: ManifestPlanOperation[];
@@ -96,17 +121,36 @@ export async function fetchLocalDiscovery(): Promise<{ clients: LocalClientDisco
 }
 
 export async function planManifestDeployment(input: {
-  clientId: string;
+  clientId?: string;
+  targets?: Array<{clientId: string; surface?: string; clientVersion?: string}>;
   scope: 'global' | 'project';
   projectPath?: string;
   projectName?: string;
   clientVersion?: string;
+  surface?: string;
   previewOptIn?: boolean;
 }): Promise<ManifestDeploymentPlan> {
   return jsonOrError(await apiFetch('/api/deployment/plan', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input)
+  }));
+}
+
+export async function planManifestRemoval(input: {
+  clientId: string; surface?: string; assetIds: string[]; scope: 'global' | 'project'; projectPath?: string; projectName?: string;
+}): Promise<ManifestDeploymentPlan> {
+  return jsonOrError(await apiFetch('/api/deployment/removal-plan', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(input)
+  }));
+}
+
+export async function planManifestMigration(input: {
+  migration: 'global-ledger' | 'shared-ownership';
+  clientId?: string; surface?: string; assetIds?: string[]; scope: 'global' | 'project'; projectPath?: string; projectName?: string;
+}): Promise<ManifestDeploymentPlan> {
+  return jsonOrError(await apiFetch('/api/deployment/migration-plan', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(input)
   }));
 }
 
@@ -197,6 +241,7 @@ export async function runDoctorDiagnostics(input: {
   projectPath?: string;
   projectName?: string;
   clientVersion?: string;
+  surface?: string;
 }): Promise<DoctorResult> {
   return jsonOrError(await apiFetch('/api/deployment/doctor', {
     method: 'POST',
@@ -296,4 +341,44 @@ export async function fetchManifestDependencies(input: {
     projectName: input.projectName || ''
   });
   return jsonOrError(await apiFetch(`/api/manifest/dependencies?${query}`));
+}
+
+export interface SavedDeploymentPlan {
+  planId: string;
+  digest: string;
+  kind: string;
+  status: string;
+  expiresAt: string;
+  targetRoot: string;
+  operations: Array<{target: string; operation: string; assetId?: string; clientId?: string}>;
+}
+
+export async function saveManifestPlan(planId: string): Promise<SavedDeploymentPlan> {
+  return jsonOrError(await apiFetch('/api/deployment/save-plan', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({planId})
+  }));
+}
+
+export async function fetchSavedManifestPlans(): Promise<{plans: SavedDeploymentPlan[]}> {
+  return jsonOrError(await apiFetch('/api/deployment/saved-plans'));
+}
+
+export async function resumeManifestPlan(planId: string, digest: string) {
+  return jsonOrError(await apiFetch('/api/deployment/resume', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({planId, digest})
+  }));
+}
+
+export async function planManifestRecovery(input: {
+  scope: 'global' | 'project'; projectPath?: string; projectName?: string; clientId?: string;
+}): Promise<ManifestDeploymentPlan> {
+  return jsonOrError(await apiFetch('/api/deployment/recovery-plan', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(input)
+  }));
+}
+
+export async function applyManifestRecovery(planId: string) {
+  return jsonOrError(await apiFetch('/api/deployment/recover', {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({planId})
+  }));
 }

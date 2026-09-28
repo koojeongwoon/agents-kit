@@ -329,6 +329,7 @@ test('doctor diagnostics reports resolvable and unresolvable environment secret 
       kind: 'mcpServers',
       assetId: 'postgres-mcp',
       asset: {
+        scope: 'project',
         command: 'npx',
         environment: {
           DATABASE_URL: { source: 'environment', name: 'TEST_RESOLVABLE_SECRET' },
@@ -358,4 +359,29 @@ test('doctor diagnostics reports resolvable and unresolvable environment secret 
   assert.equal(unresolvable.code, 'SECRET_NOT_RESOLVABLE');
 
   delete process.env.TEST_RESOLVABLE_SECRET;
+});
+
+test('schema 2 service publishes surface contracts and blocks unverified plans without writing', t => {
+  const subject = fixture();
+  t.after(() => fs.rmSync(subject.root, {recursive: true, force: true}));
+  const service = createManifestDeploymentService({
+    definitionsDir: path.resolve(import.meta.dirname, '../clients'),
+    homeDir: path.join(subject.root, 'home')
+  });
+  const clients = service.clients();
+  assert.deepEqual(clients.find(client => client.id === 'codex').surfaces.map(item => item.id), ['cli', 'desktop']);
+  assert.deepEqual(clients.find(client => client.id === 'antigravity').surfaces.map(item => item.id), ['cli', 'desktop', 'ide']);
+  for (const clientId of ['codex', 'antigravity']) {
+    const input = {scopeRoot: subject.scopeRoot, targetRoot: subject.targetRoot, clientId, surface: 'desktop', clientVersion: '1.2.3'};
+    const plan = service.plan(input);
+    assert.equal(plan.targetProfile.surface, 'desktop');
+    assert.equal(plan.targetProfile.platform, process.platform);
+    assert.equal(plan.operations.length, 0);
+    assert.equal(plan.blocked[0].reason, 'CLIENT_PROFILE_UNVERIFIED');
+    assert.throws(() => service.apply({planId: plan.planId}), error => error.code === 'DEPLOYMENT_PLAN_BLOCKED');
+    const doctor = service.doctor(input);
+    assert.equal(doctor.healthy, false);
+    assert.ok(doctor.checks.some(item => item.code === 'CLIENT_PROFILE_UNVERIFIED'));
+    assert.equal(fs.existsSync(path.join(subject.targetRoot, '.agents')), false);
+  }
 });
