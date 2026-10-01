@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 import {AlertCircle, ArrowUpRight, Bot, Boxes, Network, Plus, Search, Sparkles, Wrench} from 'lucide-react';
 import type {ClientSummary, LocalClientDiscovery, RegistryResource} from '../../api/deploy';
 import type {ResourceView} from '../shell/ControlCenterShell';
@@ -81,9 +81,18 @@ export function ResourceWorkspace({
   onOpenDeploy
 }: ResourceWorkspaceProps) {
   const [query, setQuery] = useState('');
+
+  useLayoutEffect(() => {
+    setQuery('');
+  }, [view]);
+
   const config = workspaceConfig[view];
   const Icon = config.icon;
   const normalizedQuery = query.trim().toLowerCase();
+  const emptyTitle = normalizedQuery ? '검색 결과가 없습니다.' : config.empty;
+  const emptyDescription = normalizedQuery
+    ? '검색어를 바꾸거나 지워 보세요.'
+    : '새 리소스를 추가하면 환경별 지원 상태와 의존성을 여기서 비교할 수 있습니다.';
   const clientNames = new Map([
     ...clients.map(client => [client.id, client.displayName] as const),
     ...localDiscovery.map(client => [client.id, client.displayName] as const)
@@ -197,8 +206,8 @@ export function ResourceWorkspace({
       {targetReady && !loading && !error && filtered.length === 0 && (
         <section className="rounded-3xl border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
           <Network className="mx-auto h-8 w-8 text-slate-400" />
-          <h2 className="mt-3 font-bold">{config.empty}</h2>
-          <p className="mt-2 text-sm text-slate-500">새 리소스를 추가하면 환경별 지원 상태와 의존성을 여기서 비교할 수 있습니다.</p>
+          <h2 className="mt-3 font-bold">{emptyTitle}</h2>
+          <p className="mt-2 text-sm text-slate-500">{emptyDescription}</p>
         </section>
       )}
 
