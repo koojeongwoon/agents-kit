@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10-native-owned-installation-receipts",
+  "checkedAt": "2026-11-05T21:38:59.996Z",
+  "implementation": {
+    "nativeReceiptSchema": 2,
+    "nativeLocatorSeparatedFromGenerated": true,
+    "originalIdAndBaselineObservation": true,
+    "legacyReviewedMetadataOnlyAudit": true,
+    "copyAndMcpUnitObservation": true,
+    "cliHttpGuiIntegration": true,
+    "installedProviderRevisionResolution": false,
+    "nativeDiscoveryPrerequisites": false,
+    "crossScopeReverseIndexLocksJournal": false,
+    "manifestV3DeploymentEnabled": false
+  },
+  "validation": {
+    "rootPassed": 563,
+    "httpPassed": 43,
+    "guiPassed": 69,
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargoCheck": true,
+    "logHashes": {
+      "root": "cf59d55e774acf52e9795d28ad268fb5664982565cb186a73817905296eee870",
+      "http": "b184b4a77785cd47f701d227aebb3dfa45d8408b0faff7e890b15e371b6c8363",
+      "gui": "cff0a69122b5587f0ad37b2f8b6ca8d27fc122eb1380f8ca8fa599bc755beda3",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "90a12b9ffd1485650299582bfe12185ed1bcbc434fe4f99b38c19fd284f2bad2",
+      "cargo": "d87357538044b9c2e6361695af3d95a93105560dad1d5010fd2100d31bc3b642"
+    },
+    "redHashes": {
+      "/private/tmp/kit-pr10-native-receipts-red.log": "d04755510a03fcb3dc0262b133d740a028a8dceb62b4b78ddac8b33b65e1158d",
+      "/private/tmp/kit-pr10-native-baseline-link-red.log": "3f7653724d982550ff5366d6e781b32eb8ce54a8dafffb6a076289c017ae3bb5",
+      "/private/tmp/kit-pr10-native-metadata-result-red.log": "9297f5126f0c03b9cdd7330dfec7a62ceaeb8d4d29cbdee7b84c2b432d74c36f",
+      "/private/tmp/kit-pr10-native-gui-red.log": "4d910f13d085d2fe95efe9843a9efe817ce78180bbf498fd8da064d98405b43a"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/native-installation-locator.js": "72a3136b1950f6a116557bdad9152d9136e1fb0ec12d8191bbda9851a4883bb5",
+    "lib/domain/installation-declaration.js": "e8060b2b87f0c3c9b1f6a3f5c7e448c995223972a242ffae78abe8d7dbbe009d",
+    "lib/domain/installation-receipt.js": "00227a62889eae32fe31889f1f780601edfbe560d37054e1d419227d5f7d7b93",
+    "lib/adapters/mcp/native-installation.js": "ea8f24887fb2e1e507ce904ab8e2049ac45a0048b031115752897f417257760d",
+    "lib/application/native-installation-receipt.js": "1cf1091439e2d99dea4b0b3d91b5d087d1aed98b42b8abfc10a3a131e81edd1c",
+    "lib/application/installation-receipt-service.js": "a164c424cab4d81cab6b5743cc7261f93149bf3985fed6c3c571441b183b9f3e",
+    "lib/application/native-installation-service.js": "c9a64cdf91e3fedd9630bc9a51c03324db23cfc4319b884cf91dcdd04a0ce2b3",
+    "test/helpers/native-installation-fixture.js": "fd0e1e1fb6861a57ea1918d1926de7232b1ab9f3c0235b82b33c7239923e2340",
+    "test/native-installation.test.js": "2d4771f96351bd1e53194d962c3c84b5f0b31281d5434b3dae95ae8c8b7abf70",
+    "test/native-installation-receipts.test.js": "e797b69c6b6e9799066232a7caf2f936cce6d0e22250a606473b3e80e856fc7a",
+    "gui/server/test/control-plane-e2e.test.js": "ce4ec989d0fc138e4178127faafc399bf4dd7aa5f442a5d730117f9369083894",
+    "gui/src/api/deploy.ts": "1c1544fbeb0ca341d319e195c76b486b4360e46e4f9531941220c8586a2013a3",
+    "gui/src/components/resources/NativeInstallationPanel.tsx": "270dbb5cb574ae560b9c303dc421c4af2a969904f633bde85bee93511aeb9747",
+    "gui/src/components/resources/NativeInstallationPanel.test.tsx": "0a29d1e9029991a1509a31865544e249cdf9a763c7777c20ed35cd45759f57d7",
+    "package.json": "f71dc81fe7f2795ecd3dc9ac60fb86021f24950a88b0438f5d011b2ff572fb65"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "activeNativeReceipts": [
+    {
+      "assetId": "tools",
+      "assetKind": "mcpServers",
+      "clientId": "antigravity",
+      "surface": "cli",
+      "nativeId": "tools",
+      "status": "ownership-observed",
+      "revisionDigest": "c75bfaa8576df1a13532895f9155af7c2123f0ed49ddd60619f47f75aed1998f",
+      "fulfilled": false
+    },
+    {
+      "assetId": "node-repl",
+      "assetKind": "mcpServers",
+      "clientId": "codex",
+      "surface": "cli",
+      "nativeId": "node_repl",
+      "status": "ownership-observed",
+      "revisionDigest": "e4b36d40721349721146b491e1e8267ac653e678f3839b1af02e788e38fcf3bf",
+      "fulfilled": false
+    },
+    {
+      "assetId": "codex-instructions",
+      "assetKind": "instructions",
+      "clientId": "codex",
+      "surface": "cli",
+      "nativeId": "AGENTS.md",
+      "status": "ownership-observed",
+      "revisionDigest": "2ec115792a0e79cc981ca12d736ff2d9ca93357ff878ee7e60216912039a93ee",
+      "fulfilled": false
+    },
+    {
+      "assetId": "canva",
+      "assetKind": "mcpServers",
+      "clientId": "antigravity",
+      "surface": "cli",
+      "nativeId": "canva",
+      "status": "ownership-observed",
+      "revisionDigest": "5ba13a49bb386752e653ceb2b30d4befebc3b2f84136e8bd03cfb113d9123d4f",
+      "fulfilled": false
+    }
+  ],
+  "liveRoundtrip": "docs/reconstruction/native-owned-audit-roundtrip-20261106.json",
+  "liveLedgerTransactionDelta": 12,
+  "previousManagedAndTransactionsUnchanged": true,
+  "clientSettingsWritten": false,
+  "clientFileOperations": 0,
+  "realNativeProcessesStarted": 0,
+  "realModelRequests": 0,
+  "realNativeToolRequests": 0,
+  "nativeDeploymentGateExpanded": false,
+  "runtimeEvidenceRecords": 25,
+  "browserQA": {
+    "status": "not-run",
+    "reason": "PREVIOUS_EGO_TASK_SPACE_23_NOT_FOUND",
+    "newSpaceCreated": false
+  },
+  "remaining": [
+    "PR10 installed transitive references, provider revisions and native Tool aliases",
+    "PR10 effective native discovery prerequisites",
+    "PR10 shared validate/doctor and reverse-reference guards",
+    "PR10 reverse index, global-before-project locks, saved plan preconditions and cross-scope crash recovery",
+    "PR09 Agent/instructions native runtime load and other client/surface context",
+    "PR07 Antigravity Agent direct child completion",
+    "PR11 additional discovery/HTTP/auth/desktop/IDE profiles"
+  ]
+}

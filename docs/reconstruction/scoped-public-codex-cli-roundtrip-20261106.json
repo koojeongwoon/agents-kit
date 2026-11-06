@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T02:33:34.340Z",
+  "phase": "scoped-public-cli-deployment",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "isolatedHome": true,
+  "actualUserConfigWrites": 0,
+  "actualUserStateWrites": 0,
+  "publicGlobalV3Audit": true,
+  "publicProjectV3Apply": true,
+  "privateExecutionGateRemoved": false,
+  "savedPlanSchemaVersion": 5,
+  "savedRestartNativeObservation": true,
+  "savedResumeIdempotent": true,
+  "registrationActivatedAndReleased": true,
+  "projectSettingsByteExact": true,
+  "projectModeRestored": true,
+  "globalSettingsByteExact": true,
+  "externalLinkIdentityPreserved": true,
+  "nativeObservationCalls": 3,
+  "unselectedProviderStarts": 0,
+  "selectedEvents": [
+    {
+      "event": "started"
+    },
+    {
+      "method": "initialize"
+    },
+    {
+      "method": "notifications/initialized"
+    },
+    {
+      "method": "tools/list"
+    },
+    {
+      "event": "started"
+    },
+    {
+      "method": "initialize"
+    },
+    {
+      "method": "notifications/initialized"
+    },
+    {
+      "method": "tools/list"
+    },
+    {
+      "event": "started"
+    },
+    {
+      "method": "initialize"
+    },
+    {
+      "method": "notifications/initialized"
+    },
+    {
+      "method": "tools/list"
+    }
+  ],
+  "consumerActivationState": "unverified",
+  "fulfilled": false,
+  "modelRequests": 0,
+  "threadRequests": 0,
+  "toolCalls": 0
+}

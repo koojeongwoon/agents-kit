@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T01:45:53.237865+00:00",
+  "phase": "PR10 pin-preserving legacy global apply/removal/rollback/saved resume/recovery public service dispatch",
+  "status": "partial",
+  "publicV3ApplyEnabled": false,
+  "publicGlobalMutationDispatchEnabled": true,
+  "publicGlobalMutationScope": {
+    "manifests": [
+      1,
+      2
+    ],
+    "actions": [
+      "apply",
+      "remove",
+      "rollback",
+      "saved-resume",
+      "recovery"
+    ],
+    "requires": "Every registered project, installed pin and native context remains verified and unchanged",
+    "unsupported": [
+      "native source mutation",
+      "resource-path migration",
+      "skill-strategy migration",
+      "shared-ownership migration",
+      "legacy non-durable links"
+    ]
+  },
+  "savedPlanContract": {
+    "schemaVersion": 4,
+    "contract": "global-dependency-mutation-v1",
+    "legacyReaders": [
+      1,
+      2,
+      3
+    ]
+  },
+  "tests": {
+    "root": {
+      "total": 718,
+      "passed": 718,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-global-dispatch-root-verified.log"
+    },
+    "http": {
+      "total": 48,
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-global-dispatch-http-final.log"
+    },
+    "gui": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-global-dispatch-gui-final.log"
+    },
+    "typecheck": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-global-dispatch-typecheck-final.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-global-dispatch-build-final.log"
+    },
+    "publicDispatchCases": {
+      "total": 20,
+      "includedIn": "root",
+      "test": "test/global-dependency-dispatch.test.js"
+    },
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust source changes; earlier Cargo evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/application/manifest-deployment-service.js": "3f825525032a409bd6b2c1e5ef7a510afbd7ee47a50fda3dbff776cfcd1c5f9f",
+    "lib/application/global-dependency-mutation.js": "6e970886763bf420033032c2edf64a6a70b83974af6a51df0df23e76ce2cd26c",
+    "lib/application/deployment-installation-prediction.js": "8f91f4fcadb283f8323c6208fd25ce6ae568fdc9e2423ae1d455790c8e6db346",
+    "lib/application/rollback-command.js": "401d0be65c6ca006fe56e6410d85025bc51853916d6ab451f3e650348895e42c",
+    "lib/application/rollback-deployment.js": "e36142cf52abe701157879f2d36b9b2b4d9b4c1498dbf7521fa3c31513c3a8d4",
+    "lib/application/rollback-shared-snapshot-deployment.js": "b687313ed1c4b15e8d205fabf874995d203b035c888240224d9448477f03dbd0",
+    "lib/application/apply-deployment.js": "c144e9c796b79a1beb4ab89fa4c68c3d03acb1d07aade368d06496fe0c0ced2b",
+    "lib/application/installation-receipt-service.js": "1cb4971a9cd78e6801f933670f54d29c408974f09d26c49336d57282702cc8cd",
+    "lib/application/inspect-dependency-dependents.js": "1a34470da2bb26fe57b73c5696d287176d8543ea131466e58bef848f4ba304ae",
+    "lib/application/source-dependency-guard.js": "b7a0aa25b03bda02e1841de104b3d8f8498b02e95f2605ee66d5899e7903052e",
+    "lib/infrastructure/dependency-store-session.js": "b61b34a0dc1eee577ed5b7f2ccd775ee6c0cb011308a7a138f8bf90737ffd278",
+    "lib/infrastructure/deployment-journal.js": "6c0a9eaa6634a292b19dd3f699dec1cfd01dc3841eee120106a2a50f715ba4e2",
+    "lib/infrastructure/tree-deployment-transaction.js": "04ed09a720d27c098244aa96d43f625efa488513c4bead9c7f9e79c3bbf20474",
+    "lib/infrastructure/planned-installation-view.js": "07f6f090b2eb3769613be8b828aa716caeb613c41c596ee3991167e8a22529b2",
+    "lib/infrastructure/saved-deployment-plan-store.js": "f2a1285f6c4e4a55080ccdebfd5b94b44438e9d4f5779ae27c60a06a68dbb4ff",
+    "lib/interfaces/http/error-mapper.js": "e364cb58bccc879573c32650f59f0e1089cbae4de47808d76f2bd1a52fd8ccd1",
+    "gui/src/api/deploy.ts": "2687da33e1f98acebc97e2033c5f1f9c8bcc68ef843f1beb83cdaae1aba4884d",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "28475608a6e89094d0872a6f290cc1482b79211f8ce620876664727dd7ae4414",
+    "gui/src/components/deploy/ManifestDeploymentPanel.test.tsx": "8db7c74cd533d75987ef000321c822b4819c391cd64257d44237910ddb951d75",
+    "gui/server/test/control-plane-e2e.test.js": "7036f077249299be4be6bed803470cb886c3abbd164535bed52978d46996f1c2",
+    "test/global-dependency-dispatch.test.js": "f42b6a0337d7670a73f3bd5cffb351619fafed1b99e7a5ebf2f3a027ca5cbc13",
+    "test/global-dependency-mutation.test.js": "697ab73433219736a14f055abbc2f9b3d29644eecb58fd8fb59eb92618807642",
+    "test/helpers/dependency-index-fixture.js": "a5c87cd104fdd872a840641749a6397d16e847c598e445bf21bf74595fd76e4f",
+    "test/helpers/crash-global-dependency-dispatch.js": "cfb4030c86c6dc9c8e6208a6eefec59f2a9d16da4f496ca658b7384264c3b083",
+    "test/dependency-reverse-index.test.js": "8f034b61d480214226c893b916204217ea1bc99549383b78768e3551834f0b48",
+    "test/http-error-mapper.test.js": "38729b5cf13869c49c06e488d8a7445c639acec5feb276ca52e69713e8c4b2df",
+    "package.json": "4769132578f3356c59648d28e22c58e360970f58e38f8bf43808f2a6a9b754ee",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "docs/contracts/global-dependency-mutation-v1.md": "4b29932d6cb2d98471be8fd4f6bc8b402163903ecfa99f7d267f00cca6bf10a2",
+    "docs/contracts/deployment-installation-prediction-v1.md": "6a538397d721cb1d81227d3e0dda9157d8e2177e7a40ae857da5285768adef8a",
+    "docs/contracts/dependency-reverse-index-v1.md": "bb8d9d93801d21526b610e4dcd31e3b7219af011b4a4a7d27b9f2df9dd5a2ec3",
+    "docs/contracts/source-dependency-guards-v1.md": "25a9decb8aac2b6ea0fb0deb8dd5e6938263af84149c51f17d189699d974b3cd",
+    "docs/product/shared-resources-consolidation-plan.md": "bdbd8d7878a535501f14fe77142217fe533fdf64651bca4d5d30a2dfd67a0e9a",
+    "docs/reconstruction/phase-scoped-dependencies.md": "4ab243e7781145e9ae028e703c609cede282591efaa77bb78f4fed77948a346f",
+    "docs/traceability/shared-conversation-requirements.md": "1710f738b8e89c7e00e7a50884be02a0c77591da69404385b7c2525b578e61c8",
+    "docs/reconstruction/global-dispatch-live-compatibility-20261106.json": "c5901ec3719346420491bcf7bb78f96e537e6ee3d678cac2f1fe034294c9adcf"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-root-verified.log",
+      "sha256": "ae9cafdc35a9961479c52c9b1adf9045b65bb315ebf1d0c0d2b3e44e6d02768b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-http-final.log",
+      "sha256": "5e3b6705129cfb5709f3bcece4fcecf985efa1bd3054a0eca492ee48bcdb23ff"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-gui-final.log",
+      "sha256": "65e52c10b3493de878074cb71086f0a2afc8aba9656d8343a866d7693cfcda28"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-typecheck-final.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-build-final.log",
+      "sha256": "abd434fa05266acd392e5b29c3e6e705e1e5497cfe1d86165287e07f89ec6a4b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-work1.log",
+      "sha256": "801865ee9f7bd0bcb4f270daf3c3205c5f4cde088b561d184525cb89b662b319"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-gui-red.log",
+      "sha256": "0fd141ce25a7c7f4eef544ff5133772e6378f9ce4c54122bdbe2fe3733f86711"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-errors-red.log",
+      "sha256": "571ce0f1964c72d1f0ffff8d0ebb5ec4bdf8925cff49d15f0a2315f66bb35daf"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-http-red.log",
+      "sha256": "d615b2c6ff37ae5273ad5697b0455987ea8f9b945256250b28d64f4e0f859b50"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-focused1.log",
+      "sha256": "9981aa56abd42ef736e141de1341b25e395b13efe04d5e300c835ed714c15953"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-cli-final.log",
+      "sha256": "ccfb9291f0d658da4f5c10bf200c64a5e3d1fe143410c8a6772ce1ce795dd1ab"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-preservation-final.json",
+      "sha256": "0ef66f30e217b37d9f19ec50ae317ba46921f64955ba202074b1d944dd56b265"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-dispatch-live-compatibility-final.json",
+      "sha256": "c5901ec3719346420491bcf7bb78f96e537e6ee3d678cac2f1fe034294c9adcf"
+    }
+  ],
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "actualUserClientFileOperations": 0,
+  "newRealNativeCalls": 0,
+  "newModelOrToolCalls": 0,
+  "remaining": [
+    "Public Manifest v3/scoped execution/save/registration/release/two-scope recovery dispatch",
+    "Native source mutation and previous path migration prediction",
+    "Actual planned native context transition and observation",
+    "Public validate/doctor integration and actual cross-scope consumer roundtrip",
+    "Remaining PR07/09/11 and C07 Skill compatibility/variants"
+  ]
+}

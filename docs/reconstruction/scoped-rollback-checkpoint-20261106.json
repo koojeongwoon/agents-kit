@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T03:14:50.784220+00:00",
+  "phase": "PR10 public scoped project rollback/declaration-only release/owned snapshot transition",
+  "status": "partial",
+  "projectDependencyRollbackEnabled": true,
+  "declarationOnlyReleaseEnabled": true,
+  "publicExecution": {
+    "scopes": [
+      "project"
+    ],
+    "actions": [
+      "planRollback",
+      "observe-prerequisites",
+      "rollback",
+      "save-v5",
+      "resume",
+      "coordinated-recovery",
+      "reviewed-declaration-only-release"
+    ],
+    "restoredRelationsFrom": "frozen installed receipt closure",
+    "currentSourceUsedAsHistoricalDeclaration": false,
+    "fileAndTreeRollback": true,
+    "unprovenHistoricalRelations": "blocked",
+    "externalLinks": "read-only",
+    "ownedSnapshotLinks": "ledger/receipt/snapshot verified",
+    "consumerActivationState": "unverified",
+    "fulfilled": false
+  },
+  "savedPlanContract": {
+    "schemaVersion": 5,
+    "contract": "scoped-deployment-v1",
+    "kinds": [
+      "apply",
+      "remove",
+      "rollback"
+    ],
+    "legacyReaders": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "privateNativeProofPersisted": false
+  },
+  "tests": {
+    "root": {
+      "total": 761,
+      "passed": 761,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-scoped-rollback-root-final.log"
+    },
+    "http": {
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-scoped-rollback-http-final.log"
+    },
+    "gui": {
+      "total": 83,
+      "passed": 83,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-rollback-gui-final.log"
+    },
+    "typecheck": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-rollback-typecheck-final.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-rollback-build-final.log"
+    },
+    "cliHelp": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-rollback-cli-help-final.log"
+    },
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust source changes; previous evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "README.md": "bd08614c727d062fc48fa3dfffa8168dbc4ccddf2a6605d572da31168950f292",
+    "bin/cli.js": "ebd8c97fc6e4804adb7248070fc120a2da20f0565376fb93a99f0bec8b3a7d16",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "docs/contracts/dependency-coordination-v1.md": "5ac4d68046c571b631afec4dd8447d546157a2a8e7886f84b7add082a440ea6e",
+    "docs/contracts/dependency-reverse-index-v1.md": "cf743b51fcd95e19ecbdb330eacb41d6f5cf0ea7a700374f59448dd4ff57bb54",
+    "docs/contracts/deployment-installation-prediction-v1.md": "df5922bacade141634db4aaa8f146595136a532029f49844fe81a94708326058",
+    "docs/contracts/global-dependency-mutation-v1.md": "44bac59e187e9f1d065541cf5055c0ff6657559863fd19f94d2bcb5e632cb7ca",
+    "docs/contracts/installation-receipts-v1.md": "bb3e1a2c28382e96d449348d4580c9e47ff67bb31527046d6e7395a25910d94c",
+    "docs/contracts/native-context-transition-v1.md": "7955ecb6e291099b59d0c7b4ad197cfbbfd4fb4ba3183c8ee87c2f7070731259",
+    "docs/contracts/native-prerequisite-observation-v1.md": "d804331c8df35ae4c78d01d7b083cb04e2cd9c42e6b26cef18580321906083bf",
+    "docs/contracts/scoped-dependencies-v1.md": "53ba25eab321ac48b89128a8db4d082fe5e1fe3cf5dd36bd6261d07634c02457",
+    "docs/contracts/scoped-deployment-compilation-v1.md": "1586cca7f6a5209283fce6c3e9e85183f423e3675001dcd8d320b8f6f91b2cb8",
+    "docs/contracts/scoped-deployment-execution-v1.md": "508aca5ca11ecdc7204d32ed4c6952c9bbf04ceb1367eeb7aab1d7faa04f51f0",
+    "docs/contracts/scoped-deployment-rollback-v1.md": "ea9a21409f6a377830f106d9fb236e9cff26a57d1c67f2812b1506f2d7ccdc8d",
+    "docs/contracts/scoped-installation-receipts-v4.md": "667012048a526642e2494bd2b8c4591005a2796a4f40ad3d8a41e49fb537f69e",
+    "docs/contracts/source-dependency-guards-v1.md": "eff0538af66e0fad101eddb47505d915cb6d6245c26c8020b195b6dd750677a9",
+    "docs/product/shared-resources-consolidation-plan.md": "585b7e141e46bf6701591da053cc551b650c890d67c3cc37cf4acba0b85fbf29",
+    "docs/reconstruction/phase-scoped-dependencies.md": "b402322d76f93035072f2fccfce1939d32a9e2ff31a4b0f0bb8aa22f4b9c3ade",
+    "docs/reconstruction/scoped-public-codex-cli-roundtrip-20261106.json": "1cff011a56337d7f2a994793b699739dd74d5b010bcbc8f45fd5eb875904d5af",
+    "docs/reconstruction/scoped-public-external-settings-observation-20261106.json": "44252ed816f61d172790f41032b77a1036fefd0fd7101ba0aa48e445c4b39e69",
+    "docs/reconstruction/scoped-public-live-compatibility-20261106.json": "754e33449b9c89739d56598616c502eeccbdcf0c906405539753fe563b171da1",
+    "docs/reconstruction/scoped-rollback-codex-cli-roundtrip-20261106.json": "500abe165b8365882753ace7fcf2889f45ecd4f4034bfdf9719d9f1e12b1308e",
+    "docs/reconstruction/scoped-rollback-live-compatibility-20261106.json": "09290d54658a31321fa2deceb906d14b4ad2e6e7a8cec668c6e5ae374a7be361",
+    "docs/traceability/shared-conversation-requirements.md": "cef19e36969faaf32085e2f55664a84d7606c93945d52558435ff4eeb40fcd75",
+    "gui/server/routes/deploy.js": "e357fc49e6baee4123ab6dc7aa15c36cf973888e094c651c83187972ee67c1fa",
+    "gui/server/test/control-plane-e2e.test.js": "285fb6aae05a6b9b6ca58d8699bc061658151a016d630fc90d0d80c2f89c8119",
+    "gui/server/test/deployment-routes.test.js": "25ec784e5d0cc02950ac79ed67b98a40ee2b56befbbf1ff223e402307101b264",
+    "gui/src/api/deploy.test.ts": "a74cde9de6c0227c739a8dae88935d43ea5e71b6bfcf681c42f737aa912d1b83",
+    "gui/src/api/deploy.ts": "4e69f485a0df520311a7030f0c130403cdb301548c1765b6b53c61f0227dff23",
+    "gui/src/components/deploy/ManifestDeploymentPanel.test.tsx": "49fa561641328fe01ff6165eaaf4806cff10f44dc858cb00988eb6662197c753",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "4983e1aea887c6c5b144ba7c3ac8c13c60b01b0b2de6f89f66b4d5db01315dee",
+    "lib/application/dependency-coordination-service.js": "6bea2faa746cd6352eb419c6b8abd6b28bd2f412a7eedec3dec761dc2a2168f3",
+    "lib/application/deployment-installation-prediction.js": "8b26d641d45980cd639ed9287fb3d8773496f85caf523671a66144a382a91337",
+    "lib/application/global-dependency-mutation.js": "6e970886763bf420033032c2edf64a6a70b83974af6a51df0df23e76ce2cd26c",
+    "lib/application/manifest-deployment-service.js": "2989b4e73ae8468aea96c220d627cb1ff92be3b11671b445f151e3fd52bc2c02",
+    "lib/application/native-prerequisite-service.js": "92ec568924531cf3e37a7d30cced4a9248c39622e9bdd6af71f7b63d4532baad",
+    "lib/application/native-prerequisite-transition.js": "90e77177f8ccb96603b995e886942cf6367287b477f144703fac64c5cda81042",
+    "lib/application/prepare-resource-removal.js": "ae400619dd85e589016159ac15d4fc6b087a565e34354d2d3c77dffcce315676",
+    "lib/application/rollback-command.js": "401d0be65c6ca006fe56e6410d85025bc51853916d6ab451f3e650348895e42c",
+    "lib/application/rollback-deployment.js": "c1825d9c6a0f082cbada59581373dd3f59de35a960a7ddb33c4963457a5187fa",
+    "lib/application/rollback-shared-snapshot-deployment.js": "eda24157de6ed9003b16b7b2744e0e1844ac809cae8f86b8cd9909cd23372467",
+    "lib/application/scoped-deployment-compiler.js": "a14517a38f11abe66679429e81ae500a9920ae606933bd8156d27c91983b2fd5",
+    "lib/application/scoped-deployment-execution.js": "6bb71ef971b446e6e9039f188e11474d5acb133cd3f190ed0ef7567e0774147b",
+    "lib/application/scoped-deployment-prerequisites.js": "5178116c73ec1f23c23bebb68a5c230678d0e1b8fc8bae6c0eb30ccfd4d4371b",
+    "lib/application/scoped-deployment-rollback.js": "2077d6bfbdb42f8de6cdf50519d07bca628e1e078399264750264e1c7d32ce3a",
+    "lib/application/scoped-resource-removal.js": "b9af04a91adfec9ed1b8a1b7b5807a1a4f737c2935b21c8df770ef2e93ea05a1",
+    "lib/domain/scoped-installed-relations.js": "798dcb9824e3c5ac08da5180055468e38905bdfee5f4acb0539bb3ee2c400290",
+    "lib/infrastructure/dependency-store-session.js": "d2d75e997e22d7db96a660ec335f2e4bceae48dc81fedca9e3da288bac6bb4ad",
+    "lib/infrastructure/saved-deployment-plan-store.js": "7bb7bca5c0007412ed512a5d3e145078dda2dad2f8520b634a9b12a667c0e624",
+    "lib/infrastructure/transaction-workflow.js": "83cbd9a1f20b765835fdf21cc8550e9240504265e6c6b6cfcd5f95c72d408258",
+    "lib/infrastructure/tree-deployment-transaction.js": "3cbae12239ec9a5e2b485bb176480491233efeb3e08b28bedf02c34e61f1cfad",
+    "lib/interfaces/http/error-mapper.js": "6a5ae0bc2d05f15be0a914936bedce6d2ac25da7e2e15a94fd334e64aaa77f31",
+    "package.json": "996d0a666284830773af2fafb1cba93af28f25938f2bc016d5272c9aaae21500",
+    "scripts/client-verification/native-prerequisite-fixture.mjs": "7a112baaebba96cbf252fe2ff4a10b35711b0eeb4d6a033dec72558cdd067e56",
+    "test/dependency-reverse-index.test.js": "25eaca7fef869b52a0727ce88c00b05a9bd5b7877d961fbb88d9f51f03ac5ffc",
+    "test/helpers/crash-scoped-deployment-dispatch.js": "fc5cc201102723247288db2954d2ed1f798bcadfd44808fab6cb1ed12eea7595",
+    "test/helpers/native-prerequisite-service-fixture.js": "f7f6f71af54634d5b9c29ee3d7141bb5b499f07ef70b6663b2e1dfa6c9d9fad3",
+    "test/native-prerequisite-service.test.js": "2d36bbcaa6bbe506ea20bfd113f72aa85de595d028f81b800120689c0f53b27f",
+    "test/scoped-dependency-catalog.test.js": "b62b947bee0bcf7e27ba52f35f0b380bf3f36f0f309b54613ea5b81c77093e0c",
+    "test/scoped-deployment-compiler.test.js": "965e40fda172b34b252cfed8f6835a92cc1d9dd025174d541e39825dcf42459e",
+    "test/scoped-deployment-dispatch.test.js": "ec8031bb24cf650259196e3641dae8c4b2a741e32bf852d99ed020b1172262ca",
+    "test/scoped-deployment-rollback.test.js": "53ca8e3ba2ceb5959367d69b705153a9ce12eff3b267db8329202a1ac0f33dd6"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-root-final.log",
+      "sha256": "b114899497a71d1c56383c603e35ff05a94853ec4fbc3c83822061485a9c6bbf"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-http-final.log",
+      "sha256": "8e4acf5c6ede8f39f210ea6a95277b94c56bccf5b22447b177537d59ad394ce1"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-gui-final.log",
+      "sha256": "5c378b0a5c025fdcc75551c9e59557b1d0697c21382910bae212d66c870cdacd"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-typecheck-final.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-build-final.log",
+      "sha256": "29f810394c865ecc7d1e345f0c6a868204a65cd43f4a27b5f3a06f114e24bb09"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-cli-help-final.log",
+      "sha256": "a5397498375d653f673d2e1415d09d14da1dbeed658f24ac0ab33eff16469977"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-red.log",
+      "sha256": "ab4492df52aa141da0625f271c282c4cc73dd872d14d74404cb5676d16fe961c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-work3.log",
+      "sha256": "c0955de3f0183b842d81cbcc87707b296f12064948fcd1979ad8fcb306e8e81d"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-gui-red.log",
+      "sha256": "a639a868a35b783f9599a301136f64a9be48c0e6066af1d42b64fbbbea8eb94c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-verdict-red.log",
+      "sha256": "bbcfb7884ebea26d1bea7531de6d4efa4466af00c96a2321f8531c87d4bfc93a"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-root-work1.log",
+      "sha256": "ff740cb2875d19b396f9a4b61145dfabaa24239f6f9b73e7479659a6a970604c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-http-work1.log",
+      "sha256": "aabecff6e5596a133b69da44391d1a1cd464a9a580b607ce879803d09395f826"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-real-cli-attempt1.json",
+      "sha256": "500abe165b8365882753ace7fcf2889f45ecd4f4034bfdf9719d9f1e12b1308e"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-real-cli-attempt1.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-preservation-final.json",
+      "sha256": "806c987dda1b1c2d82574a41561656922f69cbcb6a7b993ad64ac93847fde7cf"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-rollback-live-compatibility-final.json",
+      "sha256": "09290d54658a31321fa2deceb906d14b4ad2e6e7a8cec668c6e5ae374a7be361"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-release-red.log",
+      "sha256": "e46190d0483e9e7d48a1858767b58b010b1495349d0db15d4411a815fbb24242"
+    }
+  ],
+  "realNativeProof": {
+    "artifact": "docs/reconstruction/scoped-rollback-codex-cli-roundtrip-20261106.json",
+    "attempts": 1,
+    "nativeObservationCalls": 6,
+    "selectedMockProviderStarts": 6,
+    "unselectedProviderStarts": 0,
+    "modelRequests": 0,
+    "threadRequests": 0,
+    "toolCalls": 0
+  },
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "baselineReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "baselineAllBytesEqual": false,
+    "unchangedBaselinePaths": 26,
+    "baselineDifferencesUnchangedSincePreviousCheckpoint": true,
+    "knownUnmanagedSettingsDifference": {
+      "artifact": "docs/reconstruction/scoped-public-external-settings-observation-20261106.json",
+      "path": ".gemini/config/config.json",
+      "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+      "mode": 384,
+      "writerAttribution": "unproven; earlier app-start timing correlation is an inference",
+      "currentSettingsPreserved": true,
+      "currentHashAndModeStillMatchPreviousObservation": true,
+      "restoredOrRewritten": false
+    },
+    "externalLinkIdentitiesPreserved": true,
+    "managedClientBytesMatchLedger": true,
+    "originalBaselineReplaced": false
+  },
+  "agentKitUserClientFileOperations": 0,
+  "agentKitUserStateWrites": 0,
+  "remaining": [
+    "Native source and previous-path mutation prediction/coordination",
+    "Global settings transition and reobservation in all registered projects",
+    "Manifest v3 validate/doctor/source editing",
+    "Remaining PR07/09/11 and C07 Skill compatibility/variants",
+    "Separate consumer activation/agent child completion/model-response evidence where required"
+  ]
+}

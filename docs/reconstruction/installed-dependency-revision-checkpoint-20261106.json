@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10-installed-dependency-revisions-audit",
+  "checkedAt": "2026-11-05T21:53:01.235Z",
+  "implementation": {
+    "receiptSchema": 3,
+    "declarationSchema": 2,
+    "dependencySnapshotSchema": 1,
+    "legacySchemasReadable": [
+      1,
+      2
+    ],
+    "sameTransactionProviderPins": true,
+    "transitiveRevisionAndOwnershipObservation": true,
+    "explicitNativeToolNames": true,
+    "originalNativeServerIds": true,
+    "sourceOnlyEditsDoNotRebind": true,
+    "providerRollbackRestoresPin": true,
+    "unverifiedPinsNeverAutoFill": true,
+    "pureDomainAndCommonApplicationService": true,
+    "nativeDiscoveryAndToolAvailability": false,
+    "crossScopeDeploymentPlanPrerequisites": false,
+    "reverseIndexLocksAndRecovery": false,
+    "manifestV3DeploymentEnabled": false
+  },
+  "validation": {
+    "passed": {
+      "root": 572,
+      "http": 43,
+      "gui": 70
+    },
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust source or Cargo dependency changes in this stage"
+    },
+    "logs": {
+      "root": {
+        "path": "/private/tmp/kit-pr10-dependency-root-final.log",
+        "sha256": "0023ff8b0dabc66889e44cb52ab11c0642faeef3c876c196c7fea952fbb28d48"
+      },
+      "http": {
+        "path": "/private/tmp/kit-pr10-dependency-http-final.log",
+        "sha256": "fbf8c635825051a4d3abcd5f60b9941f1c1677d23aebda7c0e913e6340b176e6"
+      },
+      "gui": {
+        "path": "/private/tmp/kit-pr10-dependency-gui.log",
+        "sha256": "fc961fb76b0a25e8f820ab99f4aeba33f9393a3b853af2213a658edb290915a8"
+      },
+      "typecheck": {
+        "path": "/private/tmp/kit-pr10-dependency-typecheck.log",
+        "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+      },
+      "desktopBuild": {
+        "path": "/private/tmp/kit-pr10-dependency-build.log",
+        "sha256": "d39f29a3d51fd84c98c8d7ff099e3fd9f03f23a15c2c7e71c294edaa5e56e582"
+      }
+    },
+    "redLogHashes": {
+      "/private/tmp/kit-pr10-dependency-revisions-red.log": "c666a8720837f43d29efe063e44efb0d24719c61e1e8f24372c91d97fa3a80e8",
+      "/private/tmp/kit-pr10-dependency-erased-red.log": "e74ea38ac2fe411428d24a280735e41bd5c358e17f776b66fbd834b226895ffb",
+      "/private/tmp/kit-pr10-dependency-gui-red.log": "e6dc52c09e1109d698678d9bf5f1d048bc8d5c6c87467f672e6a807bbb48f850"
+    },
+    "documentationLinksChecked": true
+  },
+  "sourceHashes": {
+    "lib/domain/installation-declaration.js": "754bfb07149d523ff0dbbf648d8ed9c8b248da883db743ce499a3082fad0958b",
+    "lib/domain/installation-receipt.js": "7010e191752a75d232170f8d34efd7bc7ef713c042d203ca13bfc7a008a0ae54",
+    "lib/domain/installed-dependency-revisions.js": "897b21a922ca24f141d6f9533b4086fd94f32b801ddbb458607e46c809e599c9",
+    "lib/application/installation-receipt-service.js": "d1f134e72e0300d48fac393833ae50e68dec10cfecdd74319dc1f9accbf1dfd4",
+    "lib/application/inspect-catalog-installations.js": "a57fa3da872237601fe8eb73c6d0524ecd78252fc52aaec2604bc0ac956725f7",
+    "test/installed-dependency-revisions.test.js": "ca1a522f767ee29b23f47745c48789d0aa97282da0a5a8195a2a5ca7ab3948a2",
+    "test/installation-receipts.test.js": "334bb3e1788a55ae0ce4f52085d04cab4056570de8a29c595d23e4af7daa5f2d",
+    "test/native-installation-receipts.test.js": "d64706201a4c81b87cb65a69dcde8f356f5c12a276fd5243eab10840d2d46a2b",
+    "test/catalog-installation-prerequisites.test.js": "a1e82b61fc5896b5444c19a610f5fa9a253681cc364b36e2b35c199482144a4b",
+    "gui/server/test/control-plane-e2e.test.js": "a21dbff9b19f9e57a5cf72478ec8dd0c52ac5ec8b0922b83b144ad4b019e014b",
+    "gui/src/api/deploy.ts": "bf7e7616425aac0728372f920e5050cdf2714a50a8b0445d9cfbc988cb64dfff",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "75d60a29226a9cf2bb716c1a04fc01c21db20f8e833c56236f06e2f63b7b13b0",
+    "gui/src/components/resources/ResourceWorkspace.test.tsx": "8953586727234866ce93f0dfa2dabef18f0a6467b915187fb215255dde1bc1a1",
+    "docs/contracts/installed-dependency-revisions-v1.md": "f5cb3ccf30247647cddc513509f90a71d575de421065500b7799875b673240da",
+    "docs/contracts/installation-receipts-v1.md": "fd4760fc1c6fd9b358b3d7e96806f57defae296d0ce7ead206e4688922cfcdb0",
+    "docs/contracts/native-installation-receipts-v2.md": "3049677e97c6ec78e6b09fe20705e07bedd57fe84086735d9e1fa6ec24551ad2",
+    "docs/contracts/scoped-dependencies-v1.md": "d077234fada6f37bcc52591e67cc331961cd4ca5f0fe54e254f7759f3e29790a",
+    "docs/reconstruction/phase-scoped-dependencies.md": "e6cc331728fe25a7163711f0d43dffd72762cfa60ac5dbf88018573ccab0d89c",
+    "docs/product/shared-resources-consolidation-plan.md": "5a5f32351fc58a1d5b5968e64b5bc3afbe892816cb4a6bc74c5b73266866a544",
+    "docs/traceability/shared-conversation-requirements.md": "7841d84c19c0fc314c707010e5be308194d46f3dae9469bbfb4a74b079252c79",
+    "package.json": "23c815efac412db598a5026ad51616899a1aaac7ca98e65f2021bebd4092e430"
+  },
+  "realEnvironment": {
+    "compatibility": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-05T21:52:35.206Z",
+      "mode": "read-only-compatibility",
+      "state": {
+        "schemaVersion": 6,
+        "transactions": 145,
+        "managedFiles": 3,
+        "owners": 4,
+        "unchanged": true,
+        "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+        "pendingOperations": 0,
+        "managedContentMatches": true
+      },
+      "observations": [
+        {
+          "assetId": "tools",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "node-repl",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "codex-instructions",
+          "assetKind": "instructions",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "canva",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        }
+      ],
+      "clientFileOperations": 0,
+      "nativeCalls": 0,
+      "modelCalls": 0,
+      "toolCalls": 0
+    },
+    "preservation": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "newMetadataApplications": 0,
+    "newNativeCalls": 0,
+    "newModelCalls": 0,
+    "newToolCalls": 0,
+    "runtimeEvidenceRecords": 25,
+    "nativeSupportExpanded": false
+  },
+  "browser": {
+    "run": false,
+    "newTaskSpaceCreated": false,
+    "reason": "Prior task space missing; no new browser verification attempted"
+  },
+  "remaining": [
+    "Native discovery and actual Tool/provider availability",
+    "Freeze and revalidate cross-scope deployment plan prerequisites",
+    "Reverse references and all global mutation guards",
+    "Global-to-project locks and two-scope journals/recovery",
+    "Saved plan and validate/doctor integration",
+    "PR07 Antigravity Agent child-completion evidence",
+    "PR09 remaining native loading and client contexts",
+    "PR11 additional loading strategies, HTTP/auth and desktop/IDE profiles"
+  ]
+}

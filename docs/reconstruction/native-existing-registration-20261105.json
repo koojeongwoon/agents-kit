@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-05T12:38:58.254Z",
+  "complete": true,
+  "resources": [
+    {
+      "assetId": "codex-instructions",
+      "clientId": "codex",
+      "kind": "instructions",
+      "nativeId": "AGENTS.md",
+      "sourceRegistered": true,
+      "installationAdopted": true,
+      "originalBytesAndModesPreserved": true,
+      "transactionId": "tx-2026-11-05T12-38-58-467Z-6fd37949",
+      "sourceFiles": [
+        {
+          "path": "AGENTS.md",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "mode": 420
+        }
+      ]
+    },
+    {
+      "assetId": "node-repl",
+      "clientId": "codex",
+      "kind": "mcpServers",
+      "nativeId": "node_repl",
+      "sourceRegistered": true,
+      "installationAdopted": true,
+      "originalBytesAndModesPreserved": true,
+      "transactionId": "tx-2026-11-05T12-38-58-630Z-8e3fef67",
+      "sourceFiles": [
+        {
+          "path": "config.toml",
+          "bytes": 1352,
+          "sha256": "9f79842102f0d31ee2b8cb0b86da7303e1dd252f9fb71949b2cefa42a70a9317",
+          "mode": 384
+        }
+      ]
+    },
+    {
+      "assetId": "canva",
+      "clientId": "antigravity",
+      "kind": "mcpServers",
+      "nativeId": "canva",
+      "sourceRegistered": true,
+      "installationAdopted": true,
+      "originalBytesAndModesPreserved": true,
+      "transactionId": "tx-2026-11-05T12-38-58-796Z-736a3aea",
+      "sourceFiles": [
+        {
+          "path": "mcp_config.json",
+          "bytes": 167,
+          "sha256": "dac995612334e937ebe130aa9d75b14b3068a232ce6a01c818ea0b872ef1ffa7",
+          "mode": 420
+        }
+      ]
+    },
+    {
+      "assetId": "tools",
+      "clientId": "antigravity",
+      "kind": "mcpServers",
+      "nativeId": "tools",
+      "sourceRegistered": true,
+      "installationAdopted": true,
+      "originalBytesAndModesPreserved": true,
+      "transactionId": "tx-2026-11-05T12-38-58-957Z-e583abce",
+      "sourceFiles": [
+        {
+          "path": "mcp_config.json",
+          "bytes": 111,
+          "sha256": "48b814dc412a5239184a7a36692e3cab95f1f69ec8f7bcafcd0269ab6047f007",
+          "mode": 420
+        }
+      ]
+    }
+  ],
+  "externalLinksImported": false,
+  "clientFilesWritten": false
+}

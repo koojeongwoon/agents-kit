@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T06:14:10.682Z",
+  "phase": "Actual GUI import/edit/upstream merge/native apply/rollback",
+  "actualBrowser": true,
+  "isolatedHome": true,
+  "sourceVersion": 2,
+  "scope": "global",
+  "resource": "skills",
+  "flow": [
+    "import",
+    "edit",
+    "upstream-merge",
+    "adopt",
+    "apply",
+    "rollback"
+  ],
+  "mergedKitAndUpstream": true,
+  "appliedContentChecked": true,
+  "restoredApplyPrestate": true,
+  "settingsBytesAndModesPreserved": true,
+  "externalLinkIdentityPreserved": true,
+  "userClientWrites": 0,
+  "userStateWrites": 0,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "transactions": 3,
+  "requests": [
+    {
+      "method": "GET",
+      "route": "/api/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/clients",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/local-discovery",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/clients",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/local-discovery",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/import/plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/import/apply",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/source",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/source",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/source-edit/plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/source-edit/apply",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/source",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/upstream/check",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/refresh/plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/refresh/apply",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/source",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/installation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/installation",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/installation/plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/installation/apply",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/installation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/installation/plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/manifest/installation/apply",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/installation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/deployment/rollback-plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/deployment/rollback",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 200
+    }
+  ]
+}

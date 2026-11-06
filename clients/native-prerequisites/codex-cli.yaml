@@ -1,0 +1,18 @@
+schemaVersion: 1
+clientId: codex
+surface: cli
+configStore: codex-local
+adapter: codex-prerequisites-v1
+# Auxiliary discovery evidence preserves existing base client locator digests.
+# This lists Tools on explicitly selected providers; it grants no model-use gate.
+systemFiles:
+  - /etc/codex/config.toml
+  - /etc/codex/managed_config.toml
+  - /etc/codex/requirements.toml
+evidence:
+  - binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+    version: 0.166.0-alpha.6
+    platform: darwin
+    arch: arm64
+    verifiedAt: 2026-11-06
+    source: docs/reconstruction/codex-native-prerequisite-rpc-research-20261106.json

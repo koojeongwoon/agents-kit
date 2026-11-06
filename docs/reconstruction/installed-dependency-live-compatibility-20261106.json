@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T21:52:35.206Z",
+  "mode": "read-only-compatibility",
+  "state": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "observations": [
+    {
+      "assetId": "tools",
+      "assetKind": "mcpServers",
+      "schemaVersion": 2,
+      "status": "ownership-observed",
+      "dependencyState": "unverified",
+      "bindingDeclarationsState": "unverified",
+      "dependencyIssues": [
+        {
+          "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+        }
+      ],
+      "discoveryState": "unverified",
+      "fulfilled": false
+    },
+    {
+      "assetId": "node-repl",
+      "assetKind": "mcpServers",
+      "schemaVersion": 2,
+      "status": "ownership-observed",
+      "dependencyState": "unverified",
+      "bindingDeclarationsState": "unverified",
+      "dependencyIssues": [
+        {
+          "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+        }
+      ],
+      "discoveryState": "unverified",
+      "fulfilled": false
+    },
+    {
+      "assetId": "codex-instructions",
+      "assetKind": "instructions",
+      "schemaVersion": 2,
+      "status": "ownership-observed",
+      "dependencyState": "unverified",
+      "bindingDeclarationsState": "unverified",
+      "dependencyIssues": [
+        {
+          "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+        }
+      ],
+      "discoveryState": "unverified",
+      "fulfilled": false
+    },
+    {
+      "assetId": "canva",
+      "assetKind": "mcpServers",
+      "schemaVersion": 2,
+      "status": "ownership-observed",
+      "dependencyState": "unverified",
+      "bindingDeclarationsState": "unverified",
+      "dependencyIssues": [
+        {
+          "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+        }
+      ],
+      "discoveryState": "unverified",
+      "fulfilled": false
+    }
+  ],
+  "clientFileOperations": 0,
+  "nativeCalls": 0,
+  "modelCalls": 0,
+  "toolCalls": 0
+}

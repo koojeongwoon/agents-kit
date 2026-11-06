@@ -20,6 +20,18 @@ Manifest에 없는 공통 자원을 자동 생성·가져오기·배포하지 �
 근거로 판단합니다. 지원되지 않거나 검증되지 않은 기능은 fail-closed로
 차단됩니다.
 
+## 기존 자원의 Kit 관리
+
+기존 Skill·MCP·Agent·지침을 관측한 뒤 선택한 자원의 사본을 Kit에 편입합니다.
+사본 편집과 원본 업데이트의 3-way 병합은 설치와 분리하며, 설치 변경은 별도의
+계획을 검토한 뒤 적용하고 이력에서 복원합니다. CLI와 GUI는 같은 서비스를 사용합니다.
+ego-browser 같은 외부 관리 링크는 존재·연결 상태를 표시하고 원래 관리 주체를 유지합니다.
+
+현재 검증된 Codex CLI `0.167.0-alpha.3.2`의 기존 기본 형식은 전역·프로젝트 모두
+적용·인식·복원을 확인했습니다. 자동 적용은 검토된 버전·실행 파일 hash·scope·형식만
+허용합니다. [핵심 검증 결과](docs/reconstruction/current-codex-final-core-acceptance-20261106.md)와
+[PR 정리 범위](docs/reconstruction/shared-resources-core-pr-20261106.md)를 참고하세요.
+
 ## Kit 구조
 
 기본 Kit은 `~/.agents-kit/kit`에 생성됩니다.

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T23:35:41.619Z",
+  "mode": "legacy-user-catalog-read-only",
+  "state": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "unchanged": true
+  },
+  "catalog": {
+    "scopes": [
+      {
+        "scope": "global",
+        "status": "ready"
+      },
+      {
+        "scope": "project",
+        "status": "unselected"
+      }
+    ],
+    "registryEntries": 5,
+    "dependencyGraphValid": true,
+    "localNodes": 5,
+    "globalPrerequisites": 0
+  },
+  "clientFileOperations": 0,
+  "nativeCalls": 0,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "userIndexActivated": false,
+  "v3RealConsumerDeploymentProven": false
+}

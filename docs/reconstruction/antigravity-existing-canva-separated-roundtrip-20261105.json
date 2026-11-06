@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T14:24:40.962Z",
+  "clientId": "antigravity",
+  "assetId": "canva",
+  "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+  "purpose": "existing-native-registration-roundtrip",
+  "installationRoundtripConfirmed": true,
+  "semanticSettingsChanged": false,
+  "modelTurnsRequested": 0,
+  "providerToolCallsRequested": 0,
+  "stages": {
+    "before": {
+      "verification": {
+        "schemaVersion": 1,
+        "deployment": {
+          "status": "passed",
+          "checks": {
+            "recoveryClear": "passed",
+            "bytesMatch": "passed",
+            "modesMatch": "passed",
+            "ownershipMatch": "passed"
+          }
+        },
+        "nativeRecognition": {
+          "status": "passed",
+          "checks": {
+            "configurationListed": "passed"
+          }
+        },
+        "modelBehavior": {
+          "status": "not-tested",
+          "checks": {}
+        },
+        "execution": {
+          "status": "passed",
+          "checks": {
+            "processCompleted": "passed",
+            "binaryUnchanged": "passed",
+            "allowedToolsOnly": "passed"
+          },
+          "reason": "OK"
+        },
+        "confirmed": false
+      },
+      "existingOtherServerListed": true
+    },
+    "applied": {
+      "verification": {
+        "schemaVersion": 1,
+        "deployment": {
+          "status": "passed",
+          "checks": {
+            "transactionCommitted": "passed",
+            "recoveryClear": "passed",
+            "bytesMatch": "passed",
+            "modesMatch": "passed",
+            "ownershipMatch": "passed"
+          }
+        },
+        "nativeRecognition": {
+          "status": "passed",
+          "checks": {
+            "configurationListed": "passed"
+          }
+        },
+        "modelBehavior": {
+          "status": "not-tested",
+          "checks": {}
+        },
+        "execution": {
+          "status": "passed",
+          "checks": {
+            "processCompleted": "passed",
+            "binaryUnchanged": "passed",
+            "allowedToolsOnly": "passed"
+          },
+          "reason": "OK"
+        },
+        "confirmed": false
+      },
+      "existingOtherServerListed": true
+    },
+    "rollback": {
+      "verification": {
+        "schemaVersion": 1,
+        "deployment": {
+          "status": "passed",
+          "checks": {
+            "transactionCommitted": "passed",
+            "recoveryClear": "passed",
+            "bytesMatch": "passed",
+            "modesMatch": "passed",
+            "ownershipMatch": "passed"
+          }
+        },
+        "nativeRecognition": {
+          "status": "passed",
+          "checks": {
+            "configurationListed": "passed"
+          }
+        },
+        "modelBehavior": {
+          "status": "not-tested",
+          "checks": {}
+        },
+        "execution": {
+          "status": "passed",
+          "checks": {
+            "processCompleted": "passed",
+            "binaryUnchanged": "passed",
+            "allowedToolsOnly": "passed"
+          },
+          "reason": "OK"
+        },
+        "confirmed": false
+      },
+      "existingOtherServerListed": true
+    }
+  },
+  "productionEvidencePromoted": false,
+  "applyTransactionId": "tx-2026-11-05T14-24-41-631Z-5a169971",
+  "rollbackTransactionId": "tx-2026-11-05T14-24-41-942Z-8679be6d",
+  "cleanup": {
+    "originalFullConfigAndModeRestored": true,
+    "kitSourceRestored": true,
+    "originalOwnershipRetained": true
+  }
+}

@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
-import {spawn} from 'node:child_process';
+import {spawn, spawnSync} from 'node:child_process';
 import readline from 'node:readline';
 import test from 'node:test';
-import {isolatedEnvironment, runCommand, withCodexRpc} from '../scripts/client-verification/process.mjs';
+import {isolatedEnvironment, runCommand, withCodexRpc, readClientVersion} from '../scripts/client-verification/process.mjs';
 import {skillObservation, markerObservation, lifecycleRecognition} from '../scripts/client-verification/observations.mjs';
 
 function fixture(t) {
@@ -13,6 +14,18 @@ function fixture(t) {
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
   return root;
 }
+
+test('global CLI verification retains exact prerelease/build versions instead of treating them as stable releases', () => {
+  assert.equal(readClientVersion('codex-cli 0.166.0-alpha.6\n'), '0.166.0-alpha.6');
+  assert.equal(readClientVersion('v1.5.0+native.2\n'), '1.5.0+native.2');
+  assert.equal(readClientVersion('1.5.0\n'), '1.5.0');
+  for (const value of ['codex-cli 0.166', 'version 1.5.0_suffix', '', null]) assert.equal(readClientVersion(value), undefined);
+});
+
+test('global Agent verifier requires explicit fixture opt-in before opening a native client', () => {
+  const result = spawnSync(process.execPath, [path.resolve('scripts/verify-client-agents.mjs'), '--scope', 'global'], {encoding: 'utf8'});
+  assert.notEqual(result.status, 0); assert.match(result.stderr, /requires --native-global temporary-fixtures/);
+});
 
 test('CLI verification isolates credentials/config environment and bounds process lifetime', async t => {
   const root = fixture(t), env = isolatedEnvironment(path.join(root, 'home'), root, '/usr/bin:/bin');
@@ -66,8 +79,27 @@ test('RPC failures are bounded and reported without echoing server error content
   await assert.rejects(withCodexRpc(binary, {cwd: root, env: isolatedEnvironment(root, root), timeoutMs: 1000}, () => {}), error => error.code === 'RPC_REJECTED' && !error.message.includes('sensitive'));
 });
 
+test('RPC probes accept explicit per-process config arguments without editing native settings', async t => {
+  const root=fixture(t),binary=path.join(root,'rpc-options');
+  fs.writeFileSync(binary,`#!${process.execPath}\nconst rl=require('node:readline').createInterface({input:process.stdin});rl.on('line',line=>{const m=JSON.parse(line);if(m.id)console.log(JSON.stringify({id:m.id,result:{args:process.argv.slice(2)}}));});\n`,{mode:0o700});
+  const args=['-c','mcp_servers.unrelated.enabled=false'];
+  const result=await withCodexRpc(binary,{cwd:root,env:process.env,timeoutMs:1000,appServerArgs:args},request=>request('fixture/args',{}));
+  assert.deepEqual(result.args,['app-server',...args]);
+});
+
 const {createUseObservation, authenticatedEnvironment, runModelUse} = await import('../scripts/client-verification/model-use.mjs');
 const expectedUse = {instructions: 'ca04-aaa-v1', skill: 'ca04-bbb-v1', mcp: 'ca04-ccc-v1'};
+
+test('live model probes reject binary replacement before or during a turn without promoting its evidence', async t => {
+  const root=fixture(t), binary=path.join(root,'fake-codex'), ran=path.join(root,'ran');
+  fs.writeFileSync(binary, `#!${process.execPath}\nimport fs from 'node:fs';fs.writeFileSync(${JSON.stringify(ran)},'ran');if(process.argv.includes('--mutate'))fs.appendFileSync(import.meta.filename,'\\n// changed');console.log(JSON.stringify({type:'item.completed',item:{type:'agent_message',text:JSON.stringify({skill:'marker'})}}));console.log(JSON.stringify({type:'turn.completed'}));\n`, {mode:0o700});
+  const fingerprint=()=>crypto.createHash('sha256').update(fs.readFileSync(binary)).digest('hex');
+  const options={cwd:root,env:isolatedEnvironment(root,root),clientId:'codex',expected:{skill:'marker'},expectedBinarySha256:fingerprint(),timeoutMs:5000};
+  const changedBefore=await runModelUse(binary,[],{...options,expectedBinarySha256:'0'.repeat(64)});
+  assert.equal(changedBefore.reason,'CLIENT_BINARY_CHANGED');assert.equal(changedBefore.success,false);assert.equal(fs.existsSync(ran),false);
+  const stable=await runModelUse(binary,[],options);assert.equal(stable.success,true);assert.equal(stable.binaryUnchanged,true);assert.equal(stable.binarySha256Before,stable.binarySha256After);
+  const changedDuring=await runModelUse(binary,['--mutate'],options);assert.equal(changedDuring.reason,'CLIENT_BINARY_CHANGED');assert.equal(changedDuring.binaryUnchanged,false);assert.equal(changedDuring.success,false);assert.notEqual(changedDuring.binarySha256Before,changedDuring.binarySha256After);
+});
 
 test('model evidence distinguishes final answers from successful supporting-file and MCP calls', () => {
   const observation = createUseObservation('codex', expectedUse);
@@ -277,6 +309,12 @@ test('streamed model verification closes stdin on a final result and bounds pend
   assert.equal(timed.success, false); assert.equal(timed.reason, 'PROBE_TIMEOUT');
 });
 
+test('a failing public observation callback rejects the probe without escaping the cleanup promise or echoing details',async t=>{
+  const root=fixture(t),observation={facts:{terminalSuccess:false},accept(){throw new Error('private observer details');}};
+  const result=await runModelUse(process.execPath,['-e','console.log(JSON.stringify({type:"turn.completed"}))'],{cwd:root,env:process.env,clientId:'codex',observation,timeoutMs:1000});
+  assert.equal(result.reason,'PROBE_OBSERVATION_FAILED');assert.equal(result.success,false);assert.equal(JSON.stringify(result).includes('private observer details'),false);
+});
+
 import {agentEvidence} from '../scripts/client-verification/agent-use.mjs';
 
 test('Agent evidence levels never promote final-marker or invocation proof to child completion', () => {
@@ -328,6 +366,25 @@ test('global fixture refuses occupied targets and cleans owned files on action f
 });
 
 import {runCodexAgentRpc} from '../scripts/client-verification/codex-agent-rpc.mjs';
+
+test('RPC Agent probes reject a replaced executable before launching a client', async t => {
+  const root=fixture(t), binary=path.join(root,'fake-codex'), marker=path.join(root,'launched');
+  fs.writeFileSync(binary, `#!${process.execPath}\nrequire('node:fs').writeFileSync(${JSON.stringify(marker)},'launched');\n`, {mode:0o700});
+  const result=await runCodexAgentRpc(binary,{cwd:root,env:process.env,prompt:'probe',agentName:'fixture',marker:'ABSENT',expectedBinarySha256:'0'.repeat(64),timeoutMs:200});
+  assert.equal(result.reason,'CLIENT_BINARY_CHANGED');assert.equal(result.success,false);assert.equal(fs.existsSync(marker),false);
+});
+
+test('RPC verifies ephemeral child metadata without history and correlates an earlier public completed-child result', async t => {
+  const root=fixture(t),binary=path.join(root,'ephemeral.cjs');
+  fs.writeFileSync(binary,`#!${process.execPath}
+const readline=require('node:readline');const send=v=>console.log(JSON.stringify(v));readline.createInterface({input:process.stdin}).on('line',line=>{const m=JSON.parse(line);if(!m.id)return;
+if(m.method==='initialize')send({id:m.id,result:{}});if(m.method==='model/list')send({id:m.id,result:{data:[{model:'default',isDefault:true}]}});if(m.method==='thread/start')send({id:m.id,result:{thread:{id:'root'}}});
+if(m.method==='turn/start'){send({id:m.id,result:{}});send({method:'item/completed',params:{threadId:'root',item:{type:'subAgentActivity',kind:'started',agentThreadId:'child'}}});send({method:'item/completed',params:{threadId:'root',item:{type:'collabAgentToolCall',tool:'wait',status:'completed',receiverThreadIds:['child'],agentsStates:{child:{status:'completed',message:'opaque'}}}}});send({method:'item/completed',params:{threadId:'root',item:{type:'agentMessage',text:'{"agent":"opaque"}'}}});send({method:'turn/completed',params:{threadId:'root',turn:{status:'completed'}}});}
+if(m.method==='thread/resume')send({id:m.id,error:{code:-32000,message:'ephemeral thread cannot resume'}});
+if(m.method==='thread/read'){if(m.params.includeTurns!==false||m.params.threadId!=='child')process.exit(7);send({id:m.id,result:{thread:{id:'child',parentThreadId:'root',agentRole:'fixture',turns:[]}}});}});`,{mode:0o700});
+  const result=await runCodexAgentRpc(binary,{cwd:root,env:process.env,prompt:'probe',agentName:'fixture',marker:'opaque',timeoutMs:1000});
+  assert.equal(result.roleObserved,true);assert.equal(result.completedChildMarker,true);assert.equal(result.childEvidenceSource,'public-collaboration-result');assert.equal(result.success,true);
+});
 
 test('RPC subscribes to only the observed child without history and handles a failed root promptly', async t => {
   const root = fixture(t), executable = path.join(root, 'fake-codex.cjs');

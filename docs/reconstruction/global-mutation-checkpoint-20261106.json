@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T01:22:00.936903+00:00",
+  "phase": "PR10 selective global mutation internal execution and guarded file/tree recovery",
+  "status": "partial",
+  "publicV3ApplyEnabled": false,
+  "publicGlobalMutationDispatchEnabled": false,
+  "tests": {
+    "focused": {
+      "total": 105,
+      "passed": 105,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-global-mutation-final-regression.log"
+    },
+    "root": {
+      "total": 697,
+      "passed": 697,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-global-mutation-root-final.log"
+    },
+    "http": {
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-global-mutation-http-final.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-global-mutation-build-final.log"
+    },
+    "guiTypecheckCargo": {
+      "rerun": false,
+      "reason": "No frontend, TypeScript or Rust source changes; prior evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/application/global-dependency-mutation.js": "3d0cf70812d8a75f71e443b490be3b99c6ca478e91548be9c96fb5a60b74f9f3",
+    "lib/application/deployment-installation-prediction.js": "899d5742f2104694c69bb9adf6c23855c9f3acf7696700e73a8cd223682552fa",
+    "lib/application/installation-receipt-service.js": "1cb4971a9cd78e6801f933670f54d29c408974f09d26c49336d57282702cc8cd",
+    "lib/application/inspect-dependency-dependents.js": "1a34470da2bb26fe57b73c5696d287176d8543ea131466e58bef848f4ba304ae",
+    "lib/application/apply-deployment.js": "ee3fb484498b15e6c93202b1e10a309bb45ee606783de28578ab20f29cfcc6de",
+    "lib/infrastructure/dependency-store-session.js": "d1d487d20ef0e30d0bcaf5b64276592f3ab51790c0abe067c0b4ec6263e95ef4",
+    "lib/infrastructure/deployment-journal.js": "e90826bf96e53a50acd5e1104912ce7c819721897c35c8200fc6fea5e2b06950",
+    "lib/infrastructure/tree-deployment-transaction.js": "04ed09a720d27c098244aa96d43f625efa488513c4bead9c7f9e79c3bbf20474",
+    "lib/infrastructure/planned-installation-view.js": "07f6f090b2eb3769613be8b828aa716caeb613c41c596ee3991167e8a22529b2",
+    "lib/infrastructure/dependency-coordination-io.js": "6bee70ff659bbe60aac72b24ae83a3880d1d6be0e63c5384c110686d4c86bdd6",
+    "lib/infrastructure/native-prerequisite-context.js": "b16d97f5c178c42f8f4f49a4a77c301d8ca972807fb5e1a75695bd4adf9bdcf7",
+    "lib/domain/dependency-reverse-index.js": "5076b8c37644afe9ff86bef46379b8b4e123e4f5f8bc5acfd84327910f18d557",
+    "lib/application/manifest-deployment-service.js": "f1d70474bb40a0da8ada80b5bc58b4f356bb8967529f5b3dc3db211545332c70",
+    "lib/application/source-dependency-guard.js": "b7a0aa25b03bda02e1841de104b3d8f8498b02e95f2605ee66d5899e7903052e",
+    "test/global-dependency-mutation.test.js": "697ab73433219736a14f055abbc2f9b3d29644eecb58fd8fb59eb92618807642",
+    "test/helpers/crash-global-dependency-mutation.js": "d30d8328398f1aaf288a63bd18e341551c484651e46d5c5eb269675f7a72b544",
+    "package.json": "ea5c1604718dd020e913f56b878d0a838f8cd1ebcf205242d1e9573e63492625",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "docs/contracts/global-dependency-mutation-v1.md": "94c6eaf3b4c87e35cbfeabd1e79e68fd664b629791082b2735b8f7c522380214",
+    "docs/contracts/source-dependency-guards-v1.md": "d8868a67a278167dc4f430203d6ed7ac53b6d79bf9b15bb27e4099d2343889cf",
+    "docs/contracts/dependency-reverse-index-v1.md": "3b0d17956d59932848d7e642d8b83a6dee659a10f2bdff76d303f6459c8c438b",
+    "docs/contracts/scoped-dependencies-v1.md": "83310caf27cf4b3c337ce88dcf9c35ea3e4cc078274d62c24889148e54cbc4c9",
+    "docs/product/shared-resources-consolidation-plan.md": "c6265838aac7da4fd80a88caea893191ffe25d9d639560e96a8c0d205c5a9931",
+    "docs/reconstruction/phase-scoped-dependencies.md": "5e28db98aa9ece11d00a456c264716779dfd5df308e70c532913e605a6e26cf8",
+    "docs/traceability/shared-conversation-requirements.md": "cda853286a04021a38511f86308726a2e9ed9226eed3b385e88b1265f30b461a",
+    "docs/reconstruction/global-mutation-live-compatibility-20261106.json": "381e47fa5fdec4b6f4d084326430ba65534c65e68de0eda4bb8104af98c3b0ad"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-red.log",
+      "sha256": "c57051caf9bfcb1da3f1c661b1a201bfdec6c173125c6c0a0b13c59e7ef0b7bd"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-modes-hooks-red.log",
+      "sha256": "21b215d885fa79a8a2338275c4f350c81ba196020eb85d3ee0616b4fefae5382"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-profile-borrow-red.log",
+      "sha256": "2d8ed7d76bc711c081d498f18020d622761d4818b147dc8a1380f0860a9c07d3"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-pin-layout-red.log",
+      "sha256": "0ccf9082371ad9c13b65b67f806883e2ca20c36e65c680527baf2d31e1397bf2"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-stale-red.log",
+      "sha256": "8605585d9bab6db54a7cce7ea8e750df01e3fd56b452b5d393920f6264ff9d4b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-final-regression.log",
+      "sha256": "b09d57bd375a56f7c7c6f1ce6382c9640abdf058819dfa44e04d706ddbb45b32"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-root-final.log",
+      "sha256": "6deeeb41a315704de856598a7bf4b813e07cdce23515dc8706539b886315e812"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-http-final.log",
+      "sha256": "96f5ee8b31bfac04a30e10f6842162a45d7898dfd7db0bf4f44af501de8dd630"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-build-final.log",
+      "sha256": "c1e632c87aed55140d256e64929e320aa604642beccc1cebd02c20b19517131f"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-preservation-final.json",
+      "sha256": "0ef66f30e217b37d9f19ec50ae317ba46921f64955ba202074b1d944dd56b265"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-global-mutation-live-compatibility-final.json",
+      "sha256": "381e47fa5fdec4b6f4d084326430ba65534c65e68de0eda4bb8104af98c3b0ad"
+    }
+  ],
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "actualUserClientFileOperations": 0,
+  "newRealNativeCalls": 0,
+  "newModelOrToolCalls": 0,
+  "remaining": [
+    "Public global/scoped apply/save/registration/release/recovery dispatch",
+    "Global rollback and previous path migration impact prediction",
+    "Native source mutation prediction and actual planned native context transition/observation",
+    "Public saved plans/validate/doctor and actual cross-scope consumer roundtrip",
+    "Remaining PR07/09/11 and C07 Skill client compatibility/variants"
+  ]
+}

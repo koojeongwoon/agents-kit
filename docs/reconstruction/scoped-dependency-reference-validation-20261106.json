@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10-contract-provider-input-validation",
+  "checkedAt": "2026-11-05T20:38:45.609Z",
+  "implementation": {
+    "contractDraft": true,
+    "providerInputValidation": true,
+    "qualifiedReferenceResolver": false,
+    "globalInstallationPreconditions": false,
+    "reverseIndex": false,
+    "crossScopeLockJournal": false,
+    "crossScopeAutomaticApply": false
+  },
+  "validation": {
+    "rootPassed": 524,
+    "httpPassed": 40,
+    "guiPassed": 64,
+    "guiEvidence": "docs/reconstruction/native-guidance-catalog-preservation-20261106.json",
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargoCheck": true,
+    "logHashes": {
+      "root": "abc7052e9ca36474da42f690a19de1d5c082a8fc505b2220af754c311317437b",
+      "http": "9ed20122c9845d1934011f6f6038ae39be40b7ff6e6ac082b86d837f0c691baf",
+      "desktopBuild": "5769a8b84826b0d3a9502d19f52932165d3f36a41aad999c95147b90b118968e",
+      "cargo": "23e5c9546cfc4d7cb2f5c3431fdc2d23ce00475296cf8614f9d6de2c4ebd28fc",
+      "red": "294db15bcc797dc637eb62b0b316de5b0d71e1d74cc7e3bbc6092b9489f7ad3b",
+      "green": "fb623149566c373f82ee97637142fe448b5fd75969b7445ba59773aed6d875f9",
+      "httpFirst": "57adc5209adf96f2b8da182b34e88cdd1124e2a925a6a21da1af7588529fe9d5",
+      "httpDiagnostic": "92139316c7dd70efabb0c5304c217e43864040eb2a1e9296c37498492d1fd4f7"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/manifest-contracts.js": "1229f86961fdd86d443d9212864da43581e3bf0bcc4cb09e06d9cd3900be285b",
+    "test/manifest-references.test.js": "42cdc31fb5f567623aac3e0e32f8fe722dc23cbccbed97d6e1970d073b1cff43",
+    "gui/server/test/control-plane-e2e.test.js": "be5a8a44905b5e900de25c6dfbee9dfce4ec3773a0e729f2cce6065faca613c0",
+    "docs/contracts/scoped-dependencies-v1.md": "6478a4cf883aa3a2a63c067f52595f843c09d352891c1b0f5d48736a237b2a7b"
+  },
+  "httpFirstRun": {
+    "passed": 39,
+    "failed": 1,
+    "test": "HTTP control plane completes plan, apply, history, and rollback",
+    "stage": "history GET",
+    "status": 403,
+    "cause": "unconfirmed",
+    "diagnosticAssertionAdded": true,
+    "isolatedRecheckPassed": true,
+    "fullRecheckPassed": true
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "additionalNativeModelRequests": 0,
+  "additionalNativeToolRequests": 0,
+  "userSettingsWritten": false,
+  "nativeDeploymentGateExpanded": false
+}

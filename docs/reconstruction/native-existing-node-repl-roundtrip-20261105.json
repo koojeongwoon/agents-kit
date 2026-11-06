@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T12:59:25.535Z",
+  "assetId": "node-repl",
+  "clientId": "codex",
+  "complete": true,
+  "semanticSettingsChanged": false,
+  "externalLinksWritten": false,
+  "operations": [
+    {
+      "target": "/Users/jw/.codex/config.toml",
+      "operation": "UPDATE",
+      "metadataOnly": false
+    }
+  ],
+  "observations": {
+    "before": {
+      "registered": true,
+      "otherServersPreserved": true,
+      "modelOrRemoteToolInvoked": false
+    },
+    "applied": {
+      "registered": true,
+      "otherServersPreserved": true,
+      "modelOrRemoteToolInvoked": false
+    },
+    "rollback": {
+      "registered": true,
+      "otherServersPreserved": true,
+      "modelOrRemoteToolInvoked": false
+    }
+  },
+  "applyTransactionId": "tx-2026-11-05T12-59-26-253Z-c9283557",
+  "rollbackTransactionId": "tx-2026-11-05T12-59-26-578Z-2d3fdec3",
+  "cleanup": {
+    "originalFullConfigAndModeRestored": true,
+    "kitBaselineRestored": true,
+    "existingSourceAndOwnershipRetained": true
+  }
+}

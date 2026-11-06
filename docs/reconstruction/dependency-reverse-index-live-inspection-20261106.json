@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T22:05:34.377Z",
+  "mode": "read-only-cli-dependent-inspection",
+  "inspection": {
+    "schemaVersion": 1,
+    "readOnly": true,
+    "coverage": "registered-projects-only",
+    "observedAt": "2026-11-05T22:05:34.366Z",
+    "fulfilled": false,
+    "status": "not-enabled",
+    "reason": "DEPENDENCY_INDEX_NOT_ENABLED",
+    "projects": [],
+    "issues": []
+  },
+  "state": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "dependencyIndexAutomaticallyCreated": false
+  },
+  "catalogResponseSha256": "d289880774e8892c6823b3f02b90a7b1df867df69b511041568713aae883045b",
+  "catalogIssues": [],
+  "clientFileOperations": 0,
+  "nativeClientCalls": 0,
+  "modelCalls": 0,
+  "toolCalls": 0
+}

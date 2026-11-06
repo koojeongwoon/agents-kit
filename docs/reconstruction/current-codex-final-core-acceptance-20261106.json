@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T06:23:14.815334+00:00",
+  "scope": "Current Codex existing MCP/Agent/instructions global/project and GUI core flow; no expansion",
+  "complete": true,
+  "version": "0.167.0-alpha.3.2",
+  "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+  "actualBinaryIsolatedHome": true,
+  "nativeLifecycleCombinations": 6,
+  "nativeLifecycleStagesPerCombination": 5,
+  "completedAgentChildEvidence": 6,
+  "guiRepresentative": "Actual browser Skill import/edit/upstream merge/adopt/apply/rollback",
+  "typedCoreRegressionCombinations": 8,
+  "tests": {
+    "root": {
+      "passed": 853,
+      "failed": 0,
+      "skipped": 0
+    },
+    "http": {
+      "passed": 53,
+      "failed": 0,
+      "skipped": 0
+    },
+    "gui": {
+      "passed": 91,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typecheck": "passed",
+    "desktopBuild": "passed",
+    "cargoCheckOffline": "passed",
+    "diffCheck": "passed",
+    "focusedGateTests": {
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0
+    },
+    "tddGateBaseline": {
+      "passed": 32,
+      "failed": 3,
+      "skipped": 0
+    }
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": false
+      }
+    ]
+  },
+  "ledgerBefore": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": false
+  },
+  "ledgerAfter": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": false
+  },
+  "ledgerAndObservationStatusesIdentical": true,
+  "existingDriftRetained": [
+    "node-repl"
+  ],
+  "realEgoLinksPreserved": 3,
+  "userClientWrites": 0,
+  "userStateWrites": 0,
+  "sourceAuthenticationUnchanged": true,
+  "fileSha256": {
+    "clients/codex.yaml": "560d0f7b1079cd960e6defb44bba087bc6f878fef4ec3a6d96b346d3c79bed09",
+    "scripts/client-verification/native-existing-resources.mjs": "1ca270bc8fbbd815e59cf0a2a4044f560713b893ae906fd12b9159e9aff02a82",
+    "test/client-definitions.test.js": "0ec11482fc54c6cbdf8f509822f78462e3c561ae3a2158ebf4ca5c89319d9b89",
+    "test/runtime-activation.test.js": "f970d552d33b54bd859777c4f407ebdc43401e1e9158e950dcfcdf2710c81490",
+    "docs/reconstruction/current-codex-existing-resources-20261106.json": "63d3ed2c532979e196fb26d628cf13731eba201c15e07b48447653ac96150226",
+    "docs/reconstruction/current-codex-catalog-readers-20261106.json": "f3e64604b54e04bba3d15564752b1b991dddec8c04d06bebec21e73fbfd59ba9",
+    "docs/reconstruction/current-codex-gui-core-roundtrip-20261106.json": "338dec1c5ddd71e2964446be4b6c04f7931260c7d4395e509986497a83b0975b"
+  },
+  "limits": [
+    "CLI only, exact reviewed binary and existing basic profiles.",
+    "GUI live representative is Skill; all four resource types x two scopes additionally covered by shared application regression.",
+    "Instruction runtime sources observed; catalog preview and model compliance remain distinct.",
+    "MCP fixture Tool discovery observed; Tool execution not requested.",
+    "Pre-existing ledger drift is preserved, not repaired.",
+    "No new clients, formats, strategies or runtime modules."
+  ]
+}

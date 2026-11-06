@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10-internal-dependency-coordination-and-recovery",
+  "checkedAt": "2026-11-05T22:48:41.729Z",
+  "implementation": {
+    "stateSchema": 8,
+    "coordinationJournalSchema": 4,
+    "pureConsumerMergeAndReleaseTombstone": true,
+    "readonlyDigestPlan": true,
+    "globalThenProjectLocks": true,
+    "privateStoreInstanceAndInodeNonceSession": true,
+    "reviewedMutationImagesCheckedBeforeClientWrites": true,
+    "noChildGlobalClientFileWrites": true,
+    "externalLinksPreserved": true,
+    "finalRegistrationIncludedInChildJournal": true,
+    "manualMetadataAndClientEditsPreserved": true,
+    "deadOrTerminalLeaseRecovery": true,
+    "cleanupMarkerAndPartialLockRecovery": true,
+    "staleRecoveryGuardArchivedAtomically": true,
+    "legacySingleScopeRecoveryPreserved": true,
+    "publicManifestV3Deployment": false,
+    "actualNativeProofAdapter": false,
+    "selectiveGlobalMutationAndSourceGuards": false
+  },
+  "validation": {
+    "passed": {
+      "root": 602,
+      "http": 44,
+      "gui": 74
+    },
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust source or Cargo dependency changes"
+    },
+    "logs": {
+      "root": {
+        "path": "/private/tmp/kit-pr10-coordination-root-verified.log",
+        "sha256": "24e295f6ffbefd7f8c21f86dfe3802d94f6bfce7f3f4c871ce4bf1460f86b9b4"
+      },
+      "http": {
+        "path": "/private/tmp/kit-pr10-coordination-http-mutations-final.log",
+        "sha256": "2706a380fa3030c70ea23933423c439f31ddffdf2a1df6de6b00d5285189c2ab"
+      },
+      "gui": {
+        "path": "/private/tmp/kit-pr10-coordination-gui-final.log",
+        "sha256": "8fac8a1fda2d1d217afa11f59573ace07e97971e5156bea03b22a186002f0f2e"
+      },
+      "typecheck": {
+        "path": "/private/tmp/kit-pr10-coordination-typecheck-final.log",
+        "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+      },
+      "desktopBuild": {
+        "path": "/private/tmp/kit-pr10-coordination-build-mutations-final.log",
+        "sha256": "67b041918ca96b1bec4e32f98559e19469dcbcbee69eb1395c20a394db527671"
+      }
+    },
+    "redLogHashes": {
+      "/private/tmp/kit-pr10-coordination-behavior-red.log": "55b76d5c75ee11a98e95ef48023558b147b94212984e24673fbe59443afd0f95",
+      "/private/tmp/kit-pr10-coordination-concurrent-red.log": "6641c94b0d9e0759603783292d13c9aefd5ccea36eb58b1e6b43c14c10182af8",
+      "/private/tmp/kit-pr10-coordination-terminal-red.log": "58736dfbb740a6e39cf1a6ab0f28b40448c54bcb2020fa514a8756b1929cc75e",
+      "/private/tmp/kit-pr10-coordination-cleanup-red.log": "6f2be6935b70c5ace5458cfbcc7425bd9868797d0698a7fa3c51b427b7e82551",
+      "/private/tmp/kit-pr10-coordination-recovery-guard-red.log": "289b9f134a124a5e45bc0fec1bed9212efc7458365a9249f296d444cd127cfd4",
+      "/private/tmp/kit-pr10-coordination-external-link-red.log": "ae7d1c64d6e324e5ac29c8aff1462cfa8d902afde0bc30ec96b0a93aafb38e4b",
+      "/private/tmp/kit-pr10-coordination-alias-red.log": "23f36c9dbf1e6fd2f0a6fff058c341797d6799ed6b951204218778d93c30db4b",
+      "/private/tmp/kit-pr10-coordination-unreviewed-red.log": "5e9efe6e1d9ad18faa57d79d62d7076f69708f833ce5b97bf7865967d16300c1",
+      "/private/tmp/kit-pr10-coordination-root-first.log": "a0227bd2bac4f16c5ec9d9d9260536cd0e32994535547211a6496f82cbb30ebd"
+    },
+    "sigkillBoundaries": [
+      "journal-prepared",
+      "index-reserved",
+      "project-state-prepared",
+      "child-before-state",
+      "project-committed",
+      "index-active",
+      "coordination-completed",
+      "project-lock-released",
+      "global-lock-released"
+    ],
+    "sigkillDuringRecovery": true,
+    "syntheticNativeProofOnly": true,
+    "documentationLinksChecked": true
+  },
+  "sourceHashes": {
+    "lib/domain/dependency-registration-change.js": "968a044fee374bf597743aa7cadf3f28608bc91fc8cb6e60e8f2f9eb64db78d3",
+    "lib/domain/dependency-reverse-index.js": "c2b89c48b79a6d0c3c68e42394f647097376be8c986e51a9e2a5c580cdef9744",
+    "lib/application/dependency-coordination-service.js": "ba273e319462980a2d94966e2ab8fd2194d620716fa327d176459adde1e61dce",
+    "lib/infrastructure/dependency-coordination-io.js": "6bee70ff659bbe60aac72b24ae83a3880d1d6be0e63c5384c110686d4c86bdd6",
+    "lib/infrastructure/dependency-store-session.js": "fd65cfa0bfb127647c1feea28d153bb04a20cee06232db06efafe90738cc99b9",
+    "lib/infrastructure/deployment-state-store.js": "3cdb367928305952740c9266982ce330ccb5dcdba9419328b231c9283ad34fb1",
+    "lib/infrastructure/deployment-journal.js": "3c52f5afc7cba9c0fa5a2ff045ced1b1bb016d2699eb3860673d06ff90093acb",
+    "lib/infrastructure/tree-deployment-transaction.js": "27b3d7990e810d39963ccb10d5bddcf63a9b68da13142ee47f1b844c455c1bda",
+    "lib/application/apply-deployment.js": "7512abdb341c97cfc7180792496d75675baaf9589db8159786356c180e864b1c",
+    "lib/application/apply-copy-deployment.js": "b13c63e91fccc369b7ea855da585f94dcccb5c172a2eb47efbbe42fd6ac7df19",
+    "lib/application/apply-merge-deployment.js": "9d6a850cb1c849e0a2b5d066f7eb847404dc0f60bf89791d5d71b8af20bfee67",
+    "lib/application/rollback-deployment.js": "27ce9d070fc4d209b5c2341ba65630204059fbaba7f4b719774cddc7fe38354d",
+    "test/dependency-coordination.test.js": "4a676c0eb75ee76c02866d15a77d5446b72a74444e19b7287396ae4f0df69801",
+    "test/helpers/dependency-coordination-fixture.js": "8c72a786c593f3c03e0f01dc16ab884105b46991731ee77de2b452f49ca140b2",
+    "test/helpers/crash-dependency-coordination.js": "03f043e4b477facf78ea7d512587daeea0bd0c99d98ac1f6e966bf9f271e6c27",
+    "test/helpers/crash-dependency-recovery.js": "674655eda3fbc95875fcc9918fdd9b425704c7cfd043208921a3c34e8c436ff3",
+    "docs/contracts/dependency-coordination-v1.md": "3a9edb2e5ec74a86d08ee2c34029c17831476809a9256f6701ebe9ba05e45ab6",
+    "docs/contracts/dependency-reverse-index-v1.md": "a370f9a9ce253958de380d89235f0d5d4165dc141465c89858949bd03057aa8c",
+    "docs/contracts/scoped-dependencies-v1.md": "0c146e41588076431c8ed91128b0d366a24d0302d96a005aaea095c75994a780",
+    "docs/reconstruction/phase-scoped-dependencies.md": "0d4c90552b564fc402ea4f42ccc6d94429e60acce46158bb11e98628963c61f4",
+    "docs/product/shared-resources-consolidation-plan.md": "38d96d3e6da607fcce671908df2fd6989565f88a17c0084fec34c5127edfe383",
+    "docs/traceability/shared-conversation-requirements.md": "31f0f8f862c296a0db1cb00868208a24fc704ad7a0a753ba51a8f0a19a68060a",
+    "package.json": "2046cffefb62d67414bc81d780bae9f09a8d221d09c4b049b7141ed27846d5e5"
+  },
+  "realEnvironment": {
+    "compatibility": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-05T22:44:36.324Z",
+      "mode": "read-only-compatibility",
+      "state": {
+        "schemaVersion": 6,
+        "transactions": 145,
+        "managedFiles": 3,
+        "owners": 4,
+        "unchanged": true,
+        "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+        "pendingOperations": 0,
+        "managedContentMatches": true
+      },
+      "observations": [
+        {
+          "assetId": "tools",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "node-repl",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "codex-instructions",
+          "assetKind": "instructions",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "canva",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        }
+      ],
+      "clientFileOperations": 0,
+      "nativeCalls": 0,
+      "modelCalls": 0,
+      "toolCalls": 0
+    },
+    "preservation": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "userIndexActivated": false,
+    "newClientFileOperations": 0,
+    "newNativeCalls": 0,
+    "newMcpCalls": 0,
+    "newModelCalls": 0,
+    "runtimeEvidenceRecords": 25,
+    "nativeSupportExpanded": false
+  },
+  "browser": {
+    "run": false,
+    "newTaskSpaceCreated": false,
+    "reason": "No frontend workflow introduced; no new browser evidence"
+  },
+  "remaining": [
+    "Actual native/Tool prerequisite adapter",
+    "Manifest v3 local/global deployment planning and installation declaration/adapter support",
+    "Selective impact guards for global apply/remove/rollback/path migration",
+    "Source deletion/detach and every mutation entry point protection",
+    "Saved plans, public coordination recovery dispatch and validate/doctor integration",
+    "Necessary real client cross-scope apply/restore",
+    "PR07 Antigravity Agent child completion, PR09 remaining native loading contexts and PR11 strategies/profiles"
+  ]
+}

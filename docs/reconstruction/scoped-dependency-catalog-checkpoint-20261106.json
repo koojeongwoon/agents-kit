@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10-scoped-declarations-readonly-catalog",
+  "checkedAt": "2026-11-05T20:51:54.569Z",
+  "implementation": {
+    "manifestV3ReadOnly": true,
+    "qualifiedReferences": true,
+    "pureResolver": true,
+    "policyPropagation": true,
+    "cliHttpGuiCatalog": true,
+    "ordinaryV3LoadEditDeployBlocked": true,
+    "installationPreconditions": false,
+    "reverseIndex": false,
+    "crossScopeLocksJournal": false,
+    "crossScopeAutomaticApply": false,
+    "fullValidateDoctorMigration": false
+  },
+  "validation": {
+    "rootPassed": 538,
+    "httpPassed": 41,
+    "guiPassed": 66,
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargoCheck": true,
+    "logHashes": {
+      "root": "bf4899773be6d669621f18748fe901a08371982c62e6214b19d6f709172dfc6b",
+      "http": "ac7dff5c1a4f2a21e26ec6ad86a8876753aea4adcefdf2359c601268cea90262",
+      "gui": "503e58a7d41721e903f04ab8b24829428d3c6d1f3532484a85a8da3e02504474",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "85c0df4010ff6ca6388fb5e84a17d14e48f8ce47bf26baa9f117fd1b702c3352",
+      "cargo": "d3cf7e6374a8ec22f8b154f4e82602f8895a3298bf109bb224374a8adbd64ade"
+    },
+    "redHashes": {
+      "/private/tmp/kit-pr10-scoped-domain-red.log": "3bb96ccbf6adcc2e382e45492adcdc9b02b9201c8a85bbb798e7bd2300c9bfaa",
+      "/private/tmp/kit-pr10-scoped-service-red.log": "74f6652f1ae6c2367f9632cedf03b89073fecfb8536711a0428c749ac44e5821",
+      "/private/tmp/kit-pr10-scoped-policy-red.log": "4bab2f59c8f41c7986922f8a06593bee27a6eb4540a5b5863ba86371e2b05d74",
+      "/private/tmp/kit-pr10-scoped-alias-red.log": "d873ffe8af4ab087a872f3b3fe69f46682dd8ed71f0a1b6846c1857583335a90",
+      "/private/tmp/kit-pr10-scoped-gui-red.log": "78a969ef8292759ce1c8d67abf65269d96f788a0236235e182b9e117f30e4e68",
+      "/private/tmp/kit-pr10-scoped-gui-unresolved-red.log": "ba580df333f78be675b7060ef6ee520a85f17681261190902e96b741092c40ff"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/scoped-resource-reference.js": "050210b4e46f50eec632bfc5749427edee8ae4c0b3101c8a5cf8b5814718f8e1",
+    "lib/domain/scoped-manifest-dependencies.js": "0731d86d3b17dbba822bc1364193a99a513b612717acda38f262af22700aa8db",
+    "lib/domain/manifest.js": "00072455c891c2cbe0689ddd86b6193a6824aee36aad5245ee46ae1acce38634",
+    "lib/domain/manifest-contracts.js": "ec8514844179b26915588f74364c692799e7a968313d111bb8b7bf4050dfd3dd",
+    "lib/domain/manifest-dependencies.js": "7bd567d555936b4425430fa3a14412e3785b20c48259ccf852555bba1dae32a9",
+    "lib/domain/manifest-targets.js": "7fdea7a805ce19391d72689a7da2afb71cc7738dde91e8cefcca00d1996c0b3b",
+    "lib/application/plan-client-deployment.js": "1331c4420491351ffb79de32ecdc7d6cde6f8404329c8761348269df919d6028",
+    "lib/infrastructure/manifest-loader.js": "bbc8b9c51e29bd9d02e224fab21a54fd4cda9e8a109d4a56a0a321808fdd6364",
+    "lib/application/resource-catalog-service.js": "c0d05725031b18bc3f347c0279ae1fe18f65bd6bf659583136328291f8272d90",
+    "lib/interfaces/http/error-mapper.js": "7539a99ebc001e9db56969f438b6e672bd0ba89361e5f950f96f26f34cf36e19",
+    "gui/server/routes/deploy.js": "12812391c8b4617c566cbe246f7f27e56857e6d26f9dc573d7b4790571f5f9ab",
+    "gui/server/test/control-plane-e2e.test.js": "d4b2979dca0baa8aaec89151a2d9c5814f4a073dd369d09090c5bf298fad1360",
+    "gui/server/test/deployment-routes.test.js": "e9472ca7e65ffaa2b2e6f55c62f2557ee6ace2f44c4b533f66c151e5fb65144b",
+    "gui/src/api/deploy.ts": "f409242b7cdb9228796061eb198509c84cf9634283312f7b0c9e2e6a0672e0ff",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "35ec8a66297073ba01ad735627b2bdd0cc4955c612d0a280f930cc5aaf8b8eff",
+    "gui/src/components/resources/ResourceWorkspace.test.tsx": "a5cdf2ab029ccfe229741cd652f44cc7d8647dfee307a844fb6e4486212a59ce",
+    "bin/cli.js": "4024b109d5a83c6ebb3bf5e52e9a1cc96a2bd9dec2e462e1998b97313ee1090e",
+    "package.json": "d3ba516a0680e8c2116a4826b8e9e3f49916aff77cd5dcbef1f098ceb7b90c0b",
+    "test/scoped-manifest-dependencies.test.js": "fd805e481fb3fffa975499948ae6852ba033af7453e15589ad52afe73ff32141",
+    "test/scoped-dependency-catalog.test.js": "1f149b54ea25af293ed1261ecf79bc855c8b3d572e2f6b2f8c889d451dae4313"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "liveRead": "docs/reconstruction/native-live-scoped-catalog-20261106.json",
+  "liveReadBeforeFinalAliasCorrection": true,
+  "aliasCorrectionVerifiedByFixture": true,
+  "nativeProcessesStarted": 0,
+  "nativeModelRequests": 0,
+  "nativeToolRequests": 0,
+  "userSettingsWritten": false,
+  "nativeDeploymentGateExpanded": false,
+  "runtimeEvidenceRecords": 25,
+  "browserQA": {
+    "status": "not-run",
+    "reason": "PREVIOUS_EGO_TASK_SPACE_23_NOT_FOUND",
+    "newSpaceCreated": false,
+    "fixtureCleaned": true,
+    "nativeCalls": 0
+  },
+  "remaining": [
+    "PR10 installed prerequisite revision/hash/binding and discovery checks",
+    "PR10 shared validate/doctor/edit/remove/rollback integration",
+    "PR10 reverse index, global-before-project locks, saved plan preconditions and crash recovery",
+    "PR09 Agent/instructions native load and other client/surface effective context",
+    "PR07 Antigravity Agent direct child completion",
+    "PR11 additional discovery/HTTP/auth/desktop/IDE profiles"
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T13:05:24.722Z",
+  "clientId": "codex",
+  "assetId": "kit-agent-check-4ead5237a3",
+  "scope": "global",
+  "target": "/Users/jw/.codex/agents/kit-agent-check-4ead5237a3.toml",
+  "originallyAbsent": true,
+  "complete": true,
+  "stages": {
+    "applied": {
+      "terminalSuccess": true,
+      "parentCompleted": true,
+      "terminalStatus": "completed",
+      "errorCategory": [],
+      "finalMatches": true,
+      "reportedAbsent": false,
+      "spawned": true,
+      "roleObserved": true,
+      "childMarkerReturned": true,
+      "completedChildMarker": true,
+      "unexpectedTools": false,
+      "methods": [
+        "thread/started",
+        "item/started",
+        "item/completed",
+        "turn/completed"
+      ],
+      "itemTypes": [
+        "userMessage",
+        "agentMessage",
+        "subAgentActivity",
+        "collabAgentToolCall"
+      ],
+      "modelSelection": "native-advertised-default",
+      "nativeDefaultModel": "gpt-6.1-sol",
+      "childMetadataOnly": true,
+      "childMetadataRoleMatches": true,
+      "childEvidenceSource": "live-public-child-events",
+      "reason": "OK",
+      "binaryUnchanged": true,
+      "success": true,
+      "markerConfirmed": true,
+      "invocationConfirmed": true,
+      "confirmed": true,
+      "verificationReason": "CONFIRMED"
+    },
+    "rollback": {
+      "terminalSuccess": true,
+      "parentCompleted": true,
+      "terminalStatus": "completed",
+      "errorCategory": [],
+      "finalMatches": true,
+      "reportedAbsent": false,
+      "spawned": true,
+      "roleObserved": true,
+      "childMarkerReturned": true,
+      "completedChildMarker": true,
+      "unexpectedTools": false,
+      "methods": [
+        "thread/started",
+        "item/started",
+        "item/completed",
+        "turn/completed"
+      ],
+      "itemTypes": [
+        "userMessage",
+        "agentMessage",
+        "subAgentActivity",
+        "collabAgentToolCall"
+      ],
+      "modelSelection": "native-advertised-default",
+      "nativeDefaultModel": "gpt-6.1-sol",
+      "childMetadataOnly": true,
+      "childMetadataRoleMatches": true,
+      "childEvidenceSource": "live-public-child-events",
+      "reason": "OK",
+      "binaryUnchanged": true,
+      "success": true,
+      "markerConfirmed": true,
+      "invocationConfirmed": true,
+      "confirmed": true,
+      "verificationReason": "CONFIRMED"
+    }
+  },
+  "transactions": [
+    {
+      "intent": "fresh-seed",
+      "target": "/Users/jw/.codex/agents/kit-agent-check-4ead5237a3.toml",
+      "transactionId": "tx-2026-11-05T13-05-24-729Z-1c946610"
+    },
+    {
+      "intent": "adopt",
+      "transactionId": "tx-2026-11-05T13-05-24-941Z-1de23836"
+    },
+    {
+      "intent": "native-update",
+      "transactionId": "tx-2026-11-05T13-05-25-431Z-56dc38d3"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T13-05-25-431Z-56dc38d3",
+      "transactionId": "tx-2026-11-05T13-05-41-379Z-7b0afb07"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T13-05-24-941Z-1de23836",
+      "transactionId": "tx-2026-11-05T13-05-52-191Z-79ad64a4"
+    },
+    {
+      "intent": "remove-restored-fresh-seed",
+      "target": "/Users/jw/.codex/agents/kit-agent-check-4ead5237a3.toml",
+      "transactionId": "tx-2026-11-05T13-05-52-221Z-cd021117"
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "cleanup": {
+    "testAgentAbsent": true,
+    "ownershipAbsent": true,
+    "registrationDetached": true,
+    "existingFilesPreserved": true
+  }
+}

@@ -3,6 +3,9 @@
 2026-09-27, CA03-3. Codex·Antigravity의 Kit typed definition으로 배포한 Agent/MCP를
 프로젝트·전역에서 제거한다. 실제 클라이언트/daemon 실행 검증과는 별개다.
 
+이 문서는 초기 typed v1 소유권의 계약이다. 여러 검증 대상이 같은 저장소를 관리하는
+state v7/resource v2 확장은 [물리 저장소 배포 계약](physical-resource-deployment-v1.md)을 따른다.
+
 ## 소유권 기록과 호환성
 
 새 typed Agent 파일과 MCP 소유 단위에 `resource.version=1` 기록을 추가한다.

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T21:13:33.066Z",
+  "scope": "existing-user-Kit-read-only",
+  "target": {
+    "clientId": "codex",
+    "surface": "cli",
+    "configStore": "codex-local"
+  },
+  "consistency": "observed",
+  "fulfilled": false,
+  "globalPrerequisites": 0,
+  "checks": [],
+  "existingReceiptCount": 0,
+  "ledgerBytesPreserved": true,
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "nativeProcessesStarted": 0,
+  "modelRequests": 0,
+  "userSettingsWritten": false,
+  "limitation": "This read checks compatibility and preservation; the selected existing project declares no global prerequisites."
+}

@@ -8,6 +8,7 @@ import {
   fetchManifestDeploymentHistory,
   ManifestDeploymentPlan,
   planManifestDeployment,
+  observeManifestPrerequisites,
   planManifestRollback,
   planManifestRemoval,
   planManifestMigration,
@@ -17,6 +18,8 @@ import {
 } from '../../api/deploy';
 
 import { ActionableErrorResolution } from '../common/ActionableErrorResolution';
+import {SnapshotConnectionPreview} from './SnapshotConnectionPreview';
+import {SkillDistributionPreview} from './SkillDistributionPreview';
 
 interface Transaction {
   id: string;
@@ -54,6 +57,7 @@ export function ManifestDeploymentPanel({
   const [otherVersion, setOtherVersion] = useState('');
   const [removalAssets, setRemovalAssets] = useState('');
   const [plan, setPlan] = useState<ManifestDeploymentPlan | null>(null);
+  const [observeProviders,setObserveProviders]=useState(false);
   const [savedPlans, setSavedPlans] = useState<SavedDeploymentPlan[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
@@ -65,6 +69,7 @@ export function ManifestDeploymentPanel({
   const [doctorResult, setDoctorResult] = useState<any>(null);
   const [validationResult, setValidationResult] = useState<any>(null);
   const [diagnosticsLoading, setDiagnosticsLoading] = useState(false);
+  const planApplicable = !!plan?.automatic && (plan.kind!=='scoped-apply'||plan.execution?.status==='ready') && (!plan.dependencyTransition||plan.execution?.status==='ready') && (!plan.execution || plan.execution.status==='ready') && plan.dependencyProtection?.status !== 'blocked' && plan.kind !== 'scoped-preview' && !plan.operations.some(operation => operation.previewOnly);
 
   const currentClient = clients.find(client => client.id === clientId);
   const [surfaceSelection, setSurfaceSelection] = useState({clientId, id: ''});
@@ -99,6 +104,7 @@ export function ManifestDeploymentPanel({
 
   useEffect(() => {
     setPlan(null);
+    setObserveProviders(false);
     setError('');
     setLastErrorCode('');
     setLastRequestId('');
@@ -217,13 +223,16 @@ export function ManifestDeploymentPanel({
     } finally { setLoading(false); }
   };
 
-  const createMigrationPlan = async (migration: 'global-ledger' | 'shared-ownership') => {
+  const createMigrationPlan = async (migration: 'global-ledger' | 'shared-ownership' | 'skill-strategy' | 'resource-path') => {
     if (!targetReady) { setError('프로젝트 경로를 입력해야 이관을 계획할 수 있습니다.'); return; }
     setLoading(true); setPlan(null); setError(''); setMessage('');
     setLastErrorCode(''); setLastRequestId(''); setLastRemediation('');
     try {
-      setPlan(await planManifestMigration({...request, migration,
-        ...(migration === 'shared-ownership' ? {assetIds: migrationAssets.split(',').map(id => id.trim()).filter(Boolean)} : {})}));
+      const selection = ['skill-strategy', 'resource-path'].includes(migration) && otherClientId
+        ? {scope, projectName, projectPath: request.projectPath, targets: [{clientId, surface, clientVersion: request.clientVersion},
+          {clientId: otherClientId, surface: otherSurface || clients.find(item => item.id === otherClientId)?.defaultSurface, clientVersion: otherVersion.trim() || undefined}]} : request;
+      setPlan(await planManifestMigration({...selection, migration,
+        ...(['shared-ownership', 'skill-strategy', 'resource-path'].includes(migration) ? {assetIds: migrationAssets.split(',').map(id => id.trim()).filter(Boolean)} : {})}));
     } catch (cause: any) {
       setError(cause.message || '이관 계획을 만들지 못했습니다.');
       setLastErrorCode(cause.code || 'PLAN_ERROR');
@@ -232,7 +241,7 @@ export function ManifestDeploymentPanel({
   };
 
   const applyPlan = async () => {
-    if (!plan) return;
+    if (!plan || !planApplicable) return;
     setLoading(true);
     setError('');
     setLastErrorCode('');
@@ -261,6 +270,13 @@ export function ManifestDeploymentPanel({
     }
   };
 
+  const observePrerequisites=async()=>{
+    if(!plan)return;setLoading(true);setError('');setLastErrorCode('');setLastRequestId('');setLastRemediation('');
+    try{setPlan(await observeManifestPrerequisites({planId:plan.planId,observeProviders}));}
+    catch(cause:any){setError(cause.message||'전역 설치 전제를 확인하지 못했습니다.');setLastErrorCode(cause.code||'OBSERVATION_ERROR');setLastRequestId(cause.requestId||'');setLastRemediation(cause.remediation||'');}
+    finally{setLoading(false);}
+  };
+
   const createRollbackPlan = async (transactionId: string) => {
     setLoading(true);
     setError('');
@@ -279,6 +295,11 @@ export function ManifestDeploymentPanel({
       setLoading(false);
     }
   };
+
+  const readerNames = (readers: Array<{clientId: string; surface: string}>) => readers.map(reader => {
+    const client = clients.find(item => item.id === reader.clientId);
+    return `${client?.displayName || reader.clientId} · ${client?.surfaces?.find(item => item.id === reader.surface)?.displayName || reader.surface}`;
+  }).join(', ');
 
   return (
     <div className="space-y-6">
@@ -364,12 +385,16 @@ export function ManifestDeploymentPanel({
 
         <details className="mt-4 rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
           <summary className="cursor-pointer text-sm font-semibold">기존 관리 기록 이관</summary>
-          <p className="mt-2 text-xs text-slate-500">실행 중인 다른 Kit를 종료하고 이관 계획을 검토하세요. 클라이언트 파일 내용은 유지하며, 이전 버전 Kit는 이관한 원장을 사용할 수 없습니다.</p>
+          <p className="mt-2 text-xs text-slate-500">전역 원장·공유 소유권 이관은 클라이언트 파일 내용을 유지합니다. 이전 버전 Kit는 이관한 원장을 사용할 수 없습니다.</p>
           {scope === 'global' && <button onClick={() => createMigrationPlan('global-ledger')} disabled={loading} className="mt-3 rounded border px-3 py-2 text-xs">전역 원장 이관 계획</button>}
           <label className="mt-3 block text-xs">공유 소유권으로 이관할 자원 ID
             <input aria-label="이관할 자원 ID" value={migrationAssets} onChange={event => setMigrationAssets(event.target.value)} placeholder="shared-rules, source-review" className="mt-2 w-full rounded border bg-transparent p-2" />
           </label>
           <button onClick={() => createMigrationPlan('shared-ownership')} disabled={loading || !migrationAssets.trim()} className="mt-2 rounded border px-3 py-2 text-xs disabled:opacity-40">공유 소유권 이관 계획</button>
+          <p className="mt-3 text-xs text-slate-500">Skill 복사·연결 이관은 원본에 선언한 전략과 내용을 반영합니다. 같은 경로의 모든 등록 소비자를 대상에 포함하고 파일 차이를 검토하세요.</p>
+          <button onClick={() => createMigrationPlan('skill-strategy')} disabled={loading || !migrationAssets.trim()} className="mt-2 rounded border px-3 py-2 text-xs disabled:opacity-40">Skill 복사·연결 이관 계획</button>
+          <p className="mt-3 text-xs text-slate-500">정의의 설치 경로가 바뀌면 과거 소유 증거를 확인해 별도로 이관합니다. 증거가 없는 설치와 외부 링크는 이동하지 않습니다.</p>
+          <button onClick={() => createMigrationPlan('resource-path')} disabled={loading || !migrationAssets.trim()} className="mt-2 rounded border px-3 py-2 text-xs disabled:opacity-40">설치 경로 이관 계획</button>
         </details>
 
         <div className="mt-5 flex items-center justify-between gap-4 border-t border-slate-200 pt-5 dark:border-slate-800">
@@ -495,16 +520,45 @@ export function ManifestDeploymentPanel({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-500"><Clock3 className="h-4 w-4" /> {new Date(plan.expiresAt).toLocaleTimeString()}까지 유효</div>
-              <h3 className="mt-1 text-lg font-bold">{plan.kind === 'recovery' ? '중단 작업 복구 계획' : plan.kind === 'rollback' ? 'Rollback 계획' : plan.kind === 'remove' ? '관리 자원 제거 계획' : plan.kind === 'migration' ? '관리 기록 이관 계획' : '배포 계획'}</h3>
+              <h3 className="mt-1 text-lg font-bold">{plan.kind === 'scoped-apply' ? '범위 간 배포 계획' : plan.kind === 'scoped-preview' ? '범위 간 의존성 미리보기' : plan.kind === 'recovery' ? '중단 작업 복구 계획' : plan.kind === 'rollback' ? 'Rollback 계획' : plan.kind === 'remove' ? '관리 자원 제거 계획' : plan.kind === 'migration' ? '관리 기록 이관 계획' : '배포 계획'}</h3>
             </div>
-            <span className={`rounded-full px-3 py-1 text-xs font-bold ${plan.automatic ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-rose-500/10 text-rose-600 dark:text-rose-300'}`}>
-              {plan.automatic ? '적용 가능' : `${plan.blocked.length}개 차단`}
+            <span className={`rounded-full px-3 py-1 text-xs font-bold ${planApplicable ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-rose-500/10 text-rose-600 dark:text-rose-300'}`}>
+              {planApplicable ? '적용 가능' : plan.execution?.status==='requires-observation' ? '전역 설치 전제 확인 필요' : plan.dependencyProtection?.status === 'blocked' ? '프로젝트 의존성 검토 필요' : plan.kind === 'scoped-preview' || plan.operations.some(operation => operation.previewOnly) ? '미리보기 · 적용 차단' : `${plan.blocked.length}개 차단`}
             </span>
           </div>
           <p className="mt-3 text-xs text-slate-500">소비자 목록은 Kit에 등록된 사용 대상입니다. 같은 경로를 읽는 다른 클라이언트에도 파일이 보일 수 있습니다.</p>
+          {plan.dependencyProtection && <p className="mt-2 text-xs text-slate-500">등록된 프로젝트 {plan.dependencyProtection.registeredProjects}곳의 기존 의존성을 함께 확인합니다.</p>}
+          {plan.dependencyTransition && <div className="mt-3 space-y-2 text-xs text-slate-500">
+            <p>변경 후 전역 의존성: 소비자 {plan.dependencyTransition.desiredConsumers}개 · 설치 전제 {plan.dependencyTransition.desiredPrerequisites}개</p>
+            {plan.dependencyTransition.releasedConsumers.length>0 && <ul aria-label="해제할 전역 의존성 참조">{plan.dependencyTransition.releasedConsumers.map(consumer=><li key={`${consumer.assetKind}:${consumer.assetId}:${consumer.clientId}:${consumer.surface}`}>
+              참조 해제: {consumer.assetId} · {consumer.clientId} · {consumer.surface}
+            </li>)}</ul>}
+          </div>}
+          {plan.execution && plan.execution.nativePrerequisiteCount>0 && <div className="mt-4 space-y-3 rounded-xl border border-slate-300 p-3 text-xs dark:border-slate-700">
+            <p>기존 위치의 전역 설치 전제 {plan.execution.nativePrerequisiteCount}개를 현재 클라이언트에서 확인하고, 적용 뒤 다시 확인합니다.</p>
+            {plan.execution.providerDiscoveryRequired && <label className="flex items-center gap-2"><input type="checkbox" checked={observeProviders} onChange={event=>setObserveProviders(event.target.checked)} disabled={loading}/>선택된 MCP의 Tool 목록도 확인</label>}
+            <button onClick={observePrerequisites} disabled={loading||plan.execution.status==='blocked'} className="rounded-xl border border-slate-300 px-3 py-2 disabled:opacity-40">전역 설치 전제 확인</button>
+            {plan.nativePrerequisitesState==='observed' && <p>전역 자원 발견 확인</p>}
+          </div>}
+          {plan.kind === 'scoped-preview' && <div className="mt-4 rounded-xl border border-slate-300 p-3 text-xs dark:border-slate-700">
+            <p>전역 자원과 프로젝트 자원은 각 설치 위치를 유지합니다. 현재는 변경 계획만 확인할 수 있습니다.</p>
+            <ul aria-label="전역 설치 전제" className="mt-2 space-y-1">{plan.globalPrerequisites?.map((item,index)=><li key={`${item.kind}:${item.assetId}:${index}`}>
+              {({skills:'Skill',mcpServers:'MCP',agents:'Agent',instructions:'지침'} as Record<string,string>)[item.kind]||item.kind} · {item.assetId} · {item.status==='ownership-observed'?'설치 파일 확인':'설치 확인 필요'}
+            </li>)}</ul>
+            <p className="mt-2">클라이언트 인식: {plan.nativePrerequisitesState==='observed'?'전역 자원 발견 확인':plan.nativePrerequisitesState==='not-required'?'전역 설치 전제 없음':'추가 확인 필요'}</p>
+          </div>}
+          <SkillDistributionPreview reviews={plan.skillDistributions}/>
           {plan.kind === 'recovery' && <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">{plan.outcome === 'keep-committed' ? '원장에 완료된 변경을 보존하고 중단 기록을 정리합니다.' : '중단 전 파일 상태로 복원합니다. 외부 변경이 있으면 복구를 차단합니다.'}</p>}
           {plan.migration === 'global-ledger' && <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">기존 이력과 백업을 통합하고 클라이언트별 원장을 사용 중지합니다. 원장 구조의 역이관은 자동으로 지원하지 않습니다.</p>}
           {plan.stateUpgrade && <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">소유권 원장을 버전 {plan.stateUpgrade.to}로 전환합니다. 이전 버전의 Kit는 이 원장을 관리할 수 없습니다.</p>}
+          {plan.pathMigrations?.length ? <div aria-label="설치 경로 이관 내역" className="mt-4 space-y-3 rounded-xl border border-amber-300 p-3 text-xs">
+            <p>검증 후 이전 소유 항목을 해제하며, 양쪽 위치가 복원 이력에 남습니다.</p>
+            {plan.pathMigrations.map(item => <div key={`${item.clientId}:${item.surface}:${item.assetId}`}>
+              <p className="font-semibold">{item.assetId} · {readerNames([{clientId: item.clientId, surface: item.surface}])}</p>
+              <p className="break-all">이전 위치: {item.previousTarget}</p><p className="break-all">새 위치: {item.target}</p>
+              {item.remainingConsumers.length > 0 && <p className="mt-1">이전 위치를 계속 사용하는 대상: {item.remainingConsumers.join(', ')}</p>}
+            </div>)}
+          </div> : null}
           <div className="mt-5 max-h-80 space-y-2 overflow-y-auto pr-1">
             {[...plan.operations, ...plan.blocked].map((operation, index) => {
               const blocked = index >= plan.operations.length;
@@ -514,9 +568,15 @@ export function ManifestDeploymentPanel({
                     <span className="text-xs font-bold uppercase tracking-wide">{blocked ? 'BLOCKED' : operation.operation}</span>
                     <span className="text-[11px] text-slate-500">{operation.strategy || operation.ownership}</span>
                   </div>
-                  <p className="mt-2 break-all font-mono text-xs text-slate-700 dark:text-slate-300">{operation.target || operation.assetId}</p>
+                  <p className="mt-2 break-all font-mono text-xs text-slate-700 dark:text-slate-300">{operation.reason === 'RESOURCE_PATH_MIGRATION_REQUIRED' ? '새 설치 위치: ' : ''}{operation.target || operation.assetId}</p>
+                  {operation.previousTargets?.map(target => <p key={target} className="mt-1 break-all font-mono text-xs text-slate-500">기존 설치 위치: {target}</p>)}
+                  {operation.reason === 'RESOURCE_PATH_MIGRATION_REQUIRED' && <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">설치 위치가 변경되어 별도 이관 계획이 필요합니다. 기존 설치는 보존됩니다.</p>}
                   {plan.kind === 'remove' && operation.changes?.map(change => <p key={change.assetId} className="mt-1 text-xs text-slate-500">제거 대상: {change.assetId}{change.selectors?.length ? ` · ${change.selectors.join(", ")}` : ""}</p>)}
                   {operation.consumers && <p className="mt-1 text-xs text-slate-500">남는 소비자: {operation.consumers.join(', ') || '없음'}{operation.metadataOnly ? ' · 파일 내용 유지' : ''}</p>}
+                  {operation.storeEffect === 'configuration' && operation.affectedTargets && <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
+                    같은 설정에 함께 반영되는 화면: {readerNames(operation.affectedTargets)}
+                  </p>}
+                  <SnapshotConnectionPreview operation={operation} />
                   <p className={`mt-1 text-xs ${blocked ? 'text-rose-600 dark:text-rose-300' : 'text-slate-500'}`}>{operation.reason}</p>
                 </div>
               );
@@ -541,8 +601,8 @@ export function ManifestDeploymentPanel({
           ))}
           <div className="mt-5 flex justify-end gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
             <button onClick={() => setPlan(null)} className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-700">취소</button>
-            {plan.kind !== 'recovery' && plan.migration !== 'global-ledger' && !plan.operations.some(item => item.strategy === 'link' || item.operation === 'RESTORE_LINK') && <button onClick={savePlan} disabled={loading || !plan.automatic} className="rounded-xl border border-slate-300 px-4 py-2 text-sm disabled:opacity-40">계획 저장 (24시간)</button>}
-            <button onClick={applyPlan} disabled={loading || !plan.automatic} className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-40">
+            {plan.kind !== 'recovery' && plan.kind !== 'scoped-preview' && plan.migration !== 'global-ledger' && !plan.operations.some(item => item.previewOnly || item.strategy === 'link' || item.operation === 'RESTORE_LINK') && <button onClick={savePlan} disabled={loading || !planApplicable} className="rounded-xl border border-slate-300 px-4 py-2 text-sm disabled:opacity-40">계획 저장 (24시간)</button>}
+            <button onClick={applyPlan} disabled={loading || !planApplicable} className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-40">
               {plan.kind === 'recovery' ? '복구 승인' : plan.kind === 'rollback' ? 'Rollback 승인' : plan.kind === 'remove' ? '제거 승인' : plan.kind === 'migration' ? '이관 승인' : '적용 승인'}
             </button>
           </div>
@@ -561,7 +621,9 @@ export function ManifestDeploymentPanel({
           <p className="mt-1 break-all text-xs">대상: {saved.targetRoot}</p>
           <p className="mt-1 text-xs">만료: {new Date(saved.expiresAt).toLocaleString()}</p>
           <p className="mt-1 break-all font-mono text-xs">검토 digest: {saved.digest}</p>
-          <ul className="mt-2 text-xs">{saved.operations.map((operation, index) => <li key={index} className="break-all">{operation.operation} · {operation.assetId || operation.clientId} · {operation.target}</li>)}</ul>
+          <ul className="mt-2 text-xs">{saved.operations.map((operation, index) => <li key={index} className="break-all">{operation.operation} · {operation.assetId || operation.clientId} · {operation.target}
+            {operation.storeEffect === 'configuration' && operation.affectedTargets && <span className="block text-amber-700 dark:text-amber-400">같은 설정에 함께 반영되는 화면: {readerNames(operation.affectedTargets)}</span>}
+          </li>)}</ul>
           <button onClick={() => resumePlan(saved)} disabled={loading || saved.status !== 'ready' || Date.parse(saved.expiresAt) <= Date.now()} className="mt-3 rounded border px-3 py-2 text-xs disabled:opacity-40">저장 계획 적용 승인</button>
         </div>)}
       </details>

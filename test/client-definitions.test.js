@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import {parse as parseYaml} from 'yaml';
 import {
   createClientDefinition,
   resolveClientCapability
@@ -13,6 +14,66 @@ import { planClientDeployment } from '../lib/application/plan-client-deployment.
 import { createAgentKitManifest } from '../lib/domain/manifest.js';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+test('Codex 0.167.0-alpha.3.2 evidence keeps copy Skills bounded to the reviewed binary and CLI scopes',async()=>{
+  const {planVerifiedClientDeployment}=await import('../lib/application/plan-verified-client-deployment.js'),definition=loadClientDefinitions({definitionsDir:path.join(repositoryRoot,'clients')}).get('codex'),version='0.167.0-alpha.3.2',sha='a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e';
+  for(const scope of ['global','project']){
+    const manifest=createAgentKitManifest({schemaVersion:1,kit:{id:'current-codex'},assets:{skills:[{id:'review',scope,source:'review',definition:{schemaVersion:1,format:'agent-skills'}}]}}),input={manifest,definition,clientVersion:version,surface:'cli',platform:'darwin',arch:'arm64'};
+    const valid=planVerifiedClientDeployment({...input,binaryObserver:()=>({binaryPath:'/test/reviewed-codex',sha256:sha})}).plan;assert.equal(valid.automatic,true,JSON.stringify(valid.blocked));
+    const changed=planVerifiedClientDeployment({...input,binaryObserver:()=>({binaryPath:'/test/changed-codex',sha256:'0'.repeat(64)})}).plan;assert.equal(changed.automatic,false);assert.ok(changed.blocked.some(item=>item.reason==='CLIENT_BINARY_UNVERIFIED'));
+    for(const {id:surface} of definition.surfaces.filter(profile=>profile.id!=='cli'))assert.equal(resolveClientCapability(definition,{assetKind:'skills',scope,clientVersion:version,surface,platform:'darwin',arch:'arm64',asset:manifest.assets.skills[0]}).eligible,false);
+  }
+  const records=definition.surfaces.find(surface=>surface.id==='cli').runtimeEvidence.filter(record=>record.binarySha256===sha);
+  assert.deepEqual(records.map(record=>record.capabilityId).sort(),['agents-global','agents-project','instructions-global','instructions-project','mcp-global','mcp-project','skills-global','skills-project']);
+  assert.deepEqual(records.filter(record=>record.capabilityId.startsWith('skills-')).map(record=>record.strategy),['copy','copy']);
+  for(const reader of definition.surfaces.find(surface=>surface.id==='cli').nativeInventory.readers) assert.equal(reader.evidence.filter(record=>record.binarySha256===sha&&record.version===version).length,1,reader.assetKind);
+});
+
+test('native inventory declarations reject executable injection, unknown protocol and ambiguous binary evidence',()=>{
+  const raw=parseYaml(fs.readFileSync(path.join(repositoryRoot,'clients/codex.yaml'),'utf8'));
+  const inventory=raw.surfaces[0].nativeInventory;
+  raw.surfaces[0].nativeInventory={schemaVersion:1,adapter:inventory.readers[0].adapter,evidence:inventory.readers[0].evidence,environment:inventory.environment,contextFiles:inventory.contextFiles};
+  for(const mutate of [
+    value=>{value.schemaVersion=2;},value=>{value.adapter='arbitrary-command';},
+    value=>{value.environment.BASH_ENV='~/script';},value=>{value.environment.CODEX_HOME='~/../other';},
+    value=>{value.contextFiles[1].path='../outside.toml';},value=>{value.evidence[0].binarySha256='unknown';},
+    value=>{value.evidence.push({...value.evidence[0],version:'9.9.9'});}
+  ]){const candidate=structuredClone(raw);mutate(candidate.surfaces[0].nativeInventory);assert.throws(()=>createClientDefinition(candidate),{code:'INVALID_NATIVE_INVENTORY'});}
+});
+
+test('native reader schema 2 preserves the legacy reader and separates resource kinds without arbitrary methods',()=>{
+  const raw=parseYaml(fs.readFileSync(path.join(repositoryRoot,'clients/codex.yaml'),'utf8'));
+  assert.equal(createClientDefinition(raw).surfaces[0].nativeInventory.readers.length,3);
+  for(const mutate of [value=>{value.readers.push(value.readers[0]);},value=>{value.readers[0].assetKind='mcpServers';},
+    value=>{value.readers[1].adapter='mcpServer/tool/call';},value=>{value.readers[0].arguments=['exec'];},value=>{value.schemaVersion=3;}]){
+    const candidate=structuredClone(raw);mutate(candidate.surfaces[0].nativeInventory);assert.throws(()=>createClientDefinition(candidate),{code:'INVALID_NATIVE_INVENTORY'});
+  }
+});
+
+test('instruction discovery declarations keep paths bounded and reject foreign source readers',()=>{
+  const raw=parseYaml(fs.readFileSync(path.join(repositoryRoot,'clients/codex.yaml'),'utf8'));
+  for(const change of [d=>{d.globalFiles=['~/../external.md'];},d=>{d.projectFiles=['../AGENTS.md'];},d=>{d.ancestorBoundary='/';},d=>{d.schemaVersion=2;}]) {
+    const value=structuredClone(raw);change(value.surfaces[0].nativeInventory.readers.find(reader=>reader.assetKind==='instructions').discovery);
+    assert.throws(()=>createClientDefinition(value),{code:'INVALID_NATIVE_INVENTORY'});
+  }
+});
+
+test('catalog rules require documented metadata and unique scoped roots without coupling deployment path migration', () => {
+  const raw = parseYaml(fs.readFileSync(path.join(repositoryRoot, 'clients/antigravity.yaml'), 'utf8'));
+  assert.equal(createClientDefinition(raw).surfaces[0].inventoryRules.rules[0].mode, 'priority');
+  for (const change of [
+    rule => {rule.roots.push({...rule.roots[0], priority: 99});},
+    rule => {rule.evidence.state = 'verified';},
+    rule => {rule.mode = 'project-always-wins';},
+    rule => {rule.roots[0].approved = true;}
+  ]) {
+    const candidate = structuredClone(raw); change(candidate.surfaces[0].inventoryRules.rules[0]);
+    assert.throws(() => createClientDefinition(candidate), {code: 'INVALID_CLIENT_INVENTORY_RULES'});
+  }
+  const relocated = structuredClone(raw);
+  relocated.surfaces[0].overrides.find(item => item.id === 'skills-global').path = '~/.gemini/new-location/{assetId}';
+  assert.doesNotThrow(() => createClientDefinition(relocated));
+});
 
 function definitionWith(capability) {
   return createClientDefinition({
@@ -36,6 +97,16 @@ function definitionWith(capability) {
     }]
   });
 }
+
+test('connection strategy declarations are bounded and versioned and do not change the copy strategy', () => {
+  const definition = definitionWith({connectionStrategies: {schemaVersion: 1, strategies: ['snapshot-link']}});
+  assert.equal(definition.capabilities[0].strategy, 'copy');
+  assert.deepEqual(definition.capabilities[0].connectionStrategies.strategies, ['snapshot-link']);
+  for (const connectionStrategies of [{schemaVersion: 2, strategies: ['snapshot-link']}, {schemaVersion: 1, strategies: ['link']},
+    {schemaVersion: 1, strategies: ['snapshot-link', 'snapshot-link']}, {schemaVersion: 1, strategies: ['snapshot-link'], verified: true}]) {
+    assert.throws(() => definitionWith({connectionStrategies}), {code: 'INVALID_CLIENT_CONNECTION_STRATEGIES'});
+  }
+});
 
 test('stable verified capability is eligible for automatic deployment', () => {
   const result = resolveClientCapability(definitionWith({}), {
@@ -131,6 +202,20 @@ test('client capabilities validate read-only discovery adapters', () => {
   }), error => error.code === 'INVALID_CLIENT_DISCOVERY');
 });
 
+test('discovery extensions validate bounded locations and external manager declarations', () => {
+  for (const reader of ['agent-files', 'file-name']) {
+    assert.equal(definitionWith({discovery: {reader}}).capabilities[0].discovery.reader, reader);
+    assert.throws(() => definitionWith({discovery: {reader, selector: 'unexpected'}}), {code: 'INVALID_CLIENT_DISCOVERY'});
+  }
+  for (const discovery of [
+    {reader: 'directory-entries', paths: 'not-an-array'},
+    {reader: 'directory-entries', paths: Array(9).fill('~/skills')},
+    {reader: 'directory-entries', paths: ['']},
+    {reader: 'directory-entries', externalManagers: [{id: 'ego', displayName: 'Ego Lite', linkTarget: '/unbound'}]},
+    {reader: 'directory-entries', externalManagers: [{id: 'invalid id', displayName: 'Ego Lite', linkTarget: '~/bound'}]}
+  ]) assert.throws(() => definitionWith({discovery}), {code: 'INVALID_CLIENT_DISCOVERY'});
+});
+
 test('official Codex and Claude Code definitions load with corrected mappings', () => {
   const definitions = loadClientDefinitions({
     definitionsDir: path.join(repositoryRoot, 'clients')
@@ -195,7 +280,8 @@ test('official client definitions declare adapter-driven MCP and Skill discovery
       const capability = definition.capabilities.find(item => (
         item.scope === 'global' && item.assetKind === assetKind
       ));
-      assert.deepEqual(capability.discovery, discovery, `${clientId}/${assetKind}`);
+      assert.equal(capability.discovery.reader, discovery.reader, `${clientId}/${assetKind}`);
+      assert.equal(capability.discovery.selector, discovery.selector, `${clientId}/${assetKind}`);
     }
   }
 });

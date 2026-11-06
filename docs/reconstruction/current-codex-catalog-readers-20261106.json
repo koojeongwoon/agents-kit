@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T06:20:36.211Z",
+  "phase": "Current Codex actual catalog readers",
+  "isolatedHome": true,
+  "nativeMetadataSessions": 2,
+  "threadRequests": 0,
+  "modelRequests": 0,
+  "providerDiscoveryRequests": 0,
+  "toolCalls": 0,
+  "userClientWrites": 0,
+  "userStateWrites": 0,
+  "results": [
+    {
+      "kind": "mcpServers",
+      "status": "observed",
+      "globalAndProject": true,
+      "modelUse": "unverified",
+      "projectDisabledObserved": true,
+      "providerConnection": "unverified"
+    },
+    {
+      "kind": "instructions",
+      "status": "partial",
+      "globalAndProject": true,
+      "modelUse": "unverified",
+      "loadedSourcesState": "unverified",
+      "previewOnly": true
+    }
+  ]
+}

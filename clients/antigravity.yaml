@@ -12,6 +12,12 @@ capabilities:
     path: ~/.gemini/GEMINI.md
     format: markdown
     strategy: merge
+    discovery:
+      reader: file-name
+      paths:
+        - ~/.gemini/AGENTS.md
+        - ~/.gemini/config/AGENTS.md
+        - ~/.gemini/config/GEMINI.md
     status: stable
     evidence:
       state: verified
@@ -23,6 +29,8 @@ capabilities:
     path: AGENTS.md
     format: markdown
     strategy: merge
+    discovery:
+      reader: file-name
     status: stable
     evidence:
       state: verified
@@ -34,6 +42,12 @@ capabilities:
     path: .agents/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
+      externalManagers:
+        - id: ego
+          displayName: Ego Lite
+          linkTarget: ~/.local/share/ego/ego-skills
     status: stable
     evidence:
       state: verified
@@ -47,6 +61,10 @@ capabilities:
     strategy: copy
     discovery:
       reader: directory-entries
+      externalManagers:
+        - id: ego
+          displayName: Ego Lite
+          linkTarget: ~/.local/share/ego/ego-skills
     status: stable
     evidence:
       state: verified
@@ -58,6 +76,9 @@ capabilities:
     path: .agents/mcp_config.json
     format: json
     strategy: merge
+    discovery:
+      reader: json-object-keys
+      selector: mcpServers
     status: stable
     evidence:
       state: verified
@@ -83,6 +104,8 @@ capabilities:
     path: .agents/agents/{assetId}.md
     format: markdown
     strategy: copy
+    discovery:
+      reader: agent-files
     status: stable
     evidence:
       state: verified
@@ -112,6 +135,8 @@ capabilities:
     path: ~/.gemini/config/agents/{assetId}.md
     format: markdown
     strategy: copy
+    discovery:
+      reader: agent-files
     status: stable
     evidence:
       state: verified
@@ -120,6 +145,23 @@ capabilities:
 defaultSurface: cli
 surfaces:
   - id: cli
+    inventoryRules:
+      schemaVersion: 1
+      rules:
+        - assetKind: skills
+          mode: priority
+          roots:
+            - {scope: global, path: ~/.gemini/antigravity-cli/skills, priority: 3}
+            - {scope: global, path: ~/.gemini/skills, priority: 3}
+            - {scope: project, path: .agents/skills, priority: 2}
+            - {scope: global, path: ~/.gemini/config/skills, priority: 1}
+          evidence:
+            state: documented
+            source: https://antigravity.google/docs/customization-discovery?tab=cli
+            checkedAt: '2026-11-06'
+          limitations:
+            - The two legacy global roots have no documented relative priority.
+            - Personal repository folders, manifests, native names and exclusions require further observation.
     displayName: Antigravity CLI
     configStore: antigravity-local
     detection:
@@ -143,6 +185,15 @@ surfaces:
       # Other versions stay blocked by the exact-version runtime evidence gate.
       - id: skills-global
         path: ~/.gemini/config/skills/{assetId}
+        discovery:
+          reader: directory-entries
+          paths:
+            - ~/.gemini/antigravity-cli/skills
+            - ~/.gemini/skills
+          externalManagers:
+            - id: ego
+              displayName: Ego Lite
+              linkTarget: ~/.local/share/ego/ego-skills
     # CA04-7: reviewed CLI slices only; app/IDE and other versions remain gated.
     runtimeEvidence:
       - capabilityId: instructions-project
@@ -174,6 +225,51 @@ surfaces:
         verifiedAt: 2026-09-27
         source: docs/reconstruction/ca04-6-antigravity-global-skill-evidence.json
         binarySha256: 6f4785c17acc4b8b539e055e926ddc65cc83279581d24357a3b6e051a2337ae3
+      - capabilityId: skills-global
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-05
+        source: docs/reconstruction/native-installation-live-antigravity-runtime-recheck-20261105.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+      - capabilityId: mcp-global
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-05
+        source: docs/reconstruction/antigravity-native-mcp-separated-runtime-20261105.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: instructions-project
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-antigravity-basic-cli-20261106.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+      - capabilityId: skills-project
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-antigravity-basic-cli-20261106.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+        strategy: copy
+      - capabilityId: mcp-project
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-antigravity-basic-cli-20261106.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: instructions-global
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-global-antigravity-instructions-cli-20261106.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
   - id: desktop
     displayName: Antigravity 2.0 app
     configStore: antigravity-local

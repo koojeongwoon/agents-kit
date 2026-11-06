@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T05:53:56.168Z",
+  "scope": "Verify the currently installed Codex, execute the three previously skipped integration cases, and finish the existing copy Skill core apply/rollback flow while preserving user state",
+  "status": "complete-for-requested-scope",
+  "fulfilled": true,
+  "client": {
+    "id": "codex",
+    "surface": "cli",
+    "version": "0.167.0-alpha.3.2",
+    "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+    "platform": "darwin",
+    "arch": "arm64",
+    "unchangedAtFinalCheck": true
+  },
+  "supportChange": {
+    "existingStrategy": "copy",
+    "capabilities": [
+      "skills-global",
+      "skills-project"
+    ],
+    "nativeReader": "codex-skills-list-v1",
+    "preservedPreviousRecords": true,
+    "otherCapabilitiesOrClientsPromoted": false,
+    "newProductExecutionLogic": false
+  },
+  "actualVerification": {
+    "isolatedHome": true,
+    "coreFlowScopes": [
+      "global",
+      "project"
+    ],
+    "nativeImportEditRefreshMergeAdoptApplyRollbackAndRelease": true,
+    "copyLifecycleScopes": [
+      "global",
+      "project"
+    ],
+    "copyStages": [
+      "baseline",
+      "applied",
+      "updated",
+      "removed",
+      "rollback"
+    ],
+    "copyCleanupsVerified": true,
+    "discoveryArtifact": "docs/reconstruction/current-codex-skill-discovery-20261106.json",
+    "roundtripArtifact": "docs/reconstruction/current-codex-core-roundtrip-20261106.json",
+    "discoveryNativeMetadataCalls": 1,
+    "finalRoundtripNativeMetadataCalls": 14,
+    "intermediateCoreNativeMetadataCalls": 4,
+    "totalNativeMetadataCalls": 19,
+    "modelCalls": 0,
+    "toolCalls": 0,
+    "providerDiscoveryRequests": 0,
+    "modelUse": "unverified"
+  },
+  "tests": {
+    "previouslySkipped": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "cases": [
+        "CLI observed build/capability gates",
+        "Fixed-helper project gates and global Skill application",
+        "HTTP global Skill apply/remove/rollback and project/desktop gates"
+      ]
+    },
+    "root": {
+      "passed": 852,
+      "failed": 0,
+      "skipped": 0
+    },
+    "http": {
+      "passed": 53,
+      "failed": 0,
+      "skipped": 0
+    },
+    "activationAndDefinitions": {
+      "passed": 34,
+      "failed": 0
+    },
+    "guiRepeated": false,
+    "buildRepeated": false,
+    "codeChangeBoundary": "Client definition data, regression assertions, CLI test isolation, verification script and evidence documents"
+  },
+  "intermediateFailure": {
+    "rootLog": "/private/tmp/kit-current-codex-root.log",
+    "passed": 851,
+    "failed": 1,
+    "reason": "Runtime evidence referenced discovery-only artifact instead of complete file/native-metadata lifecycle",
+    "fixedBy": "Observed real copy baseline/apply/update/remove/rollback; linked runtime evidence to that roundtrip; kept lifecycle assertions",
+    "assertionsWeakened": false
+  },
+  "preservation": {
+    "comparison": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": false
+        }
+      ]
+    },
+    "originalHistoricalBaselineReplaced": false,
+    "separateTaskBaseline": true,
+    "userClientFileWrites": 0,
+    "userLedgerWrites": 0,
+    "beforeState": {
+      "schemaVersion": 6,
+      "transactions": 145,
+      "managedFiles": 3,
+      "owners": 4,
+      "unchanged": true,
+      "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+      "pendingOperations": 0,
+      "managedContentMatches": false
+    },
+    "afterState": {
+      "schemaVersion": 6,
+      "transactions": 145,
+      "managedFiles": 3,
+      "owners": 4,
+      "unchanged": true,
+      "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+      "pendingOperations": 0,
+      "managedContentMatches": false
+    },
+    "installationObservationsUnchanged": true,
+    "existingNodeReplDriftPreserved": true,
+    "driftOverwrittenOrAcceptedIntoLedger": false,
+    "externalLinks": [
+      {
+        "path": ".agents/skills/ego-browser",
+        "target": "/Users/jw/.local/share/ego/ego-skills",
+        "ino": 15212307,
+        "mode": 493
+      },
+      {
+        "path": ".gemini/config/skills/ego-browser",
+        "target": "/Users/jw/.local/share/ego/ego-skills",
+        "ino": 15212401,
+        "mode": 493
+      },
+      {
+        "path": ".gemini/antigravity-cli/skills/ego-browser",
+        "target": "/Users/jw/.local/share/ego/ego-skills",
+        "ino": 15212399,
+        "mode": 493
+      }
+    ]
+  },
+  "sourceHashes": {
+    "clients/codex.yaml": "6b024ab405d7d2276300bcaa227108e51a37b380121866bae347d9da05f839fa",
+    "test/client-definitions.test.js": "eb43fb6eaba135989853ea2f3b2354049c5925394c23f457e638c1476a6ae151",
+    "test/runtime-activation.test.js": "d4c4f792269f881168b2829beffadd9ac702a2bd6438cb695fac9d0da2a4ad56",
+    "test/manifest-cli.test.js": "43080843d64971380a9b6f8f7c35023681181a911005e0cefc638848d62bb44a",
+    "scripts/client-verification/native-core-roundtrip.mjs": "f0bc32bc12e57a2245d6777fbb880b25c7bffaabf84f64f5b76c2a7d11c0bae1",
+    "docs/reconstruction/current-codex-skill-discovery-20261106.json": "7493bf34bb24523dfd16c9e383c1a6b0d44bf8747fc1227b0b8ff7e2e9ab0bd8",
+    "docs/reconstruction/current-codex-core-roundtrip-20261106.json": "2aaaa399234da93bf30be809b4e9c9f7a4ef7c0a01a60e7e5de71eb4c6e0fc75",
+    "docs/reconstruction/current-codex-core-acceptance-20261106.md": "ba3ea3aac9c54ee63aec1aaf04624ad11f5f78cf7b83864a6fbabaebb542bbe0"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-current-codex-discovery.json",
+      "sha256": "7493bf34bb24523dfd16c9e383c1a6b0d44bf8747fc1227b0b8ff7e2e9ab0bd8"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-discovery.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-discovery.mjs",
+      "sha256": "99790cd03470a2d22ef6318d6bffc8e7c30eb0152f8adbbd1ea27edae89805ff"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-evidence-red.log",
+      "sha256": "358dc54d25206d8815020c8c71941aa07d6493986f5594998095172e522cb116"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-evidence-green.log",
+      "sha256": "d5c40212726eaee53c019d20b5945a145f8bdf96905e67b47a38022ca89dc7a2"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-three-live.log",
+      "sha256": "b871dbbca06936ca3f34a73863b7d9fe27439c5ab324e00bd2f26aa929421cca"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-core-roundtrip.json",
+      "sha256": "cf000b5a44e83c75d49a52ab9a993f6d89ff42fab17719d989b242d47ca6aa09"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-core-roundtrip.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-lifecycle-roundtrip.json",
+      "sha256": "2aaaa399234da93bf30be809b4e9c9f7a4ef7c0a01a60e7e5de71eb4c6e0fc75"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-lifecycle-roundtrip.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-root.log",
+      "sha256": "5eb9b8fba3de1e838ebddab880c917c254b10f9f5b88c1017aebcad150a6f213"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-root-final.log",
+      "sha256": "56c8007d807ba9d4e70e0491fc912651c82bf155ffdc982115b3e31d03596452"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-activation-final.log",
+      "sha256": "a8a0c5a0c95d52f99f9d3ae4fab163b4c510835cd5e8cfeb81d560745c7b06ae"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-http.log",
+      "sha256": "0905975a4528ff5ca8096fddf3138d58320fcbd86c0ee526bfa8dd88ac2d85d6"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-preservation-baseline-20261106.json",
+      "sha256": "18ab657ac7cef2c42457a73831f33ebc96c3b0cee4e87ba8a1d336ea0543c66d"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-preservation-final.json",
+      "sha256": "7e638b2dbc3c3af5e037d469c3af007310791f346b73a27b56d25715fc70cb28"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-ledger-before.json",
+      "sha256": "1ca77a3ff8578a320da5361e6726c85599f28ec1364a06247ef3b4f3526c66ca"
+    },
+    {
+      "file": "/private/tmp/kit-current-codex-ledger-final.json",
+      "sha256": "33466994f153980bfe8a3862de4eea7bd79d4b3c6d48863ee15540b0f7596ba4"
+    }
+  ],
+  "outOfScope": [
+    "New current-build MCP/Agent/instruction/snapshot or desktop profiles",
+    "Manifest-v3 native writer coordination",
+    "Model responses and actual Tool execution"
+  ]
+}

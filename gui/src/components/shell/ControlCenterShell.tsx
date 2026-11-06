@@ -2,6 +2,7 @@ import type {ReactNode} from 'react';
 import {
   Bot,
   Boxes,
+  FileText,
   Layers,
   Moon,
   PackageSearch,
@@ -13,7 +14,7 @@ import {
 } from 'lucide-react';
 import type {ClientSummary, LocalClientDiscovery} from '../../api/deploy';
 
-export type ResourceView = 'mcp' | 'skills' | 'agents' | 'harness';
+export type ResourceView = 'mcp' | 'skills' | 'agents' | 'instructions' | 'harness';
 export type AppView = 'home' | ResourceView | 'deploy' | 'editor';
 
 interface ControlCenterShellProps {
@@ -42,6 +43,7 @@ const tabs: Array<{id: ResourceView; label: string; icon: typeof Wrench}> = [
   {id: 'mcp', label: 'MCP', icon: Wrench},
   {id: 'skills', label: 'Skill', icon: Sparkles},
   {id: 'agents', label: 'Agent', icon: Bot},
+  {id: 'instructions', label: '지침', icon: FileText},
   {id: 'harness', label: 'Harness', icon: Boxes}
 ];
 

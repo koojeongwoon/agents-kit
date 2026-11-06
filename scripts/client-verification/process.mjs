@@ -1,6 +1,10 @@
 import {spawn} from 'node:child_process';
 import readline from 'node:readline';
 
+export function readClientVersion(stdout) {
+  return typeof stdout === 'string' ? stdout.match(/(?:^|\s)v?(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)(?=\s|$)/)?.[1] : undefined;
+}
+
 export function isolatedEnvironment(homeDir, scratch, pathValue = process.env.PATH) {
   return {PATH: pathValue || '', HOME: homeDir, CODEX_HOME: `${homeDir}/.codex`,
     XDG_CONFIG_HOME: `${homeDir}/.config`, XDG_CACHE_HOME: `${homeDir}/.cache`,
@@ -29,7 +33,8 @@ export function runCommand(binary, args, {cwd, env, timeoutMs = 15000}) {
 }
 
 export async function withCodexRpc(binary, options, action) {
-  const child = spawn(binary, ['app-server'], {...options, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
+  const {appServerArgs = [], ...execution} = options;
+  const child = spawn(binary, ['app-server', ...appServerArgs], {...execution, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
   const pending = new Map(); let nextId = 0;
   child.stderr.on('data', () => {}); // Never persist startup logs or event streams.
   child.stdin.on('error', () => {});

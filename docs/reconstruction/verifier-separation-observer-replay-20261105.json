@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "replayOnly": true,
+  "productionEvidencePromoted": false,
+  "recordedComplete": false,
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "blocker": "PROBE_OBSERVATION_FAILED",
+      "recordedFullLifecycleConfirmed": false,
+      "stages": {},
+      "verification": {
+        "schemaVersion": 1,
+        "requestedStages": [
+          "baseline",
+          "applied",
+          "updated",
+          "removed",
+          "rollback"
+        ],
+        "missingStages": [
+          "baseline",
+          "applied",
+          "updated",
+          "removed",
+          "rollback"
+        ],
+        "layers": {
+          "deployment": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "not-tested",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          },
+          "nativeRecognition": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "not-tested",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          },
+          "modelBehavior": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "not-tested",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          },
+          "execution": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "not-tested",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          }
+        },
+        "cleanup": "passed",
+        "complete": false,
+        "fullLifecycleConfirmed": false
+      }
+    }
+  ],
+  "complete": false,
+  "sourceSha256": "0911db01f3ce9551229355b2fdbaec7fb38b96d4a95b82fdebc5685c7206885e",
+  "verificationComponentHashes": {
+    "lib/domain/verification-evidence.js": "13c7cb3fa57745437814a5fc78dbc5af837728d376f7f8e94535d21f21274a8b",
+    "lib/adapters/verification/probe-evidence.js": "c65590cae4b0a9236eac7f5962c40a893cad42654b6ce9b40cd55d693ec0711f",
+    "lib/adapters/verification/model-use-observation.js": "9c5039cdcff11e2cb895de9098c63016fd379a28bab8d4a1d04e17a527983836",
+    "lib/adapters/verification/agent-observation.js": "96ee4c73b782881a92b8cda7b9b3d2d4284b824ab54da4db8130cf77ad8e8904",
+    "lib/adapters/verification/codex-agent-observation.js": "fefa642d39a36ffd8b5aed9cee4f374f4f5a1d44bcade98dc6b90b09df82be55",
+    "lib/adapters/verification/recorded-report.js": "f014eb92d99323d99c96ba5be3e13c5a7b433c0e8744cc0880bf0c9353df8ac7",
+    "scripts/client-verification/deployment.mjs": "6548099151ca96254470b15d860d3e660ec9e0769a4c11116e86809c01b903b1",
+    "scripts/client-verification/report.mjs": "953cb0d1325a89f86e85d92d8143f0800e10957d836b3e02a09cbd9197839348"
+  }
+}
