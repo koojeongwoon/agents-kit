@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {render, screen, waitFor} from '@testing-library/react';
+import {act,render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as deployApi from '../../api/deploy';
 import {ManifestDeploymentPanel} from './ManifestDeploymentPanel';
@@ -25,6 +25,34 @@ const clients = [{
   detection: {commands: ['codex'], userRoot: '~/.codex'},
   capabilities: [{assetKind: 'mcp', scope: 'global' as const, status: 'stable' as const}]
 }];
+
+it('blocks a shared-skill write even if the returned plan incorrectly claims automatic approval',async()=>{
+  vi.mocked(deployApi.fetchManifestDeploymentHistory).mockResolvedValue({transactions:[]});
+  vi.mocked(deployApi.planManifestDeployment).mockResolvedValue({planId:'shared',kind:'apply',automatic:true,operations:[{target:'/home/.agents/skills/review',operation:'COPY',reason:''}],blocked:[],expiresAt:'2099-01-01'});
+  renderPanel('global');await userEvent.setup().click(screen.getByRole('button',{name:'배포 계획 만들기'}));
+  expect(await screen.findByRole('button',{name:'적용 승인'})).toBeDisabled();expect(screen.getByRole('button',{name:'계획 저장 (24시간)'})).toBeDisabled();
+});
+
+it('does not accept an older plan response after a version selection changes',async()=>{
+  let resolve!:(plan:deployApi.ManifestDeploymentPlan)=>void;const pending=new Promise<deployApi.ManifestDeploymentPlan>(done=>{resolve=done;});
+  vi.mocked(deployApi.fetchManifestDeploymentHistory).mockResolvedValue({transactions:[]});vi.mocked(deployApi.planManifestDeployment).mockReturnValue(pending);
+  const props={scope:'global' as const,clientId:'codex',clients,projectName:'default',projectPath:'',setClientVersion:vi.fn()};
+  const {rerender}=render(<ManifestDeploymentPanel {...props} clientVersion="1"/>);await userEvent.setup().click(screen.getByRole('button',{name:'배포 계획 만들기'}));
+  rerender(<ManifestDeploymentPanel {...props} clientVersion="2"/>);
+  await act(async()=>resolve({planId:'old-version',kind:'apply',automatic:true,operations:[],blocked:[],expiresAt:'2099-01-01'}));
+  expect(screen.queryByRole('button',{name:'적용 승인'})).not.toBeInTheDocument();
+});
+
+it('uses every data-driven client for all-client planning and filters individual history by recorded client IDs',async()=>{
+  vi.mocked(deployApi.fetchManifestDeploymentHistory).mockResolvedValue({transactions:[{id:'other-client-record',type:'apply',status:'committed',createdAt:'',clientIds:['other'],operations:[]} ]});
+  vi.mocked(deployApi.planManifestDeployment).mockResolvedValue({planId:'all',kind:'apply',automatic:false,operations:[],blocked:[],expiresAt:'2099-01-01'});
+  const targets=[...clients,{...clients[0],id:'other',displayName:'Other'},{...clients[0],id:'third',displayName:'Third'}];
+  const props={scope:'global' as const,clientId:'codex',clients:targets,projectName:'default',projectPath:'',clientVersion:'',setClientVersion:vi.fn()};
+  const {rerender}=render(<ManifestDeploymentPanel {...props} allClients/>);const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'배포 계획 만들기'}));
+  expect(vi.mocked(deployApi.planManifestDeployment).mock.lastCall?.[0].targets?.map(target=>target.clientId)).toEqual(['codex','other','third']);
+  rerender(<ManifestDeploymentPanel {...props} allClients={false}/>);await user.click(screen.getByRole('button',{name:'적용 이력·복원'}));
+  expect(screen.queryByText('other-client-record')).not.toBeInTheDocument();
+});
 
 it('requires private native observation and explicit provider discovery before approving scoped deployment',async()=>{
   vi.clearAllMocks();vi.mocked(deployApi.fetchManifestDeploymentHistory).mockResolvedValue({transactions:[]});
@@ -58,7 +86,7 @@ it('observes a scoped rollback before approval and uses the rollback endpoint',a
   vi.clearAllMocks();vi.mocked(deployApi.fetchManifestDeploymentHistory).mockResolvedValue({transactions:[{id:'tx-update',type:'apply',status:'committed',createdAt:'2026-11-06',operations:[]}]});
   const pending={planId:'scoped-rollback',kind:'rollback' as const,automatic:false,operations:[],blocked:[],expiresAt:'2099-01-01',execution:{schemaVersion:1 as const,status:'requires-observation' as const,scope:'project' as const,nativePrerequisiteCount:1,providerDiscoveryRequired:false}};
   vi.mocked(deployApi.planManifestRollback).mockResolvedValue(pending);vi.mocked(deployApi.observeManifestPrerequisites).mockResolvedValue({...pending,automatic:true,execution:{...pending.execution,status:'ready'}});vi.mocked(deployApi.applyManifestRollback).mockResolvedValue({transactionId:'tx-rollback'});
-  renderPanel('project','/project');const user=userEvent.setup();await user.click(await screen.findByRole('button',{name:'Rollback 계획'}));expect(await screen.findByRole('button',{name:'Rollback 승인'})).toBeDisabled();
+  renderPanel('project','/project');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'적용 이력·복원'}));await user.click(await screen.findByRole('button',{name:'Rollback 계획'}));expect(await screen.findByRole('button',{name:'Rollback 승인'})).toBeDisabled();
   await user.click(screen.getByRole('button',{name:'전역 설치 전제 확인'}));await waitFor(()=>expect(screen.getByRole('button',{name:'Rollback 승인'})).toBeEnabled());expect(deployApi.applyManifestRollback).not.toHaveBeenCalled();
   await user.click(screen.getByRole('button',{name:'Rollback 승인'}));await waitFor(()=>expect(deployApi.applyManifestRollback).toHaveBeenCalledWith('scoped-rollback'));expect(deployApi.applyManifestDeployment).not.toHaveBeenCalled();
 });
@@ -66,7 +94,7 @@ it('observes a scoped rollback before approval and uses the rollback endpoint',a
 it('keeps rollback with dependency changes blocked when its execution verdict is missing',async()=>{
   vi.clearAllMocks();vi.mocked(deployApi.fetchManifestDeploymentHistory).mockResolvedValue({transactions:[{id:'tx-update',type:'apply',status:'committed',createdAt:'2026-11-06',operations:[]}]});
   vi.mocked(deployApi.planManifestRollback).mockResolvedValue({planId:'missing-rollback-verdict',kind:'rollback',automatic:true,operations:[],blocked:[],expiresAt:'2099-01-01',dependencyTransition:{schemaVersion:1,action:'rollback',releasedConsumers:[],desiredConsumers:1,desiredPrerequisites:1}});
-  renderPanel('project','/project');await userEvent.setup().click(await screen.findByRole('button',{name:'Rollback 계획'}));
+  renderPanel('project','/project');await userEvent.setup().click(screen.getByRole('button',{name:'적용 이력·복원'}));await userEvent.setup().click(await screen.findByRole('button',{name:'Rollback 계획'}));
   expect(await screen.findByRole('button',{name:'Rollback 승인'})).toBeDisabled();expect(screen.getByRole('button',{name:'계획 저장 (24시간)'})).toBeDisabled();expect(deployApi.applyManifestRollback).not.toHaveBeenCalled();
 });
 
@@ -263,7 +291,7 @@ it('creates an explicit removal plan and applies only after removal approval', a
   vi.mocked(deployApi.applyManifestDeployment).mockClear();
   vi.mocked(deployApi.planManifestRemoval).mockResolvedValue({
     planId: 'release-plan', kind: 'remove', automatic: true, expiresAt: '2026-09-27T10:00:00Z', blocked: [],
-    operations: [{assetId: 'review', target: '/project/.agents/skills/review/SKILL.md', operation: 'RELEASE', reason: 'SHARED_CONSUMER_REMOVAL', consumers: ['kit:antigravity:cli'], metadataOnly: true}]
+    operations: [{assetId: 'review', target: '/project/.claude/skills/review/SKILL.md', operation: 'RELEASE', reason: 'SHARED_CONSUMER_REMOVAL', consumers: ['kit:antigravity:cli'], metadataOnly: true}]
   });
   vi.mocked(deployApi.applyManifestDeployment).mockResolvedValue({transactionId: 'tx-release'});
   const user = userEvent.setup(); renderPanel('project', '/project');
@@ -400,6 +428,7 @@ it('saves a reviewed plan and resumes only after an explicit saved-plan approval
   expect(deployApi.saveManifestPlan).toHaveBeenCalledWith('saved-1');
   expect(deployApi.resumeManifestPlan).not.toHaveBeenCalled();
   expect(deployApi.applyManifestDeployment).not.toHaveBeenCalled();
+  await user.click(screen.getByRole('button',{name:'저장된 계획'}));
   await user.click(screen.getByText('저장 계획과 중단 작업 복구'));
   expect(screen.getByText(/검토 digest:/)).toHaveTextContent(saved.digest);
   expect(screen.getByText(/같은 설정에 함께 반영되는 화면: Codex · cli, Codex · desktop/)).toBeInTheDocument();
@@ -415,6 +444,7 @@ it('loads saved plans without execution and requires separate recovery approval'
   vi.mocked(deployApi.planManifestRecovery).mockResolvedValue({planId: 'recovery-1', kind: 'recovery', automatic: true, outcome: 'restore-original', expiresAt: '2099-01-01', operations: [{operation: 'RESTORE', target: '/project/AGENTS.md', reason: ''}], blocked: []});
   vi.mocked(deployApi.applyManifestRecovery).mockResolvedValue({transactionId: 'tx-interrupted'});
   const user = userEvent.setup(); renderPanel('project', '/project');
+  await user.click(screen.getByRole('button',{name:'저장된 계획'}));
   await user.click(screen.getByText('저장 계획과 중단 작업 복구'));
   await user.click(screen.getByRole('button', {name: '저장 계획 불러오기'}));
   expect(deployApi.resumeManifestPlan).not.toHaveBeenCalled();

@@ -6,11 +6,17 @@ import {fetchNativeInstallation, planNativeInstallation, applyNativeInstallation
 import type {NativeInstallation, NativeInstallationPlan} from '../../api/deploy';
 vi.mock('../../api/deploy', async original => ({...await original<typeof import('../../api/deploy')>(), fetchNativeInstallation: vi.fn(), planNativeInstallation: vi.fn(), applyNativeInstallation: vi.fn()}));
 const file = {sha256: 'hash', text: '# Review\n', mode: 0o640, bytes: 9};
-const status: NativeInstallation = {assetId: 'review', clientId: 'codex', surface: 'cli', target: '/project/.agents/skills/review', adopted: false, installedModified: false, kitPending: true, files: []};
+const status: NativeInstallation = {assetId: 'review', clientId: 'claude', surface: 'cli', target: '/project/.claude/skills/review', adopted: false, installedModified: false, kitPending: true, files: []};
 const plan: NativeInstallationPlan = {planId: 'install-1', kind: 'installation', mode: 'adopt', automatic: true, expiresAt: '', reviewHash: 'review-hash',
   operations: [{target: status.target, operation: 'REGISTER', reason: 'ADOPT', beforeHash: 'hash', expectedHash: 'hash', beforeMode: 0o640, afterMode: 0o640, metadataOnly: true}], blocked: [], details: [], stateUpgrade: {from: 1, to: 5}};
 beforeEach(() => {vi.clearAllMocks(); vi.mocked(fetchNativeInstallation).mockResolvedValue(status); vi.mocked(planNativeInstallation).mockResolvedValue(plan); vi.mocked(applyNativeInstallation).mockResolvedValue({transactionId: 'tx-native'});});
 const mount = () => {const changed = vi.fn(); render(<NativeInstallationPanel assetId="review" scope="project" projectName="default" projectPath="/project" onChanged={changed} onClose={vi.fn()} onHistory={vi.fn()} />); return changed;};
+
+it('keeps shared skills readable without planning adoption, modification or ledger changes',async()=>{
+  vi.mocked(fetchNativeInstallation).mockResolvedValue({...status,target:'/project/.agents/skills/review'});mount();
+  expect(await screen.findByRole('button',{name:'설치 변경 계획 확인'})).toBeDisabled();
+  expect(screen.getByRole('status')).toHaveTextContent('관측 전용');expect(planNativeInstallation).not.toHaveBeenCalled();expect(applyNativeInstallation).not.toHaveBeenCalled();
+});
 
 it('reviews metadata-only native evidence without claiming client file changes or native recognition',async()=>{
   vi.mocked(fetchNativeInstallation).mockResolvedValue({...status,adopted:true});
