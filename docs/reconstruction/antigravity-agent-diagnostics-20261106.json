@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T08:19:16.080Z",
+  "productionEvidencePromoted": false,
+  "attempts": [
+    {
+      "stage": "initial-isolated-parent",
+      "version": "1.5.1",
+      "reason": "CLIENT_BINARY_CHANGED",
+      "updatedByNativeClientTo": "1.5.2",
+      "spawned": false
+    },
+    {
+      "stage": "fixed-1.5.2-default-selection",
+      "version": "1.5.2",
+      "reason": "CLI_REJECTED",
+      "spawned": false
+    },
+    {
+      "stage": "fixed-1.5.2-selected-model",
+      "version": "1.5.2",
+      "roleObserved": true,
+      "publicChildReplyMatched": true,
+      "completedChildStateObserved": false,
+      "reason": "MANAGEMENT_TEXT_ENVELOPE_UNRECOGNIZED"
+    },
+    {
+      "stage": "fixed-1.5.1-baseline-disable-value-1",
+      "version": "1.5.1",
+      "reason": "CLIENT_BINARY_CHANGED",
+      "spawned": false
+    },
+    {
+      "stage": "empty-input-disable-value-true",
+      "version": "1.5.1",
+      "modelRequests": 0,
+      "binaryUnchanged": true
+    }
+  ],
+  "managementEnvelopeFixture": "You have 1 active subagent(s):\n[{\"conversationId\":\"fixture-child\",\"state\":\"idle\"}]",
+  "rawTranscriptsStored": false,
+  "nativeHistoryFilesRead": false,
+  "originalBinaryRestored": true,
+  "oldFailuresOverwritten": false
+}

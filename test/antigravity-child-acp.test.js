@@ -91,3 +91,37 @@ test('Agent completion joins native child state with its correlated public reply
   assert.equal(combineAcpChildEvidence({...parent, completedChildStateObserved: false}, child).completedChildMarker, false);
   assert.equal(combineAcpChildEvidence({...parent, roleObserved: false}, child).completedChildMarker, false);
 });
+
+test('recorded native management envelope exposes only the matched child state', () => {
+  // CLI 1.5.2 public manage_subagents output, with fixture identifiers substituted.
+  const row = {role: 'Evidence Probe', type: 'fixture', conversationId: 'child',
+    transcript: 'file:///NOT_READ', state: 'idle', lastStepTime: '2026-11-06T08:05:54Z'};
+  const observe = output => {
+    const observer = createAgentObservation('antigravity', 'fixture', 'opaque');
+    observer.accept(JSON.stringify({event: 'step_update', step_update: {step_type: 'subagent', state: 'DONE', tool_name: 'invoke_subagent', subagent_info: {subagents: [{type_name: 'fixture', conversation_id: 'child'}]}}}));
+    observer.accept(JSON.stringify({event: 'step_update', step_update: {step_type: 'tool', state: 'DONE', tool_info: {name: 'manage_subagents', parameters: {Action: 'list'}, output}}}));
+    return observer.facts;
+  };
+  const envelope = rows => `You have ${rows.length} active subagent(s):\n${JSON.stringify(rows)}`;
+  const facts = observe(envelope([row]));
+  assert.equal(facts.completedChildStateObserved, true);
+  assert.deepEqual(facts.managementChildStates, ['idle']);
+  assert.equal(facts.completedChildMarker, false);
+  assert.doesNotMatch(JSON.stringify(facts), /NOT_READ|Evidence Probe|2026-11-06|"child"/);
+  for (const output of [envelope([{...row, conversationId: 'another'}]), envelope([{...row, state: 'running'}]),
+    envelope([{...row, state: 'failed'}]), envelope([{...row, error: 'failed'}]),
+    envelope([{...row, thoughts: 'opaque'}]), envelope([row]).replace('1 active', '2 active'),
+    `Unrelated text\n${JSON.stringify([row])}`]) {
+    assert.equal(observe(output).completedChildStateObserved, false);
+  }
+});
+
+test('a correct parent answer keeps the native stream open until child state is observed', () => {
+  const observer = createAgentObservation('antigravity', 'fixture', 'opaque');
+  observer.accept(JSON.stringify({event: 'step_update', step_update: {step_type: 'subagent', state: 'DONE', tool_name: 'invoke_subagent', subagent_info: {subagents: [{type_name: 'fixture', conversation_id: 'child'}]}}}));
+  observer.accept(JSON.stringify({event: 'result', result: {status: 'SUCCESS', response: '{"agent":"opaque"}'}}));
+  assert.equal(observer.needsFollowup(), true);
+  observer.accept(JSON.stringify({event: 'step_update', step_update: {step_type: 'tool', state: 'DONE', tool_info: {name: 'manage_subagents', parameters: {Action: 'list'}, output: JSON.stringify([{conversationId: 'child', state: 'idle'}])}}}));
+  assert.equal(observer.needsFollowup(), false);
+  assert.equal(observer.facts.completedChildMarker, false);
+});

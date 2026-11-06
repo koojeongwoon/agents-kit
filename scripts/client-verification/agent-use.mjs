@@ -3,7 +3,7 @@ export {createAgentObservation} from '../../lib/adapters/verification/agent-obse
 
 export function agentUseConfirmed(result, present, clientId) {
   return result.success && result.finalMatches && !result.unexpectedTools && (present
-    ? result.childMarkerReturned && (clientId === 'codex' ? result.completedChildMarker : result.spawned && result.roleObserved)
+    ? result.childMarkerReturned && result.completedChildMarker === true && (clientId === 'codex' || result.spawned && result.roleObserved)
     : result.reportedAbsent && !result.spawned && !result.childMarkerReturned);
 }
 
@@ -12,5 +12,5 @@ export function agentEvidence(result, present, clientId) {
   const markerConfirmed = result.success && result.finalMatches && !result.unexpectedTools;
   const invocationConfirmed = markerConfirmed && (present ? result.roleObserved && result.spawned : result.reportedAbsent && !result.spawned);
   const confirmed = agentUseConfirmed(result, present, clientId);
-  return {markerConfirmed, invocationConfirmed, confirmed, verificationReason: confirmed ? 'CONFIRMED' : !result.success ? result.reason : result.unexpectedTools ? 'UNEXPECTED_TOOL' : !result.finalMatches ? 'MARKER_MISMATCH' : !result.childMarkerReturned ? 'CHILD_RESULT_NOT_EXPOSED' : 'INVOCATION_NOT_CONFIRMED'};
+  return {markerConfirmed, invocationConfirmed, confirmed, verificationReason: confirmed ? 'CONFIRMED' : !result.success ? result.reason : result.unexpectedTools ? 'UNEXPECTED_TOOL' : !result.finalMatches ? 'MARKER_MISMATCH' : !result.childMarkerReturned ? 'CHILD_RESULT_NOT_EXPOSED' : !result.completedChildMarker ? 'CHILD_COMPLETION_NOT_EXPOSED' : 'INVOCATION_NOT_CONFIRMED'};
 }

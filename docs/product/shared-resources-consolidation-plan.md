@@ -1,6 +1,6 @@
 # Codex·Antigravity 공통 자원 관리 보완 계획
 
-작성·재검토: 2026-11-06. 상태: **관측·등록·Kit 편집·로컬 및 고정 Git/npm 갱신/병합·설치 관리·복원·snapshot 공유 연결 집행·이관·중단 복구 구현. 현재 빌드 기본 CLI는 전역/프로젝트 16조합 중 14조합 검증, AGY Agent 2조합 미관측·차단**.
+작성·재검토: 2026-11-06. 상태: **관측·등록·Kit 편집·로컬 및 고정 Git/npm 갱신/병합·설치 관리·복원·snapshot 공유 연결 집행·이관·중단 복구 구현. 검증한 빌드의 기본 CLI 전역/프로젝트 16조합 모두 검증, AGY Agent 2조합의 실제 자식 완료·복원까지 확인**.
 검토 기준: HEAD `0fc5250`. 이번 재검토 시작 시 이 문서만 untracked였으며,
 기존 본문의 방향을 유지하면서 현재 소스와 공식 계약을 다시 대조했다.
 아래 구현 진행표의 완료 항목만 현재 제공한다. 나머지 신규 계약·서비스·API는 구현 제안이다.
@@ -11,6 +11,8 @@ ego-browser 같은 외부 관리 링크는 존재·연결·관리 주체를 보�
 [현재 Codex·GUI 핵심 검증](../reconstruction/current-codex-final-core-acceptance-20261106.md)을 따른다.
 Codex CLI `0.167.0-alpha.3.2`의 MCP·Agent·지침은 전역·프로젝트 모두 실제 적용·인식·복원을
 확인했다. GUI 대표 Skill 흐름도 편입→편집→업데이트 병합→설치 적용·복원을 확인했다.
+후속 [Antigravity Agent 완료 검증](../reconstruction/phase-antigravity-agent-completion.md)에서
+CLI `1.5.1`의 전역·프로젝트도 실제 자식 종료 상태·같은 자식의 공개 응답과 적용·복원을 확인했다.
 아래 확장 계획의 미완료 항목을 이번 핵심 범위의 추가 작업으로 진행하지 않는다.
 
 ## 목표와 설계 기준
@@ -66,7 +68,7 @@ schema 1 동작과 기존 CLI/API 호출은 보존한다. 원격 실행, 임의 
 | S02-5 Git/package 첫 범위, PR04c, S06-5 일부 | 공개 HTTPS Git 전체 commit 및 npm 정확한 version/SHA-512 출처를 기존 관리 자원에 연결. 무실행 취득, B/K/U 병합·보류, 출처 포함 이력 복원, CLI/HTTP/GUI 완료. 버전 자동 탐색·private 인증·다른 registry/패키지 형식은 후속 |
 | S03-1·2 계획, PR05, S06-3 일부 | 공통 Skill source v2의 명시적 전략·대상 override, immutable descriptor/store, 공유 연결·소비자·revision diff·보관 참조, state v6 읽기와 CLI/HTTP/GUI 미리보기 구현. 순수 계획은 무쓰기이며 집행은 아래 PR06 검증 조합만 허용 |
 | S03-3·4, PR06, S06-3 일부 | immutable snapshot 링크 집행·명시적 copy↔link 이관·consumer 해제·saved plan·backup/rollback·SIGKILL 복구를 공통 서비스와 CLI/HTTP/GUI에 연결. Codex 현재 실행 파일의 전역 CLI Skill만 native 링크 evidence 추가. AGY 링크 읽기는 미관측이라 차단 유지 |
-| S04-1·S04-2 기본 일부, PR07 일부, S06-3 일부 | typed Agent/MCP의 같은 물리 저장소 합산·gate·state v7/resource v2·제거 영향·saved v3·rollback/중단 복구 구현. 현재 빌드 기본 CLI native 14/16 증거 확보. AGY Agent 두 scope는 child 완료 미관측으로 차단 |
+| S04-1·S04-2 기본 범위, PR07 기본 범위, S06-3 일부 | typed Agent/MCP의 같은 물리 저장소 합산·gate·state v7/resource v2·제거 영향·saved v3·rollback/중단 복구 구현. 검증한 빌드의 기본 CLI native 16/16 증거 확보. AGY Agent 두 scope의 실제 child 완료·적용·복원 확인 |
 | S04-3, PR08, S06-3 일부 | 일반 경로 변경 차단·적용 locator 증거·명시적 새 위치 생성/검증/과거 해제·부분 consumer/selector 이동·mode 보존·양쪽 rollback·SIGKILL 복구를 CLI/HTTP/GUI에 구현·격리 검증. 무증거 과거 설치·Agent 등록 충돌·외부 링크는 이동 차단 |
 | S05-1·S06-1 일부, PR09 일부 | 전역+선택 프로젝트 catalog·origin/실제 경로·부분 실패·행별 scope 작업, Codex CLI Skill native 활성/비활성·상위 경로, MCP 필드별 출처/합성/가림/ignored, Agent 선언 이름 및 지침 설정·문서 기준 선택 예상·CLI/HTTP/GUI 검증. Agent/지침 실제 로딩과 다른 client/surface 실효 문맥은 미확인 |
 | S05-2·3 참조·설치/역참조·조정 일부, PR10 일부 | graph·정책·설치 revision·역참조·writer 보호, scoped v4 영수증·consumer 예측·두 scope 조정/복구 구현. pin 보존 전역 변경·공개 v3 apply/remove·의존성 rollback/참조 해제·저장 v5 재개·두 scope 복구와 일반 v3 검증/읽기 전용 진단/선언 CRUD를 CLI/HTTP/GUI에 연결. Kit 소유 snapshot·실제 격리 Codex 공개 CLI 왕복·사용자 Kit 무쓰기 진단 검증. native 원형/과거 경로 writer·편입된 원본의 v3 수명주기·전역 설정 전환은 미완료이며 해당 경로는 차단 |
@@ -161,8 +163,9 @@ PR07의 [같은 Agent/MCP 저장소 합산](../reconstruction/phase-physical-res
 미치는 영향을 계획과 저장 계획에 표시한다. 네 자원의 전역/프로젝트 합성 수명주기에서
 기존 파일 mode 보존 누락도 고쳤다. 이후 [기본 CLI 실기](../reconstruction/phase-basic-cli-verification.md)에서
 Codex 프로젝트 네 자원·전역 basic MCP, AGY 프로젝트 세 자원·전역 지침의 다섯 단계와
-최종 원상 복원을 확인해 현재 gate가 14/16으로 늘었다. 첫 사전 행렬의 5/16은 과거 기록으로
-보존한다. AGY Agent 두 scope의 child 완료는 미관측이며 PR07 전체는 진행 중이다.
+최종 원상 복원을 확인해 당시 gate가 14/16으로 늘었다. 첫 사전 행렬의 5/16은 과거 기록으로
+보존한다. 이후 [AGY Agent 완료 검증](../reconstruction/phase-antigravity-agent-completion.md)으로
+전역·프로젝트의 실제 child 완료와 복원까지 확보해 기본 범위는 16/16을 마쳤다.
 기존 설정의 내용·mode와 외부 링크는 보존했고 Codex config의 inode/mtime 변경은 별도
 기록했다. 루트 465, HTTP 31, GUI 55 passed다.
 
@@ -1032,7 +1035,7 @@ source 입력이 바뀌었으면 같은 candidateId라도 재검토해야 한다
 | PR04c 출처 연동 | PR04b | Kit 관리 자원의 Git/package source adapter | 공개 HTTPS Git commit·npm version/SHA-512 범위 구현. 무실행 취득·병합·출처 포함 복원. 외부 관리 항목과 updater에는 관여하지 않음. 인증/자동 버전 탐색은 후속 |
 | PR05 snapshot·연결 계획 | PR04b | S03-1·2, 새 state/연결 descriptor와 diff | 구현·검증. source v2, snapshot/store, state v6 연결 모델과 소비자/보관 계획. copy 회귀 없음, pure plan 무쓰기. 실제 적용은 PR06까지 차단 |
 | PR06 링크 집행·복구 | PR05 | S03-3·4, 관련 S01-2 전략 실기 evidence, S06-3 | 구현·검증. 이관·소비자·저장 계획·SIGKILL 복구 통과. Codex 전역 CLI의 검증된 링크 조합만 활성화, AGY 미관측은 차단 유지 |
-| PR07 같은 저장소·기본 범위 | PR06 | S04-1, S04-2의 기본 CLI 전역/프로젝트, S06-3 | 진행 중. typed 저장소 합산·격리 행렬 구현/검증, 기본 CLI native 14/16 증거 확보. AGY Agent 두 scope의 직접 child 완료는 미관측·차단 |
+| PR07 같은 저장소·기본 범위 | PR06 | S04-1, S04-2의 기본 CLI 전역/프로젝트, S06-3 | 기본 범위 완료. typed 저장소 합산·격리 행렬 구현/검증, 기본 CLI native 16/16 증거 확보. AGY Agent 두 scope의 직접 child 완료·적용·복원 확인 |
 | PR08 기존 경로 이관 | PR07 | S04-3 및 제거/rollback 호환 | 구현·격리 검증. 적용 locator와 소유 증명, 새/옛 위치 이관·양쪽 rollback·SIGKILL 복구·CLI/HTTP/GUI. 무증거 과거 설치와 미확인 Agent 등록·외부 링크는 충돌로 보존 |
 | PR09 통합 조회 | PR03 | S05-1, S06-1. 구현 순서상 PR04a~08과 독립 | 진행 중. catalog·scope 작업·문서 규칙, Codex CLI Skill 활성/비활성·상위 경로, MCP 필드별 합성/가림/제외, Agent 선언 이름·지침 설정/문서 기준 선택 예상 구현·검증. Agent/지침 실제 로딩과 다른 client/surface 실효 문맥은 미확인 |
 | PR10 교차 scope 의존성 | PR07·08·09 | S05-2·3, scoped schema/catalog/역참조·잠금·복구 | graph·설치/역참조·writer 보호·두 scope 집행/복구·native verifier·v4 영수증·consumer 예측 구현. 공개 v3 계획/관측/집행·제거·의존성 rollback/참조 해제·저장 v5/복구 및 일반 v3 검증·읽기 전용 doctor·선언 CRUD를 CLI/HTTP/GUI에 연결. source peer·target/동명 참조 보존과 실제 Codex 공개 왕복·사용자 Kit 무쓰기 진단 검증. native 원형/과거 경로 writer·편입된 원본의 v3 수명주기·전역 설정 전환은 미완료이며 차단 |
