@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR07-S04-2-basic-native",
+  "observedAt": "2026-11-05T18:30:44.120Z",
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "validation": {
+    "rootPassed": 465,
+    "httpPassed": 31,
+    "guiPassed": 55,
+    "typecheck": "passed",
+    "desktopBuild": "passed",
+    "diffCheck": "passed",
+    "httpSandboxAttempt": {
+      "passed": 13,
+      "failed": 18,
+      "reason": "listen EPERM; local port opening restricted; unsandboxed disposable-home run passed all 31"
+    },
+    "logHashes": {
+      "root": "b8685795d8b34b0aab37e199f03bc2db5d5c78c99b7eed145c4f2064bdd5a58f",
+      "http": "cf6e8c2c515afaefd3fc4a62da01708bc00f0c190f3b0709a02cbcdd40f14399",
+      "gui": "53f2b21bae1c1ed91a8d260a192137d1d59669f53c73672ffdcf53a304f0803b",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "163c1feffe27beda89a0f472d0619972b3376439bcbd9b714fcdf82614d949e7"
+    }
+  },
+  "nativeReports": [
+    {
+      "file": "docs/reconstruction/native-project-codex-basic-cli-20261106.json",
+      "sha256": "4ebfaacb8b84fab64dce9bd7fa2918ae90d4106832a5f37e342d8482c609b17d",
+      "topLevelRequests": 5,
+      "complete": true,
+      "cleanupVerified": true,
+      "childInvocationsObserved": 0
+    },
+    {
+      "file": "docs/reconstruction/native-project-codex-agent-cli-20261106.json",
+      "sha256": "1a4440fc6f49195b7a0e09174db8362e983e22d7e7776ed4402ab6e2e5a95f19",
+      "topLevelRequests": 5,
+      "complete": true,
+      "cleanupVerified": true,
+      "childInvocationsObserved": 3
+    },
+    {
+      "file": "docs/reconstruction/native-project-antigravity-basic-cli-attempt1-20261106.json",
+      "sha256": "62e3f5a66c026b845f2a7cd83ab1116cb93cd6fd0bee016fb1952f2e1dbece44",
+      "topLevelRequests": 1,
+      "complete": false,
+      "cleanupVerified": true,
+      "childInvocationsObserved": 0
+    },
+    {
+      "file": "docs/reconstruction/native-project-antigravity-basic-cli-20261106.json",
+      "sha256": "ea6e081978cbef844df0c9f63f7f353889b7083f098e8be9b57ce22518a03b71",
+      "topLevelRequests": 5,
+      "complete": true,
+      "cleanupVerified": true,
+      "childInvocationsObserved": 0
+    },
+    {
+      "file": "docs/reconstruction/native-global-antigravity-instructions-cli-20261106.json",
+      "sha256": "dfcd16deeadaf6ee9688e422602cb1b31e3a76a6a9905a7924322794524d6fbd",
+      "topLevelRequests": 5,
+      "complete": true,
+      "cleanupVerified": true,
+      "childInvocationsObserved": 0
+    },
+    {
+      "file": "docs/reconstruction/native-global-codex-basic-mcp-cli-20261106.json",
+      "sha256": "60ba5be26adfb8792b30778c5139777f2a9c6883faff869be5f3f8b3fbadbbe8",
+      "topLevelRequests": 5,
+      "complete": true,
+      "cleanupVerified": true,
+      "childInvocationsObserved": 0
+    }
+  ],
+  "topLevelRequests": 26,
+  "childInvocationsObserved": 3,
+  "basicGateMatrix": {
+    "source": "docs/reconstruction/basic-cli-matrix-current-20261106.json",
+    "sha256": "3ffcfc0d2fa2c7d65ebd74ebb6dedae2c19cb22f8f62c5f96ca0b6b90a636507",
+    "eligible": 14,
+    "blocked": 2
+  },
+  "remaining": "Antigravity CLI global/project Agent direct child completion evidence; PR08-11"
+}

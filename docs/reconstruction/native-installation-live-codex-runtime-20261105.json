@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-6",
+  "observedAt": "2026-11-05T12:11:46.846Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "skills",
+  "pathCandidate": "selected-client-profile",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "da1786eb8c2d185fd3beada8bb77a53ea0a1a5125487eb27767e6f50c460e49a",
+  "helperSha256": "2bdd9eeb568a64997068c6d4c7933470d16fcc1d85c44d829b8290e5f97ec08f",
+  "runnerSha256": "8f384624a154f8685b45ab1f973f84e628c3f8b4c6384f47947605a14ce3fb27",
+  "isolation": {
+    "nativeLogin": true,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "temporaryGlobalAssets": true,
+    "kitLedgerHistoryRetained": true,
+    "rawTranscriptsStoredByVerifier": false
+  },
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "skill": true
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "skill": true
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "success": true,
+          "confirmed": true
+        },
+        "applied": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "skill": false
+          },
+          "skillFileRead": true,
+          "mcpToolCalled": false,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "skill": false
+          },
+          "toolKinds": [
+            "command_execution"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "command_execution",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": true,
+              "skillMarkerReturned": true,
+              "mcpMarkerReturned": false
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "success": true,
+          "confirmed": false
+        },
+        "updated": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "skill": true
+          },
+          "skillFileRead": true,
+          "mcpToolCalled": false,
+          "completedTools": 2,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "skill": false
+          },
+          "toolKinds": [
+            "command_execution"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "command_execution",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": true,
+              "skillMarkerReturned": true,
+              "mcpMarkerReturned": false
+            },
+            {
+              "kind": "command_execution",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": true,
+              "skillMarkerReturned": true,
+              "mcpMarkerReturned": false
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "success": true,
+          "confirmed": true
+        },
+        "removed": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "skill": true
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "skill": true
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "success": true,
+          "confirmed": true
+        },
+        "rollback": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "skill": true
+          },
+          "skillFileRead": true,
+          "mcpToolCalled": false,
+          "completedTools": 2,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "skill": false
+          },
+          "toolKinds": [
+            "command_execution"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "command_execution",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": true,
+              "skillMarkerReturned": true,
+              "mcpMarkerReturned": false
+            },
+            {
+              "kind": "command_execution",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": true,
+              "skillMarkerReturned": true,
+              "mcpMarkerReturned": false
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "success": true,
+          "confirmed": true
+        }
+      },
+      "fullLifecycleConfirmed": false,
+      "definitionSha256": "9b3b949a78171c2ca6eccf39651eb434e787e055d7b14d5a0f637c8cb969ff91",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "preflight": {
+        "automatic": true,
+        "operations": [
+          {
+            "assetId": "ca04-global-skill-02918fd742e8",
+            "operation": "CREATE",
+            "reason": "SHARED_CONTENT_PLANNED"
+          },
+          {
+            "assetId": "ca04-global-skill-02918fd742e8",
+            "operation": "CREATE",
+            "reason": "SHARED_CONTENT_PLANNED"
+          }
+        ],
+        "blocked": []
+      },
+      "cleanup": {
+        "attempted": true,
+        "assetsAbsent": true,
+        "ledgerHistoryRetained": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T18:29:55.194Z",
+  "phase": "PR07-S04-2-current-gates",
+  "platform": "darwin",
+  "arch": "arm64",
+  "surface": "cli",
+  "configurationAppliedByThisReport": false,
+  "modelRequestsByThisReport": 0,
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "definitionSha256": "a882d96bd67c76a66e2166a6642da2903a8251f2b906932226ec6b8a3939ed05",
+      "matrix": [
+        {
+          "scope": "global",
+          "kind": "instructions",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.codex/AGENTS.md",
+          "evidenceSource": "docs/reconstruction/native-global-codex-instructions-runtime-20261105.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "report.cleanup.originalBytesAndModeRestored"
+        },
+        {
+          "scope": "global",
+          "kind": "skills",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.agents/skills/matrix-probe",
+          "evidenceSource": "docs/reconstruction/native-installation-live-codex-runtime-recheck-20261105.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanup.assetsAbsent"
+        },
+        {
+          "scope": "global",
+          "kind": "agents",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.codex/agents/matrix-probe.toml",
+          "evidenceSource": "docs/reconstruction/native-global-codex-agent-runtime-recheck-20261105.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanup.assetsAbsent"
+        },
+        {
+          "scope": "global",
+          "kind": "mcpServers",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.codex/config.toml",
+          "evidenceSource": "docs/reconstruction/native-global-codex-basic-mcp-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "instructions",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "AGENTS.md",
+          "evidenceSource": "docs/reconstruction/native-project-codex-basic-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "skills",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": ".agents/skills/matrix-probe",
+          "evidenceSource": "docs/reconstruction/native-project-codex-basic-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "agents",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": ".codex/agents/matrix-probe.toml",
+          "evidenceSource": "docs/reconstruction/native-project-codex-agent-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "mcpServers",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": ".codex/config.toml",
+          "evidenceSource": "docs/reconstruction/native-project-codex-basic-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        }
+      ]
+    },
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "definitionSha256": "8d7b01af6be7c8689069a9423aacce3b1d4e6ae2c382b9e32e50b96f73d96b16",
+      "matrix": [
+        {
+          "scope": "global",
+          "kind": "instructions",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.gemini/GEMINI.md",
+          "evidenceSource": "docs/reconstruction/native-global-antigravity-instructions-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "global",
+          "kind": "skills",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.gemini/config/skills/matrix-probe",
+          "evidenceSource": "docs/reconstruction/native-installation-live-antigravity-runtime-recheck-20261105.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanup.assetsAbsent"
+        },
+        {
+          "scope": "global",
+          "kind": "agents",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": "~/.gemini/config/agents/matrix-probe.md",
+          "evidenceSource": null,
+          "binaryMatchesRuntimeEvidence": false
+        },
+        {
+          "scope": "global",
+          "kind": "mcpServers",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.gemini/config/mcp_config.json",
+          "evidenceSource": "docs/reconstruction/antigravity-native-mcp-separated-runtime-20261105.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "instructions",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "AGENTS.md",
+          "evidenceSource": "docs/reconstruction/native-project-antigravity-basic-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "skills",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": ".agents/skills/matrix-probe",
+          "evidenceSource": "docs/reconstruction/native-project-antigravity-basic-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        },
+        {
+          "scope": "project",
+          "kind": "agents",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".agents/agents/matrix-probe.md",
+          "evidenceSource": null,
+          "binaryMatchesRuntimeEvidence": false
+        },
+        {
+          "scope": "project",
+          "kind": "mcpServers",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": ".agents/mcp_config.json",
+          "evidenceSource": "docs/reconstruction/native-project-antigravity-basic-cli-20261106.json",
+          "binaryMatchesRuntimeEvidence": true,
+          "sourceClientFullLifecycleConfirmed": true,
+          "sourceCleanupStatus": "passed",
+          "sourceCleanupEvidence": "client.cleanupVerified"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "combinations": 16,
+    "eligible": 14,
+    "blocked": 2
+  }
+}

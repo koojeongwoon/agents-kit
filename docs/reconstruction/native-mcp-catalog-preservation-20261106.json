@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR09-native-mcp-config-origins",
+  "observedAt": "2026-11-05T20:12:35.619Z",
+  "validation": {
+    "rootPassed": 514,
+    "httpPassed": 39,
+    "guiPassed": 63,
+    "typecheck": true,
+    "desktopBuild": true,
+    "logHashes": {
+      "root": "9df98e0cf03515c0ffaa0a519bf98c6f950e2864d6a8eb1d10ef8ea7668fdf91",
+      "http": "fcca28d7fe93436ad333511374849c5f8192b2e64b1bc1850ad8aeca6ce2cd4a",
+      "gui": "d5572414659b908484d5a43dbde83534b67c86c92b9fa30a3bb3742c3225755e",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "70af5d5e4eef581743feed49f2ff29c9e9a30a6ea10484ec1dfaee38c4a9feda"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/client-definition.js": "47e95517ed1f596131eda0343ac857515e8fb59d20dc18992312d05d4a221c14",
+    "lib/adapters/native-mcp-inventory.js": "de0b43eb984dd4eed3101a9b68015281a92280ab183fca65755af1c224141888",
+    "lib/application/attach-native-mcp-inventory.js": "ea9650533c64f053d6ee6b23bf76aa3421e5ef2b830a6e90271674ae9b158e12",
+    "lib/application/observe-resource-catalog.js": "34ef40d9abedc82de8f49d1c18c5c6679489f193a99e405169b303c4bc4d6772",
+    "lib/infrastructure/native-inventory-observer.js": "e554416904f12dcdbf647befdbcbbb20d2377396a7178571843359bb484f4378",
+    "clients/codex.yaml": "34fbf8fdf07ba0b09d3a7e0411e8ad1712371f2198e723ad6633d50db19a3aff",
+    "bin/cli.js": "6e873449b958fbb93c6e2b5f843544b116a108d97c69e45b850da77d6c4914ef",
+    "gui/server/routes/deploy.js": "04831de302c9aacd4c99347c2d06b4321346ae4fd8b9290701b191393968672f",
+    "gui/src/ManifestApp.tsx": "e63201e7ab809b7850c8f4c04e4e278ac03acb7deb469320d8e4f3cda486b817",
+    "gui/src/api/deploy.ts": "74cd94037a8399d73203f985e2ea8fab27de45b264ab73d184f257c4a4114be9",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "eb9b72cc0b0c60d43f53ccd8c1ecb20b4adccee26d43b82fd45d68cc58fcffb5",
+    "test/native-mcp-catalog.test.js": "ba74a345893a0de2ec261f64f2ca25b9993480cf69c6afd4f075fe3ebfc74bc6",
+    "test/native-inventory-observer.test.js": "dd717e9d7a82245620ec7be25507fc51accf22681dbeb5eaf11241287cb25bd8"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "nativeModelRequests": 0,
+  "nativeToolRequests": 0,
+  "nativeMcpConnectionsRequested": 0,
+  "userSettingsWrittenByAgentKit": false,
+  "nativeDeploymentGateExpanded": false,
+  "runtimeEvidenceRecords": 25,
+  "nativeControl": "docs/reconstruction/codex-native-mcp-catalog-service-20261106.json",
+  "untrustedControl": "docs/reconstruction/codex-native-mcp-untrusted-control-20261106.json",
+  "liveObservation": "docs/reconstruction/native-live-catalog-mcp-codex-20261106.json",
+  "browserQA": {
+    "spaceId": 23,
+    "injectedNativePort": true,
+    "nativeProcessStarted": false,
+    "sourceContributionRows": 2,
+    "fieldOriginsVisible": true,
+    "privateValuesVisible": false,
+    "nativeSummaryButtons": 0,
+    "screenshotSha256": "c8d3bf87796920d80a452a448d59ac5885eb2d5aaa53aeaf446ce3197ee38bf9"
+  },
+  "remaining": [
+    "PR09 Agent/instructions and other client/surface effective context",
+    "PR07 Antigravity Agent direct child completion",
+    "PR10 cross-scope dependencies",
+    "PR11 additional discovery/HTTP/auth/surfaces"
+  ]
+}

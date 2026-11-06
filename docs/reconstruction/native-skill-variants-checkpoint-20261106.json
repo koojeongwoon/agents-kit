@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T05:14:17.422Z",
+  "phase": "C07 Codex native Skill UI metadata source/distribution/application/native/GUI roundtrip",
+  "status": "partial",
+  "fulfilled": false,
+  "contracts": {
+    "skillDefinitionVersion": 3,
+    "distributionVersions": [
+      1,
+      2
+    ],
+    "nativeDeclarationVersion": 1,
+    "nativeProfile": "codex-skill-interface-v1",
+    "selectionVersions": [
+      1,
+      2,
+      3
+    ],
+    "skillSelectionReceiptVersions": [
+      1,
+      2
+    ],
+    "existingClientPathDefinitionsChanged": false,
+    "existingInstallationReceiptSchemasChanged": false,
+    "oldCommonAndOpaqueNativeSourceFlowsPreserved": true
+  },
+  "nativeBoundary": {
+    "clientId": "codex",
+    "surface": "cli",
+    "version": "0.166.0-alpha.6",
+    "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+    "platform": "darwin",
+    "arch": "arm64",
+    "combinations": [
+      {
+        "scope": "global",
+        "strategy": "copy"
+      },
+      {
+        "scope": "project",
+        "strategy": "copy"
+      },
+      {
+        "scope": "global",
+        "strategy": "snapshot-link"
+      }
+    ],
+    "uiInterfaceOnly": true,
+    "invocationPolicy": "unverified/blocked",
+    "nativeToolDependencies": "unverified/blocked",
+    "unknownExtensions": "preserved in Kit; deployment blocked",
+    "exclusiveIsolation": "unverified/blocked",
+    "otherClientsPromoted": false,
+    "otherSurfacesPromoted": false
+  },
+  "reviewProtection": {
+    "auxiliaryPolicyDigestInSelection": true,
+    "policyChangesInvalidatePlanAndSavedResume": true,
+    "policyChangesInvalidateGlobalProjectPrerequisite": true,
+    "binaryRuntimeCheck": true,
+    "sourceBytesModesAndIconsPreserved": true
+  },
+  "tests": {
+    "root": {
+      "passed": 831,
+      "failed": 0,
+      "nativeCases": 7
+    },
+    "http": {
+      "passed": 53,
+      "failed": 0
+    },
+    "gui": {
+      "passed": 91,
+      "failed": 0
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "desktopBuild": {
+      "frontendAndBackend": true,
+      "exitCode": 0
+    }
+  },
+  "failures": {
+    "projectProbe": {
+      "reason": "Verifier omitted await for existing asynchronous project apply/rollback",
+      "reproducedOffline": true,
+      "productCodeChangedForThisFailure": false,
+      "corrected": true,
+      "initialFailedRunNativeObservationCalls": 2
+    },
+    "intermediateHttp": {
+      "log": "/private/tmp/kit-c07-native-variants-http-final.log",
+      "case": "HTTP Kit edit, conflict resolution, partial refresh and rollback preserve upstream and reject stale plans",
+      "line": 428,
+      "route": "/api/manifest/refresh/plan",
+      "status": 403,
+      "appOriginProven": false,
+      "safeRequestIdAndOwnRequestLogDiagnosticAdded": true,
+      "reproducedInFinalFullRun": false,
+      "authenticationWeakened": false
+    }
+  },
+  "actualVerification": {
+    "serviceArtifact": "docs/reconstruction/native-skill-variants-service-roundtrip-20261106.json",
+    "managedVariantRegisterEditReimportMergeBeforeApply": true,
+    "nativeObservationCallsSuccessfulRun": 6,
+    "providerDiscoveryRequests": 0,
+    "modelCalls": 0,
+    "toolCalls": 0,
+    "guiArtifact": "docs/reconstruction/native-skill-variants-gui-roundtrip-20261106.json",
+    "guiScopeLimit": "Global copy deployment preview/apply/history rollback only; other GUI workflows remain unverified"
+  },
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "baselineReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "originalBaselineReplaced": false,
+    "unchangedBaselinePaths": 26,
+    "externalLinkIdentitiesPreserved": true,
+    "knownUnmanagedSettingsDifference": {
+      "path": ".gemini/config/config.json",
+      "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+      "mode": 384,
+      "restoredOrRewritten": false,
+      "writerAttribution": "unproven; existing difference preserved"
+    }
+  },
+  "agentKitUserClientFileOperations": 0,
+  "agentKitUserStateWrites": 0,
+  "sourceHashes": {
+    "README.md": "586d6e148af2994b71b89f543785b5ddb8b76ddfcc2f54eecc464b418e812428",
+    "package.json": "2c5bc68ca8e72f55918e030925b20229a1f8516fa3b0dce2c1b3f4f6b202877d",
+    "clients/native-skills/codex-cli.yaml": "23e496f3b1f16c738c385b951eedd052c870922ca20b3086d8919baaa1b813ad",
+    "lib/adapters/native-skill-interface.js": "498fce34a8ccd6ac3d2fb0dceed2a6ae88c2e9f85fa61b8bee3d124cda2244a7",
+    "lib/infrastructure/native-skill-policy-loader.js": "84eff23a9607e550d45111e6ca317b307d9adcbe2c50b8449ffa71bd3b963504",
+    "lib/infrastructure/common-source-validator.js": "0095b64f290a5cea639d233f9f3864e941b64c730000fb9f4714713202f9a11e",
+    "lib/infrastructure/skill-distribution-source.js": "a0e9ce39324dae397d9bbb137784d45a58225bfe2745b92812429365c02b8916",
+    "lib/domain/client-definition.js": "6e7200e5dc17d8c5d199b9a870775a4883ee95d608dce7e31574563f8a85dd0e",
+    "lib/domain/skill-distribution.js": "c1438b5602cc987d436c433a99f161039b4054a85cd6f982b714d26d93e48011",
+    "lib/domain/skill-selection-receipt.js": "3380072572f0ab8c150405d36d260580641565fb26ede7810a56aaaff6ab4351",
+    "lib/application/plan-client-deployment.js": "d36e54a2eb179643988e2bafb73e2cfd9666098c9d0d9fe4f4ec0112db3dc87c",
+    "lib/application/plan-verified-client-deployment.js": "23f00c6ead1fbe8266deb9492748b6f31878b686ded1b213baadd14b89dbd467",
+    "lib/application/manifest-deployment-service.js": "334bb7834b553bc11f15c87bc8b7d344c4e20f9ac4f71b9b5135f3dcd0e174c8",
+    "lib/application/scoped-deployment-compiler.js": "a812b6e5e322bb5739de4bdad135f478e43a27752201b0975f3de305c93baaac",
+    "lib/application/scoped-deployment-execution.js": "c15697521c9c7476caa0b7128a45adbffad0aa151d94aa35b578f737261a8677",
+    "lib/application/scoped-deployment-prerequisites.js": "82a6eb27e1f4f33282cfe2525543af5f3de25f3bfe5fc2a36e298c9e850558f6",
+    "lib/interfaces/http/error-mapper.js": "3576116680284bb559e727870e6798bfd810bcf09da781980eb5645e61a065b9",
+    "gui/server/test/control-plane-e2e.test.js": "1bf56bce419cc07f0d7bc9aef624784caffd9cb88a5cf8c91d7d766001aacb82",
+    "gui/src/api/deploy.ts": "9a547b24664d1533ee5213a30174b1c906117f5550a483b82eaffaaf367090ec",
+    "gui/src/components/deploy/SkillDistributionPreview.tsx": "5df2633f1469618eb2e361106ffde7386eba346a094b2ae3319e4c4aa246fb2a",
+    "gui/src/components/deploy/SkillDistributionPreview.test.tsx": "7658e5297105d78461dd2c64a6ee5edc108ba3f72501feff782a2e6313f484ae",
+    "test/native-skill-variants.test.js": "0f615c522876aef98c8568b826f4b56ceda4ef5a4d3e1122dbcedad312d87e9e",
+    "test/http-error-mapper.test.js": "e8ad4780248c9d6928fdf6b044e1ef4cb5fbf3f4555d0df3d2dd0e76448ef70c",
+    "scripts/client-verification/native-skill-interface-probe.mjs": "6f5ef4b3d78c98f1a6237d4d797d3509f62f8991564e412707d5fbf867b9bdc1",
+    "scripts/client-verification/skill-distribution-fixture.mjs": "e0a24e0880e09c58774b0726ed706d401e68b238ec9497dbfadb4baae70e35eb",
+    "docs/contracts/native-skill-interface-v1.md": "4e24a2622f13498fac74952f185abbc5f10a4d455cc8a10ce45d996be101632c",
+    "docs/contracts/skill-distribution-v1.md": "8e5c58034daf4147287b2b99ab5ba16d3b526c3fdaacce960d5531e9a47eb7b9",
+    "docs/product/shared-resources-consolidation-plan.md": "94a70d931dccfa18a9cbe6818755bb9ee3baabda2f944713e8053b52a19791f9",
+    "docs/traceability/shared-conversation-requirements.md": "dbbcda691ea7671cda8e14f26e456cf85753ebf363685971b4b9bf82e06a06c2",
+    "docs/reconstruction/phase-skill-distribution.md": "edabe962b572b9564e50ea21d6defb44af1caec17fcb167953d219d8dfcf2359",
+    "docs/reconstruction/codex-native-skill-interface-research-20261106.json": "eb37adf5aff492fa11261dfcebb1cbe3a2066171e50d420d26b4619b851c7e70",
+    "docs/reconstruction/native-skill-variants-service-roundtrip-20261106.json": "b2f75271a746765f1ef36cc8bd872afe3b99b57610978295bd30875ee617b62e",
+    "docs/reconstruction/native-skill-variants-gui-roundtrip-20261106.json": "7f2eedd0d962e6ad7fe0a9d4125ddcd9b17ac954eb92664172ece94f92e30136",
+    "docs/reconstruction/native-skill-variants-live-compatibility-20261106.json": "85fc7b4873cdea5f7eb5236c168a138c6f4b615aca47b786e2aaa604e30b21b2",
+    "docs/reconstruction/native-skill-gui-plan-20261106.png": "7ab44da46b366e84138790e73c519d3995a9064c9b4a2e4dc801835a112dbd43",
+    "docs/reconstruction/native-skill-gui-restored-20261106.png": "484ac4a2613680f89211c60b1227d4b7f99381cab9dd54829cfd5b56baec0a3c"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-c07-native-variants-work2.log",
+      "sha256": "2798df813e3f92f465c5bf2cb23393468460a9ae5dc7964d73ef7b65d8b02142"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-expanded2.log",
+      "sha256": "0fc704e0ffb020c3ccf87ce4ae9b248922a3cc72aa690b2447af14d287acc762"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-project-managed-red.log",
+      "sha256": "8cb39dfb2a154ce25a1bbfc195c4459aefd55de425f92a051dafe53fc5cb66a2"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-project-managed-green.log",
+      "sha256": "e41acb48fc7d399ab04ad397a123a064b5f257600195288f1a6ef572da3aa716"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-focused-final.log",
+      "sha256": "cd6132ca78cbe49c9acde20fc0dfef52a7def55f56c46a89c8a2a647ad49fc2c"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-root-final.log",
+      "sha256": "9da2f2c69378976928d4feee3b924c9bc4b70d97ffbb84677a14e15ecf5e9fb6"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-http.log",
+      "sha256": "e0c830bc1a46d17258e64d5632a3636c21c80d1d36df7ef1b0867c083d27518d"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-http-final.log",
+      "sha256": "d093ed57668da0ed487f3066022e0a43dfd2c5cccc46a6d07d0955669f180af8"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-http-diagnostic-final.log",
+      "sha256": "d5273387261f3dc7f870ba65ae399ccd324c4832d8cc33f3823941b45724ed29"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-gui.log",
+      "sha256": "33a867acb358a8528ee70636c0b36dd895bfdd4259117cccae00a9d3c83f6215"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-typecheck.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-build-final.log",
+      "sha256": "fec4d2fe50d8a02ad9a5f3f7964fab793faf80b9898d149aa7e914dd3640b242"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-service-roundtrip.stderr",
+      "sha256": "23af05e17bc77ff59921d8816494b8ef8ee9b1f63dfabb74864277d764ab28be"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-service-roundtrip-final.json",
+      "sha256": "b2f75271a746765f1ef36cc8bd872afe3b99b57610978295bd30875ee617b62e"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-service-roundtrip-final.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-preservation-final.json",
+      "sha256": "806c987dda1b1c2d82574a41561656922f69cbcb6a7b993ad64ac93847fde7cf"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-variants-live-compatibility-final.json",
+      "sha256": "85fc7b4873cdea5f7eb5236c168a138c6f4b615aca47b786e2aaa604e30b21b2"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-gui-session.mjs",
+      "sha256": "dd34932eb735c6760c750b52c272e2acb543e7323a01e072ce208ce4b3914ae4"
+    },
+    {
+      "file": "/private/tmp/kit-c07-native-gui-final-snapshot.txt",
+      "sha256": "90a40c4868a97f240ba8f98fd7d0181db7cdb8fd4b7e8c3b4ea1d26c44e5b82f"
+    }
+  ],
+  "remaining": [
+    "Invocation policy/native Tool dependencies and additional native formats/clients/surfaces",
+    "Exclusive-client isolation and actual additional discovery settings observation",
+    "Explicit variant management detach/retirement",
+    "PR10 imported native v3 source lifecycle, native/previous-path writer coordination and global settings transition",
+    "Remaining PR07/09/11, full GUI workflow integration and consumer/Agent completion evidence"
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T04:06:58.481118+00:00",
+  "phase": "C07 versioned Skill distribution reader and pure selection",
+  "status": "partial",
+  "manifestVersions": [
+    1,
+    2,
+    3
+  ],
+  "skillDefinitionVersion": 3,
+  "legacySkillDefinitionsPreserved": [
+    1,
+    2
+  ],
+  "distributionDeploymentEnabled": false,
+  "distributionInstallationEvidenceAvailable": false,
+  "declaredCompatibilityProvesNativeUse": false,
+  "nativeVariantsDeployable": false,
+  "exclusiveClientIsolationVerified": false,
+  "fulfilled": false,
+  "tests": {
+    "focused": {
+      "passed": 17,
+      "failed": 0
+    },
+    "root": {
+      "passed": 798,
+      "failed": 0
+    },
+    "http": {
+      "passed": 51,
+      "failed": 0
+    }
+  },
+  "guiVerification": "unchanged; previous component/typecheck/build evidence remains historical; real GUI integration pending",
+  "sourceHashes": {
+    "lib/domain/skill-distribution.js": "0f336bf19b08b2a2db788672c04ec5507d0c369bcbc513ad1868e7e901ec603e",
+    "lib/domain/common-source-definition.js": "04d9231cf3bef3c6cdd8924c70ce7d490d96b91e6c46d9fbb7efbd2cec1b5fa8",
+    "lib/domain/manifest-targets.js": "5daf9d8918b7a9824883a8eced039013644bcb3ffe2a1d3d7bcfee7b11e3247e",
+    "lib/domain/scoped-deployment-selection.js": "19e79e68e7d47fac8e79e9672f971f7e62ca41ba5fda5383a3700ec12f721ff8",
+    "lib/application/plan-client-deployment.js": "7750a6181369ea855002d3e22917ed06acbf42145457c43490828d9f0ba473e7",
+    "lib/application/manifest-deployment-service.js": "aa1897a8065263c2c2de5161c1785d59334845c1199b145ee0d0523f5bd2d42f",
+    "lib/application/scoped-deployment-prerequisites.js": "4a2601f67cff85e32ffdf7875de44d8f46d3f32fff05f5903e9a00aa3c35fa49",
+    "lib/infrastructure/skill-distribution-source.js": "e0a7cb7fe3f48a043133a2827644ebf1492826e785da54068ebb3408534bb859",
+    "lib/infrastructure/common-source-validator.js": "17efc9a8e3723d9649f4766b936449c670e408fdbd838c781afd40397350915a",
+    "lib/infrastructure/manifest-loader.js": "f1a45415a0dfaa493ace82e74f18d05bcfa6e9a3fc3f2b5c302d7e66b301d156",
+    "test/skill-distribution.test.js": "628890858c946f4aaf70cab1a269bdad32897501e8c40a0314b355ab6f9e9fae",
+    "test/skill-distribution-selection.test.js": "1d664719af082df4e5e1519e4cb4d11c2f440fc199896ed75774750d423f8799",
+    "test/skill-distribution-deployment.test.js": "3c87a4ec71fdffe18337e3eb734fad1a407476d2b1298d3c504874fb4f162cb6",
+    "docs/contracts/skill-distribution-v1.md": "841be36e51e0a25470d65dbfc04b45f9c3cb2c93829de871ae1902adca4dd874",
+    "docs/contracts/common-source-v1.md": "73e0678aed922f482733e62922c588abbddeaca905b429899de292ef72d010ba",
+    "docs/product/shared-resources-consolidation-plan.md": "5800159e52e4f9e6e74df6e4134e9952fc5e60de139a2e619be1a760d065e2b2",
+    "docs/traceability/shared-conversation-requirements.md": "1ba4d335647714a86bf7f34bbb9d5e3a2b4befff387bdfe7230c775716db070c",
+    "docs/reconstruction/phase-skill-distribution.md": "fce266d96ea50992daa7ebf5f05025811108396e4600792787fadfa2610eeeb0",
+    "package.json": "f7ca59cc8569df7ce61d1c7f7ed256062d5bda8b8f0a6a52f1e9a9b848cc652d"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-c07-foundation-red.log",
+      "sha256": "43da99c3b736c720bc86c6cf83a9659d71fdf1aa9a6312e697dc8a07a4aa872e"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selection-red.log",
+      "sha256": "581c3f19564c13b8ace6f2d846b6fdcb16f922b23e566e5f81395e3bc08ee81d"
+    },
+    {
+      "file": "/private/tmp/kit-c07-foundation-focused.log",
+      "sha256": "93d48f43e941603e2e716196f119dd3632f7aa30a6657fa57cd92c31cbe3e2e2"
+    },
+    {
+      "file": "/private/tmp/kit-c07-foundation-root.log",
+      "sha256": "ee29fbabe733757650e57fa92b2f216a0ec6da8b0f5b6877336d471ced5504fb"
+    },
+    {
+      "file": "/private/tmp/kit-c07-foundation-http.log",
+      "sha256": "7d00106fe9cca440acef537fc336efa90ada60695c4bb20cb973480d7706bcb5"
+    },
+    {
+      "file": "/private/tmp/kit-c07-foundation-preservation.json",
+      "sha256": "806c987dda1b1c2d82574a41561656922f69cbcb6a7b993ad64ac93847fde7cf"
+    },
+    {
+      "file": "/private/tmp/kit-c07-foundation-live-compatibility.json",
+      "sha256": "9da18be6922be226bd222d28ad8246c8e9f2ca1233e2f386528dfe47f6bfe54f"
+    }
+  ],
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "baselineReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "baselineAllBytesEqual": false,
+    "unchangedBaselinePaths": 26,
+    "externalLinkIdentitiesPreserved": true,
+    "originalBaselineReplaced": false,
+    "knownUnmanagedSettingsDifference": {
+      "path": ".gemini/config/config.json",
+      "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+      "mode": 384,
+      "currentSettingsPreserved": true,
+      "restoredOrRewritten": false,
+      "writerAttribution": "unproven; earlier startup timing correlation remains an inference"
+    }
+  },
+  "agentKitUserClientFileOperations": 0,
+  "agentKitUserStateWrites": 0,
+  "nativeCalls": 0,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "clientSupportMatrixPromoted": false,
+  "remaining": [
+    "Selected variant deployment and versioned installation selection evidence",
+    "Shared path/additional discovery exposure and exclusive-client isolation checks",
+    "Saved-plan invalidation and per-variant edit/update/merge/rollback lifecycle",
+    "Common CLI/HTTP/GUI presentation and additional client/native support evidence",
+    "PR10 native-source/previous-path coordination and global settings transition",
+    "Remaining PR07/09/11, actual GUI integration and consumer/Agent completion evidence"
+  ]
+}

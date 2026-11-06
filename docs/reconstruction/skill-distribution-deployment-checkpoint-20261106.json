@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T04:24:29.227161+00:00",
+  "phase": "C07 common shared Skill variant deployment, selection receipts and rollback",
+  "status": "partial",
+  "manifestVersions": [
+    1,
+    2,
+    3
+  ],
+  "skillDefinitionVersion": 3,
+  "legacySkillDefinitionsPreserved": [
+    1,
+    2
+  ],
+  "commonSharedDistributionDeploymentEnabled": true,
+  "nativeVariantsDeployable": false,
+  "exclusiveClientIsolationVerified": false,
+  "fullDiscoverySettingsObserved": false,
+  "fulfilled": false,
+  "tests": {
+    "root": {
+      "passed": 810,
+      "failed": 0,
+      "c07CasesIncluded": 29
+    },
+    "http": {
+      "passed": 52,
+      "failed": 0,
+      "newC07Case": 1
+    },
+    "gui": {
+      "passed": 88,
+      "failed": 0,
+      "newPreviewCases": 2
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "desktopBuild": {
+      "frontendAndBackend": true,
+      "exitCode": 0
+    }
+  },
+  "guiVerification": "components/typecheck/build; actual browser integration remains pending",
+  "selectionEvidence": {
+    "transactionField": "skillSelections",
+    "schemaVersion": 1,
+    "receiptVersionsUnchanged": true,
+    "boundTo": [
+      "same-transaction installation receipt digest",
+      "source definition digest",
+      "client/surface/version/variant/author review"
+    ],
+    "metadataOnlyVariantSwitchAndRollback": true,
+    "requestedSelectionFailureRollsBack": true,
+    "legacyReceiptDoesNotProveNewSelection": true
+  },
+  "exposure": {
+    "coverage": "known-roots-only",
+    "definitionSources": [
+      "capability",
+      "inventory",
+      "discovery"
+    ],
+    "additionalDiscoveryState": "unverified",
+    "isolationState": "unverified",
+    "exclusiveGate": "SKILL_EXCLUSIVE_ISOLATION_UNVERIFIED"
+  },
+  "realNativeVerification": {
+    "artifact": "docs/reconstruction/skill-distribution-native-roundtrip-20261106.json",
+    "clientId": "codex",
+    "version": "0.166.0-alpha.6",
+    "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+    "scope": "global",
+    "strategies": [
+      "copy",
+      "snapshot-link"
+    ],
+    "isolatedHome": true,
+    "successfulRunMetadataRequests": 4,
+    "totalMetadataRequestsAcrossAttempts": 9,
+    "failedDriverAttempts": 3,
+    "failureReasons": [
+      "missing history clientId",
+      "missing history targetRoot",
+      "canonical snapshot path compared only with logical link path"
+    ],
+    "failedHomesCleaned": true,
+    "providerDiscoveryRequests": 0,
+    "modelCalls": 0,
+    "toolCalls": 0,
+    "modelUseState": "unverified"
+  },
+  "sourceHashes": {
+    "lib/domain/skill-distribution.js": "0f336bf19b08b2a2db788672c04ec5507d0c369bcbc513ad1868e7e901ec603e",
+    "lib/domain/skill-selection-receipt.js": "2e5cf4636e059b8baa870c71dcc982cfc1ddf55afa29a8f13d7a829de4db381a",
+    "lib/domain/common-source-definition.js": "04d9231cf3bef3c6cdd8924c70ce7d490d96b91e6c46d9fbb7efbd2cec1b5fa8",
+    "lib/domain/client-definition.js": "3063f6fe9ca595aee6627108be077c97bca74185ed9cad8dce4419440f43e021",
+    "lib/domain/manifest-targets.js": "5daf9d8918b7a9824883a8eced039013644bcb3ffe2a1d3d7bcfee7b11e3247e",
+    "lib/domain/scoped-deployment-selection.js": "19e79e68e7d47fac8e79e9672f971f7e62ca41ba5fda5383a3700ec12f721ff8",
+    "lib/application/plan-client-deployment.js": "2ebd6572019723bb38f04bca9406dd6eb22dafbcf8f86a30161cc49787d89302",
+    "lib/application/skill-distribution-deployment.js": "cf713eedec3d1b947d6b68dd3a5865efa90cf06024497d3c799f1ad2f45316cc",
+    "lib/application/manifest-deployment-service.js": "0e9a771a7666068f291ce9f1ff2f9fd2c586cc312e07922ddbcaed21b0035fdc",
+    "lib/application/scoped-deployment-compiler.js": "e41330c4c7a35ce4c641f9715c2af25b52e8dbeac3bfbecf567d7df08bcbf4aa",
+    "lib/application/scoped-deployment-prerequisites.js": "2cc1c97587ad101c70f5fd4b09d17e8231c79cc442080459dcbdd594a3149bf9",
+    "lib/application/shared-resource-deployment.js": "b57559575ac04a5415ebee887752242827f23eb6b832df326cd6ad2f05f4787d",
+    "lib/application/prepare-shared-snapshot-deployment.js": "7c939b7c93b6307fa32396a482680cab6bea4e2666da12ee7c670cb36b1dc376",
+    "lib/application/installation-receipt-service.js": "7db3b93579b2cb5e59725478c2c69451cdca1197d3af4da191ee18f3310db8bf",
+    "lib/infrastructure/skill-distribution-source.js": "e0a7cb7fe3f48a043133a2827644ebf1492826e785da54068ebb3408534bb859",
+    "lib/infrastructure/common-source-validator.js": "17efc9a8e3723d9649f4766b936449c670e408fdbd838c781afd40397350915a",
+    "lib/infrastructure/manifest-loader.js": "f1a45415a0dfaa493ace82e74f18d05bcfa6e9a3fc3f2b5c302d7e66b301d156",
+    "lib/infrastructure/deployment-state-store.js": "b2b2c598bcad8d84b1eac56f56ce741f826f6e55183bb940472d721ab66c8d47",
+    "lib/infrastructure/saved-deployment-plan-store.js": "1e59ee05b626bf1160c312b0e6e16956dc7862c6aea5a2e6e7ea2f56fcd8e705",
+    "test/skill-distribution.test.js": "628890858c946f4aaf70cab1a269bdad32897501e8c40a0314b355ab6f9e9fae",
+    "test/skill-distribution-selection.test.js": "1d664719af082df4e5e1519e4cb4d11c2f440fc199896ed75774750d423f8799",
+    "test/skill-distribution-deployment.test.js": "2819bbbfcd588a928cadf282a68584ff4dfdf05dfe5f80afed6f49887822a9e2",
+    "test/skill-distribution-installation.test.js": "0c1e53e580ba90a6c6b1b513192bce575c10136f526bbc0b7352048b183795fa",
+    "test/skill-distribution-cli.test.js": "d0109a0de64049380a9c7c532e8b73cd7933dfdf10161ea90fb92ca95e861632",
+    "test/helpers/skill-distribution-fixture.js": "dc02f249eb616dc9d1ea6b706482b7c499505bcd50b1ad30f0ed5ef411ce2bbd",
+    "gui/src/api/deploy.ts": "863d85186692a7cf4dbce68697e7a4f6cd3f0fb0474063f9a90b5c639df7417b",
+    "gui/src/components/deploy/SkillDistributionPreview.tsx": "462500f7ced4084ddb1a93c03a687381086ed1c870b529a5331996f6817e15e0",
+    "gui/src/components/deploy/SkillDistributionPreview.test.tsx": "1b1e026ba42cf0afe226b1f3f50b3761b02548e39e1d215fde29dc81bf3dc7d4",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "15a9fa459cec11db72ab52def80021f5129a33582d455455496f99f24972833a",
+    "gui/server/test/deployment-routes.test.js": "c2321f0cdb398d4c70059e741ed7af8785174b3b06b5d32cd49ca12467cf2d46",
+    "scripts/client-verification/skill-distribution-fixture.mjs": "3c8239c2aa52a13005b8ed777a394917bbca662ff7f1997fe16b0754b7a5554f",
+    "docs/contracts/skill-distribution-v1.md": "3204edf66d444b0df89cb0c2b88f10ae5cb7cda2962d241e4941734e58d2f0f9",
+    "docs/contracts/common-source-v1.md": "a259801144a45c826ac385d5a1718a97ca3daa7d67a10e706f9b09ffce3858ab",
+    "docs/product/shared-resources-consolidation-plan.md": "7bc7aefed06e5c8c8f3614468904f32b60ed197ce12eeac7e56d75497772aea8",
+    "docs/traceability/shared-conversation-requirements.md": "599f7c2673ea4cb2dff9f0cc6879d7eed9242825ca93de84fb80b2e26a0edbb9",
+    "docs/reconstruction/phase-skill-distribution.md": "911e6e01eb684b251656c2eb84e76d1aa6c91ec381eef6175fc35c71da436cb7",
+    "docs/reconstruction/skill-distribution-native-roundtrip-20261106.json": "c9485eddfa6487097ba163100a2ec696d06aa240f95818ae1c21d165a96dc238",
+    "docs/reconstruction/skill-distribution-live-compatibility-20261106.json": "9f5e16962455c393c3309be7c5e4734a8263289aeaa71bf585a3f0f86ce7f67d",
+    "package.json": "b062ed7186e6626a9d5e1f10d4bd41a122dad5d1b8e4f0438a3f724757980589"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-c07-selected-deployment-red.log",
+      "sha256": "e77b3697c5ae71d79b42e5584b5de1956ac2b64d3cbf7159e533cc464f785617"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-installation-red.log",
+      "sha256": "b5d3bf84a80627e09aff94d29b758a70575bfaabedd9c51c3b56b79b9dbf0eb0"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-capture-red.log",
+      "sha256": "10a06d5ec9c063caaebfee215e259454b0e648bd27a107d60bf7f30fa687ab53"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-focused.log",
+      "sha256": "558530e6b45fd8a1d8737d4188dd12be62f031de8ede698fa174f9ae12a529e4"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-public-focused.log",
+      "sha256": "52ca0ca42d053193050f5a89f5858ffb38a0ac4af49237023e4bae0afeff2bd0"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-root.log",
+      "sha256": "e1d1924544b133e24797427f6767bfa3bed2a2dce42432961489c8399b7674f0"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-http.log",
+      "sha256": "8e5dd634b943419b50384a5bbc59d0bd16932206e8868b5bd5c80a83bdb20751"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-gui.log",
+      "sha256": "3746d97b1f516f847fcc3280d795561cd41b4ae272fa3d4eaaf746368e4199be"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-typecheck.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-build.log",
+      "sha256": "0ad3d93ad2febd430a2bbb370aa703718eae2153c4422a4d8beba7ef36da3734"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-native-roundtrip.json",
+      "sha256": "c9485eddfa6487097ba163100a2ec696d06aa240f95818ae1c21d165a96dc238"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-native-roundtrip-attempt1.stderr",
+      "sha256": "3a3567c861b78fe455bf5d2266f45a22651bf4694691c02d1265688a0a5a3fd4"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-native-roundtrip-attempt2.stderr",
+      "sha256": "183bed2edc52f915d1e1c15f15f879ac5af5af40dc21674cf9f09c2824e1ec51"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-native-roundtrip-attempt3.stderr",
+      "sha256": "8252192307881af42fbf57b8ee39e5487b3d4df0c38e97eb55152e7d5861a53c"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-preservation-complete.json",
+      "sha256": "806c987dda1b1c2d82574a41561656922f69cbcb6a7b993ad64ac93847fde7cf"
+    },
+    {
+      "file": "/private/tmp/kit-c07-selected-live-compatibility-complete.json",
+      "sha256": "9f5e16962455c393c3309be7c5e4734a8263289aeaa71bf585a3f0f86ce7f67d"
+    }
+  ],
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "baselineReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "baselineAllBytesEqual": false,
+    "unchangedBaselinePaths": 26,
+    "externalLinkIdentitiesPreserved": true,
+    "originalBaselineReplaced": false,
+    "knownUnmanagedSettingsDifference": {
+      "path": ".gemini/config/config.json",
+      "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+      "mode": 384,
+      "currentSettingsPreserved": true,
+      "restoredOrRewritten": false,
+      "writerAttribution": "unproven; earlier app-start timing correlation remains an inference"
+    }
+  },
+  "agentKitUserClientFileOperations": 0,
+  "agentKitUserStateWrites": 0,
+  "clientSupportMatrixPromoted": false,
+  "remaining": [
+    "Native variant adapters and compatibility evidence for additional clients/surfaces",
+    "Exclusive-client isolation and actual additional discovery settings observation",
+    "Per-variant source edit/update/reimport/merge/revision lifecycle",
+    "PR10 native-source/previous-path writer coordination and global settings transition",
+    "Remaining PR07/09/11, actual GUI integration and consumer/Agent completion evidence"
+  ]
+}

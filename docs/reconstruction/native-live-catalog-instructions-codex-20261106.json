@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:31:26.794Z",
+  "clientId": "codex",
+  "surface": "cli",
+  "kind": "instructions",
+  "status": "partial",
+  "reason": "INSTRUCTION_LOAD_UNVERIFIED",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "requests": [
+    "initialize",
+    "config/read"
+  ],
+  "threadStarted": false,
+  "modelTurnsRequested": false,
+  "instructionPreview": {
+    "state": "documented-prediction",
+    "loadedSourcesState": "unverified",
+    "settingsVerified": true,
+    "byteBudget": 32768,
+    "budgetMayTruncate": false,
+    "customGuidancePresent": false,
+    "contextIncomplete": false,
+    "files": [
+      {
+        "path": "/Users/jw/.codex/AGENTS.override.md",
+        "scope": "global",
+        "state": "missing",
+        "bytes": 0,
+        "contentRead": false,
+        "manageable": false,
+        "code": "ENOENT"
+      },
+      {
+        "path": "/Users/jw/.codex/AGENTS.md",
+        "scope": "global",
+        "state": "empty",
+        "bytes": 0,
+        "contentRead": true,
+        "manageable": false
+      },
+      {
+        "path": "/Users/jw/__dev/agents-kit/AGENTS.override.md",
+        "scope": "project",
+        "state": "missing",
+        "bytes": 0,
+        "contentRead": false,
+        "manageable": false,
+        "code": "ENOENT"
+      },
+      {
+        "path": "/Users/jw/__dev/agents-kit/AGENTS.md",
+        "scope": "project",
+        "state": "candidate",
+        "bytes": 2900,
+        "contentRead": true,
+        "manageable": false
+      }
+    ]
+  },
+  "external": [
+    {
+      "id": "ego-browser",
+      "contentRead": false,
+      "nativeEvidenceAttached": false
+    }
+  ],
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "userSettingsWrittenByAgentKit": false
+}

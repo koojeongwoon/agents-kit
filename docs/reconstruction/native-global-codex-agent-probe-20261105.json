@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-6",
+  "observedAt": "2026-11-05T12:42:21.986Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "agents",
+  "codexTransport": "app-server",
+  "rpcCollectorSha256": "fb499de39cd06ecbd7e1ecb09c8fed4769d79609d566460c6057ab138ac035f5",
+  "stagesRequested": "applied",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "6b44583acad16697a9d8b8af3b2ffa0333179fce3888a186c6ee9243a2f44ba7",
+  "collectorSha256": "94da0d8083a965fd535c25796cb213a6d7b0a2889e16dc7852bda09a481fc672",
+  "runnerSha256": "e9199c6d49a66e799c515886e8fe74a78389ec4304fbdd7a41d05a953fd4ee90",
+  "authentication": "existing-native-login",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": false,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": true
+  },
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "stages": {
+        "applied": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "roleObserved": true,
+          "childMarkerReturned": true,
+          "completedChildMarker": true,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "agentMessage",
+            "subAgentActivity",
+            "collabAgentToolCall"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-6.1-sol",
+          "childMetadataOnly": true,
+          "childMetadataRoleMatches": true,
+          "childEvidenceSource": "live-public-child-events",
+          "reason": "OK",
+          "binaryUnchanged": true,
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        }
+      },
+      "fullLifecycleConfirmed": false,
+      "roleEvidence": "live-native-child-role-parent-and-completion",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "definitionSha256": "8ad6b8db403245a119055cc4747a06da03d8f8ab061d115ebaa438da67ed7c4c",
+      "cleanup": {
+        "attempted": true,
+        "assetsAbsent": true,
+        "ledgerHistoryRetained": true
+      }
+    }
+  ]
+}

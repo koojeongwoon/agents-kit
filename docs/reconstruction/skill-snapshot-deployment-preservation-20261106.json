@@ -1,0 +1,42 @@
+{
+  "observedAt": "2026-11-05T17:27:19.087Z",
+  "phase": "PR06",
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": []
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 119,
+    "active": [
+      {
+        "path": "/Users/jw/.codex/AGENTS.md",
+        "bytesMatch": true,
+        "strategy": "native-source",
+        "ownerCount": 1
+      },
+      {
+        "path": "/Users/jw/.codex/config.toml",
+        "bytesMatch": true,
+        "strategy": "native-source",
+        "ownerCount": 1
+      },
+      {
+        "path": "/Users/jw/.gemini/config/mcp_config.json",
+        "bytesMatch": true,
+        "strategy": "native-source",
+        "ownerCount": 2
+      }
+    ],
+    "temporarySnapshotConnectionsRemaining": 0,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "notes": [
+    "Original 3 physical files and 4 owners retained.",
+    "Global ledger upgraded to schema 6; history, snapshots, tree images and retained stages intentionally kept.",
+    "No user configuration or ego-browser link changed during native PR06 probes."
+  ]
+}

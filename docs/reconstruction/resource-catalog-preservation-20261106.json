@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR09-source-catalog-partial",
+  "observedAt": "2026-11-05T19:40:58.152Z",
+  "implemented": [
+    "global-selected-project-catalog",
+    "origin-identity-and-partial-failures",
+    "bounded-ordinary-skill-name-metadata",
+    "documented-composition-versus-unverified-activation",
+    "shared-CLI-HTTP-GUI-service",
+    "origin-scoped-actions"
+  ],
+  "validation": {
+    "rootPassed": 497,
+    "httpPassed": 35,
+    "guiPassed": 60,
+    "typecheck": true,
+    "desktopBuild": true,
+    "logHashes": {
+      "root": "a4ea6ad1d1f633e3cc04bfb1b50579ab804d1f861e753da8062e12a089ac48e4",
+      "http": "e8755d8796e5a6fc0f2bef43747e879bd7f225dca1432d343ed7b033e44272a9",
+      "gui": "7aa280f354e786614a393cddc910fae08137ab34ac7d26520b4f99a6e1760e74",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "build": "98e654bef5e2cda6917c5fbfed1f436bf3dd3faa8f84eb4d243e839bec66fbaf"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/resource-catalog.js": "a6f7551d894262658ba803ece442eb2439fdcffc0e4fe490da94eb0df3bfde83",
+    "lib/application/resource-catalog-service.js": "8d5176ab365c5d4585b16c310dae9e85d6bf054f2dd035b16dfc2f11b3342acc",
+    "lib/adapters/skill-inventory.js": "755b948f4667e9a1dbfd2b9ea73285d071026c64cf9373fb0a2c02cb5b074da3",
+    "lib/application/manifest-deployment-service.js": "715fad84356a40f3d2c9d8870b44efd5bf26a7ed7b1c0cdd690f5dab68e7ee72",
+    "lib/application/local-installation-discovery-service.js": "65a93100a53f2d37ebfe6f63663d7a43aaa2c3ce7c3b6f4deb1e6f8838b317ce",
+    "lib/domain/client-definition.js": "a014672b17a34b0b9ab70768c2cdd651e53014622577ba4961603d98854d80d6",
+    "clients/codex.yaml": "49037825c9cb320af68b6fde98fe78b4960a5f2da73bbc939749302797044e89",
+    "clients/antigravity.yaml": "0a455e37040d1769f8b5ef277ad0b55494021a4b9e586bd6432d1b5f633ffc5a",
+    "bin/cli.js": "2bdc5d3429f289fc716c41a9547a418965b3dc62429be77211bc2d5fd6ead7c4",
+    "gui/server/routes/deploy.js": "c2527ceaeb57f8d3686cc4c4d60ce20dfaa117be7febfe928c1f5bd97827bef7",
+    "gui/src/api/deploy.ts": "8699d1dbcb14598630fe3496f33f7a2dcc1a330c874bbb24dce69fff078e54b1",
+    "gui/src/ManifestApp.tsx": "a461eacc42df2ffb271a57d43e124ed997d94bba13185921a42583ad5960f1c1",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "580d983e28e699aafab4d83e2675d78517f09bbe661b326420dec988b06e35e3",
+    "test/resource-catalog.test.js": "df0c2400a6cef9805db5e3442b9096f57aa8597da9d2a178d3f002bc6b2041f6"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "liveCatalog": {
+    "scopes": [
+      {
+        "scope": "global",
+        "status": "ready"
+      },
+      {
+        "scope": "project",
+        "status": "ready"
+      }
+    ],
+    "resources": 6,
+    "observations": 4,
+    "externalLinks": [
+      {
+        "id": "ego-browser",
+        "contentRead": false,
+        "linkTarget": "~/.local/share/ego/ego-skills"
+      }
+    ]
+  },
+  "nativeControl": {
+    "source": "docs/reconstruction/codex-catalog-skill-discovery-20261106.json",
+    "freshHome": true,
+    "modelTurnsRequested": false
+  },
+  "browserQA": {
+    "spaceId": 23,
+    "globalBeforeProject": true,
+    "separateSameIdOrigins": true,
+    "scopeFilter": true,
+    "globalEditorContext": true,
+    "linkMutationButtons": 0,
+    "screenshotSha256": "22c78c8265b03f6e3f1098b8dd02fcf5c63e67ed0968c59763dbbd0529c102ae"
+  },
+  "productionClientPathsChanged": false,
+  "nativeSupportExpanded": false,
+  "remaining": [
+    "PR09 native inventory, disabled and parent/manifest/trust context",
+    "PR07 Antigravity Agent direct child completion",
+    "PR10 cross-scope dependencies",
+    "PR11 additional discovery/HTTP/auth/surfaces"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:15:28.834Z",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "freshHome": true,
+  "modelTurnsRequested": false,
+  "credentialsCopied": false,
+  "mcpDisabled": false,
+  "agentConfigKeys": null,
+  "reason": "MCP isolation unavailable",
+  "mcpStarted": false,
+  "settingsPreserved": true
+}

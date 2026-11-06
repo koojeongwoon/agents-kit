@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:00:04.078Z",
+  "clientId": "codex",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "requests": [
+    "initialize",
+    "config/read"
+  ],
+  "modelTurnsRequested": false,
+  "toolRequests": 0,
+  "topKeys": [
+    "config",
+    "origins",
+    "layers"
+  ],
+  "servers": [
+    {
+      "name": "other",
+      "enabled": true
+    },
+    {
+      "name": "shared",
+      "enabled": false
+    }
+  ],
+  "origins": [
+    {
+      "field": "mcp_servers.shared.command",
+      "sourceRole": "project-parent",
+      "version": "sha256:66b315d48f380dab8e7867440ef18f6cdff14c3ea0a44fa70dd1e594796a693f"
+    },
+    {
+      "field": "mcp_servers.other.command",
+      "sourceRole": "project-current",
+      "version": "sha256:a927fc29ca88a4b993f83453c65ccbd4f996aff855ccfd100467a5357c38c335"
+    },
+    {
+      "field": "mcp_servers.shared.enabled",
+      "sourceRole": "project-parent",
+      "version": "sha256:66b315d48f380dab8e7867440ef18f6cdff14c3ea0a44fa70dd1e594796a693f"
+    }
+  ],
+  "layers": [
+    {
+      "sourceRole": "project-current",
+      "configKeys": [
+        "mcp_servers"
+      ]
+    },
+    {
+      "sourceRole": "project-parent",
+      "configKeys": [
+        "mcp_servers"
+      ]
+    },
+    {
+      "sourceRole": "global",
+      "configKeys": [
+        "projects",
+        "mcp_servers"
+      ]
+    },
+    {
+      "sourceRole": "other",
+      "configKeys": []
+    }
+  ],
+  "connectionProved": false
+}

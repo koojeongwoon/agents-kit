@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T12:18:44.568Z",
+  "clientId": "codex",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "scope": "global",
+  "surface": "cli",
+  "home": "actual-user-home",
+  "assetId": "live-install-codex-360f2fc91f",
+  "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f",
+  "complete": true,
+  "stages": {
+    "applied": {
+      "code": 0,
+      "reason": "OK",
+      "terminalSuccess": true,
+      "final": {
+        "skill": true
+      },
+      "skillFileRead": true,
+      "mcpToolCalled": false,
+      "completedTools": 1,
+      "finalParsed": true,
+      "reportedAbsent": {
+        "skill": false
+      },
+      "toolKinds": [
+        "command_execution"
+      ],
+      "answerFormat": {
+        "text": true,
+        "fenced": false,
+        "nonempty": true
+      },
+      "toolEvidence": [
+        {
+          "kind": "command_execution",
+          "success": true,
+          "errorCategories": [],
+          "outputNonempty": true,
+          "parameterKeys": [],
+          "fixtureServerInParameters": false,
+          "fixtureToolInParameters": false,
+          "supportingFileNamed": true,
+          "skillMarkerReturned": true,
+          "mcpMarkerReturned": false
+        }
+      ],
+      "mcpAdvertised": false,
+      "permissionRequested": false,
+      "stepTypes": [],
+      "terminalStatus": "unobserved",
+      "diagnostics": {
+        "projectConfigDisabled": false,
+        "mcpStartupFailed": false,
+        "permissionNotice": false,
+        "fixtureMcpPermissionNotice": false,
+        "mcpPermissionRequired": false
+      },
+      "binaryUnchanged": true,
+      "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "success": true,
+      "confirmed": true
+    },
+    "rollback": {
+      "code": 0,
+      "reason": "OK",
+      "terminalSuccess": true,
+      "final": {
+        "skill": true
+      },
+      "skillFileRead": true,
+      "mcpToolCalled": false,
+      "completedTools": 1,
+      "finalParsed": true,
+      "reportedAbsent": {
+        "skill": false
+      },
+      "toolKinds": [
+        "command_execution"
+      ],
+      "answerFormat": {
+        "text": true,
+        "fenced": false,
+        "nonempty": true
+      },
+      "toolEvidence": [
+        {
+          "kind": "command_execution",
+          "success": true,
+          "errorCategories": [],
+          "outputNonempty": true,
+          "parameterKeys": [],
+          "fixtureServerInParameters": false,
+          "fixtureToolInParameters": false,
+          "supportingFileNamed": true,
+          "skillMarkerReturned": true,
+          "mcpMarkerReturned": false
+        }
+      ],
+      "mcpAdvertised": false,
+      "permissionRequested": false,
+      "stepTypes": [],
+      "terminalStatus": "unobserved",
+      "diagnostics": {
+        "projectConfigDisabled": false,
+        "mcpStartupFailed": false,
+        "permissionNotice": false,
+        "fixtureMcpPermissionNotice": false,
+        "mcpPermissionRequired": false
+      },
+      "binaryUnchanged": true,
+      "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "success": true,
+      "confirmed": true
+    }
+  },
+  "transactions": [
+    {
+      "kind": "import",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "REGISTER_SOURCE"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/imported/live-install-codex-360f2fc91f/bundle/SKILL.md"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/baselines/live-install-codex-360f2fc91f/ff7fc41aa26e05e07bd602878f758c6851381493192bde8cee767c7846d0506f/SKILL.md"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/imported/live-install-codex-360f2fc91f/bundle/references/marker.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/baselines/live-install-codex-360f2fc91f/ff7fc41aa26e05e07bd602878f758c6851381493192bde8cee767c7846d0506f/references/marker.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/imported/live-install-codex-360f2fc91f/bundle/scripts/check.sh"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/baselines/live-install-codex-360f2fc91f/ff7fc41aa26e05e07bd602878f758c6851381493192bde8cee767c7846d0506f/scripts/check.sh"
+        }
+      ],
+      "blocked": []
+    },
+    {
+      "kind": "installation",
+      "mode": "adopt",
+      "automatic": true,
+      "reviewHash": "899cf1e69eb489cfe8f9b16194fa67c7ef27f6a484af8e88fa545598c2ffdcd4",
+      "operations": [
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/SKILL.md",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/references/marker.txt",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/scripts/check.sh",
+          "metadataOnly": true
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-18-44-782Z-c461bc44"
+    },
+    {
+      "kind": "source-edit",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "EDIT_KIT_SOURCE"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-codex-360f2fc91f/be331ec1-1140-43fd-8902-385abb6f50e0/SKILL.md"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-codex-360f2fc91f/be331ec1-1140-43fd-8902-385abb6f50e0/references/marker.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-codex-360f2fc91f/be331ec1-1140-43fd-8902-385abb6f50e0/scripts/check.sh"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-codex-360f2fc91f/be331ec1-1140-43fd-8902-385abb6f50e0/references/kit-added.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/revisions/live-install-codex-360f2fc91f/ff7fc41aa26e05e07bd602878f758c6851381493192bde8cee767c7846d0506f.json"
+        }
+      ],
+      "blocked": []
+    },
+    {
+      "kind": "installation",
+      "mode": "apply",
+      "automatic": true,
+      "reviewHash": "8d23d290e31d7e1334262e42dcaa614466758bcff5443abd4e86f89739a67ba8",
+      "operations": [
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/SKILL.md",
+          "metadataOnly": true
+        },
+        {
+          "operation": "CREATE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/references/kit-added.txt",
+          "metadataOnly": false
+        },
+        {
+          "operation": "UPDATE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/references/marker.txt",
+          "metadataOnly": false
+        },
+        {
+          "operation": "UPDATE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/scripts/check.sh",
+          "metadataOnly": false
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-18-45-253Z-561ea31e"
+    },
+    {
+      "kind": "rollback",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "RESTORE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/SKILL.md"
+        },
+        {
+          "operation": "REMOVE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/references/kit-added.txt"
+        },
+        {
+          "operation": "RESTORE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/references/marker.txt"
+        },
+        {
+          "operation": "RESTORE",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/scripts/check.sh"
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-18-53-135Z-ac47723a"
+    },
+    {
+      "kind": "installation",
+      "mode": "detach",
+      "automatic": true,
+      "reviewHash": "b78b8ed20dd7326dc4ecc8bd95143eca23f4e968d5469608db1787ce93e20faf",
+      "operations": [
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/SKILL.md",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/references/marker.txt",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.agents/skills/live-install-codex-360f2fc91f/scripts/check.sh",
+          "metadataOnly": true
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-19-01-180Z-bf1eeed7"
+    },
+    {
+      "kind": "detach",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "DETACH_SOURCE"
+        }
+      ],
+      "blocked": []
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "existingSettingsWritten": false,
+  "externalLinksWritten": false,
+  "adoption": {
+    "metadataOnly": true,
+    "bytesModesAndMtimesPreserved": true
+  },
+  "installation": {
+    "actualPathWritten": true,
+    "markerHash": "7b1a409d87bf43b3897433b13919af9ee0d892d44faf123832fbe9ae72f49651",
+    "executableMode": 493,
+    "addedFile": true
+  },
+  "rollback": {
+    "restored": true,
+    "markerHash": "18adb52832e991359596db807b2daa82498c07e19e3107695215b789d4660c63",
+    "executableMode": 488,
+    "addedFileRemoved": true
+  },
+  "cleanup": {
+    "assetAbsent": true,
+    "ownershipReleased": true,
+    "sourceRegistrationDetached": true,
+    "kitSourcesAndHistoryRetained": true
+  }
+}

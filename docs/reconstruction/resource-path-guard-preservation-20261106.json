@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR08-path-drift-guard",
+  "observedAt": "2026-11-05T18:41:09.724Z",
+  "implemented": [
+    "ordinary-path-drift-block",
+    "reviewed-context-check-before-apply-and-before-commit",
+    "CLI-HTTP-GUI-old-and-new-location-preview"
+  ],
+  "explicitPathMigrationImplemented": false,
+  "nativeModelRequests": 0,
+  "productionEvidencePromoted": false,
+  "validation": {
+    "rootPassed": 470,
+    "httpPassed": 32,
+    "guiPassed": 56,
+    "skipped": 0,
+    "typecheck": "passed",
+    "desktopBuild": "passed",
+    "diffCheck": "passed",
+    "logHashes": {
+      "root": "a7bfadad0daef0c36e7b2a4564e383f637c3e10b8c611467632afdb2703f93b4",
+      "http": "ccabca9a2c2daa67742dc41206740a740ad62f88f3cc166d18fee1c1541e37bf",
+      "gui": "257a5aaa16a060afa4adcb862184fe9eeebecff1a3cd6db91ddb3312e129f184",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "78eff8afe2c95c0a2246999c1bc2dd6cc3b4d257e9979aa0e0b67f65b3e27161"
+    }
+  },
+  "sourceHashes": {
+    "lib/application/deployment-path-drift.js": "6794c604da25f5ada991445570e9dea2b2e6e15f98233c762a889653249edc4d",
+    "lib/application/manifest-deployment-service.js": "5d87fca2a031abd4967f1e72c8ee111a9671a0038fd8ee47ef0173b2154a29d4",
+    "lib/application/apply-deployment.js": "83bf826a1061c8485d8818ca10b2e78d8437c0305474ad6b9a96ad0b1cf8cc6e",
+    "test/deployment-path-drift.test.js": "7dc930d65435211060c261dedd181b7ab41634cc4d6570388974443fb48c7abe",
+    "gui/server/test/control-plane-e2e.test.js": "ec5440e8a7b7e9bcafee8e3f12f873bfcf9772589aad52b8d4f968afa5755363",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "3eace152469a48d927c601680ca01e204686c91f0cac654aa9db67907c2a6850",
+    "gui/src/components/deploy/ManifestDeploymentPanel.test.tsx": "7679b8915e290286b147d0c60d38c8240523b497b0917735e45a5621b83b438e"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "remaining": "PR07 Antigravity Agent child completion; PR08 locator proof and explicit migration/rollback; PR09-11"
+}
