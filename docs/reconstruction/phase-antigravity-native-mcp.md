@@ -1,5 +1,8 @@
 # Antigravity MCP 실제 적용·복원과 Agent 완료 증거 조사
 
+후속 완료: [Agent 전역·프로젝트 실제 자식 완료 검증](phase-antigravity-agent-completion.md).
+아래 Agent 미관측 결과는 2026-11-05 조사 당시의 기록으로 보존한다.
+
 2026-11-05, macOS arm64, Antigravity CLI `1.5.1`의 정확한 실행 파일 SHA-256으로
 확인했다. 기존 설정·외부 링크를 보존하면서 분리된 검증기로 전역 MCP를 확인했다.
 

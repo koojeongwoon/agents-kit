@@ -31,6 +31,15 @@ test('recorded Agent parent response and invocation do not prove child completio
   assert.equal(separated.confirmed, false);
 });
 
+test('an Antigravity delivered marker still requires directly observed child completion', () => {
+  const recorded = receipt('native-global-antigravity-agent-runtime-20261105.json').clients[0].stages.updated;
+  const result = {...recorded, childMarkerReturned: true, completedChildMarker: false};
+  const separated = probeEvidence(result, {clientId: 'antigravity', resource: 'agents', present: true, deployment: passedDeployment});
+  assert.equal(separated.modelBehavior.status, 'passed');
+  assert.equal(separated.nativeRecognition.checks.childCompleted, 'not-observed');
+  assert.equal(separated.confirmed, false);
+});
+
 test('recorded observer failure and timeout retain deployment proof without claiming model failure', () => {
   const recorded = receipt('native-global-antigravity-mcp-response-probe-20261105.json');
   assert.equal(recorded.blocker, 'VERIFICATION_OBSERVER_FAILED');

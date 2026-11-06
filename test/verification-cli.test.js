@@ -59,6 +59,54 @@ test('Agent preflight makes no parent or child requests and stage failure stops 
   report = JSON.parse(fs.readFileSync(f.output)); assert.equal(report.parentRequests, 2); assert.deepEqual(Object.keys(report.clients[0].stages), ['baseline', 'applied']); assert.equal(report.clients[0].cleanupVerified, true);
 });
 
+test('Antigravity Agent lifecycle joins exact child status and ACP reply in an isolated HOME without touching source state', t => {
+  const f = fixture(t), binary = path.join(f.root, 'agy'), auth = path.join(f.home, '.gemini/antigravity-cli/antigravity-oauth-token');
+  fs.mkdirSync(path.dirname(auth), {recursive: true});
+  const credentials = JSON.stringify({token: {access_token: 'fixture-access', refresh_token: 'source-refresh', expiry: new Date(Date.now() + 3600000).toISOString()}});
+  fs.writeFileSync(auth, credentials, {mode: 0o600});
+  const ledger = path.join(f.home, '.agents-kit/state.json'); fs.mkdirSync(path.dirname(ledger)); fs.writeFileSync(ledger, 'preserve-original-ledger');
+  fs.writeFileSync(binary, `#!${process.execPath}
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),emit=v=>console.log(JSON.stringify(v));
+if(process.env.AGY_CLI_DISABLE_AUTO_UPDATE!=='true')process.exit(7);
+if(process.argv.includes('--version')){console.log('1.5.1');process.exit(0);}
+const auth=JSON.parse(fs.readFileSync(path.join(os.homedir(),'.gemini/antigravity-cli/antigravity-oauth-token')));
+if(auth.token.refresh_token||os.homedir()===${JSON.stringify(f.home)})process.exit(8);
+let file;for(const dir of [path.join(process.cwd(),'.agents/agents'),path.join(os.homedir(),'.gemini/config/agents')])if(fs.existsSync(dir))for(const n of fs.readdirSync(dir))if(n.startsWith('ca04-agent-'))file=path.join(dir,n);
+const marker=file?fs.readFileSync(file,'utf8').match(/ca04-[a-f0-9]+-v[12]/)[0]:'ABSENT',role=file?path.basename(file,'.md'):'';
+require('node:readline').createInterface({input:process.stdin}).on('line',line=>{const r=JSON.parse(line);
+if(process.argv.includes('acp')){
+ if(r.method==='initialize')emit({jsonrpc:'2.0',id:r.id,result:{protocolVersion:1,agentCapabilities:{loadSession:true,sessionCapabilities:{close:{}}}}});
+ else if(r.method==='session/load'){if(r.params.sessionId!=='fixture-child')process.exit(9);emit({jsonrpc:'2.0',method:'session/update',params:{sessionId:'fixture-child',update:{sessionUpdate:'agent_message_chunk',content:{type:'text',text:marker}}}});emit({jsonrpc:'2.0',id:r.id,result:{}});}
+ else if(r.method==='session/close')emit({jsonrpc:'2.0',id:r.id,result:{}});else process.exit(10);return;
+}
+if(file){emit({event:'step_update',step_update:{step_type:'subagent',state:'DONE',tool_name:'invoke_subagent',subagent_info:{subagents:[{type_name:role,conversation_id:'fixture-child'}]}}});emit({event:'step_update',step_update:{step_type:'tool',state:'DONE',tool_info:{name:'manage_subagents',parameters:{Action:'list'},output:'You have 1 active subagent(s):\\n'+JSON.stringify([{conversationId:'fixture-child',state:'idle'}])}}});}
+emit({event:'result',result:{status:'SUCCESS',response:JSON.stringify({agent:marker})}});});
+`, {mode: 0o700});
+  for (const scope of ['project', 'global']) {
+    const result = spawnSync(process.execPath, ['scripts/verify-client-agents.mjs', '--client', 'antigravity', '--antigravity', scope === 'global' ? 'agy' : binary,
+      '--isolated-antigravity-home', 'true', '--scope', scope, '--native-global', 'temporary-fixtures', '--stop-on-failure', 'true', '--output', f.output],
+    {encoding: 'utf8', timeout: 20000, env: {...process.env, HOME: f.home, PATH: f.root + path.delimiter + process.env.PATH}});
+    assert.equal(result.status, 0, result.stderr);
+    const report = JSON.parse(fs.readFileSync(f.output)); assert.equal(report.complete, true);
+    assert.equal(report.isolation.freshHome, true); assert.equal(report.isolation.refreshTokenCopied, false);
+    assert.equal(report.sourceAuthenticationPreserved, true); assert.equal(report.clients[0].cleanupVerified, true);
+    for (const stage of ['applied', 'updated', 'rollback']) {
+      const proof = report.clients[0].stages[stage];
+      assert.equal(proof.completedChildMarker, true); assert.equal(proof.childAcpInspection.modelTurnsRequested, 0);
+      assert.equal(proof.verification.nativeRecognition.status, 'passed');
+    }
+    assert.equal(fs.readFileSync(auth, 'utf8'), credentials); assert.equal(fs.readFileSync(ledger, 'utf8'), 'preserve-original-ledger');
+  }
+  const expired = JSON.stringify({token: {access_token: 'expired-access', refresh_token: 'preserve-refresh', expiry: '2000-01-01T00:00:00Z'}});
+  fs.writeFileSync(auth, expired, {mode: 0o600});
+  const rejected = spawnSync(process.execPath, ['scripts/verify-client-agents.mjs', '--client', 'antigravity', '--antigravity', binary,
+    '--isolated-antigravity-home', 'true', '--output', f.output], {encoding: 'utf8', timeout: 20000, env: {...process.env, HOME: f.home}});
+  assert.equal(rejected.status, 2, rejected.stderr);
+  const report = JSON.parse(fs.readFileSync(f.output)); assert.equal(report.parentRequests, 0);
+  assert.equal(report.clients[0].blocker, 'AUTH_ACCESS_TOKEN_UNAVAILABLE');
+  assert.equal(fs.readFileSync(auth, 'utf8'), expired); assert.equal(fs.readFileSync(ledger, 'utf8'), 'preserve-original-ledger');
+});
+
 test('model-use CLI preserves deployment and native proof when a wrapped final response fails', t => {
   const f = fixture(t, true), result = f.run('scripts/verify-client-use.mjs', ['--stages', 'applied']);
   assert.equal(result.status, 2, result.stderr);

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T08:19:15.964Z",
+  "preserved": true,
+  "paths": 30,
+  "differences": [],
+  "metadataOnly": [
+    {
+      "path": ".codex/config.toml",
+      "contentAndModeUnchanged": true,
+      "mtimeChanged": true,
+      "identityChanged": false
+    }
+  ],
+  "externalLinks": [
+    {
+      "path": ".agents/skills/ego-browser",
+      "target": "/Users/jw/.local/share/ego/ego-skills",
+      "identityPreserved": true
+    },
+    {
+      "path": ".gemini/config/skills/ego-browser",
+      "target": "/Users/jw/.local/share/ego/ego-skills",
+      "identityPreserved": true
+    },
+    {
+      "path": ".gemini/antigravity-cli/skills/ego-browser",
+      "target": "/Users/jw/.local/share/ego/ego-skills",
+      "identityPreserved": true
+    }
+  ],
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": false,
+    "diagnosticUnchanged": true
+  },
+  "existingDrift": [
+    {
+      "assetId": "node-repl",
+      "status": "drift"
+    }
+  ],
+  "nativeBinary": {
+    "version": "1.5.1",
+    "sha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+    "originalRestoredAfterNativeAutoUpdate": true
+  },
+  "sourceAuthenticationPreserved": true,
+  "userClientConfigurationWrites": 0,
+  "userLedgerWrites": 0
+}

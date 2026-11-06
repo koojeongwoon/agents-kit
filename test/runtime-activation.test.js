@@ -71,7 +71,7 @@ test('current Codex project basic profiles use their own native lifecycle eviden
   assert.equal(resolveClientCapability(definition, {...query, clientVersion, assetKind: 'agents', scope: 'project', asset: {...assetFor('agents'), definition: {...assetFor('agents').definition, sandboxDefault: 'read-only'}}}).eligible, false);
 });
 
-test('current Antigravity project basic profiles require direct resource evidence while Agent and other surfaces remain unverified', () => {
+test('current Antigravity project basic profiles require direct resource evidence while other surfaces remain unverified', () => {
   const definition = definitions.get('antigravity'), clientVersion = '1.5.1';
   for (const kind of ['instructions', 'skills', 'mcp']) {
     const input = {...query, assetKind: kind, scope: 'project', clientVersion, asset: assetFor(kind)};
@@ -80,11 +80,37 @@ test('current Antigravity project basic profiles require direct resource evidenc
     assert.equal(result.runtimeEvidence.source, 'docs/reconstruction/native-project-antigravity-basic-cli-20261106.json');
     for (const surface of ['desktop', 'ide']) assert.equal(resolveClientCapability(definition, {...input, surface}).eligible, false);
   }
-  assert.equal(resolveClientCapability(definition, {...query, clientVersion, assetKind: 'agents', scope: 'project', asset: assetFor('agents')}).eligible, false);
   for (const definition of [
     {schemaVersion: 1, transport: 'http', endpointId: 'remote'},
     {...assetFor('mcp').definition, environment: [{source: 'environment', name: 'API_TOKEN'}]}
   ]) assert.equal(resolveClientCapability(definitions.get('antigravity'), {...query, clientVersion, assetKind: 'mcp', scope: 'project', asset: {...assetFor('mcp'), definition}}).reason, 'CLIENT_RESOURCE_PROFILE_UNVERIFIED');
+});
+
+test('Antigravity Agent basic roles require exact binary and scoped native child completion evidence', async () => {
+  const {planVerifiedClientDeployment} = await import('../lib/application/plan-verified-client-deployment.js');
+  const definition = definitions.get('antigravity'), clientVersion = '1.5.1', sha256 = '5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f';
+  for (const scope of ['global', 'project']) {
+    const asset = assetFor('agents', scope), input = {...query, clientVersion, assetKind: 'agents', scope, asset};
+    const capability = resolveClientCapability(definition, input);
+    assert.equal(capability.eligible, true);
+    assert.equal(capability.runtimeEvidence.source, `docs/reconstruction/antigravity-agent-${scope}-completion-20261106.json`);
+    const planInput = {...query, definition, clientVersion, manifest: manifestFor('agents', asset)};
+    assert.equal(planVerifiedClientDeployment({...planInput, binaryObserver: () => ({binaryPath: '/test/agy', sha256})}).plan.automatic, true);
+    assert.equal(planVerifiedClientDeployment({...planInput, binaryObserver: () => ({binaryPath: '/test/agy', sha256: '0'.repeat(64)})}).plan.automatic, false);
+    for (const patch of [{clientVersion: '1.5.2'}, {surface: 'desktop'}, {surface: 'ide'}, {platform: 'linux'}, {arch: 'x64'},
+      {asset: {...asset, definition: {...asset.definition, sandboxDefault: 'read-only'}}}]) {
+      assert.equal(resolveClientCapability(definition, {...input, ...patch}).eligible, false);
+    }
+    const evidence = JSON.parse(fs.readFileSync(path.join(repositoryRoot, capability.runtimeEvidence.source)));
+    assert.equal(evidence.complete, true); assert.equal(evidence.sourceAuthenticationPreserved, true);
+    assert.equal(evidence.isolation.freshHome, true); assert.equal(evidence.isolation.userStateWritten, false);
+    for (const stage of ['applied', 'updated', 'rollback']) {
+      const proof = evidence.clients[0].stages[stage];
+      assert.equal(proof.completedChildMarker, true); assert.equal(proof.completedChildStateObserved, true);
+      assert.equal(proof.childAcpInspection.publicChildMessageMatched, true);
+      assert.equal(proof.childAcpInspection.modelTurnsRequested, 0);
+    }
+  }
 });
 
 test('current Antigravity global instructions require their own five-stage native evidence', () => {
@@ -152,7 +178,7 @@ test('production activation includes only reviewed CLI version/capability slices
       assert.equal(resolveClientCapability(definition, {...query, clientVersion, assetKind, scope, asset: assetFor(assetKind, scope)}).eligible, false);
     }
   }
-  assert.equal(count, 33);
+  assert.equal(count, 35);
   assert.equal(resolveClientCapability(definitions.get('antigravity'), {...query, clientVersion: '1.2.12', assetKind: 'agents', scope: 'project', asset: assetFor('agents')}).reason, 'CLIENT_PROFILE_UNVERIFIED');
 });
 
@@ -166,7 +192,7 @@ test('current Antigravity global MCP enables only the verified basic stdio slice
     {...assetFor('mcp', 'global'), definition: {...assetFor('mcp', 'global').definition, environment: [{source: 'environment', name: 'API_TOKEN'}]}}
   ]) assert.equal(resolveClientCapability(definition, {...input, asset}).reason, 'CLIENT_RESOURCE_PROFILE_UNVERIFIED');
   assert.equal(resolveClientCapability(definition, {...input, scope: 'project', asset: assetFor('mcp')}).eligible, true);
-  assert.equal(resolveClientCapability(definition, {...query, clientVersion, assetKind: 'agents', scope: 'global', asset: assetFor('agents', 'global')}).eligible, false);
+  assert.equal(resolveClientCapability(definition, {...query, clientVersion, assetKind: 'agents', scope: 'global', asset: assetFor('agents', 'global')}).eligible, true);
 });
 
 test('production planning rejects HTTP, environment forwarding, native sources and unverified Agent defaults', () => {

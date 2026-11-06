@@ -1,0 +1,1091 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-5",
+  "observedAt": "2026-11-06T08:12:18.737Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "project",
+  "surface": "cli",
+  "resource": "agents",
+  "codexTransport": "exec",
+  "rpcCollectorSha256": "8a9d77725dff82f4b7c54eb3e91ea6121c566c57b614ce28445f1ea6a73d661c",
+  "stagesRequested": "lifecycle",
+  "complete": true,
+  "productionEvidencePromoted": false,
+  "verificationRevision": "PR07-agent-v2",
+  "checkOnly": false,
+  "parentRequests": 5,
+  "verifierSha256": "0a2097db6ae937fc200978feec96df324543cbaa2c2ac8a439ae189bff8a7bfc",
+  "collectorSha256": "5478e804f5fc0c6b0e9d929d98f652d2d060aaf9b8bc801107b2966130afb018",
+  "runnerSha256": "f87b2ccb9801280eb228345edbd35bbce939a98b0d104e1a40447db2d6c5ac19",
+  "authentication": "ephemeral-existing-access-token",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": true,
+    "credentialsCopied": true,
+    "userSettingsWritten": false,
+    "temporaryGlobalAssets": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": false,
+    "userStateWritten": false,
+    "sourceCredentialsWritten": false,
+    "refreshTokenCopied": false
+  },
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalParsed": true,
+          "finalMatches": true,
+          "reportedAbsent": true,
+          "spawned": false,
+          "childMarkerReturned": false,
+          "roleObserved": false,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "initial_prompt",
+                "role",
+                "type_name"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "subagent",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "completedChildStateObserved": false,
+          "managementChildStates": [],
+          "managementOutputKinds": [],
+          "managementOutputKeys": [],
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED",
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "noUnexpectedInvocation": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          }
+        },
+        "applied": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalParsed": true,
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "childMarkerReturned": true,
+          "roleObserved": true,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent",
+            "manage_subagents"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "parameters"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Role",
+                "TypeName"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "conversation_id",
+                "initial_prompt",
+                "log_uri",
+                "role",
+                "type_name",
+                "workspace_uris"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Action"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "output",
+                "parameters"
+              ]
+            },
+            {
+              "label": "system_message",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "tool",
+            "subagent",
+            "system_message",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": true,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "completedChildStateObserved": true,
+          "managementChildStates": [
+            "idle"
+          ],
+          "managementOutputKinds": [
+            "json"
+          ],
+          "managementOutputKeys": [
+            "role",
+            "type",
+            "conversationId",
+            "transcript",
+            "state",
+            "lastStepTime"
+          ],
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "childAcpInspection": {
+            "historyReplayCompleted": true,
+            "publicChildMessageMatched": true,
+            "publicMessageCount": 1,
+            "completionEvidenceStatus": "not-observed",
+            "publicUpdateKinds": [
+              "agent_message_chunk"
+            ],
+            "shapes": [
+              {
+                "label": "agent_message_chunk",
+                "keys": [
+                  "content",
+                  "sessionUpdate"
+                ]
+              }
+            ],
+            "unverifiedTerminalHints": [],
+            "reason": "OK",
+            "binaryUnchanged": true,
+            "loadSessionAdvertised": true,
+            "loadedSessionClosed": true,
+            "serverRequestsDeclined": 0,
+            "modelTurnsRequested": 0,
+            "rawTranscriptsStored": false
+          },
+          "childEvidenceSource": "native-child-state-and-correlated-public-acp-reply",
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED",
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "roleInvoked": "passed",
+                "childCompleted": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          }
+        },
+        "updated": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalParsed": true,
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "childMarkerReturned": true,
+          "roleObserved": true,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent",
+            "manage_subagents"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "parameters"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Role",
+                "TypeName"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "conversation_id",
+                "initial_prompt",
+                "log_uri",
+                "role",
+                "type_name",
+                "workspace_uris"
+              ]
+            },
+            {
+              "label": "system_message",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Action"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "output",
+                "parameters"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "tool",
+            "subagent",
+            "system_message",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": true,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "completedChildStateObserved": true,
+          "managementChildStates": [
+            "idle"
+          ],
+          "managementOutputKinds": [
+            "json"
+          ],
+          "managementOutputKeys": [
+            "role",
+            "type",
+            "conversationId",
+            "transcript",
+            "state",
+            "lastStepTime"
+          ],
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "childAcpInspection": {
+            "historyReplayCompleted": true,
+            "publicChildMessageMatched": true,
+            "publicMessageCount": 1,
+            "completionEvidenceStatus": "not-observed",
+            "publicUpdateKinds": [
+              "agent_message_chunk"
+            ],
+            "shapes": [
+              {
+                "label": "agent_message_chunk",
+                "keys": [
+                  "content",
+                  "sessionUpdate"
+                ]
+              }
+            ],
+            "unverifiedTerminalHints": [],
+            "reason": "OK",
+            "binaryUnchanged": true,
+            "loadSessionAdvertised": true,
+            "loadedSessionClosed": true,
+            "serverRequestsDeclined": 0,
+            "modelTurnsRequested": 0,
+            "rawTranscriptsStored": false
+          },
+          "childEvidenceSource": "native-child-state-and-correlated-public-acp-reply",
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED",
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "roleInvoked": "passed",
+                "childCompleted": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          }
+        },
+        "removed": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalParsed": true,
+          "finalMatches": true,
+          "reportedAbsent": true,
+          "spawned": false,
+          "childMarkerReturned": false,
+          "roleObserved": false,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "initial_prompt",
+                "role",
+                "type_name"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "subagent",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "completedChildStateObserved": false,
+          "managementChildStates": [],
+          "managementOutputKinds": [],
+          "managementOutputKeys": [],
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED",
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "noUnexpectedInvocation": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          }
+        },
+        "rollback": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalParsed": true,
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "childMarkerReturned": true,
+          "roleObserved": true,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent",
+            "manage_subagents"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "conversation_id",
+                "initial_prompt",
+                "log_uri",
+                "role",
+                "type_name",
+                "workspace_uris"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "system_message",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "parameters"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Action"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "output",
+                "parameters"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "subagent",
+            "system_message",
+            "tool",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": true,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "completedChildStateObserved": true,
+          "managementChildStates": [
+            "idle"
+          ],
+          "managementOutputKinds": [
+            "json"
+          ],
+          "managementOutputKeys": [
+            "role",
+            "type",
+            "conversationId",
+            "transcript",
+            "state",
+            "lastStepTime"
+          ],
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "childAcpInspection": {
+            "historyReplayCompleted": true,
+            "publicChildMessageMatched": true,
+            "publicMessageCount": 1,
+            "completionEvidenceStatus": "not-observed",
+            "publicUpdateKinds": [
+              "agent_message_chunk"
+            ],
+            "shapes": [
+              {
+                "label": "agent_message_chunk",
+                "keys": [
+                  "content",
+                  "sessionUpdate"
+                ]
+              }
+            ],
+            "unverifiedTerminalHints": [],
+            "reason": "OK",
+            "binaryUnchanged": true,
+            "loadSessionAdvertised": true,
+            "loadedSessionClosed": true,
+            "serverRequestsDeclined": 0,
+            "modelTurnsRequested": 0,
+            "rawTranscriptsStored": false
+          },
+          "childEvidenceSource": "native-child-state-and-correlated-public-acp-reply",
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED",
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "roleInvoked": "passed",
+                "childCompleted": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          }
+        }
+      },
+      "fullLifecycleConfirmed": true,
+      "roleEvidence": "native-subagent-type-name;exact-child-management-state-and-public-acp-answer",
+      "model": "gemini-3.8-flash-medium",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "definitionSha256": "0a455e37040d1769f8b5ef277ad0b55494021a4b9e586bd6432d1b5f633ffc5a",
+      "preflight": {
+        "automatic": true,
+        "operations": [
+          {
+            "assetId": "ca04-agent-42910c961cfb",
+            "target": "/private/var/folders/3l/1d2h7vnj7kb9ds6v2mcvrg200000gn/T/agents-kit-ca04-agents-xPLxiO/antigravity/project/.agents/agents/ca04-agent-42910c961cfb.md",
+            "operation": "CREATE"
+          }
+        ],
+        "blocked": []
+      },
+      "markerLifecycleConfirmed": true,
+      "invocationLifecycleConfirmed": true,
+      "cleanupVerified": true,
+      "verification": {
+        "schemaVersion": 1,
+        "requestedStages": [
+          "baseline",
+          "applied",
+          "updated",
+          "removed",
+          "rollback"
+        ],
+        "missingStages": [],
+        "layers": {
+          "deployment": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          },
+          "nativeRecognition": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          },
+          "modelBehavior": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          },
+          "execution": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          }
+        },
+        "cleanup": "passed",
+        "complete": true,
+        "fullLifecycleConfirmed": true
+      }
+    }
+  ],
+  "sourceAuthenticationPreserved": true,
+  "completionScope": "requested-clients-resources-stages",
+  "verificationComponentHashes": {
+    "lib/domain/verification-evidence.js": "13c7cb3fa57745437814a5fc78dbc5af837728d376f7f8e94535d21f21274a8b",
+    "lib/adapters/verification/probe-evidence.js": "3faad2c650c979829cb3f804e5e0bfacf9ace90b05e162a322765869f1072112",
+    "lib/adapters/verification/model-use-observation.js": "a1b70399e6caf98d20c767c40872cafa314d06bdf435b4533366adc0a5e4d7ac",
+    "lib/adapters/verification/basic-resource-observation.js": "ba7e02b9d4b295d8dc3a00c8a96dd7c27462386c0a91366a2ec66fe114379ac3",
+    "lib/adapters/verification/command-coverage.js": "bf13c30fe9012bd2b25091c117878d3c61e811f38c7c8b89106cdefba01a5027",
+    "lib/adapters/verification/agent-observation.js": "1f6557e86515e8728ced830bb65c7b10f2c727fd2a350148ae76406fc46835f5",
+    "lib/adapters/verification/antigravity-child-acp.js": "c03fc22888501dcd5ae4b0d6877c1aa5252d905c06f341749fcdbe9a61bf7908",
+    "scripts/client-verification/antigravity-child-acp.mjs": "e99c491864940ab44b170b664c5b5619992fefe1927dea16814ff9a1f2fb0bf6",
+    "lib/adapters/verification/codex-agent-observation.js": "fefa642d39a36ffd8b5aed9cee4f374f4f5a1d44bcade98dc6b90b09df82be55",
+    "lib/adapters/verification/recorded-report.js": "f014eb92d99323d99c96ba5be3e13c5a7b433c0e8744cc0880bf0c9353df8ac7",
+    "scripts/client-verification/deployment.mjs": "6548099151ca96254470b15d860d3e660ec9e0769a4c11116e86809c01b903b1",
+    "scripts/client-verification/report.mjs": "dfec0f6a2c8b3cb83214f604f68867c38bb2d5b869b87b66c97f2b49e8e69f37"
+  }
+}

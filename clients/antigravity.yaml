@@ -270,6 +270,22 @@ surfaces:
         verifiedAt: 2026-11-06
         source: docs/reconstruction/native-global-antigravity-instructions-cli-20261106.json
         binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+      - capabilityId: agents-project
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/antigravity-agent-project-completion-20261106.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+        resourceProfile: agent-role-basic-v1
+      - capabilityId: agents-global
+        version: 1.5.1
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/antigravity-agent-global-completion-20261106.json
+        binarySha256: 5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f
+        resourceProfile: agent-role-basic-v1
   - id: desktop
     displayName: Antigravity 2.0 app
     configStore: antigravity-local

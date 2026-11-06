@@ -284,7 +284,8 @@ test('Antigravity Agent requires the configured subagent role and delivered resu
   finish(o);
   assert.equal(agentUseConfirmed({...o.facts, success: true}, true, 'antigravity'), false);
   emit(o, {step_type: 'system_message', text_delta: marker});
-  assert.equal(agentUseConfirmed({...o.facts, success: true}, true, 'antigravity'), true);
+  assert.equal(agentUseConfirmed({...o.facts, success: true}, true, 'antigravity'), false);
+  assert.equal(agentUseConfirmed({...o.facts, completedChildMarker: true, success: true}, true, 'antigravity'), true);
   assert.equal(agentUseConfirmed({...o.facts, success: false}, true, 'antigravity'), false);
   for (const state of ['ACTIVE', 'DONE']) {
     const wrong = make();
