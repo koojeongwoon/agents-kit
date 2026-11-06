@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 export function createAppContext(options = {}) {
   const homeDir = options.homeDir || os.homedir();
-  const projectRoot = options.projectRoot || path.resolve(__dirname, '../..');
+  const projectRoot = options.projectRoot || process.env.AGENTS_KIT_RESOURCE_DIR || path.resolve(__dirname, '../..');
   const kitRoot = options.kitRoot || resolveKitRoot(projectRoot);
   const manifestDeploymentService = createManifestDeploymentService({
     definitionsDir: options.definitionsDir || path.join(projectRoot, 'clients'),
