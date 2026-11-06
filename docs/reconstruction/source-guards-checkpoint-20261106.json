@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T00:51:45.400957+00:00",
+  "phase": "PR10 source removal/registration lock handshake, ordinary writer coverage and v4 reverse inspection",
+  "status": "partial",
+  "publicV3ApplyEnabled": false,
+  "tests": {
+    "focused": {
+      "total": 90,
+      "passed": 90,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-source-mutation-guards-final-focused.log"
+    },
+    "root": {
+      "total": 679,
+      "passed": 679,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-source-guards-root-final.log"
+    },
+    "http": {
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-source-guards-http-final.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-source-guards-build-final.log"
+    },
+    "guiTypecheckCargo": {
+      "rerun": false,
+      "reason": "No frontend, TypeScript or Rust source changes; prior evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/source-dependency-removal.js": "0791b2af8e590e67bb22d4c3fe8e989c9cc1a6990fbf04addcdd591f5c54811f",
+    "lib/application/source-dependency-guard.js": "b7a0aa25b03bda02e1841de104b3d8f8498b02e95f2605ee66d5899e7903052e",
+    "lib/application/manifest-editing-service.js": "9608166c0727eee86917589909023d02f00a3a0bcec5f4b36e35f2a5a999515a",
+    "lib/application/manifest-deployment-service.js": "f1d70474bb40a0da8ada80b5bc58b4f356bb8967529f5b3dc3db211545332c70",
+    "lib/application/resource-import-service.js": "5985e6872b57e07e53f1223339f414ebcd45ebfc19b4b66ccb7ce6174bfb2cd0",
+    "lib/application/dependency-coordination-service.js": "6f3c67b066f965ded35f4294485f86133a4859a6f58119d2dd2b4f9fe79a1187",
+    "lib/application/inspect-dependency-dependents.js": "26bb04713db16b5baf298bb73698f0b69a727e58491151e7d2f9a17994fb67d9",
+    "lib/interfaces/http/error-mapper.js": "b43289df09aeedcf5c9c25144b2d2397b2a3efae50ec20575342d94ec77c72c3",
+    "lib/infrastructure/dependency-store-session.js": "fd65cfa0bfb127647c1feea28d153bb04a20cee06232db06efafe90738cc99b9",
+    "lib/infrastructure/kit-source-transaction.js": "211edc51cd59ab98f2ab9d76a95ca9000f3037366e3f277c95c010dffa9817f1",
+    "test/dependency-reverse-index.test.js": "177c975a7562e210f5676445cd0e46eb07b02c445a9d3d23bda4a44c371862e5",
+    "test/dependency-coordination.test.js": "140965d3357601487e8e6702de3eee07f54f2653805ab80f40182ca067cfe39a",
+    "test/native-installation.test.js": "48d91245453a01f4ae7d7d011e301addc99ee4d438cb6749f08af5d9c8db8619",
+    "test/resource-import.test.js": "0aef453a3392492d6ec306fa8397343af1d81c7015f7f9e650d5f8d8623e031e",
+    "test/http-error-mapper.test.js": "9a3d087b0b2c4e845c2737d187a78b1898f0dcc99ec3612b9603edbd8aa32df6",
+    "gui/server/test/control-plane-e2e.test.js": "dc361384464313adba72c6fc624e1957a27203196187ef46f29a5359c6d68126",
+    "docs/contracts/source-dependency-guards-v1.md": "2ee66f58ad18462e09bee7edc21c7ff1e8bf42be8e0ce2b486bd18d99c88aeb3",
+    "docs/contracts/dependency-coordination-v1.md": "6bd6dc4840e45021ff753ba0108b51ba3238a765e645450a5bb2c145d42311c5",
+    "docs/contracts/dependency-reverse-index-v1.md": "f1e928bd94b482aa52c777e0865d4838a735432663f55275f2241523decee1a4",
+    "docs/contracts/scoped-dependencies-v1.md": "268cd3f586c948f56820484fdc62e8e876481e855de193520133e09e90f0fd08",
+    "docs/product/shared-resources-consolidation-plan.md": "ca54ef8710cc9537ab19ad2e9548e57d948e44e675355116f95dc6f4705b68c5",
+    "docs/reconstruction/phase-scoped-dependencies.md": "c0a5513cd52400f813f7fde33e228dd6cf8bbdd6d47e4e2a46b716400c83e404",
+    "docs/traceability/shared-conversation-requirements.md": "7f0548588687f6fac357343c1c5f1211be47d3636923342ad15b3d3eab166ad0",
+    "docs/reconstruction/source-guards-live-compatibility-20261106.json": "0837164a10edd56f88edb9e88a8a128d95c3b27e1058e25f8c64cd658b7a1fc7"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-mutation-v4-reader-verified-red.log",
+      "sha256": "0a9a8a5a50b9f22c0d62f567af3bc6fa4c6ac5edbaf1e5d06d8a02751e3f23c2"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-mutation-red.log",
+      "sha256": "fb5c71aeb738bb524f56604ee2712ce7661fbd5580a04314e8eb0132922e65f6"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-detach-http-red.log",
+      "sha256": "2388ae68a8c1c650ae65d38e86243a05ab02c2a0ff084cf58ebdfcfc8f18efb2"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-missing-origin-red.log",
+      "sha256": "6772544801e4366b45943d24d0e78cd19013f0e7b630a5491fbf70721168f988"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-mutation-guards-final-focused.log",
+      "sha256": "1efbd382c937592540bb037556d845657fed6cd512cd0268c54f47a7a931996c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-guards-root-final.log",
+      "sha256": "6eb5dd758e3c0a85d7a6bbc9f964e22ff2135ae8cf14e5a32a402a9309423bb9"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-guards-http-final.log",
+      "sha256": "002afcf0eb641ba7aa6fec7eb48b759ca64312239b348ac9e557e43912432feb"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-guards-build-final.log",
+      "sha256": "14dc303e72477c023690e9f7e5aa83cc0b5e572e5aba06bc83bf2874e725836c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-guards-preservation-final.json",
+      "sha256": "0ef66f30e217b37d9f19ec50ae317ba46921f64955ba202074b1d944dd56b265"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-source-guards-live-compatibility-final.json",
+      "sha256": "0837164a10edd56f88edb9e88a8a128d95c3b27e1058e25f8c64cd658b7a1fc7"
+    }
+  ],
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "actualUserClientFileOperations": 0,
+  "newRealNativeCalls": 0,
+  "newModelOrToolCalls": 0,
+  "remaining": [
+    "Public v3 apply/save and registration/release dispatch",
+    "Selective global client mutation impact coordination",
+    "Planned native context transition and observation",
+    "Native source and previous path migration prediction",
+    "Public saved plans/recovery/validate/doctor and actual cross-scope consumer roundtrip",
+    "Remaining PR07/09/11 and C07 Skill target/compatibility/variant work"
+  ]
+}

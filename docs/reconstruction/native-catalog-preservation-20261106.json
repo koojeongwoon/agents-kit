@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR09-native-skill-inventory",
+  "observedAt": "2026-11-05T19:55:52.549Z",
+  "validation": {
+    "rootPassed": 507,
+    "httpPassed": 37,
+    "guiPassed": 62,
+    "typecheck": true,
+    "desktopBuild": true,
+    "logHashes": {
+      "root": "b9512fa5270cd8c3d3b474b83bdcf667b7bddfd3c46f6739cec54848999f30dc",
+      "http": "f69e23a74d36a633a614cabadc11f1a022755acc4c8561f0fe47092ee153fa8a",
+      "gui": "1f5685fddf1a260c4231d72e89ece5ec7570834179686985860229518e36df6a",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "0707d347021a41a62400d4c7ad22dd328a0f7f934676d0b5930a82658bf28238"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/resource-catalog.js": "2abb61f88e36c4efcc0156298b69622ee60606aeae7bf786e085e927e9e0ad78",
+    "lib/domain/client-definition.js": "4fb30933280000f8caf221bb2cf807d5a61e657b0755c8bb3a1598ec7da06225",
+    "lib/adapters/native-skill-inventory.js": "c949bbc3987a76b237f4586e7bad95cb7c1e0f24a48a57952c31e3aaa7bcaf2c",
+    "lib/infrastructure/native-inventory-observer.js": "a1a1d0907abf475db9a444ffdd22c2ce878933604a54ac53a511b35915d992a2",
+    "lib/application/resource-catalog-service.js": "abe5d1d35fe90cc0cff14d07090e9098571d48c7f7bcbd3a8f8ba9316d7a8a47",
+    "lib/application/observe-resource-catalog.js": "b9d946be7acbcce6fd15660422df5436413080d0508e77f00fa24bb0725466ce",
+    "lib/application/manifest-deployment-service.js": "1de3fb53d7acc420c3011c82df2b211b92709bcc0eeb248fd160f0a7ff28691b",
+    "clients/codex.yaml": "28561eb8435c271be8abb07efbf500d39be7045c580ba705f748423389e8fb23",
+    "bin/cli.js": "4bbba7acf06a8853afd31fc37fc6a4bcbf89d1771c71f0dd71563fe2ebc4efcd",
+    "gui/server/context.js": "104b2ddf73e0944f16ee2663159d419a2954663cd3dbf33d47d5afdbd12cbdb0",
+    "gui/server/routes/deploy.js": "978684d6812abf559d261da486bd8e4755154f3f95627ddb919cf7ac3a9d07cf",
+    "gui/src/ManifestApp.tsx": "661300404dcfcbcf6316ebfc78b17cfac0ebb4ece99624f44d9734ec86fa4cd1",
+    "gui/src/api/deploy.ts": "11b84fb94d0517f86780b9d718468e3b8d4fcd18963855b8667cadc9f0369a15",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "46773ed437d51725d1329ddc7aae7d049f70268e9bd74856e6e49d5f2cd03577",
+    "test/native-resource-catalog.test.js": "ab3c1630d99babcf036fc4a6ed5aed4c001b62053a716c5ee952c6c53dcd2383",
+    "test/native-inventory-observer.test.js": "bb10762c3d2017feb05540a67aa3b098970b585efaeaa3c250faace529a2615d"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "nativeModelRequests": 0,
+  "nativeToolCalls": 0,
+  "userSettingsWrittenByAgentKit": false,
+  "nativeDeploymentGateExpanded": false,
+  "runtimeEvidenceRecords": 25,
+  "nativeServiceControl": "docs/reconstruction/codex-native-catalog-service-20261106.json",
+  "liveObservation": "docs/reconstruction/native-live-catalog-codex-20261106.json",
+  "browserQA": {
+    "spaceId": 23,
+    "injectedNativePort": true,
+    "nativeProcessStarted": false,
+    "explicitButton": true,
+    "enabledAndDisabled": true,
+    "disabledFilterRows": 1,
+    "additionalReadOnly": true,
+    "externalMutationButtons": 0,
+    "screenshotSha256": "32fce5f4688c8af7fb5af16a0a4adbd018da40e3e2a4222dbb471f1db5045549"
+  },
+  "remaining": [
+    "PR09 other resource kinds and client/surface effective context",
+    "PR07 Antigravity Agent direct child completion",
+    "PR10 cross-scope dependency consistency",
+    "PR11 discovery-reference/HTTP/auth/desktop/IDE"
+  ]
+}

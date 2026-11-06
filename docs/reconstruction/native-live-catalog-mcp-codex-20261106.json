@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:08:42.972Z",
+  "clientId": "codex",
+  "surface": "cli",
+  "kind": "mcpServers",
+  "status": "observed",
+  "reason": null,
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "requests": [
+    "initialize",
+    "config/read"
+  ],
+  "modelTurnsRequested": false,
+  "connectionState": "unverified",
+  "toolUseState": "unverified",
+  "registrations": [
+    {
+      "name": "node_repl",
+      "enabled": true,
+      "composition": "single-source",
+      "sourceCount": 1,
+      "manageable": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "node_repl",
+      "scope": "global",
+      "nativeState": "listed",
+      "activation": "enabled"
+    }
+  ],
+  "external": [
+    {
+      "id": "ego-browser",
+      "contentRead": false,
+      "nativeEvidenceAttached": false
+    }
+  ],
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "userSettingsWrittenByAgentKit": false
+}

@@ -1,11 +1,18 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   fetchClients,
   fetchLocalDiscovery,
-  fetchManifestRegistry,
+  fetchResourceCatalog,
+  fetchCatalogInstallations,
+  fetchCatalogDependents,
+  observeResourceCatalog,
+  ApiRequestError,
   type ClientSummary,
   type LocalClientDiscovery,
-  type RegistryResource
+  type RegistryResource,
+  type ResourceCatalog,
+  type ResourceActionContext,
+  type NativeResourceKind
 } from './api/deploy';
 import {ManifestEditor} from './components/config/ManifestEditor';
 import {ManifestDeploymentPanel} from './components/deploy/ManifestDeploymentPanel';
@@ -32,11 +39,36 @@ export default function ManifestApp() {
   const [clientsLoading, setClientsLoading] = useState(true);
   const [clientsError, setClientsError] = useState('');
   const [localDiscovery, setLocalDiscovery] = useState<LocalClientDiscovery[]>([]);
+  const [projectDiscovery, setProjectDiscovery] = useState<LocalClientDiscovery[]>([]);
   const [localDiscoveryLoading, setLocalDiscoveryLoading] = useState(true);
   const [localDiscoveryError, setLocalDiscoveryError] = useState('');
   const [resources, setResources] = useState<RegistryResource[]>([]);
   const [resourcesLoading, setResourcesLoading] = useState(false);
   const [resourcesError, setResourcesError] = useState('');
+  const [resourceRevision, setResourceRevision] = useState(0);
+  const [sourceRecoveryRequired, setSourceRecoveryRequired] = useState(false);
+  const [catalog, setCatalog] = useState<ResourceCatalog | undefined>();
+  const nativeContextKey=JSON.stringify([projectName,projectPath,clientId,resourceRevision,activeView]);
+  const nativeContext=useRef(nativeContextKey);nativeContext.current=nativeContextKey;
+  const inventoryRequest=useRef(0);
+  const observeNative=async(kind:NativeResourceKind='skills')=>{
+    const key=nativeContext.current,request=++inventoryRequest.current;
+    const data=await observeResourceCatalog({clientId,surface:'cli',projectName,projectPath,includeOtherClients:true,kind,...(catalog?.installationPrerequisites?{includeInstallations:true}:{}),...(catalog?.dependencyDependents?{includeDependents:true}:{})});
+    if(nativeContext.current!==key||inventoryRequest.current!==request)return;
+    setCatalog(data);setResources(data.registry||[]);
+  };
+  const inspectInstallations=async()=>{
+    const key=nativeContext.current,request=++inventoryRequest.current;
+    const data=await fetchCatalogInstallations({clientId,surface:'cli',projectName,projectPath,...(catalog?.dependencyDependents?{includeDependents:true}:{})});
+    if(nativeContext.current!==key||inventoryRequest.current!==request)return;
+    setCatalog(data);setResources(data.registry||[]);
+  };
+  const inspectDependents=async()=>{
+    const key=nativeContext.current,request=++inventoryRequest.current;
+    const data=await fetchCatalogDependents({clientId,surface:'cli',projectName,projectPath,...(catalog?.installationPrerequisites?{includeInstallations:true}:{})});
+    if(nativeContext.current!==key||inventoryRequest.current!==request)return;
+    setCatalog(data);setResources(data.registry||[]);
+  };
 
   const targetReady = scope === 'global' || projectPath.trim().length > 0;
 
@@ -70,6 +102,17 @@ export default function ManifestApp() {
 
   useEffect(() => {
     let current = true;
+    setProjectDiscovery([]);
+    if (scope === 'project' && projectPath.trim()) {
+      fetchLocalDiscovery({scope: 'project', projectPath})
+        .then(data => { if (current) setProjectDiscovery(data.clients || []); })
+        .catch(error => { if (current) setLocalDiscoveryError(error instanceof Error ? error.message : '프로젝트 탐색 실패'); });
+    }
+    return () => { current = false; };
+  }, [scope, projectPath]);
+
+  useEffect(() => {
+    let current = true;
     setLocalDiscoveryLoading(true);
     setLocalDiscoveryError('');
     fetchLocalDiscovery()
@@ -92,23 +135,24 @@ export default function ManifestApp() {
 
   useEffect(() => {
     let current = true;
-    if (!targetReady) {
-      setResources([]);
-      setResourcesError('');
-      return () => {
-        current = false;
-      };
-    }
     setResourcesLoading(true);
     setResourcesError('');
-    fetchManifestRegistry({scope, projectName, projectPath})
+    setSourceRecoveryRequired(false);
+    fetchResourceCatalog({projectName, projectPath})
       .then(data => {
-        if (current) setResources(data.registry || []);
+        if (current) {
+          setResources(data.registry || []);
+          setCatalog(data.schemaVersion === 1 && data.scopes ? data : undefined);
+        }
       })
       .catch(error => {
         if (current) {
           setResources([]);
-          setResourcesError(error instanceof Error ? error.message : '리소스를 불러오지 못했습니다.');
+          setCatalog(undefined);
+          setSourceRecoveryRequired(error instanceof ApiRequestError && error.code === 'SOURCE_MANAGEMENT_RECOVERY_REQUIRED');
+          setResourcesError(error instanceof ApiRequestError && error.code === 'MANIFEST_REQUIRED'
+            ? 'Kit이 아직 없습니다. 기존 자원은 확인할 수 있습니다. Kit 관리는 agents-kit init으로 시작하세요.'
+            : error instanceof Error ? error.message : '리소스를 불러오지 못했습니다.');
         }
       })
       .finally(() => {
@@ -117,12 +161,31 @@ export default function ManifestApp() {
     return () => {
       current = false;
     };
-  }, [scope, projectName, projectPath, targetReady]);
+  }, [scope, projectName, projectPath, targetReady, resourceRevision, activeView]);
 
-  const openEditor = (assetId?: string) => {
+  const selectContext = (context?: ResourceActionContext) => {
+    if (!context) return;
+    setScope(context.scope);
+    if (context.scope === 'project') {
+      setProjectName(context.projectName || 'default');
+      setProjectPath(context.projectPath || '');
+    }
+  };
+  const openEditor = (assetId?: string, context?: ResourceActionContext) => {
+    selectContext(context);
     setSelectedAssetId(assetId || null);
     setActiveView('editor');
   };
+
+  const resourceDiscovery = localDiscovery.map(client => {
+    const project = projectDiscovery.find(item => item.id === client.id);
+    if (!project) return client;
+    return {...client, observations: [...(client.observations || client.assets), ...(project.observations || project.assets)],
+      surfaces: client.surfaces?.map(surface => {
+        const other = project.surfaces?.find(item => item.id === surface.id);
+        return {...surface, observations: [...(surface.observations || surface.assets), ...(other?.observations || other?.assets || [])]};
+      })};
+  });
 
   const content = (() => {
     if (activeView === 'home') {
@@ -138,18 +201,24 @@ export default function ManifestApp() {
         />
       );
     }
-    if (['mcp', 'skills', 'agents', 'harness'].includes(activeView)) {
+    if (['mcp', 'skills', 'agents', 'instructions', 'harness'].includes(activeView)) {
       return (
         <ResourceWorkspace
+          key={`${scope}:${projectName}:${projectPath}:${activeView}`}
           view={activeView as ResourceView}
           clients={clients}
-          localDiscovery={localDiscovery}
+          localDiscovery={catalog?.clients || resourceDiscovery}
+          catalog={catalog}
+          nativeClientId={clientId} onObserveNative={observeNative} onInspectInstallations={inspectInstallations} onInspectDependents={inspectDependents}
           resources={resources}
           targetReady={targetReady}
           loading={resourcesLoading}
           error={resourcesError}
           onOpenEditor={openEditor}
-          onOpenDeploy={() => setActiveView('deploy')}
+          onOpenDeploy={context => {selectContext(context); setActiveView('deploy');}}
+          scope={scope} projectName={projectName} projectPath={projectPath}
+          recoveryRequired={sourceRecoveryRequired} onChanged={() => setResourceRevision(value => value + 1)}
+          onNativeHistory={(id, context) => {selectContext(context); if (id) setClientId(id); setActiveView('deploy');}}
         />
       );
     }

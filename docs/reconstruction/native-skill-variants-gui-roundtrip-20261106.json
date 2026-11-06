@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T05:11:39.796Z",
+  "phase": "C07 native Skill browser GUI plan/apply/rollback",
+  "isolatedHome": true,
+  "version": "0.166.0-alpha.6",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "scope": "global",
+  "strategy": "copy",
+  "nativeProfile": "codex-skill-interface-v1",
+  "selectionVersion": 3,
+  "actualBrowser": true,
+  "appliedAndRolledBack": true,
+  "settingsBytesAndModePreserved": true,
+  "externalLinkIdentityPreserved": true,
+  "actualUserConfigWrites": 0,
+  "actualUserStateWrites": 0,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "nativeCalls": 0,
+  "requests": [
+    {
+      "method": "GET",
+      "route": "/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/vite.svg",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "route": "/assets/index-CUjMdHcC.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/local-discovery",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/clients",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/local-discovery",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/clients",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/daemon/status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/manifest/registry",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 304
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 304
+    },
+    {
+      "method": "POST",
+      "route": "/api/deployment/plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/deployment/apply",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/deployment/rollback-plan",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/deployment/rollback",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/deployment/history",
+      "status": 200
+    }
+  ],
+  "fulfilled": false,
+  "browserOrigin": "http://127.0.0.1:3000",
+  "mode": "Vite development frontend with isolated application backend and normal session/CORS policy",
+  "screenshots": [
+    "docs/reconstruction/native-skill-gui-plan-20261106.png",
+    "docs/reconstruction/native-skill-gui-restored-20261106.png"
+  ],
+  "browserTaskSpaceClosed": true,
+  "temporaryServersStopped": true,
+  "scopeLimit": "Global copy deployment preview/apply/history rollback only; other GUI workflows remain unverified",
+  "fixtureIssues": {
+    "initialArbitraryBackendOriginUnsupported": true,
+    "applicationAuthOrCorsWeakened": false,
+    "twoWaitConditionsCorrected": true
+  }
+}

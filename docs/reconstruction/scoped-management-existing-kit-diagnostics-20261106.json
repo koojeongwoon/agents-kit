@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T03:35:46.450Z",
+  "mode": "read-only-existing-user-kit-diagnostics",
+  "validation": {
+    "valid": true,
+    "issues": []
+  },
+  "doctor": {
+    "healthy": true,
+    "readOnly": true,
+    "deploymentReady": false,
+    "fulfilled": false,
+    "checks": [
+      {
+        "id": "manifest-load",
+        "status": "healthy",
+        "code": "MANIFEST_OK"
+      },
+      {
+        "id": "manifest-dependencies",
+        "status": "healthy",
+        "code": "DEPENDENCIES_OK"
+      },
+      {
+        "id": "client-definition",
+        "status": "warning",
+        "code": "CLIENT_NOT_SELECTED"
+      },
+      {
+        "id": "target-path",
+        "status": "healthy",
+        "code": "TARGET_PATH_OK"
+      }
+    ]
+  },
+  "preservation": {
+    "manifestUnchanged": true,
+    "stateUnchanged": true,
+    "metadataPresenceUnchanged": true
+  },
+  "binaryCalls": 0,
+  "nativeCalls": 0,
+  "modelCalls": 0,
+  "toolCalls": 0
+}

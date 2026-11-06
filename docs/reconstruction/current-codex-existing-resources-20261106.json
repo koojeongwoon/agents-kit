@@ -1,0 +1,630 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T06:18:26.154750+00:00",
+  "phase": "Current installed Codex existing MCP/Agent/instruction acceptance",
+  "clientId": "codex",
+  "version": "0.167.0-alpha.3.2",
+  "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+  "isolatedHome": true,
+  "userClientWrites": 0,
+  "userStateWrites": 0,
+  "sourceAuthenticationUnchanged": true,
+  "ephemeralAccessTokenCopy": true,
+  "refreshTokenCopied": false,
+  "rawTranscriptsStored": false,
+  "successfulAcceptance": {
+    "nativeMetadataSessions": 20,
+    "modelParentRequests": 10,
+    "completedAgentChildren": 6
+  },
+  "diagnostics": {
+    "additionalModelParentRequests": 3,
+    "completedAgentChildren": 1,
+    "recordedFailedMetadataSessions": 2,
+    "failures": [
+      {
+        "kind": "fixture",
+        "case": "MCP trust table",
+        "reason": "MCP_TOML_TARGET_UNSUPPORTED",
+        "resolution": "Keep the preservation guard; move disposable trust selection to the native process override."
+      },
+      {
+        "kind": "verifier",
+        "case": "project MCP Tool list",
+        "reason": "Global status without thread context omitted project MCP",
+        "resolution": "Start an ephemeral read-only thread and pass its threadId to status/list; no model turn."
+      },
+      {
+        "kind": "verifier",
+        "case": "Agent global applied",
+        "reason": "Parent reported ABSENT without child spawn",
+        "resolution": "Explicit spawn request with fork_turns=none and exact agent_type; real role and child completion required. Internal cause of the first response is not established."
+      }
+    ]
+  },
+  "scopeBoundary": "Existing CLI basic formats only. No HTTP/environment/native MCP options, Agent sandbox/tool defaults, alternate client surfaces or new distribution strategies.",
+  "fileSha256": {
+    "scripts/client-verification/native-existing-resources.mjs": "1ca270bc8fbbd815e59cf0a2a4044f560713b893ae906fd12b9159e9aff02a82",
+    "scripts/client-verification/codex-agent-rpc.mjs": "8a9d77725dff82f4b7c54eb3e91ea6121c566c57b614ce28445f1ea6a73d661c",
+    "lib/adapters/verification/codex-agent-observation.js": "fefa642d39a36ffd8b5aed9cee4f374f4f5a1d44bcade98dc6b90b09df82be55",
+    "lib/application/mcp-merge-guard.js": "6c4da8ea49c6890a46bf3bee243a20441b73a8952418d1496b8a54645e604205"
+  },
+  "runs": [
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "global",
+        "resource": "agents",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "stages": {
+              "baseline": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": true,
+                "spawned": false,
+                "roleObserved": false,
+                "childMarkerReturned": false,
+                "completedChildMarker": false,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "applied": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": false,
+                "spawned": true,
+                "roleObserved": true,
+                "childMarkerReturned": true,
+                "completedChildMarker": true,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "agentMessage",
+                  "subAgentActivity",
+                  "collabAgentToolCall"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "childMetadataOnly": true,
+                "childMetadataRoleMatches": true,
+                "childEvidenceSource": "live-public-child-events",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "updated": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": false,
+                "spawned": true,
+                "roleObserved": true,
+                "childMarkerReturned": true,
+                "completedChildMarker": true,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "subAgentActivity",
+                  "collabAgentToolCall",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "childMetadataOnly": true,
+                "childMetadataRoleMatches": true,
+                "childEvidenceSource": "live-public-child-events",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "removed": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": true,
+                "spawned": false,
+                "roleObserved": false,
+                "childMarkerReturned": false,
+                "completedChildMarker": false,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "rollback": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": false,
+                "spawned": true,
+                "roleObserved": true,
+                "childMarkerReturned": true,
+                "completedChildMarker": true,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "subAgentActivity",
+                  "collabAgentToolCall",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "childMetadataOnly": true,
+                "childMetadataRoleMatches": true,
+                "childEvidenceSource": "live-public-child-events",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              }
+            },
+            "fullLifecycleConfirmed": true,
+            "cleanupVerified": true,
+            "userSettingsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "project",
+        "resource": "agents",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "stages": {
+              "baseline": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": true,
+                "spawned": false,
+                "roleObserved": false,
+                "childMarkerReturned": false,
+                "completedChildMarker": false,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "applied": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": false,
+                "spawned": true,
+                "roleObserved": true,
+                "childMarkerReturned": true,
+                "completedChildMarker": true,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "subAgentActivity",
+                  "collabAgentToolCall",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "childMetadataOnly": true,
+                "childMetadataRoleMatches": true,
+                "childEvidenceSource": "live-public-child-events",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "updated": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": false,
+                "spawned": true,
+                "roleObserved": true,
+                "childMarkerReturned": true,
+                "completedChildMarker": true,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "agentMessage",
+                  "subAgentActivity",
+                  "collabAgentToolCall"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "childMetadataOnly": true,
+                "childMetadataRoleMatches": true,
+                "childEvidenceSource": "live-public-child-events",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "removed": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": true,
+                "spawned": false,
+                "roleObserved": false,
+                "childMarkerReturned": false,
+                "completedChildMarker": false,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              },
+              "rollback": {
+                "terminalSuccess": true,
+                "finalParsed": true,
+                "finalNonempty": true,
+                "parentCompleted": true,
+                "terminalStatus": "completed",
+                "errorCategory": [],
+                "finalMatches": true,
+                "reportedAbsent": false,
+                "spawned": true,
+                "roleObserved": true,
+                "childMarkerReturned": true,
+                "completedChildMarker": true,
+                "unexpectedTools": false,
+                "methods": [
+                  "thread/started",
+                  "item/started",
+                  "item/completed",
+                  "turn/completed"
+                ],
+                "itemTypes": [
+                  "userMessage",
+                  "subAgentActivity",
+                  "collabAgentToolCall",
+                  "agentMessage"
+                ],
+                "modelSelection": "native-advertised-default",
+                "nativeDefaultModel": "gpt-6.1-sol",
+                "childMetadataOnly": true,
+                "childMetadataRoleMatches": true,
+                "childEvidenceSource": "live-public-child-events",
+                "reason": "OK",
+                "binaryUnchanged": true,
+                "success": true,
+                "confirmed": true
+              }
+            },
+            "fullLifecycleConfirmed": true,
+            "cleanupVerified": true,
+            "userSettingsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "global",
+        "resource": "instructions",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "stages": {
+              "baseline": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": false
+              },
+              "applied": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": true
+              },
+              "updated": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": true
+              },
+              "removed": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": false
+              },
+              "rollback": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": true
+              }
+            },
+            "fullLifecycleConfirmed": true,
+            "cleanupVerified": true,
+            "userSettingsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "project",
+        "resource": "instructions",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "stages": {
+              "baseline": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": false
+              },
+              "applied": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": true
+              },
+              "updated": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": true
+              },
+              "removed": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": false
+              },
+              "rollback": {
+                "confirmed": true,
+                "instructionSourceLoaded": true,
+                "kitMarkerInLoadedFile": true
+              }
+            },
+            "fullLifecycleConfirmed": true,
+            "cleanupVerified": true,
+            "userSettingsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "global",
+        "resource": "mcp",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "stages": {
+              "baseline": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": false,
+                "toolsListed": false
+              },
+              "applied": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": true,
+                "toolsListed": true
+              },
+              "updated": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": true,
+                "toolsListed": true
+              },
+              "removed": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": false,
+                "toolsListed": false
+              },
+              "rollback": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": true,
+                "toolsListed": true
+              }
+            },
+            "fullLifecycleConfirmed": true,
+            "cleanupVerified": true,
+            "userSettingsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "project",
+        "resource": "mcp",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "stages": {
+              "baseline": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": false,
+                "toolsListed": false
+              },
+              "applied": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": true,
+                "toolsListed": true
+              },
+              "updated": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": true,
+                "toolsListed": true
+              },
+              "removed": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": false,
+                "toolsListed": false
+              },
+              "rollback": {
+                "confirmed": true,
+                "configurationObserved": true,
+                "serverPresent": true,
+                "toolsListed": true
+              }
+            },
+            "fullLifecycleConfirmed": true,
+            "cleanupVerified": true,
+            "userSettingsPreserved": true
+          }
+        ]
+      }
+    }
+  ]
+}

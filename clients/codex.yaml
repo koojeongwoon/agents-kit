@@ -12,6 +12,10 @@ capabilities:
     path: ~/.codex/AGENTS.md
     format: markdown
     strategy: merge
+    discovery:
+      reader: file-name
+      paths:
+        - ~/.codex/AGENTS.override.md
     status: stable
     evidence:
       state: verified
@@ -23,6 +27,10 @@ capabilities:
     path: AGENTS.md
     format: markdown
     strategy: merge
+    discovery:
+      reader: file-name
+      paths:
+        - AGENTS.override.md
     status: stable
     evidence:
       state: verified
@@ -34,8 +42,16 @@ capabilities:
     path: ~/.agents/skills/{assetId}
     format: directory
     strategy: copy
+    connectionStrategies:
+      schemaVersion: 1
+      strategies:
+        - snapshot-link
     discovery:
       reader: directory-entries
+      externalManagers:
+        - id: ego
+          displayName: Ego Lite
+          linkTarget: ~/.local/share/ego/ego-skills
     status: stable
     evidence:
       state: verified
@@ -47,6 +63,12 @@ capabilities:
     path: .agents/skills/{assetId}
     format: directory
     strategy: copy
+    discovery:
+      reader: directory-entries
+      externalManagers:
+        - id: ego
+          displayName: Ego Lite
+          linkTarget: ~/.local/share/ego/ego-skills
     status: stable
     evidence:
       state: verified
@@ -96,6 +118,9 @@ capabilities:
     path: .codex/config.toml
     format: toml-section
     strategy: merge
+    discovery:
+      reader: toml-table-prefix
+      selector: mcp_servers
     status: stable
     constraints:
       - trusted-project
@@ -109,6 +134,8 @@ capabilities:
     path: ~/.codex/agents/{assetId}.toml
     format: toml
     strategy: copy
+    discovery:
+      reader: agent-files
     status: stable
     evidence:
       state: verified
@@ -120,6 +147,8 @@ capabilities:
     path: .codex/agents/{assetId}.toml
     format: toml
     strategy: copy
+    discovery:
+      reader: agent-files
     status: stable
     constraints:
       - trusted-project
@@ -172,6 +201,74 @@ capabilities:
 defaultSurface: cli
 surfaces:
   - id: cli
+    nativeInventory:
+      schemaVersion: 2
+      environment: {CODEX_HOME: ~/.codex}
+      contextFiles:
+        - {scope: global, path: ~/.codex/config.toml}
+        - {scope: project, path: .codex/config.toml, ancestors: true}
+      readers:
+        - assetKind: skills
+          adapter: codex-skills-list-v1
+          evidence:
+            - binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+              version: 0.166.0-alpha.6
+              platform: darwin
+              arch: arm64
+              verifiedAt: '2026-11-06'
+              source: docs/reconstruction/codex-native-catalog-service-20261106.json
+            - binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+              version: 0.167.0-alpha.3.2
+              platform: darwin
+              arch: arm64
+              verifiedAt: '2026-11-06'
+              source: docs/reconstruction/current-codex-skill-discovery-20261106.json
+        - assetKind: mcpServers
+          adapter: codex-mcp-config-v1
+          evidence:
+            - binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+              version: 0.166.0-alpha.6
+              platform: darwin
+              arch: arm64
+              verifiedAt: '2026-11-06'
+              source: docs/reconstruction/codex-native-mcp-catalog-service-20261106.json
+            - binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+              version: 0.167.0-alpha.3.2
+              platform: darwin
+              arch: arm64
+              verifiedAt: '2026-11-06'
+              source: docs/reconstruction/current-codex-catalog-readers-20261106.json
+        - assetKind: instructions
+          adapter: codex-instruction-settings-v1
+          discovery:
+            schemaVersion: 1
+            globalFiles: [~/.codex/AGENTS.override.md, ~/.codex/AGENTS.md]
+            projectFiles: [AGENTS.override.md, AGENTS.md]
+            ancestorBoundary: .git
+          evidence:
+            - binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+              version: 0.166.0-alpha.6
+              platform: darwin
+              arch: arm64
+              verifiedAt: '2026-11-06'
+              source: docs/reconstruction/codex-instruction-settings-catalog-service-20261106.json
+            - binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+              version: 0.167.0-alpha.3.2
+              platform: darwin
+              arch: arm64
+              verifiedAt: '2026-11-06'
+              source: docs/reconstruction/current-codex-catalog-readers-20261106.json
+    inventoryRules:
+      schemaVersion: 1
+      rules:
+        - assetKind: skills
+          mode: coexist
+          evidence:
+            state: documented
+            source: https://learn.chatgpt.com/docs/build-skills
+            checkedAt: '2026-11-06'
+          limitations:
+            - Native names, disabled settings, parent roots and runtime loading still require observation.
     displayName: Codex CLI
     configStore: codex-local
     detection:
@@ -232,6 +329,147 @@ surfaces:
         verifiedAt: 2026-09-27
         source: docs/reconstruction/ca04-6-global-skills-original-path-evidence.json
         binarySha256: 1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590
+      - capabilityId: skills-global
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-05
+        source: docs/reconstruction/native-installation-live-codex-runtime-recheck-20261105.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+      - capabilityId: skills-global
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-global-codex-snapshot-skills-20261106.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        strategy: snapshot-link
+        resourceProfile: skill-snapshot-link-v1
+      - capabilityId: agents-global
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-05
+        source: docs/reconstruction/native-global-codex-agent-runtime-recheck-20261105.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        resourceProfile: agent-role-basic-v1
+      - capabilityId: instructions-global
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-05
+        source: docs/reconstruction/native-global-codex-instructions-runtime-20261105.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+      - capabilityId: mcp-global
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-05
+        source: docs/reconstruction/native-global-codex-mcp-runtime-20261105.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        resourceProfile: mcp-native-stdio-options-v1
+      - capabilityId: instructions-project
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-codex-basic-cli-20261106.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+      - capabilityId: skills-project
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-codex-basic-cli-20261106.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        strategy: copy
+      - capabilityId: mcp-project
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-codex-basic-cli-20261106.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: agents-project
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-project-codex-agent-cli-20261106.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        resourceProfile: agent-role-basic-v1
+      - capabilityId: mcp-global
+        version: 0.166.0-alpha.6
+        platform: darwin
+        arch: arm64
+        verifiedAt: 2026-11-06
+        source: docs/reconstruction/native-global-codex-basic-mcp-cli-20261106.json
+        binarySha256: 508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44
+        resourceProfile: mcp-stdio-basic-v1
+      # Current installed binary: existing basic CLI formats only.
+      - capabilityId: skills-global
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-core-roundtrip-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+        strategy: copy
+      - capabilityId: skills-project
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-core-roundtrip-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+        strategy: copy
+      - capabilityId: instructions-global
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-existing-resources-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+      - capabilityId: instructions-project
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-existing-resources-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+      - capabilityId: mcp-global
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-existing-resources-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: mcp-project
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-existing-resources-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+        resourceProfile: mcp-stdio-basic-v1
+      - capabilityId: agents-global
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-existing-resources-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+        resourceProfile: agent-role-basic-v1
+      - capabilityId: agents-project
+        version: 0.167.0-alpha.3.2
+        platform: darwin
+        arch: arm64
+        verifiedAt: '2026-11-06'
+        source: docs/reconstruction/current-codex-existing-resources-20261106.json
+        binarySha256: a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e
+        resourceProfile: agent-role-basic-v1
   - id: desktop
     displayName: Codex app (local)
     configStore: codex-local

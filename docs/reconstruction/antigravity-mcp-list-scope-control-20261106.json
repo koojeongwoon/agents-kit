@@ -1,0 +1,29 @@
+{
+  "observedAt": "2026-11-05T18:13:42.302Z",
+  "clientId": "antigravity",
+  "version": "1.5.1",
+  "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+  "platform": "darwin",
+  "arch": "arm64",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "userSettingsWritten": false,
+  "modelRequests": 0,
+  "observations": [
+    {
+      "cwdCase": "empty-cwd",
+      "code": 0,
+      "reason": "OK",
+      "globalControlListed": true,
+      "projectControlListed": false
+    },
+    {
+      "cwdCase": "project-cwd",
+      "code": 0,
+      "reason": "OK",
+      "globalControlListed": true,
+      "projectControlListed": false
+    }
+  ],
+  "controlsRestored": true
+}

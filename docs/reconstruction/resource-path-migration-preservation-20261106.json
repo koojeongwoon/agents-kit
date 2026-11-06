@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR08-resource-path-migration",
+  "observedAt": "2026-11-05T19:19:24.948Z",
+  "implemented": [
+    "committed-locator-evidence",
+    "explicit-multi-resource-relocation",
+    "partial-shared-consumer-and-selector-migration",
+    "physical-reader-coordination",
+    "old-and-new-location-rollback",
+    "SIGKILL-apply-and-rollback-recovery",
+    "CLI-HTTP-GUI-review-save-resume"
+  ],
+  "nativeModelRequests": 0,
+  "newNativeUseProbes": 0,
+  "productionClientPathsChanged": false,
+  "configurationEffect": "disposable-targets-only",
+  "validation": {
+    "rootPassed": 489,
+    "httpPassed": 33,
+    "guiPassed": 57,
+    "skipped": 0,
+    "typecheck": "passed",
+    "desktopBuild": "passed",
+    "diffCheck": "passed",
+    "logHashes": {
+      "root": "31a194413dfe96cb7ffda36ef28051c94e7b3905f178c758f3ab5e726d020c08",
+      "http": "bfce56b8cbbfde7a1c9407bc00b3f8019c915df870cfdb422ed377303153a7cf",
+      "gui": "df13955d117cf8ada97615b9d3c057aaeb6fc8f61421f59a91e14cdfe43b5dfc",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "02c8b9b0b04334274de1b2ba4268ffd33f839bc44604e3923620dec1f02581d9",
+      "unowned": "d5496f8f48afec9c91f104ef8c601e9ec0fecf950dde7965613a4b0b44bf243e",
+      "rollback": "52bb99d1f96c07707549f9d520e6c953448a707c3ec023283513d0c2be980214"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/deployment-locator.js": "5e2f24ea0c0edb786d8692f72f773b8719fd5ccec8d1e523b998b5968fe08bd2",
+    "lib/application/deployment-locator-evidence.js": "480af3efb1d630193c30d0de91d1eada2efb50b58c448a226ef918516f46c974",
+    "lib/application/prepare-resource-path-migration.js": "e3f0e29607a425da28296aa40c2a5ceb007583dbfbb89f306ddb3d3192df121c",
+    "lib/application/apply-resource-path-migration.js": "d72aab18d8e75e49f0a0e222bdb4075eb6a692ef0e59b5bfd6d5ee3909bd4071",
+    "lib/adapters/agents/legacy-registration.js": "ba6ee4ba667fe6e0234c296a471008caaadf99e0c9d2a7b7882c16fa02c83345",
+    "lib/application/deployment-path-drift.js": "3d553e763d9e2c5ce6c0d0d74b21f9b7879f13d0ef6d124749157def0029d966",
+    "lib/application/shared-resource-deployment.js": "a6c21da14bf2f4e8b60d045af8a2beeb31b0242d68d6caed6f28d017adf25db4",
+    "lib/application/manifest-deployment-service.js": "0f23a95c37bac0590226458565b1bf7827af74272810ede912ac6e8674337636",
+    "lib/application/apply-deployment.js": "d217ccb4f33610825d083b2f55eac39e77ca383019a17a00c21f9a612b96f60f",
+    "lib/application/apply-shared-snapshot-deployment.js": "ff67c3164ec0d64337d12afa021642a45c61b8e3cb1c377681962b75fb3d600f",
+    "lib/infrastructure/deployment-state-store.js": "a3f2603cbb8e4ffa037fd87920822c9d22e10a941b35834902f2fcc38379b3ed",
+    "lib/infrastructure/saved-deployment-plan-store.js": "bccc9fdb865c083f22520a66281f7fff53a58e7d87276cad8f09766043cb31e5",
+    "bin/cli.js": "d28ef990876aa3767eaa30dd20d2e7e511dacac4d4b400dff088a86abce6021c",
+    "gui/src/api/deploy.ts": "99d1b40773d47f7aee590cf2b621bdc63394d0193dac945e5deafa9b3cca6540",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "4834b9d75da44145bccea6bc7ddbf3b4997bbbee03da97e987d7b3e7d2dd32af",
+    "test/deployment-locators.test.js": "a90d79d8c6f03ccf6e8895d87328547a7b04260c8f6963a184e8d8bdf1552397",
+    "test/resource-path-migration.test.js": "ca3a1161b65705e0466d39f6ad08b4a7d0c4b517882210cc8a425f56371013bb",
+    "test/resource-path-cli.test.js": "193e6ffea870920b8d2f0e37d992a579d46fa9bfe20c648e0e380f036ca8241e",
+    "test/helpers/resource-path-fixture.js": "7709892f3649624130997112286b39a6801962b6b631acde8e0e48687686c628"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "nativeSupport": {
+    "eligible": 14,
+    "blocked": 2,
+    "definitionsUnchanged": true,
+    "source": "docs/reconstruction/basic-cli-matrix-current-20261106.json"
+  },
+  "remaining": "PR07 Antigravity Agent direct child completion; PR09 catalog; PR10 cross-scope dependencies; PR11 additional discovery/HTTP/auth/surfaces"
+}

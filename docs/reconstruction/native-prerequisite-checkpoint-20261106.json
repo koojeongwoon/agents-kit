@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10 Codex CLI native prerequisites and private coordinator proof",
+  "checkedAt": "2026-11-05T23:20:20.769Z",
+  "status": "partial",
+  "tests": {
+    "root": {
+      "passed": 621,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-native-prerequisite-root-final.log"
+    },
+    "focused": {
+      "passed": 19,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-native-prerequisite-focused-final.log"
+    },
+    "httpGuiDesktopCargo": {
+      "rerun": false,
+      "reason": "No frontend/routes/desktop/Rust changes in this stage; previous evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/native-prerequisite-definition.js": "a74eab05033c46add9b11ad5f915c693ea93af3af9feb3ce6b45cafb530ec8b4",
+    "lib/domain/dependency-reverse-index.js": "9c0c6e5049fc399b8ab7271332c7aded0e2300b2b16285d5c5df710abb960b4a",
+    "lib/adapters/native-prerequisite-inventory.js": "6b0dce792bdbfb0b85528a2ad022ec43880f1b9896c52e8c9c4f47b4c214e1d9",
+    "lib/infrastructure/native-prerequisite-definition-loader.js": "2b4f72190e7d6f2774af60127565baaf9ee21981b1950c9f581015c454e800ae",
+    "lib/infrastructure/native-prerequisite-context.js": "b16d97f5c178c42f8f4f49a4a77c301d8ca972807fb5e1a75695bd4adf9bdcf7",
+    "lib/infrastructure/native-inventory-observer.js": "ddbbe179935aaa04d47cb46cc13b09f71fee2c6881f35378b2cb8c56b30234cd",
+    "lib/application/native-prerequisite-service.js": "c9ac37564423a787313c5867fd0f90f520a10a70f4f45cd2fe2a644757c89e39",
+    "lib/application/dependency-coordination-service.js": "ba273e319462980a2d94966e2ab8fd2194d620716fa327d176459adde1e61dce",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "scripts/client-verification/native-prerequisite-fixture.mjs": "28b2b0c024438f39f5a2c06b1e3055f14c806aef90a6bd35c646eda9d4f180a6",
+    "test/native-prerequisite-service.test.js": "55f7d87bceac8be9e3e4fac8e1d997c7495c4fd1bef5fc47e2705243c1389b02",
+    "test/native-prerequisite-inventory.test.js": "5ab4cd70225e026b0d661512d784c000a602f6df86513d3f2cd31c14f71c84d3",
+    "test/native-prerequisite-observer.test.js": "2a34ae66964e0810549472cfa5f106c73f6a7d60d837e918fb089b0f577b38e5",
+    "docs/contracts/native-prerequisite-observation-v1.md": "5b2be79d86c4d4c2b7dabc2cafc0c4c9a273edd8624f138836cc2e94de8e4317",
+    "docs/contracts/dependency-coordination-v1.md": "109f97e2fae31e27417e800f8077b06490670cd1fc4ad7db7d36a3b9f69df592",
+    "docs/contracts/scoped-dependencies-v1.md": "9b82bf8d75b4550a0c4c92cbd709f19ad1674d5c62bf52952a77de19e96c371a",
+    "docs/product/shared-resources-consolidation-plan.md": "3a6aa5a46883fc6a2a1826aaefc6b7e18af932186ec1fec3add68d7a3b3b4a4a",
+    "docs/reconstruction/phase-scoped-dependencies.md": "a54a08828cc5369f885e87f0c04b4eb3e0e0c62a9d2f60ac028dcfb2229bc35a",
+    "docs/traceability/shared-conversation-requirements.md": "22dca27420a1dbe7299e293b1368ef8d49a4cc06b69dbb55cd17b8509d75719b",
+    "package.json": "49cc566ffc9867684dd43d54d252dc8045dc8e572c5563e4b1e4c706178d3dcd"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-native-proof-transport-red.log",
+      "sha256": "582c9e2e3839e57ea2db0f72f084f9c84ce4696a20d5622fb2a816e2e03ea13c",
+      "summary": [
+        "# tests 3",
+        "# pass 0",
+        "# fail 3"
+      ]
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-proof-adapter-red.log",
+      "sha256": "bb824a4f7065981578a9095ecd6d41ea0a748ff65ab39109f1c096d97b069d69",
+      "summary": [
+        "# tests 6",
+        "# pass 4",
+        "# fail 2"
+      ]
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-proof-service-red.log",
+      "sha256": "7bd5909e4b5ddcb24f0d74c3f3c2e511e90358ed6b1b26e2a7303c380f5bc818",
+      "summary": [
+        "# tests 1",
+        "# pass 0",
+        "# fail 1"
+      ]
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-proof-origins-red.log",
+      "sha256": "023e65fbf1745aeec1f8df5cb310e3cbee63ef85225b52b626f38d908042c31e",
+      "summary": [
+        "# tests 7",
+        "# pass 6",
+        "# fail 1"
+      ]
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-prerequisite-focused-final.log",
+      "sha256": "e793ca231be64d6fcb383db58fd33d3dc861874ef680c100df700f655cc15256",
+      "summary": [
+        "# tests 19",
+        "# pass 19",
+        "# fail 0"
+      ]
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-prerequisite-root-final.log",
+      "sha256": "0533b6cd7b0092d7898f4a215613f36850b05f2356d708627fafcde349bc2f4c",
+      "summary": [
+        "# tests 621",
+        "# pass 621",
+        "# fail 0"
+      ]
+    }
+  ],
+  "native": {
+    "serviceRoundtrip": {
+      "artifact": "docs/reconstruction/codex-native-prerequisite-service-roundtrip-20261106.json",
+      "sha256": "cb5218fe538857c90ca3bc3bc3918562924e8d5bc069767842e402d78b75f5fd"
+    },
+    "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+    "isolatedHome": true,
+    "modelRequests": 0,
+    "toolCalls": 0,
+    "selectedProviderOnly": true,
+    "publicV3DeploymentEnabled": false,
+    "consumerActivationProven": false,
+    "fulfilled": false
+  },
+  "realEnvironment": {
+    "compatibility": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-05T23:17:37.280Z",
+      "mode": "read-only-compatibility",
+      "state": {
+        "schemaVersion": 6,
+        "transactions": 145,
+        "managedFiles": 3,
+        "owners": 4,
+        "unchanged": true,
+        "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+        "pendingOperations": 0,
+        "managedContentMatches": true
+      },
+      "observations": [
+        {
+          "assetId": "tools",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "node-repl",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "codex-instructions",
+          "assetKind": "instructions",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "canva",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        }
+      ],
+      "clientFileOperations": 0,
+      "nativeCalls": 0,
+      "modelCalls": 0,
+      "toolCalls": 0
+    },
+    "preservation": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "userIndexActivated": false,
+    "newUserConfigWrites": 0,
+    "newUserStateWrites": 0,
+    "runtimeEvidenceRecords": 25,
+    "nativeDeploymentSupportExpanded": false
+  },
+  "remaining": [
+    "Manifest v3 local/global deployment compiler and installed declarations/adapters",
+    "Reviewed context transition or re-observation for planned project configuration changes",
+    "Selective impact guards for all global mutations and source deletion/detach",
+    "Saved plans, public recovery dispatch and validate/doctor integration",
+    "Necessary real client cross-scope consumer apply/restore",
+    "Additional native client/surface contexts",
+    "PR07 Antigravity Agent child-completion evidence, PR09 remaining native loading contexts, PR11 strategies/profiles"
+  ]
+}

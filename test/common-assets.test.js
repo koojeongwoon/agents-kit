@@ -6,6 +6,7 @@ import test from 'node:test';
 import {parse, stringify} from 'yaml';
 import {createAgentKitManifest, validateManifestAssetContracts} from '../lib/domain/manifest.js';
 import {renderAgentDefinition} from '../lib/adapters/agents/index.js';
+import {bindAgentMcpTools} from '../lib/domain/agent-tool-bindings.js';
 import {createManifestDeploymentService} from '../lib/application/manifest-deployment-service.js';
 import {writeProfileFixture} from './helpers/client-profile-fixture.js';
 
@@ -58,14 +59,14 @@ function render(raw, clientId = 'codex') {
   return renderAgentDefinition({manifest, asset: manifest.assets.agents[0], clientId});
 }
 
-test('logical Agent tool IDs resolve to native server allowlists, never logical strings or global allowlists', () => {
+test('logical Agent tool IDs resolve in the registry without promising native Agent enforcement', () => {
   const raw = rawManifest(); withTools(raw);
   const before = structuredClone(raw);
-  const output = render(raw).content;
-  assert.match(output, /sandbox_mode = "read-only"/);
-  assert.match(output, /\[mcp_servers.docs\]\nurl = "https:\/\/docs.example.test\/mcp"\nenabled_tools = \["search_docs"\]/);
-  assert.equal(output.includes('docs.search'), false);
+  const manifest = createAgentKitManifest(raw);
+  const bindings = bindAgentMcpTools(manifest.assets.agents[0], manifest);
+  assert.deepEqual(bindings.map(item => [item.provider.id, item.nativeNames]), [['docs', ['search_docs']]]);
   assert.deepEqual(raw, before);
+  assert.throws(() => render(raw), {code: 'AGENT_NATIVE_DEFAULTS_UNSUPPORTED'});
   assert.throws(() => render(raw, 'antigravity'), {code: 'AGENT_NATIVE_DEFAULTS_UNSUPPORTED'});
 });
 
@@ -78,34 +79,42 @@ test('Agent mapping rejects missing, ambiguous, optional, unsafe native names an
     raw => { raw.assets.agents[0].requires.tools[0].optional = true; },
     raw => { raw.assets.agents[0].requires.tools[0].providerId = 'missing'; },
     raw => { delete raw.assets.mcpServers[0].definition; raw.assets.mcpServers[0].source = 'native.toml'; },
-    raw => { raw.assets.agents[0].policy = {deny: {capabilities: ['write']}}; },
     raw => { raw.assets.agents[0].definition.sandboxDefault = 'full-access'; }
   ]) {
     const raw = rawManifest(); withTools(raw); mutate(raw);
-    assert.throws(() => render(raw));
+    assert.throws(() => {
+      const manifest = createAgentKitManifest(raw);
+      validateManifestAssetContracts(manifest, {requireMaterialization: true});
+      bindAgentMcpTools(manifest.assets.agents[0], manifest);
+    });
   }
+  const raw = rawManifest(); withTools(raw);
+  raw.assets.agents[0].policy = {deny: {capabilities: ['write']}};
+  assert.throws(() => render(raw), {code: 'AGENT_POLICY_MAPPING_UNSUPPORTED'});
 });
 
-test('Agent mapping preserves environment references and deterministic multi-provider output', () => {
+test('Agent registry binding orders multiple providers and preserves environment references', () => {
   const raw = rawManifest(); withTools(raw);
   raw.defaults.mcpBindings.executables = {local: {command: 'docs-server'}};
   raw.assets.mcpServers.push({id: 'local', scope: 'project', provides: {tools: [{id: 'local.read', nativeName: 'read'}]},
     definition: {schemaVersion: 1, transport: 'stdio', executableId: 'local', environment: [{source: 'environment', name: 'DOCS_TOKEN'}]}});
   raw.assets.agents[0].requires.tools.unshift('local.read');
-  const content = render(raw).content;
-  assert.ok(content.indexOf('[mcp_servers.docs]') < content.indexOf('[mcp_servers.local]'));
-  assert.match(content, /env_vars = \["DOCS_TOKEN"\]/);
-  assert.match(content, /enabled_tools = \["read"\]/);
+  const manifest = createAgentKitManifest(raw);
+  const bindings = bindAgentMcpTools(manifest.assets.agents[0], manifest);
+  assert.deepEqual(bindings.map(item => item.provider.id), ['docs', 'local']);
+  assert.deepEqual(bindings[1].nativeNames, ['read']);
+  assert.equal(bindings[1].provider.definition.environment[0].name, 'DOCS_TOKEN');
 });
 
-test('Agent provider lists include tools required by transitive Skills without activating those Skills', () => {
+test('Agent registry bindings include transitive Skill tool dependencies', () => {
   const raw = rawManifest(); withTools(raw);
   raw.assets.mcpServers[0].provides.tools.push({id: 'docs.read', nativeName: 'read_doc'});
   raw.assets.skills[0].requires.tools.push('docs.read');
-  assert.match(render(raw).content, /enabled_tools = \["read_doc", "search_docs"\]/);
-  assert.equal(render(raw).content.includes('skills.config'), false);
+  let manifest = createAgentKitManifest(raw);
+  assert.deepEqual(bindAgentMcpTools(manifest.assets.agents[0], manifest)[0].nativeNames, ['read_doc', 'search_docs']);
   delete raw.assets.agents[0].requires;
-  assert.match(render(raw).content, /enabled_tools = \["read_doc", "search_docs"\]/);
+  manifest = createAgentKitManifest(raw);
+  assert.deepEqual(bindAgentMcpTools(manifest.assets.agents[0], manifest)[0].nativeNames, ['read_doc', 'search_docs']);
 });
 
 test('same four-resource manifest applies to each client, preserves user rules, repeats and rolls back', t => {
@@ -179,20 +188,14 @@ test('validated common sources refuse to adopt identical unmanaged Skill files a
   }
 });
 
-test('Agent defaults flow through shared service and remain runtime-gated on production profiles', t => {
+test('Agent defaults remain blocked even when a synthetic profile would allow rendering', t => {
   for (const verified of [true, false]) {
     const f = fixture(t, 'codex', verified); withTools(f.raw); f.write();
     const plan = f.service.plan(f.input);
-    assert.equal(plan.automatic, verified);
-    assert.match(plan.previews.find(item => item.assetId === 'reviewer').desired, /enabled_tools/);
-    assert.deepEqual(plan.previews.find(item => item.assetId === 'reviewer').notices,
-      ['AGENT_SANDBOX_DEFAULT_OVERRIDABLE', 'AGENT_MCP_PROVIDER_SCOPE_ONLY']);
-    if (verified) {
-      const agentOp = plan.operations.find(item => item.assetId === 'reviewer');
-      const result = f.service.apply({planId: plan.planId});
-      assert.match(fs.readFileSync(agentOp.target, 'utf8'), /search_docs/);
-      f.service.rollback({planId: f.service.planRollback({...f.input, transactionId: result.transactionId}).planId});
-    } else assert.throws(() => f.service.apply({planId: plan.planId}), {code: 'DEPLOYMENT_PLAN_BLOCKED'});
+    assert.equal(plan.automatic, false);
+    assert.equal(plan.previews.some(item => item.assetId === 'reviewer'), false);
+    assert.equal(plan.blocked.find(item => item.assetId === 'reviewer').reason, 'AGENT_NATIVE_DEFAULTS_UNSUPPORTED');
+    assert.throws(() => f.service.apply({planId: plan.planId}), {code: 'DEPLOYMENT_PLAN_BLOCKED'});
   }
   const f = fixture(t, 'antigravity'); withTools(f.raw); f.write();
   const plan = f.service.plan(f.input);

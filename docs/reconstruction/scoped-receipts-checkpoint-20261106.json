@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10 scoped receipt v4 and existing owned-file metadata registration/recovery",
+  "checkedAt": "2026-11-06T00:17:10.283Z",
+  "status": "partial",
+  "tests": {
+    "root": {
+      "passed": 657,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-receipts-root-verified.log"
+    },
+    "scopedReceipt": {
+      "passed": 15,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-receipts-recovery-final.log"
+    },
+    "http": {
+      "passed": 44,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-receipts-http.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-receipts-build.log"
+    },
+    "guiTypecheckCargo": {
+      "rerun": false,
+      "reason": "No frontend, TypeScript, Rust or Cargo source changes; previous checks remain historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/scoped-installation-declaration.js": "67c9cc428fba83f8f252eb9f5bc045a7e6b435ab78e96291780447b32a96a6e6",
+    "lib/domain/scoped-installed-dependencies.js": "acf2d539d6b1991df31be8708128c7d0b7764526035f9c334d368386925b95ea",
+    "lib/domain/installation-receipt.js": "0cb5f3ae921f65b084931f70ea53791edcbfec2274582a791a3db67c32f565c4",
+    "lib/domain/installed-dependency-revisions.js": "6336449eb4e103088281bdbb0a7b1ecefae75554aed11b259d9fb9e836ce4d41",
+    "lib/domain/dependency-reverse-index.js": "5076b8c37644afe9ff86bef46379b8b4e123e4f5f8bc5acfd84327910f18d557",
+    "lib/application/installation-receipt-service.js": "455d5d11992ea4f31782b890135c314a6592c1ce484ec875b8e496f150bd9be1",
+    "lib/application/scoped-deployment-compiler.js": "150db64ae5ae98db5775d7da0a2f618b440028e3d96d2b73d5dff9d318a0b9d5",
+    "lib/application/scoped-deployment-prerequisites.js": "5178116c73ec1f23c23bebb68a5c230678d0e1b8fc8bae6c0eb30ccfd4d4371b",
+    "lib/application/resource-catalog-service.js": "6d3363b3bebc1e4ccc8c07170ce65d60d5663b1a3b619dc8e19470191e480c24",
+    "lib/application/dependency-coordination-service.js": "ad04c5455dd853634168808690945d6e75b1a7f69a2c22ceee3ebc35c5175324",
+    "lib/application/native-prerequisite-service.js": "6650286f0f1f18be6e39c43491310516893cfa281a125892db26e5a858635c40",
+    "lib/adapters/native-prerequisite-inventory.js": "ceb2826fa968cd06c52d4cd4848803aa39f582a8d6b3f0be2be0507b07a7aa52",
+    "lib/application/apply-deployment.js": "1e3e6820247a1570ea48b597823c4c989d65fea170d8d7755b67855b417d25fe",
+    "lib/application/apply-shared-snapshot-deployment.js": "35090bcd21b6371971d0adc1dd8d8337f7f84fc74f44f624f3d38ae054554c63",
+    "lib/application/apply-resource-path-migration.js": "d7662429777905af0d9693961799b9fbe4fbfb2516c75767037339c8cf75b8d7",
+    "scripts/client-verification/native-prerequisite-fixture.mjs": "0cef8a48d2588ab2d7875dcbf3996c265798f592fa8ab40794c6f5902a3f9703",
+    "test/scoped-installation-receipts.test.js": "89c2b06ca364af73a267536c9f0368ca6923f6576e01977f0c80c19f1f4683aa",
+    "test/native-prerequisite-service.test.js": "8a6c1b3e0b3f0c420f158afe300e92d6d169bc99b7736f0117cd9b661c89d8b5",
+    "package.json": "f3dd39fb6c620d01b9b8c35a7b7ebdddb75d42fa4f5cbc65f73d5d0c01c39aa7",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/antigravity.yaml": "0a455e37040d1769f8b5ef277ad0b55494021a4b9e586bd6432d1b5f633ffc5a",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "docs/contracts/scoped-installation-receipts-v4.md": "119bd0f6cef7590b06aa752f10a111eb8b3b42cf338643f1815b856ba85a39e2",
+    "docs/contracts/installation-receipts-v1.md": "5f6e079e2632d7d70bad7a9a20ba410c23e44cfb85adb1df5b463a44e4bb0f35",
+    "docs/contracts/scoped-deployment-compilation-v1.md": "1b397d8c815a9d15c4932359c92fb31dff3625769d45b61b66cd38d0fe1004ad",
+    "docs/contracts/native-prerequisite-observation-v1.md": "8cb3b21de8f1cc6eb4d1d0c6c263ae4a18a2a42df4f48838721911213f4929f1",
+    "docs/contracts/dependency-coordination-v1.md": "d2eda943f9b59c4bc908b224ffa45bfa8ba2a9f650dd1cef417fb47bc35e62ff",
+    "docs/contracts/scoped-dependencies-v1.md": "15e10e648a93862eabcc30c81216fcf28e47d74e7916cb2a11bbd989dafb8e38",
+    "docs/product/shared-resources-consolidation-plan.md": "2cc50956d50059e686ee823ab8427b174403915d0362a8524cdbc784c495d933",
+    "docs/reconstruction/phase-scoped-dependencies.md": "6353a8a86c93e707a279f476058127a9c18979dfd65ece9de22c4eb081ff4ddd",
+    "docs/traceability/shared-conversation-requirements.md": "99dac6a8cd56fb4b77b1e1beb17e02bf4e8a9fc14d7f40f846665baf430e3966"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-domain-red.log",
+      "sha256": "ecdb8c65ebc98d6d6e7d787212211103701ee6e0430dcbbec7d6abfa9603c7de"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-types-red.log",
+      "sha256": "e1b145b2574635cdc9361bcfc8a658bbb4853e2aa9af64ded315fdbaca410b08"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-application-red.log",
+      "sha256": "56236ee7e6e8e4aca97b5416e75b5ed5697922cce359bab373db5c08e8864894"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-coordination-red.log",
+      "sha256": "7cc01c665e39dd15b1f35c2635ce0a025ca27de1cf7d189c59e8a8d5c7735e47"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-native-v4-red.log",
+      "sha256": "d6018b6b5d76b4d1f9407d014c1b37e543334ae2926a3f728be92b1a58a866c5"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-alias-red.log",
+      "sha256": "f7093ada9a13b6b80aa60d7e72d3f0dde38f7dfd0e5400af52689da69b64b43d"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-descriptor-alias-red.log",
+      "sha256": "df01354756bedb46322e64a389c6d009e2f1dcd0a49a6df9659ac36e06eb7320"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-root-verified.log",
+      "sha256": "ce7f9e13169773851cf0801f9a33b8c574666f5172c231ae8d4f6780e2d675f9"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-http.log",
+      "sha256": "b35c4083db7c98d43e59ba74c4118c90b01788af0fe97b54e0e8de5a8361ea5b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-build.log",
+      "sha256": "4735ddf9e253c3467c75b1c4fc3ddddc623b2263fd9ce4c7f95c0dd140677f0c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-receipts-recovery-final.log",
+      "sha256": "f0befa0d4ea1f4e30aa79fec69219ff3e98b59e3813eb6b56f47824e67ab4170"
+    }
+  ],
+  "native": {
+    "artifact": "docs/reconstruction/codex-scoped-receipt-native-roundtrip-20261106.json",
+    "sha256": "655ed131ed2e4f1349ef67fadf513d6491d5bec763ba1d099da1d6bde6d319fb",
+    "isolatedHome": true,
+    "receiptSchemaVersion": 4,
+    "metadataOnly": true,
+    "modelRequests": 0,
+    "threadRequests": 0,
+    "toolCalls": 0,
+    "allClientBytesAndModesPreserved": true,
+    "scopedConsumerNativeDeploymentProven": false
+  },
+  "boundaries": {
+    "scopedDeclarationsAndSnapshotsImplemented": true,
+    "existingOwnedMetadataRegistrationAndRecovery": true,
+    "publicPlanReadOnly": true,
+    "publicExecutionEnabled": false,
+    "savedExecutionEnabled": false,
+    "allConsumerRevisionPredictionImplemented": false,
+    "allGlobalMutationGuardsImplemented": false,
+    "automaticReceiptMigration": false
+  },
+  "realEnvironment": {
+    "compatibility": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-06T00:09:32.463Z",
+      "mode": "read-only-compatibility",
+      "state": {
+        "schemaVersion": 6,
+        "transactions": 145,
+        "managedFiles": 3,
+        "owners": 4,
+        "unchanged": true,
+        "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+        "pendingOperations": 0,
+        "managedContentMatches": true
+      },
+      "observations": [
+        {
+          "assetId": "tools",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "node-repl",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "codex-instructions",
+          "assetKind": "instructions",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        },
+        {
+          "assetId": "canva",
+          "assetKind": "mcpServers",
+          "schemaVersion": 2,
+          "status": "ownership-observed",
+          "dependencyState": "unverified",
+          "bindingDeclarationsState": "unverified",
+          "dependencyIssues": [
+            {
+              "code": "INSTALLED_DEPENDENCY_SNAPSHOT_UNAVAILABLE"
+            }
+          ],
+          "discoveryState": "unverified",
+          "fulfilled": false
+        }
+      ],
+      "clientFileOperations": 0,
+      "nativeCalls": 0,
+      "modelCalls": 0,
+      "toolCalls": 0
+    },
+    "preservation": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "newUserConfigWrites": 0,
+    "newUserStateWrites": 0,
+    "userIndexActivated": false,
+    "runtimeEvidenceRecords": 25,
+    "nativeDeploymentSupportExpanded": false
+  },
+  "remaining": [
+    "Predict complete file/tree after images, ownership state and revisions for new/changed scoped consumers",
+    "Public coordinator registration/release dispatch",
+    "Safe native context transition or re-observation for planned project configuration changes",
+    "Selective global apply/remove/rollback/path-migration and source deletion/detach impact guards",
+    "Saved plans, public recovery dispatch, validate/doctor integration",
+    "Necessary actual cross-scope consumer apply/restore",
+    "Additional client/surface and target-batch verification",
+    "PR07 Antigravity Agent child completion, PR09 remaining native loading contexts, PR11 strategies/profiles"
+  ]
+}

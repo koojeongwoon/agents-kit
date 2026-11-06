@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:17:41.143Z",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "modelTurnsRequested": false,
+  "requests": [
+    "initialize",
+    "config/read",
+    "thread/start"
+  ],
+  "scope": "isolated-control-only",
+  "mcpDisabled": true,
+  "responseKeys": [
+    "thread",
+    "model",
+    "modelProvider",
+    "serviceTier",
+    "disabledPluginIds",
+    "cwd",
+    "runtimeWorkspaceRoots",
+    "instructionSources",
+    "approvalPolicy",
+    "approvalsReviewer",
+    "sandbox",
+    "activePermissionProfile",
+    "reasoningEffort",
+    "multiAgentMode"
+  ],
+  "instructionSourcesPresent": true,
+  "sources": [
+    "<fixture>/home/.codex/AGENTS.md",
+    "<fixture>/repo/AGENTS.md",
+    "<fixture>/repo/child/AGENTS.override.md"
+  ],
+  "threadTurns": 0,
+  "mcpStarted": false
+}

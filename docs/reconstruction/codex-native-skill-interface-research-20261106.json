@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T04:59:00.238Z",
+  "phase": "native Skill interface discovery research",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "isolatedHome": true,
+  "nativeCalls": 6,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "providerDiscoveryRequests": 0,
+  "results": [
+    {
+      "scope": "global",
+      "strategy": "copy",
+      "capabilityId": "skills-global",
+      "allInterfaceFieldsObserved": true,
+      "localIconsObserved": true,
+      "removalObserved": true,
+      "settingsBytesAndModePreserved": true
+    },
+    {
+      "scope": "project",
+      "strategy": "copy",
+      "capabilityId": "skills-project",
+      "allInterfaceFieldsObserved": true,
+      "localIconsObserved": true,
+      "removalObserved": true,
+      "settingsBytesAndModePreserved": true
+    },
+    {
+      "scope": "global",
+      "strategy": "snapshot-link",
+      "capabilityId": "skills-global",
+      "allInterfaceFieldsObserved": true,
+      "localIconsObserved": true,
+      "removalObserved": true,
+      "settingsBytesAndModePreserved": true
+    }
+  ]
+}

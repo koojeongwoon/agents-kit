@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T13:02:29.446Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "mcp",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": true
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response",
+            "finish"
+          ],
+          "terminalStatus": "SUCCESS",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": true
+        }
+      },
+      "fullLifecycleConfirmed": false
+    }
+  ],
+  "proof": "native-model-read-only-fixture-tool",
+  "transactions": [
+    {
+      "intent": "verification-fixture-control",
+      "reason": "SEED_FRESH_SELECTED_FIXTURE_SERVER",
+      "beforeHash": "3d76dd74a4afc1af07b40be1985a3bd07b99ddf3236b4b85083a771698eedb61",
+      "afterHash": "01ea9d1b906e00dc8da40dbf333c1c815406125bce8eb841c68bfd08d0630ae2",
+      "target": "/Users/jw/.gemini/config/mcp_config.json",
+      "transactionId": "tx-2026-11-05T13-02-45-446Z-4bb1c4c1"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T13-02-45-446Z-4bb1c4c1",
+      "transactionId": "tx-2026-11-05T13-02-45-551Z-a174e0fb"
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "blocker": "ERR_ASSERTION",
+  "cleanup": {
+    "exactOriginalConfigAndModeRestored": true,
+    "fixtureOwnershipAbsent": true,
+    "fixtureRegistrationDetached": true,
+    "existingOwnersPreserved": true,
+    "historyRetained": true
+  }
+}

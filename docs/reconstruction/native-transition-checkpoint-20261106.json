@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T02:06:46.868577+00:00",
+  "phase": "PR10 planned project native context transition and async coordinated execution",
+  "status": "partial",
+  "publicV3ApplyEnabled": false,
+  "publicGlobalMutationDispatchEnabled": true,
+  "internalAsyncNativeTransitionEnabled": true,
+  "supportedTransition": {
+    "clientId": "codex",
+    "surface": "cli",
+    "projectChangesOnly": true,
+    "globalPrerequisites": [
+      "skills",
+      "mcpServers"
+    ],
+    "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+    "consumerActivationState": "unverified",
+    "fulfilled": false
+  },
+  "tests": {
+    "root": {
+      "total": 733,
+      "passed": 733,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-native-transition-root-verified.log"
+    },
+    "http": {
+      "total": 48,
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-native-transition-http-verified.log"
+    },
+    "focused": {
+      "total": 59,
+      "passed": 59,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-native-transition-restoration-focused2.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-native-transition-build-verified.log"
+    },
+    "guiTypecheckCargo": {
+      "rerun": false,
+      "reason": "No frontend, TypeScript or Rust source changes; prior GUI 77/typecheck/Cargo remain historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/application/native-prerequisite-service.js": "92ec568924531cf3e37a7d30cced4a9248c39622e9bdd6af71f7b63d4532baad",
+    "lib/application/native-prerequisite-transition.js": "bafc866e579c1a5b5da8a99c02e9f1e4b371447676d46884e9c4c674720cf23f",
+    "lib/application/dependency-coordination-service.js": "1a89042e8a555df8eb982333d168a92590871eaf16e94e7a11fc52e67e4683cd",
+    "lib/application/scoped-deployment-compiler.js": "a14517a38f11abe66679429e81ae500a9920ae606933bd8156d27c91983b2fd5",
+    "lib/application/apply-deployment.js": "60a6e01ee1a3be00b6f34a6bc955b8296eece204641c421815edafc65723818d",
+    "lib/application/apply-shared-snapshot-deployment.js": "c2764291d032243c261686eded014995ba5fb725e2def6395c37b644dc30103d",
+    "lib/application/prepare-resource-removal.js": "ae400619dd85e589016159ac15d4fc6b087a565e34354d2d3c77dffcce315676",
+    "lib/application/manifest-deployment-service.js": "912a1a88b4b0273990589072b668ca4bd2fe4bdd4312be3bf4a2f12304e2b755",
+    "lib/adapters/native-prerequisite-inventory.js": "087a72a8def0510fdf2f7f727ff824c7ea7c5bb5b60099ce1efcb4b9737d6ccd",
+    "lib/infrastructure/transaction-workflow.js": "83cbd9a1f20b765835fdf21cc8550e9240504265e6c6b6cfcd5f95c72d408258",
+    "lib/infrastructure/dependency-store-session.js": "153c96dbb3c7317f9933e94cb0048bceb8ef95da3b88e93ceb11bf4d9051c24c",
+    "lib/infrastructure/deployment-state-store.js": "38d089bb6f83b56861998f70e5c8c575ef71f28cdc0c8037923c42f63c63177d",
+    "lib/infrastructure/global-deployment-state-store.js": "df10b86ffaba2408be7253143cd8e88bedcecfbef8f6b2a221ff3b77ed894b71",
+    "lib/infrastructure/tree-deployment-transaction.js": "3cbae12239ec9a5e2b485bb176480491233efeb3e08b28bedf02c34e61f1cfad",
+    "lib/infrastructure/native-prerequisite-context.js": "b16d97f5c178c42f8f4f49a4a77c301d8ca972807fb5e1a75695bd4adf9bdcf7",
+    "test/native-prerequisite-service.test.js": "87216602f60caae1b49ff69c87c4116a78e543aef10621eff6b7e144c85e51db",
+    "test/resource-removal.test.js": "d983a9cda8738d72f977435b4d1a20ecaba8af8835b9327928b2c92fd3c911bb",
+    "scripts/client-verification/native-prerequisite-fixture.mjs": "3667ead0d43d925c222359fccca40de4b0c74fe376de4cb0f818dc45a9adf3db",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "docs/contracts/native-context-transition-v1.md": "b6d623ee0b1d89b4c88b1c8a479c1b238424f51acd6adaf8ae88167ff4bcbbd3",
+    "docs/contracts/native-prerequisite-observation-v1.md": "87f909c7529d668568907e8ddfc94a7a4277eb81fa3710e396e89415c931a5b9",
+    "docs/contracts/dependency-coordination-v1.md": "e48c784a3c2381d2047330193630e228b6357953aed5325bb40e97c97ae73ad4",
+    "docs/contracts/global-dependency-mutation-v1.md": "901fd7f79b45402e27fe40d5e21a35cfe65f9b95a61031498bcec7e76dd6790f",
+    "docs/product/shared-resources-consolidation-plan.md": "faf8ba577aa1510b5145d1d2cc236cd33bca8d8cb2d75706e8861d548091d63d",
+    "docs/reconstruction/phase-scoped-dependencies.md": "38dbc08087d2a2bc95f7da798c99e3ddbf611af14c3cadde5a46c6a67690107e",
+    "docs/traceability/shared-conversation-requirements.md": "e6861c8751d3016099494bd2de8f921695cf8ee50ee4c01fd6bef201da5cfe1b",
+    "docs/reconstruction/native-transition-live-compatibility-20261106.json": "4b95a730ac0163a46478c73f7641bc28e534ee4576bb96dcc70f6b5c502cccc4",
+    "docs/reconstruction/codex-native-context-transition-roundtrip-20261106.json": "43127e30266bc95023b808d655ec09bc2f3da9d3c921d35792e421cf21bf4ac5"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-root-verified.log",
+      "sha256": "8888dc08d780cfa0a6a8ea31ec9b3b7c957dca1cefca48f6ba49bcac36e25b58"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-http-verified.log",
+      "sha256": "af0725fac4dbb1dab910cfcb9415515cd82c8b48e9af6a47f193e57a3051660b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-build-verified.log",
+      "sha256": "1b002b1dca03c24b49155803c7a62d545f3d8585f0fa420c4d2c18f415c6d39b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-restoration-focused2.log",
+      "sha256": "d8a789cf23c3a0d048e4c6dd9a127b4befb5ddea8d2633c8abf7bd189ec791e0"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-red.log",
+      "sha256": "606fc1831ed005b6ee303013da40bfde3da8bcb49078fa9884eb6fb725b4a459"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-shadow-red.log",
+      "sha256": "84bdbd2d4cbb9ceca81938bdb7f8aefb000b70c0d7166d3d97c1dff2b44e68ef"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-lease-red.log",
+      "sha256": "c5e92c7f94a7196d93fda0ab453ac2e5fab92f9119e168b62600381bd8cb3d79"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-ledger-red.log",
+      "sha256": "d157d108bcc1dc04bb92252e5a234f57bb8d7313b1528ae85ca022bfc0bc2882"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-exact-removal-red.log",
+      "sha256": "5d2b1f3ee2ba252a6cc7b62ba568e33e724aea7835ddb90472e36f3854e76516"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-real-attempt1.err",
+      "sha256": "6e97c901c3e4dd597bf1f881a6f9de56adfe0b8923b4adc1f7d3a5b373faedd7"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-real-attempt2.json",
+      "sha256": "cd09c23837c382089c14d046aebeb7466a4168c9edb121057a1077f89c79541b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-real-attempt3.json",
+      "sha256": "43127e30266bc95023b808d655ec09bc2f3da9d3c921d35792e421cf21bf4ac5"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-http-final.log",
+      "sha256": "fb043fb6fff3ed55423d14d12c0bf13ae4e606719493f0b0bc4a22cdef4a5f8a"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-preservation-final.json",
+      "sha256": "0ef66f30e217b37d9f19ec50ae317ba46921f64955ba202074b1d944dd56b265"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-native-transition-live-compatibility-final.json",
+      "sha256": "4b95a730ac0163a46478c73f7641bc28e534ee4576bb96dcc70f6b5c502cccc4"
+    }
+  ],
+  "realNativeProof": {
+    "artifact": "docs/reconstruction/codex-native-context-transition-roundtrip-20261106.json",
+    "attempts": 3,
+    "nativePrerequisiteObservationCalls": 7,
+    "callsByAttempt": [
+      3,
+      2,
+      2
+    ],
+    "selectedProviderStartsByAttempt": [
+      2,
+      2,
+      2
+    ],
+    "unselectedProviderStarts": 0,
+    "attempt1": "Applied, observed and registered; probe removal helper lacked plans argument",
+    "attempt2": "Applied, reobserved and released; project settings/mode restored but trailing blank lines remained",
+    "attempt3": "Applied, reobserved, released, exact project bytes/mode and global settings/external link restored",
+    "modelRequests": 0,
+    "threadRequests": 0,
+    "toolCalls": 0
+  },
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "actualUserClientFileOperations": 0,
+  "actualUserStateWrites": 0,
+  "remaining": [
+    "Public Manifest v3/scoped apply/save, observation selection and registration/release/two-scope recovery dispatch",
+    "All native and previous-path mutation prediction and guards",
+    "Global settings transition and reobservation in every registered project context",
+    "Public validate/doctor integration",
+    "Actual consumer activation/model response as separately required",
+    "Remaining PR07/09/11 and C07 Skill compatibility/variants"
+  ]
+}

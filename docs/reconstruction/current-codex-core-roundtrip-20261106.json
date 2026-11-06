@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T05:50:23.339Z",
+  "phase": "Preserved native core flow and copy lifecycle",
+  "clientId": "codex",
+  "surface": "cli",
+  "version": "0.167.0-alpha.3.2",
+  "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+  "isolatedHome": true,
+  "nativeMetadataCalls": 14,
+  "providerDiscoveryRequests": 0,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "userClientFileWrites": 0,
+  "userStateWrites": 0,
+  "results": [
+    {
+      "scope": "global",
+      "manifestVersion": 2,
+      "flow": [
+        "import",
+        "edit",
+        "upstream-refresh-merge",
+        "adopt",
+        "apply",
+        "rollback",
+        "release-ownership"
+      ],
+      "mergedKitAndUpstream": true,
+      "clientDiscoveredEditedSkill": true,
+      "clientDiscoveredRestoredSkill": true,
+      "restoredApplyPrestate": true,
+      "settingsBytesAndModesPreserved": true,
+      "externalLinkIdentityAndPayloadPreserved": true,
+      "copyLifecycle": {
+        "baseline": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "absent"
+        },
+        "applied": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "expected-bytes"
+        },
+        "updated": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "expected-bytes"
+        },
+        "removed": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "absent"
+        },
+        "rollback": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "expected-bytes"
+        }
+      },
+      "copyCleanupVerified": true,
+      "modelUse": "unverified"
+    },
+    {
+      "scope": "project",
+      "manifestVersion": 2,
+      "flow": [
+        "import",
+        "edit",
+        "upstream-refresh-merge",
+        "adopt",
+        "apply",
+        "rollback",
+        "release-ownership"
+      ],
+      "mergedKitAndUpstream": true,
+      "clientDiscoveredEditedSkill": true,
+      "clientDiscoveredRestoredSkill": true,
+      "restoredApplyPrestate": true,
+      "settingsBytesAndModesPreserved": true,
+      "externalLinkIdentityAndPayloadPreserved": true,
+      "copyLifecycle": {
+        "baseline": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "absent"
+        },
+        "applied": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "expected-bytes"
+        },
+        "updated": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "expected-bytes"
+        },
+        "removed": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "absent"
+        },
+        "rollback": {
+          "confirmed": true,
+          "nativeRecognition": "observed",
+          "files": "expected-bytes"
+        }
+      },
+      "copyCleanupVerified": true,
+      "modelUse": "unverified"
+    }
+  ],
+  "runs": [
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "global",
+        "resource": "skills",
+        "strategy": "copy",
+        "observationBoundary": "Filesystem and native metadata; model use remains unverified",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "fullLifecycleConfirmed": true,
+            "stages": {
+              "baseline": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "absent"
+              },
+              "applied": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "expected-bytes"
+              },
+              "updated": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "expected-bytes"
+              },
+              "removed": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "absent"
+              },
+              "rollback": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "expected-bytes"
+              }
+            },
+            "cleanupVerified": true,
+            "modelUse": "unverified"
+          }
+        ]
+      }
+    },
+    {
+      "evidence": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "surface": "cli",
+        "scope": "project",
+        "resource": "skills",
+        "strategy": "copy",
+        "observationBoundary": "Filesystem and native metadata; model use remains unverified",
+        "clients": [
+          {
+            "clientId": "codex",
+            "version": "0.167.0-alpha.3.2",
+            "binarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+            "fullLifecycleConfirmed": true,
+            "stages": {
+              "baseline": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "absent"
+              },
+              "applied": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "expected-bytes"
+              },
+              "updated": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "expected-bytes"
+              },
+              "removed": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "absent"
+              },
+              "rollback": {
+                "confirmed": true,
+                "nativeRecognition": "observed",
+                "files": "expected-bytes"
+              }
+            },
+            "cleanupVerified": true,
+            "modelUse": "unverified"
+          }
+        ]
+      }
+    }
+  ]
+}

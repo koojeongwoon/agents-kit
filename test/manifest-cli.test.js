@@ -10,13 +10,89 @@ import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-function run(args) {
+function run(args, environment = {}) {
   return spawnSync(process.execPath, ['bin/cli.js', ...args], {
     cwd: repositoryRoot,
     encoding: 'utf8',
-    env: { ...process.env }
+    env: { ...process.env, ...environment }
   });
 }
+
+test('CLI native install adopts unchanged files, detects drift, merges into Kit and preserves unverified clients', t => {
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kit-native-cli-'))); t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const kitRoot = path.join(root, 'kit'), project = path.join(root, 'project'), original = path.join(project, '.agents/skills/review/SKILL.md');
+  fs.mkdirSync(path.dirname(original), {recursive: true}); fs.writeFileSync(original, 'alpha\nbase\nomega\n');
+  fs.mkdirSync(path.join(kitRoot, 'projects/default'), {recursive: true}); fs.writeFileSync(path.join(kitRoot, 'projects/default/agent-kit.yaml'), 'schemaVersion: 1\nkit: {id: cli-native}\nassets: {}\n');
+  const common = ['--kit', kitRoot, '--project', project], selection = ['--client', 'codex', '--surface', 'cli'];
+  const observed = JSON.parse(run(['discover', ...common, ...selection]).stdout).clients[0].observations.find(item => item.id === 'review');
+  let result = run(['import', ...common, ...selection, '--candidate', observed.candidateId]); assert.equal(result.status, 0, result.stderr);
+  result = run(['install', ...common, '--asset', 'review', '--mode', 'adopt', '--dry-run']); assert.equal(result.status, 0, result.stderr); assert.equal(fs.existsSync(path.join(project, '.agent-kit')), false);
+  result = run(['install', ...common, '--asset', 'review', '--mode', 'adopt']); assert.equal(result.status, 0, result.stderr);
+  result = run(['installation', ...common, '--asset', 'review']); assert.equal(JSON.parse(result.stdout).adopted, true);
+  const oversized = path.join(root, 'manual.json'); fs.writeFileSync(oversized, ' '.repeat(2 * 1024 * 1024 + 1));
+  result = run(['install', ...common, '--asset', 'review', '--mode', 'import-installed', '--manual-texts', oversized]); assert.equal(result.status, 1); assert.match(result.stderr, /Manual merge input exceeds 2 MiB/);
+  fs.writeFileSync(original, 'alpha\nbase\nINSTALLED\n');
+  result = run(['install', ...common, '--asset', 'review', '--mode', 'import-installed']); assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(run(['source', ...common, '--asset', 'review']).stdout).files[0].text, 'alpha\nbase\nINSTALLED\n');
+  result = run(['install', ...common, '--asset', 'review', '--mode', 'apply', '--client-version', '0.0.1-test']); assert.equal(result.status, 1); assert.match(result.stdout, /CLIENT_PROFILE_UNVERIFIED/);
+  assert.equal(fs.readFileSync(original, 'utf8'), 'alpha\nbase\nINSTALLED\n');
+  result = run(['install', ...common, '--asset', 'review', '--mode', 'detach']); assert.equal(result.status, 0, result.stderr);
+});
+
+test('CLI edits a Kit copy, reimports/merges local updates and restores history without a client argument', t => {
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kit-revisions-cli-')));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const kitRoot = path.join(root, 'kit'), project = path.join(root, 'project'), original = path.join(project, '.agents/skills/review/SKILL.md');
+  fs.mkdirSync(path.dirname(original), {recursive: true}); fs.writeFileSync(original, 'a\nb\nc\n');
+  fs.mkdirSync(path.join(kitRoot, 'projects/default'), {recursive: true});
+  fs.writeFileSync(path.join(kitRoot, 'projects/default/agent-kit.yaml'), 'schemaVersion: 1\nkit: {id: cli-revisions}\nassets: {}\n');
+  const common = ['--kit', kitRoot, '--project', project], selection = ['--client', 'codex', '--surface', 'cli'];
+  const observed = JSON.parse(run(['discover', ...common, ...selection]).stdout).clients[0].observations.find(item => item.id === 'review');
+  let result = run(['import', ...common, ...selection, '--candidate', observed.candidateId]); assert.equal(result.status, 0, result.stderr);
+  const source = () => {const response = run(['source', ...common, '--asset', 'review']); assert.equal(response.status, 0, response.stderr); return JSON.parse(response.stdout);};
+  const initial = source(), changes = path.join(root, 'changes.json'); fs.writeFileSync(changes, JSON.stringify([{path: 'SKILL.md', text: 'KIT\nb\nc\n'}]));
+  result = run(['source-edit', ...common, '--asset', 'review', '--revision', initial.revision, '--changes', changes, '--dry-run']); assert.equal(result.status, 0, result.stderr); assert.equal(source().files[0].text, 'a\nb\nc\n');
+  result = run(['source-edit', ...common, '--asset', 'review', '--revision', initial.revision, '--changes', changes]); assert.equal(result.status, 0, result.stderr);
+  fs.writeFileSync(original, 'a\nb\nUPSTREAM\n');
+  result = run(['updates', ...common, '--asset', 'review']); assert.equal(JSON.parse(result.stdout).status, 'changed');
+  result = run(['refresh', ...common, '--asset', 'review']); assert.equal(result.status, 0, result.stderr);
+  const merged = source(); assert.equal(merged.files[0].text, 'KIT\nb\nUPSTREAM\n');
+  result = run(['source-rollback', ...common, '--asset', 'review', '--revision', merged.revision, '--checkpoint', merged.history.at(-1).id]); assert.equal(result.status, 0, result.stderr);
+  assert.equal(source().files[0].text, 'KIT\nb\nc\n'); assert.equal(fs.readFileSync(original, 'utf8'), 'a\nb\nUPSTREAM\n');
+  const upstream = path.join(root, 'upstream.json');
+  fs.writeFileSync(upstream, JSON.stringify({schemaVersion: 1, type: 'git', repository: 'https://github.com/example/review.git', commit: 'main', subpath: 'skills/review'}));
+  for (const command of ['updates', 'refresh']) {
+    result = run([command, ...common, '--asset', 'review', '--upstream', upstream, '--dry-run']);
+    assert.equal(result.status, 1); assert.match(result.stderr, /INVALID_UPSTREAM_SOURCE/);
+  }
+  fs.writeFileSync(upstream, 'null');
+  result = run(['updates', ...common, '--asset', 'review', '--upstream', upstream]);
+  assert.equal(JSON.parse(result.stdout).status, 'changed');
+});
+
+test('CLI source import and detach review the same plans and preserve project originals', t => {
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kit-import-cli-')));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const kitRoot = path.join(root, 'kit'), project = path.join(root, 'project');
+  const scopeRoot = path.join(kitRoot, 'projects/default'), source = path.join(project, '.agents/skills/review/SKILL.md');
+  fs.mkdirSync(scopeRoot, {recursive: true}); fs.mkdirSync(path.dirname(source), {recursive: true});
+  fs.writeFileSync(source, '# Original review\n');
+  const manifest = path.join(scopeRoot, 'agent-kit.yaml'); fs.writeFileSync(manifest, 'schemaVersion: 1\nkit: {id: cli-import}\nassets: {}\n');
+  const common = ['--kit', kitRoot, '--project', project, '--client', 'codex', '--surface', 'cli'];
+  const discovered = run(['discover', ...common]); assert.equal(discovered.status, 0, discovered.stderr);
+  const candidateId = JSON.parse(discovered.stdout).clients[0].observations.find(item => item.id === 'review').candidateId;
+  let result = run(['import', ...common, '--candidate', candidateId, '--dry-run']);
+  assert.equal(result.status, 0, result.stderr); assert.match(result.stdout, /REGISTER_SOURCE/);
+  assert.equal(fs.existsSync(path.join(scopeRoot, '.kit-sources')), false);
+  result = run(['import', ...common, '--candidate', candidateId]); assert.equal(result.status, 0, result.stderr);
+  assert.match(fs.readFileSync(manifest, 'utf8'), /schemaVersion: 2/);
+  result = run(['detach', ...common, '--asset', 'review', '--dry-run']); assert.equal(result.status, 0, result.stderr);
+  assert.match(fs.readFileSync(manifest, 'utf8'), /status: active/);
+  result = run(['detach', '--kit', kitRoot, '--project', project, '--asset', 'review']); assert.equal(result.status, 0, result.stderr);
+  assert.match(fs.readFileSync(manifest, 'utf8'), /status: detached/);
+  assert.equal(fs.readFileSync(source, 'utf8'), '# Original review\n');
+  assert.equal(fs.readFileSync(path.join(scopeRoot, 'assets/imported/review/bundle/SKILL.md'), 'utf8'), '# Original review\n');
+});
 
 test('Legacy schema 1 CLI uses the shared Manifest plan, apply, history, and rollback services', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-cli-manifest-'));
@@ -80,6 +156,24 @@ test('CLI initializes only Manifest starter scopes and rejects legacy surfaces',
   result = run(['apply', '--kit', kitRoot, '--client', 'codex', '--resource', 'skills']);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /select assets in the Manifest/);
+});
+
+test('CLI discovery needs no Manifest and never bootstraps a Kit or rewrites external links', t => {
+  const homeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-discover-cli-'));
+  t.after(() => fs.rmSync(homeDir, {recursive: true, force: true}));
+  const link = path.join(homeDir, '.agents/skills/ego-browser');
+  const target = path.join(homeDir, '.local/share/ego/ego-skills');
+  fs.mkdirSync(path.dirname(link), {recursive: true});
+  fs.mkdirSync(target, {recursive: true});
+  fs.symlinkSync(target, link);
+  const env = {...process.env, HOME: homeDir};
+  delete env.AGENTS_KIT_DIR;
+  const result = spawnSync(process.execPath, ['bin/cli.js', 'discover', '--client', 'codex', '--surface', 'cli'], {cwd: repositoryRoot, encoding: 'utf8', env});
+  assert.equal(result.status, 0, result.stderr);
+  const record = JSON.parse(result.stdout).clients[0].surfaces[0].observations.find(item => item.id === 'ego-browser');
+  assert.equal(record.managementMode, 'external');
+  assert.equal(fs.readlinkSync(link), target);
+  assert.equal(fs.existsSync(path.join(homeDir, '.agents-kit')), false);
 });
 
 test('CLI supports validate and doctor commands', () => {
@@ -220,6 +314,20 @@ test('CLI validates and plans the shared four-resource example for both clients'
   }
 });
 
+test('CLI strategy migration forwards every selected client and exact version without writing an unverified target', t => {
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kit-cli-strategy-'))); t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const kitRoot = path.join(root, 'kit'), scopeRoot = path.join(kitRoot, 'projects/default'), targetRoot = path.join(root, 'project');
+  fs.mkdirSync(path.join(scopeRoot, 'review'), {recursive: true}); fs.mkdirSync(targetRoot);
+  fs.writeFileSync(path.join(scopeRoot, 'review/SKILL.md'), '---\nname: review\ndescription: Review source\n---\nRead it.\n');
+  fs.writeFileSync(path.join(scopeRoot, 'agent-kit.yaml'), 'schemaVersion: 1\nkit: {id: cli-strategy}\nassets:\n  skills:\n    - id: review\n      scope: project\n      source: review\n      definition:\n        schemaVersion: 2\n        format: agent-skills\n        deployment: {schemaVersion: 1, strategy: snapshot-link}\n');
+  const targets = JSON.stringify([{clientId: 'codex', surface: 'cli', clientVersion: '0.0.1-test'}, {clientId: 'antigravity', surface: 'cli', clientVersion: '0.0.2-test'}]);
+  const result = run(['migrate', '--kit', kitRoot, '--project', targetRoot, '--targets', targets, '--migration', 'skill-strategy', '--assets', 'review', '--dry-run']);
+  assert.equal(result.status, 0, result.stderr); const plan = JSON.parse(result.stdout);
+  assert.equal(plan.kind, 'migration'); assert.equal(plan.selections.length, 2); assert.equal(plan.automatic, false); assert.ok(plan.blocked.length >= 2);
+  assert.deepEqual(plan.targetProfiles.map(profile => profile.clientVersion), ['0.0.1-test', '0.0.2-test']);
+  assert.deepEqual(fs.readdirSync(targetRoot), []);
+});
+
 test('CLI batch and explicit removal use the shared service without bypassing runtime evidence', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agents-kit-cli-shared-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
@@ -294,7 +402,7 @@ test('CLI saves without applying and resumes across processes with the reviewed 
   assert.equal(recovery.status, 1); assert.match(recovery.stderr, /No readable deployment recovery journal/);
 });
 
-test('shipped CLI activation uses observed native binaries for plan, apply, remove and rollback', {skip: process.platform !== 'darwin' || process.arch !== 'arm64'}, async t => {
+test('shipped CLI uses observed builds and rejects project slices outside their reviewed capability evidence', {skip: process.platform !== 'darwin' || process.arch !== 'arm64'}, async t => {
   const {observeClientBinary} = await import('../lib/infrastructure/client-binary-observer.js');
   const {loadClientDefinitions} = await import('../lib/infrastructure/client-definition-loader.js');
   const definitions = loadClientDefinitions({definitionsDir: path.join(repositoryRoot, 'clients')});
@@ -307,15 +415,23 @@ test('shipped CLI activation uses observed native binaries for plan, apply, remo
   for (const clientId of ['codex', 'antigravity']) {
     const kitRoot = path.join(root, clientId, 'kit'), scopeRoot = path.join(kitRoot, 'projects/default'), targetRoot = path.join(root, clientId, 'project');
     fs.mkdirSync(scopeRoot, {recursive: true}); fs.mkdirSync(targetRoot);
+    const homeDir=path.join(root,clientId,'home');fs.mkdirSync(homeDir);const environment={HOME:homeDir,CODEX_HOME:path.join(homeDir,'.codex')};
     fs.writeFileSync(path.join(scopeRoot, 'rules.md'), 'Review carefully.\n');
     fs.writeFileSync(path.join(scopeRoot, 'agent-kit.yaml'), 'schemaVersion: 1\nkit: {id: cli-activation}\nassets:\n  instructions:\n    - {id: rules, scope: project, source: rules.md, definition: {schemaVersion: 1, format: markdown}}\n');
     const common = ['--kit', kitRoot, '--project', targetRoot, '--client', clientId, '--surface', 'cli'];
-    const execute = args => {const result = run([...args, ...common]); assert.equal(result.status, 0, result.stderr); return JSON.parse(result.stdout.slice(result.stdout.lastIndexOf('\n{') + 1));};
+    const execute = args => {const result = run([...args, ...common],environment); assert.equal(result.status, 0, result.stderr); return JSON.parse(result.stdout.slice(result.stdout.lastIndexOf('\n{') + 1));};
     const plan = execute(['apply', '--dry-run']);
-    assert.equal(plan.automatic, true);
-    assert.equal(plan.targetProfile.versionSource, 'binary-sha256');
     const target = path.join(targetRoot, 'AGENTS.md');
     assert.equal(fs.existsSync(target), false);
+    const profile = definitions.get(clientId).surfaces[0], observed = observeClientBinary(profile);
+    const supported = profile.runtimeEvidence.some(record => record.capabilityId === 'instructions-project' && record.binarySha256 === observed.sha256 && record.platform === process.platform && record.arch === process.arch);
+    assert.equal(plan.automatic, supported);
+    if (!supported) {
+      assert.ok(plan.blocked.length); assert.ok(plan.blocked.every(item => item.reason === 'CLIENT_PROFILE_UNVERIFIED'));
+      assert.equal(run(['apply', ...common],environment).status, 1); assert.equal(fs.existsSync(target), false);
+      continue;
+    }
+    assert.equal(plan.targetProfile.versionSource, 'binary-sha256');
     execute(['apply']);
     const applied = fs.readFileSync(target, 'utf8');
     const removed = execute(['remove', '--assets', 'rules']);

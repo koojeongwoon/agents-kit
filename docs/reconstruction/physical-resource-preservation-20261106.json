@@ -1,0 +1,38 @@
+{
+  "phase": "PR07-S04-1",
+  "observedAt": "2026-11-05T17:56:15.202Z",
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": []
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 119,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "validation": {
+    "rootPassed": 445,
+    "httpPassed": 31,
+    "guiPassed": 55,
+    "typecheck": "passed",
+    "desktopBuild": "passed",
+    "diffCheck": "passed",
+    "logHashes": {
+      "root": "25aeb588e96f0801022841ffada74c04758aa6e9744201011cbfd94bda0e1362",
+      "http": "09aaed90e445578c70e4ce1a5a799c410f9d0cd61acc02dfa61e56bd2fe0bb1f",
+      "gui": "ce4d89e1cbcdb5ba47d38cea63e635b6caf7d2ef39239b0f0e356ec95e212762",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "fa289192326000cd3510b0c532acc94a59fa18c65111715d11f5746de35cb2f4"
+    }
+  },
+  "nativeResourceCalls": 0,
+  "modelCalls": 0,
+  "productionEvidencePromoted": false,
+  "remaining": "PR07 S04-2 current-build native CLI profile matrix, then PR08-11"
+}

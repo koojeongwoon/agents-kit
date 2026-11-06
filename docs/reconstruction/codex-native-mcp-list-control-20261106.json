@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T19:58:44.566Z",
+  "clientId": "codex",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "modelTurnsRequested": false,
+  "stages": [
+    {
+      "stage": "global",
+      "exitCode": 0,
+      "reason": "OK",
+      "entries": [
+        {
+          "name": "global_only",
+          "enabled": false,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "global-only",
+          "transportType": "stdio"
+        },
+        {
+          "name": "shared",
+          "enabled": true,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "global",
+          "transportType": "stdio"
+        }
+      ],
+      "mcpStarted": false
+    },
+    {
+      "stage": "project-root",
+      "exitCode": 0,
+      "reason": "OK",
+      "entries": [
+        {
+          "name": "global_only",
+          "enabled": false,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "global-only",
+          "transportType": "stdio"
+        },
+        {
+          "name": "project_only",
+          "enabled": true,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "project-only",
+          "transportType": "stdio"
+        },
+        {
+          "name": "shared",
+          "enabled": false,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "project-root",
+          "transportType": "stdio"
+        }
+      ],
+      "mcpStarted": false
+    },
+    {
+      "stage": "project-child",
+      "exitCode": 0,
+      "reason": "OK",
+      "entries": [
+        {
+          "name": "global_only",
+          "enabled": false,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "global-only",
+          "transportType": "stdio"
+        },
+        {
+          "name": "project_only",
+          "enabled": true,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "project-only",
+          "transportType": "stdio"
+        },
+        {
+          "name": "shared",
+          "enabled": true,
+          "disabledReason": null,
+          "keys": [
+            "auth_status",
+            "disabled_reason",
+            "enabled",
+            "name",
+            "startup_timeout_sec",
+            "tool_timeout_sec",
+            "transport"
+          ],
+          "transportKeys": [
+            "args",
+            "command",
+            "cwd",
+            "env",
+            "env_vars",
+            "type"
+          ],
+          "role": "project-child",
+          "transportType": "stdio"
+        }
+      ],
+      "mcpStarted": false
+    }
+  ]
+}

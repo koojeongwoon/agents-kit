@@ -59,9 +59,11 @@ projectName을 확인해야 한다. 암묵적으로 다른 client나 프로젝�
 렌더링된 바이트는 원본 prepared operation에만 연결되며 복제 객체·preview는 적용할 수 없다.
 미검증 profile은 출력 미리보기만 제공한다. 실제 홈 설정, 클라이언트 실행, daemon job은 이 계약으로 변경하지 않는다.
 
-## CA02-3: 명시적인 Codex 기본 설정과 MCP 도구 연결
+## 2026-11-05 계약 교정: Agent 파일의 권한/MCP 기본값
 
-Agent definition v1에 두 선택 필드를 추가했다.
+CA02-3에서 추가한 아래 두 선택 필드는 기존 Manifest를 읽고 문제를 설명하기 위해
+구조상 보존하지만 현재 Codex·Antigravity adapter는 `AGENT_NATIVE_DEFAULTS_UNSUPPORTED`로
+자동 변환·적용을 차단한다. 기본 역할 정의는 기존대로 변환한다.
 
 ```yaml
 definition:
@@ -77,24 +79,15 @@ requires:
       providerId: docs
 ```
 
-`sandboxDefault: read-only`는 Codex `sandbox_mode` 기본값이다. **강제 보안 정책이 아니다.**
-공식 Subagents 문서에 따르면 부모의 live runtime override가 이를 덮어쓸 수 있다.
-원격 MCP 부작용까지 read-only로 만드는 설정도 아니다. GUI/CLI preview notice로 이 한계를 표시한다.
+현재 Codex custom Agent 파일의 `sandbox_mode`와 `mcp_servers`는 부모의 설정을
+덮어쓰지 않는다. 과거 렌더러가 해당 필드를 출력하고 notice를 붙이던 동작을 중단한다.
+synthetic runtime evidence도 이 차단을 우회하지 못한다. 다른 검증 가능한 mapping이
+없는 Antigravity에도 같은 차단을 유지한다. 프롬프트 문장으로 권한을 대신하지 않는다.
 
-`mcpToolAccess: required-providers`는 Agent와 그 Skill 의존성의 tool requirement를 resolver로
-검증한 후 provider별 `enabled_tools`에 실제 native 도구명을 넣는다.
-`provides.tools: [{id: docs.search, nativeName: search_docs}]`처럼 MCP 자원에 명시적으로 선언한다.
-logical ID를 native 이름으로 추정하지 않는다. nativeName은 1~128자의 영문자·숫자·underscore·점·hyphen
-부분집합이며 첫 글자는 영문자·숫자·underscore다. 중복 이름과 모호한 logical ID는 거절한다.
-
-해당 provider는 typed MCP여야 하며 같은 endpoint/실행물·환경 변수 참조로 Agent 내부 설정을 생성한다.
-이 목록은 **그 provider에만 적용**된다. 다른 상속 서버·기본 도구를 모두 차단하는 Agent 전체 allowlist가 아니다.
-Skill 의존 도구도 포함하지만 Skill을 preload하거나 자동 호출하는 설정은 생성하지 않는다.
-optional tool 요구, 누락된 native 이름, 해석되지 않는 source provider와 provider 정책은 차단한다.
-
-현재 Antigravity에서는 두 필드 모두 `AGENT_NATIVE_DEFAULTS_UNSUPPORTED`다. 공식 문서의
-`commandExecutionPolicy`를 강제 파일 읽기 전용과 동일시하지 않고, `mcpServers` object 및 MCP 도구 이름의
-Agent 전용 mapping도 추정하지 않는다. 기본 역할 Agent는 두 제품 모두 기존대로 변환한다.
+논리 tool → provider → nativeName의 registry 바인딩 검증은 유지한다. 이는 의존성
+분석이며 Agent의 native 도구 허용 목록이 성립한다는 의미가 아니다. 기존 설치 파일,
+원장, 백업을 변경하거나 과거 배포를 자동 제거하지 않는다. 해당 옵션을 사용하는
+Manifest는 별도 변경 계획에서 기본 역할 또는 검증된 후속 계약으로 수정해야 한다.
 
 공식 근거: [Codex Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents),
 [Codex MCP enabled_tools](https://learn.chatgpt.com/docs/extend/mcp),

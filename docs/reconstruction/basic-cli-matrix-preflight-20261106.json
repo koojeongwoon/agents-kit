@@ -1,0 +1,195 @@
+{
+  "observedAt": "2026-11-05T17:51:13.705Z",
+  "phase": "PR07-S04-2-preflight",
+  "platform": "darwin",
+  "arch": "arm64",
+  "surface": "cli",
+  "modelCalls": 0,
+  "clientVersionCommandsOnly": true,
+  "productionEvidencePromoted": false,
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "definitionSha256": "487b0d4ce666ba32f44fccbe93ef8dff466a7cde116cfcc23a8388a1cdee4ed0",
+      "matrix": [
+        {
+          "scope": "global",
+          "kind": "instructions",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.codex/AGENTS.md",
+          "evidenceSource": "docs/reconstruction/native-global-codex-instructions-runtime-20261105.json",
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "global",
+          "kind": "skills",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.agents/skills/matrix-probe",
+          "evidenceSource": "docs/reconstruction/native-installation-live-codex-runtime-recheck-20261105.json",
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "global",
+          "kind": "agents",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.codex/agents/matrix-probe.toml",
+          "evidenceSource": "docs/reconstruction/native-global-codex-agent-runtime-recheck-20261105.json",
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "global",
+          "kind": "mcpServers",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_RESOURCE_PROFILE_UNVERIFIED",
+          "targetTemplate": "~/.codex/config.toml",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "instructions",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": "AGENTS.md",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "skills",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".agents/skills/matrix-probe",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "agents",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".codex/agents/matrix-probe.toml",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "mcpServers",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".codex/config.toml",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        }
+      ]
+    },
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "definitionSha256": "5ad6895be18539874885e54273c1685686a2845cfc222f7fe315333499ef6b64",
+      "matrix": [
+        {
+          "scope": "global",
+          "kind": "instructions",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": "~/.gemini/GEMINI.md",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "global",
+          "kind": "skills",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.gemini/config/skills/matrix-probe",
+          "evidenceSource": "docs/reconstruction/native-installation-live-antigravity-runtime-recheck-20261105.json",
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "global",
+          "kind": "agents",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": "~/.gemini/config/agents/matrix-probe.md",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "global",
+          "kind": "mcpServers",
+          "capabilityGate": "eligible",
+          "reason": "CAPABILITY_ELIGIBLE",
+          "targetTemplate": "~/.gemini/config/mcp_config.json",
+          "evidenceSource": "docs/reconstruction/antigravity-native-mcp-separated-runtime-20261105.json",
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "instructions",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": "AGENTS.md",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "skills",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".agents/skills/matrix-probe",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "agents",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".agents/agents/matrix-probe.md",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        },
+        {
+          "scope": "project",
+          "kind": "mcpServers",
+          "capabilityGate": "blocked",
+          "reason": "CLIENT_PROFILE_UNVERIFIED",
+          "targetTemplate": ".agents/mcp_config.json",
+          "evidenceSource": null,
+          "configurationApplied": false,
+          "nativeRecognitionRechecked": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "eligible": 5,
+    "blocked": 11,
+    "total": 16
+  },
+  "nativeResourceProbes": 0,
+  "clientVersionCommands": 2
+}

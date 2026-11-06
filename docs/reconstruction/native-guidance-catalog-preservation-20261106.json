@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR09-agent-names-instruction-settings",
+  "observedAt": "2026-11-05T20:33:51.986Z",
+  "validation": {
+    "rootPassed": 522,
+    "httpPassed": 40,
+    "guiPassed": 64,
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargoCheck": true,
+    "logHashes": {
+      "root": "5cae28274ab00c4ef7d6a1218d7122a616d5c96bc15c8528020bcb1219a7f9ef",
+      "http": "1f140a69ebd10bb6e99aff2d5b0f6e994057307def9764b29f84807791dc7468",
+      "gui": "43a84ca6438fe3fb7be70ba21eab7a46e23cc9df09707063c6769064f72da539",
+      "typecheck": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8",
+      "desktopBuild": "867a7eb58443844768424d4f5aeb150572f6b55ab7e9e8cc1bd029a519eba8e6",
+      "cargo": "97d1e49605f0d49adf47749724b8c9dc4d64395f04aedabbab302fea5ba1f4e1"
+    }
+  },
+  "sourceHashes": {
+    "lib/infrastructure/catalog-text-reader.js": "078e42b157a925723185ab6070760cefe8e3c606ff918a5432239245da6b4645",
+    "lib/adapters/agent-inventory.js": "1954f219cefbad58e75d53d4f3ff5269343e5032cda6e8a31c18f0510fffeda8",
+    "lib/adapters/instruction-inventory.js": "ac2534f9f4197cb0669b75fa30038e08a583f2704e50f81f1648a54a2d33aca2",
+    "lib/application/resource-catalog-service.js": "5073231e95221d628b51b3532070745586c985d94f7214a17f9b4b809df66f35",
+    "lib/application/observe-resource-catalog.js": "060b567399766b08fc9b9004d329799dfc0492f3ce7422d7c949bb56892dd3fb",
+    "lib/domain/client-definition.js": "cfd5fb9c74083773d9fe4e5bed3c7f8c20fbcb4e9ab4ee19934b1627548ebb60",
+    "lib/infrastructure/native-inventory-observer.js": "4c35bd4a74a1660a23f2192be7b2499c23fb23d3f0969d687dbd5d2bd752283a",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "164eae327f7197459ca731ae8d5d748c6261a3d4f067e970910e4f81257aee8e",
+    "gui/src/ManifestApp.tsx": "1cab0be82d1c5f9f6d481c1d85d60ea2143369f7c9db3cb30f1bd79600ac0d68",
+    "gui/src/api/deploy.ts": "cb716ce14169d19b3bf0107666104e6d6d0dad77ab01bdf70ef81eac441783a3",
+    "bin/cli.js": "8621507842e63fcbd8f39011c0d8b5cc01ab1f4c9a893580ec516c78bef1a9ce",
+    "test/agent-instruction-catalog.test.js": "02a4830db6367a005ee58dd32026837d7fa8082a7604419db2cff74998f830be",
+    "test/client-definitions.test.js": "8eea34eea087fb7ef3bfecfe9d7d0dda19e8a171e40457a6dd8a9c2faa081118",
+    "test/native-inventory-observer.test.js": "97c35af4f01be7c11bafb0d0af2ba60e6434e3bf57dac53450afa1d04f735588",
+    "test/native-resource-catalog.test.js": "ea2a88ca7921136f2f920ffedfe49e58e59672dfe1e15ead2a78ca96e742bc01",
+    "gui/server/test/control-plane-e2e.test.js": "df6731487762be3c9da935a8179ed897705e98c4a78515215bb9f0bf1ba31ad6",
+    "gui/src/components/resources/ResourceWorkspace.test.tsx": "8d9e7fc06980ca805c17f32d1477c809581cd5a4e9a68af07e9ff453381b4e74"
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "ledger": {
+    "schemaVersion": 6,
+    "transactions": 133,
+    "activeFiles": 3,
+    "activeOwners": 4,
+    "allActiveFileHashesMatch": true,
+    "lockPresent": false,
+    "journalPresent": false
+  },
+  "nativeModelRequests": 0,
+  "nativeToolRequests": 0,
+  "nativeMcpConnectionsRequested": 0,
+  "productionThreadInitializationEnabled": false,
+  "userSettingsWrittenByAgentKit": false,
+  "nativeDeploymentGateExpanded": false,
+  "runtimeEvidenceRecords": 25,
+  "nativeControl": "docs/reconstruction/codex-instruction-settings-catalog-service-20261106.json",
+  "liveObservation": "docs/reconstruction/native-live-catalog-instructions-codex-20261106.json",
+  "redEvidence": {
+    "phantom": "/private/tmp/kit-pr09-guidance-phantom-red.log",
+    "phantomHash": "42fce23fa5ea84956c324c4bc9588fe13feb00a039037cc1f3f53e227eb5ee03"
+  },
+  "remaining": [
+    "PR09 Agent/instructions native runtime load and other client/surface effective context",
+    "PR07 Antigravity Agent direct child completion",
+    "PR10 cross-scope dependencies",
+    "PR11 additional discovery/HTTP/auth/surfaces"
+  ]
+}

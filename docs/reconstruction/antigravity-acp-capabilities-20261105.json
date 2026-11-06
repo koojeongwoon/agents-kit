@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T14:11:35.542Z",
+  "clientId": "antigravity",
+  "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+  "binaryUnchanged": true,
+  "reason": "OK",
+  "protocolVersion": 1,
+  "loadSession": true,
+  "resumeWithoutHistory": true,
+  "listSessions": true,
+  "closeSession": true,
+  "forkSession": false,
+  "capabilityKeys": [
+    "loadSession",
+    "promptCapabilities",
+    "sessionCapabilities",
+    "auth"
+  ],
+  "sessionCapabilityKeys": [
+    "resume",
+    "close",
+    "load",
+    "list",
+    "additionalDirectories"
+  ],
+  "sessionRequests": 0,
+  "modelTurnsRequested": 0,
+  "clientSettingsWritten": false,
+  "historyRead": false,
+  "rawTranscriptsStored": false
+}

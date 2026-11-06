@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T12:20:37.250Z",
+  "clientId": "antigravity",
+  "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+  "scope": "global",
+  "surface": "cli",
+  "home": "actual-user-home",
+  "assetId": "live-install-antigravity-d6cc1c7bd9",
+  "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9",
+  "complete": true,
+  "stages": {
+    "applied": {
+      "code": 0,
+      "reason": "OK",
+      "terminalSuccess": true,
+      "final": {
+        "skill": true
+      },
+      "skillFileRead": true,
+      "mcpToolCalled": false,
+      "completedTools": 1,
+      "finalParsed": true,
+      "reportedAbsent": {
+        "skill": false
+      },
+      "toolKinds": [
+        "read_file"
+      ],
+      "answerFormat": {
+        "text": true,
+        "fenced": false,
+        "nonempty": true
+      },
+      "toolEvidence": [
+        {
+          "kind": "read_file",
+          "success": true,
+          "errorCategories": [],
+          "outputNonempty": true,
+          "parameterKeys": [
+            "Path"
+          ],
+          "fixtureServerInParameters": false,
+          "fixtureToolInParameters": false,
+          "supportingFileNamed": true,
+          "skillMarkerReturned": false,
+          "mcpMarkerReturned": false
+        }
+      ],
+      "mcpAdvertised": false,
+      "permissionRequested": false,
+      "stepTypes": [
+        "user_input",
+        "agent_response",
+        "tool"
+      ],
+      "terminalStatus": "SUCCESS",
+      "diagnostics": {
+        "projectConfigDisabled": false,
+        "mcpStartupFailed": false,
+        "permissionNotice": false,
+        "fixtureMcpPermissionNotice": false,
+        "mcpPermissionRequired": false
+      },
+      "binaryUnchanged": true,
+      "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "success": true,
+      "confirmed": true
+    },
+    "rollback": {
+      "code": 0,
+      "reason": "OK",
+      "terminalSuccess": true,
+      "final": {
+        "skill": true
+      },
+      "skillFileRead": true,
+      "mcpToolCalled": false,
+      "completedTools": 1,
+      "finalParsed": true,
+      "reportedAbsent": {
+        "skill": false
+      },
+      "toolKinds": [
+        "read_file"
+      ],
+      "answerFormat": {
+        "text": true,
+        "fenced": false,
+        "nonempty": true
+      },
+      "toolEvidence": [
+        {
+          "kind": "read_file",
+          "success": true,
+          "errorCategories": [],
+          "outputNonempty": true,
+          "parameterKeys": [
+            "Path"
+          ],
+          "fixtureServerInParameters": false,
+          "fixtureToolInParameters": false,
+          "supportingFileNamed": true,
+          "skillMarkerReturned": false,
+          "mcpMarkerReturned": false
+        }
+      ],
+      "mcpAdvertised": false,
+      "permissionRequested": false,
+      "stepTypes": [
+        "user_input",
+        "agent_response",
+        "tool"
+      ],
+      "terminalStatus": "SUCCESS",
+      "diagnostics": {
+        "projectConfigDisabled": false,
+        "mcpStartupFailed": false,
+        "permissionNotice": false,
+        "fixtureMcpPermissionNotice": false,
+        "mcpPermissionRequired": false
+      },
+      "binaryUnchanged": true,
+      "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "success": true,
+      "confirmed": true
+    }
+  },
+  "transactions": [
+    {
+      "kind": "import",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "REGISTER_SOURCE"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/imported/live-install-antigravity-d6cc1c7bd9/bundle/SKILL.md"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/baselines/live-install-antigravity-d6cc1c7bd9/f19ea181f730abec2ea23cbb902b3270ce5863efc56bfa07e2d5c68d78c87eed/SKILL.md"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/imported/live-install-antigravity-d6cc1c7bd9/bundle/references/marker.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/baselines/live-install-antigravity-d6cc1c7bd9/f19ea181f730abec2ea23cbb902b3270ce5863efc56bfa07e2d5c68d78c87eed/references/marker.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/imported/live-install-antigravity-d6cc1c7bd9/bundle/scripts/check.sh"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/baselines/live-install-antigravity-d6cc1c7bd9/f19ea181f730abec2ea23cbb902b3270ce5863efc56bfa07e2d5c68d78c87eed/scripts/check.sh"
+        }
+      ],
+      "blocked": []
+    },
+    {
+      "kind": "installation",
+      "mode": "adopt",
+      "automatic": true,
+      "reviewHash": "afda0561f7a6be50144847da19a52c6facc903cc70a3106d97738e66dd8afbb0",
+      "operations": [
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/SKILL.md",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/references/marker.txt",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/scripts/check.sh",
+          "metadataOnly": true
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-20-37-466Z-d32e5173"
+    },
+    {
+      "kind": "source-edit",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "EDIT_KIT_SOURCE"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-antigravity-d6cc1c7bd9/0063b6ef-ea29-48a1-a241-6214fed81a26/SKILL.md"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-antigravity-d6cc1c7bd9/0063b6ef-ea29-48a1-a241-6214fed81a26/references/marker.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-antigravity-d6cc1c7bd9/0063b6ef-ea29-48a1-a241-6214fed81a26/scripts/check.sh"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": "assets/revisions/live-install-antigravity-d6cc1c7bd9/0063b6ef-ea29-48a1-a241-6214fed81a26/references/kit-added.txt"
+        },
+        {
+          "operation": "CREATE_SOURCE",
+          "target": ".kit-sources/revisions/live-install-antigravity-d6cc1c7bd9/f19ea181f730abec2ea23cbb902b3270ce5863efc56bfa07e2d5c68d78c87eed.json"
+        }
+      ],
+      "blocked": []
+    },
+    {
+      "kind": "installation",
+      "mode": "apply",
+      "automatic": true,
+      "reviewHash": "276eb36cff3957a6b1be118265eed23dec26b9f3a1e265eb98447f43ed6d862a",
+      "operations": [
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/SKILL.md",
+          "metadataOnly": true
+        },
+        {
+          "operation": "CREATE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/references/kit-added.txt",
+          "metadataOnly": false
+        },
+        {
+          "operation": "UPDATE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/references/marker.txt",
+          "metadataOnly": false
+        },
+        {
+          "operation": "UPDATE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/scripts/check.sh",
+          "metadataOnly": false
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-20-37-842Z-0b500578"
+    },
+    {
+      "kind": "rollback",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "RESTORE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/SKILL.md"
+        },
+        {
+          "operation": "REMOVE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/references/kit-added.txt"
+        },
+        {
+          "operation": "RESTORE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/references/marker.txt"
+        },
+        {
+          "operation": "RESTORE",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/scripts/check.sh"
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-20-50-994Z-3985350c"
+    },
+    {
+      "kind": "installation",
+      "mode": "detach",
+      "automatic": true,
+      "reviewHash": "0a30d2632a12356551199a78c2aed4b9fd77376c93db90bd4cac8101ce1a5bd5",
+      "operations": [
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/SKILL.md",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/references/marker.txt",
+          "metadataOnly": true
+        },
+        {
+          "operation": "REGISTER",
+          "target": "/Users/jw/.gemini/config/skills/live-install-antigravity-d6cc1c7bd9/scripts/check.sh",
+          "metadataOnly": true
+        }
+      ],
+      "blocked": [],
+      "transactionId": "tx-2026-11-05T12-21-05-290Z-b8c2b15d"
+    },
+    {
+      "kind": "detach",
+      "automatic": true,
+      "operations": [
+        {
+          "operation": "DETACH_SOURCE"
+        }
+      ],
+      "blocked": []
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "existingSettingsWritten": false,
+  "externalLinksWritten": false,
+  "adoption": {
+    "metadataOnly": true,
+    "bytesModesAndMtimesPreserved": true
+  },
+  "installation": {
+    "actualPathWritten": true,
+    "markerHash": "913d579373ca66203a11a295a20decada003d0b768ba7f4b3084603a536e3adb",
+    "executableMode": 493,
+    "addedFile": true
+  },
+  "rollback": {
+    "restored": true,
+    "markerHash": "f7b2414689696260c916a5dc14632cf6508925dd3318f305df6de267b799f8e7",
+    "executableMode": 488,
+    "addedFileRemoved": true
+  },
+  "cleanup": {
+    "assetAbsent": true,
+    "ownershipReleased": true,
+    "sourceRegistrationDetached": true,
+    "kitSourcesAndHistoryRetained": true
+  }
+}

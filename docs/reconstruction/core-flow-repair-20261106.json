@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T05:37:46.837Z",
+  "scope": "Fix the recorded failures and stabilize the existing supported core flow; additional expansion stopped",
+  "status": "code-and-offline-core-verified; current-client-acceptance-blocked",
+  "allCurrentClientAcceptanceComplete": false,
+  "failureClassification": {
+    "recordedFailures": 7,
+    "testSetup": {
+      "wrongCandidate": 4,
+      "wrongProjectInstructionPath": 1,
+      "nonselectedMcpCommentExpectation": 2
+    },
+    "productDefectsAmongRecordedSeven": 0,
+    "separateProductCorrections": [
+      "Allow guarded canonical Manifest-v3 source management without downgrading its version",
+      "Preserve named project scope and existing qualified references/targets",
+      "Reuse companion graph review/locks and recheck after source commit"
+    ],
+    "firstCorrectedRun": {
+      "passed": 10,
+      "failed": 0
+    },
+    "sourceCasesAfterSafetyCoverage": {
+      "passed": 12,
+      "failed": 0
+    }
+  },
+  "coreFlow": {
+    "manifestVersions": [
+      1,
+      2
+    ],
+    "nativeSourceKinds": [
+      "skills",
+      "instructions",
+      "agents",
+      "mcpServers"
+    ],
+    "scopes": [
+      "global",
+      "project"
+    ],
+    "cases": 8,
+    "syntheticCapabilityFixture": true,
+    "sequence": [
+      "import",
+      "edit",
+      "upstream-refresh-merge",
+      "adopt",
+      "apply",
+      "rollback",
+      "release-ownership"
+    ],
+    "httpExistingNativeFlowExtendedWithRollback": true,
+    "restoresApplyPrestateAndModes": true,
+    "preservesOtherMcpEntriesAndExternalLinkIdentity": true
+  },
+  "tests": {
+    "root": {
+      "passed": 849,
+      "failed": 0,
+      "skipped": 2,
+      "total": 851
+    },
+    "http": {
+      "passed": 52,
+      "failed": 0,
+      "skipped": 1,
+      "total": 53
+    },
+    "backendBundle": {
+      "exitCode": 0
+    },
+    "frontendChanged": false,
+    "frontendTestsRepeated": false
+  },
+  "actualClient": {
+    "clientId": "codex",
+    "version": "0.167.0-alpha.3.2",
+    "observedBinarySha256": "a636331ed87605efc4cf84028ac2884a75363f9d10ead63cffb57ea0016d486e",
+    "previousReviewedBinarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+    "status": "preflight-blocked-unreviewed-binary",
+    "nativeMetadataCalls": 0,
+    "modelCalls": 0,
+    "toolCalls": 0,
+    "supportEvidenceChanged": false,
+    "additionalProfilesAdded": false
+  },
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": false
+  },
+  "preservation": {
+    "originalBaselineReplaced": false,
+    "initialHistoricalReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".codex/config.toml",
+          "before": "file",
+          "after": "file"
+        },
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        },
+        {
+          "path": ".agents/skills/ego-browser",
+          "before": "symlink",
+          "after": "symlink"
+        },
+        {
+          "path": ".gemini/config/skills/ego-browser",
+          "before": "symlink",
+          "after": "symlink"
+        },
+        {
+          "path": ".gemini/antigravity-cli/skills/ego-browser",
+          "before": "symlink",
+          "after": "symlink"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/computer-use/config.json",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "finalHistoricalReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".codex/config.toml",
+          "before": "file",
+          "after": "file"
+        },
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        },
+        {
+          "path": ".agents/skills/ego-browser",
+          "before": "symlink",
+          "after": "symlink"
+        },
+        {
+          "path": ".gemini/config/skills/ego-browser",
+          "before": "symlink",
+          "after": "symlink"
+        },
+        {
+          "path": ".gemini/antigravity-cli/skills/ego-browser",
+          "before": "symlink",
+          "after": "symlink"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/computer-use/config.json",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "endOfTaskSeparateCheckpoint": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": []
+    },
+    "separateCheckpointMeaning": "Only checks further change during the final inspection interval; does not erase or attribute earlier differences",
+    "currentCodexSettingsSha256": "3ae3eb24dba62e039feb275a4634654e6a2a84dad28b0f47389e3f5040e3de43",
+    "codexSettingsRecordedManagedHash": "5a7b6ec5d762b04fa0937070efaa1566462d9545da4546bc65decf9325077e63",
+    "codexSettingsMtime": "2026-11-06T05:34:42.158Z",
+    "codexSettingsWriter": "unproven; observed differences were not restored or accepted into the ledger",
+    "externalLinks": [
+      {
+        "path": ".agents/skills/ego-browser",
+        "link": "/Users/jw/.local/share/ego/ego-skills",
+        "mode": 493,
+        "ino": 15212307
+      },
+      {
+        "path": ".gemini/config/skills/ego-browser",
+        "link": "/Users/jw/.local/share/ego/ego-skills",
+        "mode": 493,
+        "ino": 15212401
+      },
+      {
+        "path": ".gemini/antigravity-cli/skills/ego-browser",
+        "link": "/Users/jw/.local/share/ego/ego-skills",
+        "mode": 493,
+        "ino": 15212399
+      }
+    ],
+    "explicitUserClientWritesByTask": 0,
+    "userLedgerWrites": 0
+  },
+  "remainingForCurrentInstalledClient": [
+    "Review and verify the installed Codex build before enabling its real apply/rollback; current old evidence cannot authorize it",
+    "Account for the existing Codex node-repl configuration drift without overwriting current user settings"
+  ],
+  "deferred": [
+    "Manifest-v3 native installation writers and cross-scope native coordination",
+    "Additional clients, formats, discovery, desktop/IDE and authentication profiles",
+    "Further GUI workflow expansion"
+  ],
+  "sourceHashes": {
+    "lib/application/resource-import-service.js": "aed83412fdc3f7c2b435c9c9a1a0e2dfaf16efe7ef7287d546e3bb129a12e8c3",
+    "test/scoped-source-revisions.test.js": "9a946676cdc9a3c610eef01fd0793f2b382c3cea7a0e26543fe5865cc99deefc",
+    "test/native-installation-core-flow.test.js": "15e06b6bc5baaa3da8cbec2a9e373ce01308a6a152664f2196a5b31c188d6564",
+    "package.json": "3a74ee60cfddb103d3a9eac4766833cfa44aab83de7b766d56837b463f7b8f9f",
+    "gui/server/test/control-plane-e2e.test.js": "33c75437a33f608c623e9de547512d41bfe5ede2c5ad260a1b2b1452bfe6dfad",
+    "docs/contracts/resource-import-v1.md": "144edfc8aad0961b81fab9c4635dd4fc5f9d1fba0dd966cb1307d6f86b403e93",
+    "docs/contracts/source-revisions-v1.md": "a2e460b90c2cade64ef35f9f52ee1ac20afec914109bb30b9b97ffc05df240fa",
+    "docs/contracts/scoped-manifest-management-v1.md": "a9d94f45fd8fd02d2e4a462abd4df7d638789d1f67e50ac3490fe0d676394ebb",
+    "docs/product/shared-resources-consolidation-plan.md": "db4f60754eabc4c67b1d1184d5c989c55ed230d9a30046ffb3891a8659134a53",
+    "docs/reconstruction/core-flow-repair-20261106.md": "cbb22e04c610470b3da9006a4bac8aa15465bfaa7194b59d323ade44b115b9f3"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-scoped-source-work1.log",
+      "sha256": "a5511d63031362d8f716d44c704384860055507bd5de9e0efdfcd66fa3b48a1c"
+    },
+    {
+      "file": "/private/tmp/kit-core-scoped-source-fixtures.log",
+      "sha256": "2bdedb9a1d52f794b496e6dd1c3d067a7234fb319e4da346950a055383e09249"
+    },
+    {
+      "file": "/private/tmp/kit-core-scoped-source-final.log",
+      "sha256": "fbc4b9649bc598f5f9f1e7f942431d78d6e575802d4b8709eb5984071c43a7db"
+    },
+    {
+      "file": "/private/tmp/kit-core-flow-focused.log",
+      "sha256": "d0f9df07a6bfe1c8d1774d437a12efb53355a5d67b82567c77112fbdc1c7c791"
+    },
+    {
+      "file": "/private/tmp/kit-core-repair-root.log",
+      "sha256": "d4d9bfd5489ddbbb743989c7a3dd17c02c93d2c9ca47db98ed2cfc49abd40f57"
+    },
+    {
+      "file": "/private/tmp/kit-core-repair-http.log",
+      "sha256": "dab20394f68a6b8640d25f11d87366aa7139c409fb12087f7f8ca919f223425d"
+    },
+    {
+      "file": "/private/tmp/kit-core-repair-build.log",
+      "sha256": "ccfac82f65e30b912fc75258dc7399da296c026ef21361e6749bc923d0aaf16f"
+    },
+    {
+      "file": "/private/tmp/kit-core-preservation-before.json",
+      "sha256": "009ea75e412309265109acbc9d8ceb5fc92d5bd785b8f6393fb54827aae6d3ff"
+    },
+    {
+      "file": "/private/tmp/kit-core-preservation-historical-final.json",
+      "sha256": "009ea75e412309265109acbc9d8ceb5fc92d5bd785b8f6393fb54827aae6d3ff"
+    },
+    {
+      "file": "/private/tmp/kit-core-preservation-review-baseline-20261106.json",
+      "sha256": "92104e78e5bf1c358bd8e8055c3528284dd4b7e6bfcfd13cefb2443a3a6bfaa1"
+    },
+    {
+      "file": "/private/tmp/kit-core-preservation-review-final.json",
+      "sha256": "fc9383befe36e79d2023936937d5a1882e97ea907dd24dc93de5ea3977760a36"
+    },
+    {
+      "file": "/private/tmp/kit-core-live-compatibility.json",
+      "sha256": "db8f1b84bca4dc28e246f2cc3f3de12caef69a1e8bf61e6e22d3fba7b073da44"
+    },
+    {
+      "file": "/private/tmp/kit-core-native-probe.mjs",
+      "sha256": "fc6cea667b744e7bcd2cb342214126ca679638e12e351abe8661ce9b92b74d99"
+    },
+    {
+      "file": "/private/tmp/kit-core-native-roundtrip.stderr",
+      "sha256": "d1ebe51b5554ba3a4ba9b2ab806a72779da2d200cb04d25b2ac564196ddd7a16"
+    }
+  ]
+}

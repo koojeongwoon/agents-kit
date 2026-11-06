@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10 scoped local/global compiler and common readonly plan",
+  "checkedAt": "2026-11-05T23:40:01.168Z",
+  "status": "partial",
+  "tests": {
+    "root": {
+      "passed": 641,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-compiler-root-final.log"
+    },
+    "focused": {
+      "passed": 23,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-compiler-focused-final.log"
+    },
+    "http": {
+      "passed": 44,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-compiler-http-final.log"
+    },
+    "gui": {
+      "passed": 75,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-compiler-gui.log"
+    },
+    "typecheck": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-compiler-typecheck.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-compiler-build-final.log"
+    },
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust or Cargo changes"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/scoped-deployment-selection.js": "c3c412b3265e2d8461ac71e381e8b29f60b28d52710f8338633291a97ec960e3",
+    "lib/application/plan-client-deployment.js": "a497e767cd3bd698ef7843dac00bd163e13ea8d063d9b87d2b303e63a949b641",
+    "lib/application/plan-verified-client-deployment.js": "d3b282b9907589d6bc0ce2486d9576014f590797bebd2d6c1d901c6fa5bab9ea",
+    "lib/application/resource-catalog-service.js": "a67aa10de3a5b0437f44d4bf076c0130d9450fc4c1769871172505e2c3ca7854",
+    "lib/application/scoped-deployment-compiler.js": "25c114b5ea898b11d3e80ff6fe2306201f8adfe52ef1835d563140793dff9662",
+    "lib/application/scoped-deployment-prerequisites.js": "79dd50dc9022767144c786c315bc6c4dfd1fdaf7222ba4507fd968977dfde48d",
+    "lib/application/manifest-deployment-service.js": "dd40c558b7f7627422dd735d4c6da05c1283f2af74425884731fca3dd77ebe83",
+    "lib/infrastructure/manifest-loader.js": "1c6869d29192199084b1e3d4eba5a6bb8571603ba28e202356bb784b51f07bb9",
+    "lib/interfaces/http/error-mapper.js": "8f30988db86ed18206aad1da6e11cc2fdcb898276b618a5fb6bc7b834980a35a",
+    "gui/src/api/deploy.ts": "7e131995bfd521916aa08133dc72769ba4d95f40a4ef64283e665b7a71271290",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "b231df4f71dd0203c18ddbc94fa37f63277f2e5dc0c2fb257f0bce7df5183d72",
+    "gui/src/components/deploy/ManifestDeploymentPanel.test.tsx": "509df57e8ef64146475c6dd6343dc3bd328a12dcb397d47777abfc65e64cd9fd",
+    "gui/server/test/control-plane-e2e.test.js": "d3cd6e791db3f58e4428e375a507fb786c15fdc6090e281166bea33157de3cba",
+    "test/scoped-deployment-plan.test.js": "4f8e6fb2ead5c27a873335bbd0f7d5cd93b924cee324431f2ef3e7594c194318",
+    "test/scoped-deployment-compiler.test.js": "ab1ca6ff83f5f64a7b58cf18959102ba8c1ad47126c5070e6450e9ce81f417e9",
+    "test/scoped-dependency-catalog.test.js": "dc91adbfd2be8798b0147fc7b5f1de4315944e0d63dc525b4f25d5e573505771",
+    "test/http-error-mapper.test.js": "1ca8f7beddd3acc63f6c09f560820447bb10c8895e5c7ee9b43071201f12cc6e",
+    "test/helpers/resource-path-fixture.js": "1c03e878b89b037d9c914a7859412728600a994853b19dd7cdfa48ac581ebbe5",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/antigravity.yaml": "0a455e37040d1769f8b5ef277ad0b55494021a4b9e586bd6432d1b5f633ffc5a",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "package.json": "4b625c59096a641c1e5778c467d219e3c8b0ee2dcbada607b3124b1e0f444715",
+    "docs/contracts/scoped-deployment-compilation-v1.md": "d6088f1183c751a8fa164d31d466023c1329fff23453442412dce67f4138b876",
+    "docs/contracts/scoped-dependencies-v1.md": "ed652af9d7a50089e10946dc775b495f9f1497478e07f9cfc4fd9e7a66444c88",
+    "docs/contracts/dependency-coordination-v1.md": "5cbd0195cd45f948830de195dad192c233f1dd9743ca3945617fa5285b3a5d1a",
+    "docs/contracts/native-prerequisite-observation-v1.md": "6e79433820ca957f29ac1fb6bdd188e92ce525a32b0d0e4c7d8ee5148b9b9db1",
+    "docs/product/shared-resources-consolidation-plan.md": "cd0731d39813c130305c6029d019e6bbd8c4979b777db42f1e6bc81ca87e91f9",
+    "docs/reconstruction/phase-scoped-dependencies.md": "95d133d75fedb70d662c2ede14925e16f603c4133d86aedd0edaa5cb4742898f",
+    "docs/traceability/shared-conversation-requirements.md": "a5d8bc127551fa2c754561a8f2a6e407ed671bb0198c8cb3f883a4ea5c802217"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-domain-red.log",
+      "sha256": "838985fd5b8ef378c0cc3c32b5f7014e0bc21720ebaa306aa77c611525a61164"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-application-red.log",
+      "sha256": "924620feef6003df954da0091659eac1004038108cc39b4888982521d09a6644"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-application-attempt1.log",
+      "sha256": "6aa207125e9a5b4bd2adab487d9cf7a70669fac7b7f0c8988092ed06119dcdbf"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-preservation-red.log",
+      "sha256": "8e368f5e81e104e62681ba68abbfb0abf3ec3e0aeee72be477ee325230518f8a"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-service-red.log",
+      "sha256": "a2cacaf45ee23b2bbfa90230115e67807a421886c9bedddf6e8d702423178f43"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-target-red.log",
+      "sha256": "d1920144bd05b92b058fcbd44d64dd5d82dddc5c5470d2ec13d0a7d9404f3e80"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-bounds-red.log",
+      "sha256": "6429c06876de699a86449c7b7479b7ead882b44a9ca6b92f430a5c53d14024ed"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-http-status-red.log",
+      "sha256": "996e116d99d31e624a00224c69b90758259612c1f6b2d79839c95a62064a091a"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-gui-red.log",
+      "sha256": "aebafbe1fd741c9de82dda51fbe95be519559f52cbb361f6d0fe08360dd56e09"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-focused-final.log",
+      "sha256": "e0e81ad7c0986a115d57939bb3f079f14a5dcefdef4573c43f0a58518373da7d"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-root-final.log",
+      "sha256": "a296d96aa9c04b32c91bb1a97851ffb7bbd2fab1dece50f512ca042cad57809e"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-http-final.log",
+      "sha256": "b676d7a980238e24d2c3b03618023c026b5023280d11d767dfc780c93a48565b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-gui.log",
+      "sha256": "c35b8492f4a51dfc574ffcd5197d017ca2cb886c4de19be482cdc23200bfc17c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-typecheck.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-compiler-build-final.log",
+      "sha256": "aac5417f6915cbd36bdde5592947f69a30a5d49ffd0c450f5a1cb7ed5f4b8c25"
+    }
+  ],
+  "boundaries": {
+    "publicReviewKind": "scoped-preview",
+    "publicPlanEnabled": true,
+    "publicExecutionEnabled": false,
+    "savedExecutionEnabled": false,
+    "scopedReceiptsImplemented": false,
+    "allGlobalMutationGuardsImplemented": false,
+    "originalAssetRuntimeGatesPreserved": true,
+    "publicPrivateAuthoritySeparated": true,
+    "bodyAndConnectionValuesProjected": false,
+    "initialRequestProfiles": 1
+  },
+  "realEnvironment": {
+    "compatibility": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-05T23:35:41.619Z",
+      "mode": "legacy-user-catalog-read-only",
+      "state": {
+        "schemaVersion": 6,
+        "transactions": 145,
+        "managedFiles": 3,
+        "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+        "unchanged": true
+      },
+      "catalog": {
+        "scopes": [
+          {
+            "scope": "global",
+            "status": "ready"
+          },
+          {
+            "scope": "project",
+            "status": "unselected"
+          }
+        ],
+        "registryEntries": 5,
+        "dependencyGraphValid": true,
+        "localNodes": 5,
+        "globalPrerequisites": 0
+      },
+      "clientFileOperations": 0,
+      "nativeCalls": 0,
+      "modelCalls": 0,
+      "toolCalls": 0,
+      "userIndexActivated": false,
+      "v3RealConsumerDeploymentProven": false
+    },
+    "preservation": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "newUserConfigWrites": 0,
+    "newUserStateWrites": 0,
+    "newNativeCalls": 0,
+    "newMcpCalls": 0,
+    "newModelCalls": 0,
+    "newToolCalls": 0,
+    "userIndexActivated": false,
+    "nativeDeploymentSupportExpanded": false,
+    "runtimeEvidenceRecords": 25
+  },
+  "browser": {
+    "run": false,
+    "newTaskSpaceCreated": false,
+    "newBrowserEvidence": false
+  },
+  "remaining": [
+    "Origin-aware scoped installation declarations/receipts and global v3 declaration compatibility",
+    "Predict installed consumer revisions and coordinate registration/release",
+    "Safe native context transitions or re-observation for planned project configuration changes",
+    "Selective impact guards across global apply/remove/rollback/path migration and source deletion/detach",
+    "Saved plans, public coordination recovery dispatch, validate/doctor",
+    "Necessary actual cross-scope consumer apply/restore",
+    "Additional client/surface and target-batch verification",
+    "PR07 Antigravity Agent child completion, PR09 remaining native loading contexts, PR11 strategies/profiles"
+  ]
+}

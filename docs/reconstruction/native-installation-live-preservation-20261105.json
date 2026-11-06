@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T12:23:32.025Z",
+  "complete": true,
+  "kitRoot": "/Users/jw/.agents-kit/kit",
+  "scopes": [
+    {
+      "scope": "global",
+      "scopeRoot": "/Users/jw/.agents-kit/kit/global",
+      "valid": true
+    },
+    {
+      "scope": "projects/default",
+      "scopeRoot": "/Users/jw/.agents-kit/kit/projects/default",
+      "valid": true
+    }
+  ],
+  "proofs": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "capabilityId": "skills-global",
+      "surface": "cli",
+      "platform": "darwin",
+      "arch": "arm64",
+      "accepted": true,
+      "runtimeEvidence": "native-installation-live-codex-runtime-recheck-20261105.json",
+      "nativeEvidence": "native-installation-live-codex-20261105.json",
+      "installedAndRolledBack": true,
+      "testAssetsAbsent": true
+    },
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "capabilityId": "skills-global",
+      "surface": "cli",
+      "platform": "darwin",
+      "arch": "arm64",
+      "accepted": true,
+      "runtimeEvidence": "native-installation-live-antigravity-runtime-recheck-20261105.json",
+      "nativeEvidence": "native-installation-live-antigravity-20261105.json",
+      "installedAndRolledBack": true,
+      "testAssetsAbsent": true
+    }
+  ],
+  "rejectedEvidence": [
+    {
+      "report": "native-installation-live-codex-runtime-20261105.json",
+      "reason": "INITIAL_APPLIED_FINAL_MARKER_MISMATCH",
+      "accepted": false
+    },
+    {
+      "report": "native-installation-live-antigravity-runtime-20261105.json",
+      "reason": "EXECUTABLE_UPDATED_FROM_1_5_0_TO_1_5_1_DURING_VERIFICATION",
+      "accepted": false
+    }
+  ],
+  "preservation": {
+    "watchedPaths": 23,
+    "contentAndModesUnchanged": true,
+    "preexistingLinks": [
+      {
+        "path": "/Users/jw/.agents/skills/ego-browser",
+        "link": "/Users/jw/.local/share/ego/ego-skills",
+        "exactIdentityAndMtimePreserved": true
+      },
+      {
+        "path": "/Users/jw/.gemini/config/skills/ego-browser",
+        "link": "/Users/jw/.local/share/ego/ego-skills",
+        "exactIdentityAndMtimePreserved": true
+      },
+      {
+        "path": "/Users/jw/.gemini/antigravity-cli/skills/ego-browser",
+        "link": "/Users/jw/.local/share/ego/ego-skills",
+        "exactIdentityAndMtimePreserved": true
+      }
+    ],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": false
+      }
+    ],
+    "credentialsCopied": false,
+    "credentialsMutated": false,
+    "rawTranscriptsStored": false
+  },
+  "deployment": {
+    "schemaVersion": 5,
+    "managedTargets": 0,
+    "retainedTransactions": 28,
+    "pendingRecovery": false,
+    "backupsAndHistoryRetained": true
+  },
+  "privateEvidence": "/Users/jw/.agents-kit/verification/native-installation-20261105",
+  "operatorSha256": "d1e05c31850a6ddae6669d2ea0846a6d3a30c3beb3417b80c5ab631f719b23ea",
+  "boundaries": {
+    "verifiedResource": "global Skill only",
+    "existingResourcesAutomaticallyAdopted": false,
+    "appIdeAndOtherCapabilitiesPromoted": false
+  }
+}

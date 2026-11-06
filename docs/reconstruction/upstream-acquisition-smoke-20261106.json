@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-05T15:32:16.977Z",
+  "acquisitionOnly": true,
+  "sourceCodeExecuted": false,
+  "clientFilesWritten": false,
+  "results": [
+    {
+      "locator": {
+        "schemaVersion": 1,
+        "type": "npm",
+        "package": "yaml",
+        "version": "2.8.3",
+        "integrity": "sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==",
+        "subpath": "README.md"
+      },
+      "fingerprint": "7daef70791d7eba48d3425c85f28cabbd6c7c232a9b97590d3902b5aaebd3029",
+      "fileCount": 1,
+      "byteCount": 6266,
+      "contentHash": "c8aa393826fb1c55ae195399864e7f454a2c66c4d9491459545b26cac4b958e6"
+    },
+    {
+      "locator": {
+        "schemaVersion": 1,
+        "type": "git",
+        "repository": "https://github.com/eemeli/yaml.git",
+        "commit": "ce14587484822bffb0f7d31aefedcaf2dc0d0387",
+        "subpath": "README.md"
+      },
+      "fingerprint": "7daef70791d7eba48d3425c85f28cabbd6c7c232a9b97590d3902b5aaebd3029",
+      "fileCount": 1,
+      "byteCount": 6266,
+      "contentHash": "c8aa393826fb1c55ae195399864e7f454a2c66c4d9491459545b26cac4b958e6"
+    }
+  ]
+}

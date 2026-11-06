@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T12:54:45.807Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "mcp",
+  "complete": true,
+  "productionEvidencePromoted": false,
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "stages": {
+        "baseline": {
+          "success": true,
+          "reason": "OK",
+          "mcpAdvertised": false,
+          "confirmed": true,
+          "markerMatched": false,
+          "binaryUnchanged": true
+        },
+        "applied": {
+          "success": true,
+          "reason": "OK",
+          "mcpAdvertised": true,
+          "markerMatched": true,
+          "mcpToolCalled": true,
+          "environmentForwardingConfirmed": true,
+          "confirmed": true,
+          "binaryUnchanged": true
+        },
+        "updated": {
+          "success": true,
+          "reason": "OK",
+          "mcpAdvertised": true,
+          "markerMatched": true,
+          "mcpToolCalled": true,
+          "environmentForwardingConfirmed": true,
+          "confirmed": true,
+          "binaryUnchanged": true
+        },
+        "removed": {
+          "success": true,
+          "reason": "OK",
+          "mcpAdvertised": false,
+          "confirmed": true,
+          "markerMatched": false,
+          "binaryUnchanged": true
+        },
+        "rollback": {
+          "success": true,
+          "reason": "OK",
+          "mcpAdvertised": true,
+          "markerMatched": true,
+          "mcpToolCalled": true,
+          "environmentForwardingConfirmed": true,
+          "confirmed": true,
+          "binaryUnchanged": true
+        }
+      },
+      "fullLifecycleConfirmed": true
+    }
+  ],
+  "proof": "native-client-RPC-transport-and-environment",
+  "transactions": [
+    {
+      "intent": "verification-fixture-control",
+      "reason": "SEED_FRESH_SELECTED_FIXTURE_SERVER",
+      "beforeHash": "5a7b6ec5d762b04fa0937070efaa1566462d9545da4546bc65decf9325077e63",
+      "afterHash": "539137d262162efd6585ecad3448c8d3b8bf08d16ab0f77125c7696cac0b3598",
+      "target": "/Users/jw/.codex/config.toml",
+      "transactionId": "tx-2026-11-05T12-54-46-094Z-ec8370c3"
+    },
+    {
+      "intent": "adopt",
+      "transactionId": "tx-2026-11-05T12-54-46-206Z-5a5b0e07"
+    },
+    {
+      "intent": "native-update",
+      "transactionId": "tx-2026-11-05T12-54-46-972Z-f9f41cf1"
+    },
+    {
+      "intent": "verification-fixture-control",
+      "reason": "TEMPORARY_FIXTURE_ABSENCE",
+      "beforeHash": "9a203fb955d932ee6c74bc659c24239bc6b737f5bfdadb43380b676bc9891963",
+      "afterHash": "5a7b6ec5d762b04fa0937070efaa1566462d9545da4546bc65decf9325077e63",
+      "target": "/Users/jw/.codex/config.toml",
+      "transactionId": "tx-2026-11-05T12-54-47-422Z-7d3519fd"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-54-47-422Z-7d3519fd",
+      "transactionId": "tx-2026-11-05T12-54-47-713Z-45669ab8"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-54-46-972Z-f9f41cf1",
+      "transactionId": "tx-2026-11-05T12-54-47-719Z-2431cee4"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-54-46-206Z-5a5b0e07",
+      "transactionId": "tx-2026-11-05T12-54-48-048Z-2f63e982"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-54-46-094Z-ec8370c3",
+      "transactionId": "tx-2026-11-05T12-54-48-056Z-5303d091"
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "cleanup": {
+    "exactOriginalConfigAndModeRestored": true,
+    "fixtureOwnershipAbsent": true,
+    "fixtureRegistrationDetached": true,
+    "existingOwnersPreserved": true,
+    "historyRetained": true
+  }
+}

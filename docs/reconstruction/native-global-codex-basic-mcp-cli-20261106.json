@@ -1,0 +1,743 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T18:26:21.451Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "mcp",
+  "stagesRequested": "lifecycle",
+  "complete": true,
+  "resourceProfile": "mcp-stdio-basic-v1",
+  "sourceRepresentation": "client-neutral-rendered-then-native-managed",
+  "productionEvidencePromoted": false,
+  "proof": "native-model-read-only-fixture-tool",
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true,
+            "skill": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": true,
+            "skill": false
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "installedSkillRead": false,
+          "unexpectedTools": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "success": true,
+          "nativeDiscovery": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "configurationListed": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          },
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "noUnexpectedInvocation": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          },
+          "confirmed": true
+        },
+        "applied": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true,
+            "skill": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": true,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": false,
+            "skill": false
+          },
+          "toolKinds": [
+            "ca04-marker/read_marker"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "ca04-marker/read_marker",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": false,
+              "skillMarkerReturned": false,
+              "mcpMarkerReturned": true
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "installedSkillRead": false,
+          "unexpectedTools": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "success": true,
+          "nativeDiscovery": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "configurationListed": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          },
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "toolResultMatched": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          },
+          "confirmed": true
+        },
+        "updated": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true,
+            "skill": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": true,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": false,
+            "skill": false
+          },
+          "toolKinds": [
+            "ca04-marker/read_marker"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "ca04-marker/read_marker",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": false,
+              "skillMarkerReturned": false,
+              "mcpMarkerReturned": true
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "installedSkillRead": false,
+          "unexpectedTools": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "success": true,
+          "nativeDiscovery": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "configurationListed": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          },
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "toolResultMatched": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          },
+          "confirmed": true
+        },
+        "removed": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true,
+            "skill": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": true,
+            "skill": false
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "installedSkillRead": false,
+          "unexpectedTools": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "success": true,
+          "nativeDiscovery": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "configurationListed": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          },
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "noUnexpectedInvocation": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          },
+          "confirmed": true
+        },
+        "rollback": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true,
+            "skill": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": true,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": false,
+            "skill": false
+          },
+          "toolKinds": [
+            "ca04-marker/read_marker"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "ca04-marker/read_marker",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [],
+              "fixtureServerInParameters": false,
+              "fixtureToolInParameters": false,
+              "supportingFileNamed": false,
+              "skillMarkerReturned": false,
+              "mcpMarkerReturned": true
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [],
+          "terminalStatus": "unobserved",
+          "installedSkillRead": false,
+          "unexpectedTools": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "binarySha256After": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+          "success": true,
+          "nativeDiscovery": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "configurationListed": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          },
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "toolResultMatched": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          },
+          "confirmed": true
+        }
+      },
+      "cleanupVerified": true,
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "definitionSha256": "0c1841455d2aea53db0aad5da04ef2d99a4526e3810e11cb18e89244ad7de4b6",
+      "verification": {
+        "schemaVersion": 1,
+        "requestedStages": [
+          "baseline",
+          "applied",
+          "updated",
+          "removed",
+          "rollback"
+        ],
+        "missingStages": [],
+        "layers": {
+          "deployment": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          },
+          "nativeRecognition": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          },
+          "modelBehavior": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          },
+          "execution": {
+            "status": "passed",
+            "stages": {
+              "baseline": "passed",
+              "applied": "passed",
+              "updated": "passed",
+              "removed": "passed",
+              "rollback": "passed"
+            }
+          }
+        },
+        "cleanup": "passed",
+        "complete": true,
+        "fullLifecycleConfirmed": true
+      },
+      "fullLifecycleConfirmed": true
+    }
+  ],
+  "transactions": [
+    {
+      "intent": "SEED_FRESH_SELECTED_FIXTURE",
+      "transactionId": "tx-2026-11-05T18-26-38-844Z-9446eba3"
+    },
+    {
+      "intent": "adopt",
+      "transactionId": "tx-2026-11-05T18-26-39-011Z-316d1f45"
+    },
+    {
+      "intent": "apply-kit-update",
+      "transactionId": "tx-2026-11-05T18-26-54-805Z-76c166ef"
+    },
+    {
+      "intent": "TEMPORARY_SELECTED_FIXTURE_ABSENCE",
+      "transactionId": "tx-2026-11-05T18-27-13-094Z-5b5947c3"
+    },
+    {
+      "intent": "rollback",
+      "transactionId": "tx-2026-11-05T18-27-33-602Z-0d43cbf8"
+    },
+    {
+      "intent": "rollback",
+      "transactionId": "tx-2026-11-05T18-27-33-616Z-472e0a2d"
+    }
+  ],
+  "verifierSha256": "61d856b0f974c49d27032e27bb1cccbcb2b1ae110d9d9503ee0e0e6edd0707fc",
+  "rawTranscriptsStored": false,
+  "nativeModelProbes": 5,
+  "isolation": {
+    "credentialsCopied": false,
+    "existingServersChanged": false,
+    "temporarySelectedServer": true,
+    "permissionScope": "native-read-only-session"
+  },
+  "cleanup": {
+    "exactOriginalConfigAndModeRestored": true,
+    "existingOwnersPreserved": true,
+    "fixtureOwnershipAbsent": true,
+    "fixtureRegistrationDetached": true,
+    "historyRetained": true
+  },
+  "completionScope": "requested-clients-resources-stages",
+  "verificationComponentHashes": {
+    "lib/domain/verification-evidence.js": "13c7cb3fa57745437814a5fc78dbc5af837728d376f7f8e94535d21f21274a8b",
+    "lib/adapters/verification/probe-evidence.js": "3cc2c34cff7b23d6d8f7b0fd5316b0d9b0fd2754e7994feec71201eb2f8b8ad5",
+    "lib/adapters/verification/model-use-observation.js": "a1b70399e6caf98d20c767c40872cafa314d06bdf435b4533366adc0a5e4d7ac",
+    "lib/adapters/verification/basic-resource-observation.js": "ba7e02b9d4b295d8dc3a00c8a96dd7c27462386c0a91366a2ec66fe114379ac3",
+    "lib/adapters/verification/command-coverage.js": "bf13c30fe9012bd2b25091c117878d3c61e811f38c7c8b89106cdefba01a5027",
+    "lib/adapters/verification/agent-observation.js": "7ee27eca089a6eb281567577410c3da5d2749e37acf7f30cb4b1fa267b8f91ea",
+    "lib/adapters/verification/antigravity-child-acp.js": "c03fc22888501dcd5ae4b0d6877c1aa5252d905c06f341749fcdbe9a61bf7908",
+    "scripts/client-verification/antigravity-child-acp.mjs": "e99c491864940ab44b170b664c5b5619992fefe1927dea16814ff9a1f2fb0bf6",
+    "lib/adapters/verification/codex-agent-observation.js": "fefa642d39a36ffd8b5aed9cee4f374f4f5a1d44bcade98dc6b90b09df82be55",
+    "lib/adapters/verification/recorded-report.js": "f014eb92d99323d99c96ba5be3e13c5a7b433c0e8744cc0880bf0c9353df8ac7",
+    "scripts/client-verification/deployment.mjs": "6548099151ca96254470b15d860d3e660ec9e0769a4c11116e86809c01b903b1",
+    "scripts/client-verification/report.mjs": "dfec0f6a2c8b3cb83214f604f68867c38bb2d5b869b87b66c97f2b49e8e69f37"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:06:40.553Z",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "modelTurnsRequested": false,
+  "requests": [
+    "initialize",
+    "config/read"
+  ],
+  "stages": [
+    {
+      "stage": "project-disabled",
+      "status": "observed",
+      "reason": null,
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "version": "0.166.0-alpha.6",
+      "groups": [
+        {
+          "name": "shared",
+          "enabled": false,
+          "composition": "single-source",
+          "connectionState": "unverified",
+          "sourceCount": 1,
+          "manageable": false
+        }
+      ],
+      "sources": [
+        {
+          "name": "shared",
+          "scope": "global",
+          "state": "shadowed",
+          "activation": "unknown"
+        },
+        {
+          "name": "shared",
+          "scope": "project",
+          "state": "listed",
+          "activation": "disabled"
+        }
+      ],
+      "settingsPreserved": true,
+      "mcpStarted": false
+    },
+    {
+      "stage": "composed",
+      "status": "observed",
+      "reason": null,
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "version": "0.166.0-alpha.6",
+      "groups": [
+        {
+          "name": "shared",
+          "enabled": true,
+          "composition": "composed",
+          "connectionState": "unverified",
+          "sourceCount": 2,
+          "manageable": false
+        }
+      ],
+      "sources": [
+        {
+          "name": "shared",
+          "scope": "global",
+          "state": "contributing",
+          "activation": "unknown"
+        },
+        {
+          "name": "shared",
+          "scope": "project",
+          "state": "contributing",
+          "activation": "unknown"
+        }
+      ],
+      "settingsPreserved": true,
+      "mcpStarted": false
+    },
+    {
+      "stage": "ancestor",
+      "status": "observed",
+      "reason": null,
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "version": "0.166.0-alpha.6",
+      "groups": [
+        {
+          "name": "shared",
+          "enabled": true,
+          "composition": "composed",
+          "connectionState": "unverified",
+          "sourceCount": 2,
+          "manageable": false
+        },
+        {
+          "name": "child_only",
+          "enabled": true,
+          "composition": "single-source",
+          "connectionState": "unverified",
+          "sourceCount": 1,
+          "manageable": false
+        }
+      ],
+      "sources": [
+        {
+          "name": "shared",
+          "scope": "global",
+          "state": "contributing",
+          "activation": "unknown"
+        },
+        {
+          "name": "child_only",
+          "scope": "project",
+          "state": "listed",
+          "activation": "enabled"
+        }
+      ],
+      "settingsPreserved": true,
+      "mcpStarted": false
+    }
+  ],
+  "success": true
+}

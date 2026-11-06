@@ -1,47 +1,14 @@
 import {spawn} from 'node:child_process';
+import path from 'node:path';
+import {observeClientBinary} from '../../lib/infrastructure/client-binary-observer.js';
 
-// Native public events only: never load rollout history or decode reasoning items.
-export function createRpcAgentObservation(agentName, marker) {
-  let parentId;
-  const children = new Set(), completed = new Set(), matched = new Set(), candidates = new Set();
-  const facts = {terminalSuccess: false, parentCompleted: false, terminalStatus: null, errorCategory: [], finalMatches: false, reportedAbsent: false, spawned: false, roleObserved: false, childMarkerReturned: false, completedChildMarker: false, unexpectedTools: false, methods: [], itemTypes: []};
-  const finishChild = () => {facts.childMarkerReturned = [...matched].some(id => completed.has(id)); facts.completedChildMarker = facts.childMarkerReturned;};
-  return {facts, candidateIds: () => [...candidates], childIds: () => [...children], setParent(id) {parentId = id;}, accept(line) {
-    const method = line.match(/"method"\s*:\s*"([a-zA-Z/]{1,80})"/)?.[1];
-    if (!['thread/started', 'item/started', 'item/completed', 'turn/completed'].includes(method)) return;
-    if (/"type"\s*:\s*"reasoning"/.test(line)) return;
-    if (!facts.methods.includes(method)) facts.methods.push(method);
-    let event; try {event = JSON.parse(line);} catch {return;}
-    const p = event.params || {};
-    if (method === 'thread/started') {
-      const t = p.thread, source = t?.source?.subAgent?.thread_spawn;
-      if (t?.id && (t.parentThreadId || source?.parent_thread_id) === parentId && (t.agentRole || source?.agent_role) === agentName) {children.add(t.id); facts.spawned = true; facts.roleObserved = true;}
-    }
-    if (method === 'turn/completed') {
-      if (p.threadId === parentId) {facts.parentCompleted = true; facts.terminalSuccess = p.turn?.status === 'completed'; facts.terminalStatus = ['completed', 'failed', 'interrupted'].includes(p.turn?.status) ? p.turn.status : 'unknown'; facts.errorCategory = ['model', 'unsupported', 'auth', 'quota', 'key', 'provider', 'limit', 'credit'].filter(word => JSON.stringify(p.turn?.error || '').toLowerCase().includes(word));}
-      if (children.has(p.threadId) && p.turn?.status === 'completed') {completed.add(p.threadId); finishChild();}
-      return;
-    }
-    const item = p.item;
-    if (!item || p.threadId !== parentId && !children.has(p.threadId)) return;
-    if (/^[a-zA-Z]{1,60}$/.test(item.type) && !facts.itemTypes.includes(item.type)) facts.itemTypes.push(item.type);
-    if (item.type === 'subAgentActivity' && p.threadId === parentId && item.kind === 'started' && item.agentThreadId) candidates.add(item.agentThreadId);
-    if (item.type === 'agentMessage' && method === 'item/completed') {
-      if (children.has(p.threadId) && marker !== 'ABSENT' && item.text?.trim() === marker) {matched.add(p.threadId); finishChild();}
-      if (p.threadId === parentId) {try {const value = JSON.parse(item.text.trim().match(/```(?:json)?\s*([\s\S]*?)```/)?.[1] || item.text.trim()); facts.finalMatches = value.agent === marker; facts.reportedAbsent = value.agent === 'ABSENT';} catch {facts.finalMatches = false;}}
-    }
-    if (['commandExecution', 'mcpToolCall', 'fileChange', 'webSearch', 'dynamicToolCall'].includes(item.type)) facts.unexpectedTools = true;
-    if (item.type === 'collabAgentToolCall' && method === 'item/completed') {
-      if (!['spawnAgent', 'wait', 'closeAgent'].includes(item.tool)) facts.unexpectedTools = true;
-      if (item.status === 'completed') for (const [id, state] of Object.entries(item.agentsStates || {})) {
-        if (children.has(id) && item.receiverThreadIds?.includes(id) && state.status === 'completed' && marker !== 'ABSENT' && state.message?.trim() === marker) {matched.add(id); completed.add(id); finishChild();}
-      }
-    }
-  }};
-}
+import {createRpcAgentObservation} from '../../lib/adapters/verification/codex-agent-observation.js';
+export {createRpcAgentObservation} from '../../lib/adapters/verification/codex-agent-observation.js';
 
-export async function runCodexAgentRpc(binary, {cwd, env, prompt, agentName, marker, timeoutMs = 120000}) {
+export async function runCodexAgentRpc(binary, {cwd, env, prompt, agentName, marker, timeoutMs = 120000, expectedBinarySha256}) {
   const observation = createRpcAgentObservation(agentName, marker);
+  const fingerprint = () => path.isAbsolute(binary) ? observeClientBinary({id:'cli', detection:{commands:[path.basename(binary)]}}, {pathValue:path.dirname(binary)})?.sha256 : null;
+  if (expectedBinarySha256 && fingerprint() !== expectedBinarySha256) return {...observation.facts, reason:'CLIENT_BINARY_CHANGED', binaryUnchanged:false, success:false};
   const child = spawn(binary, ['app-server', '-c', `projects={${JSON.stringify(cwd)}={trust_level="trusted"}}`, '-c', 'approval_policy="never"', '-c', 'sandbox_mode="read-only"'], {cwd, env, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
   let nextId = 0, buffer = '', total = 0, reason = 'OK', end, childEnd;
   const childDone = new Promise(resolve => {childEnd = resolve;});
@@ -69,7 +36,11 @@ export async function runCodexAgentRpc(binary, {cwd, env, prompt, agentName, mar
         if (id) child.stdin.write(`${JSON.stringify({id: Number(id), error: {code: -32601, message: 'Fixture does not permit tool requests'}})}\n`);
         observation.accept(line);
         for (const id of observation.candidateIds()) if (!subscriptions.has(id)) {
-          const subscription = request('thread/resume', {threadId: id, excludeTurns: true}).then(resumed => {
+          const subscription = request('thread/resume', {threadId: id, excludeTurns: true}).catch(async () => {
+            const metadata = await request('thread/read', {threadId:id, includeTurns:false});
+            observation.facts.childMetadataOnly = true;
+            return metadata;
+          }).then(resumed => {
             observation.accept(JSON.stringify({method: 'thread/started', params: {thread: resumed.thread}}));
             observation.facts.childMetadataRoleMatches = resumed.thread?.agentRole === agentName;
           }).catch(() => {observation.facts.subscriptionFailed = true;});
@@ -93,13 +64,14 @@ export async function runCodexAgentRpc(binary, {cwd, env, prompt, agentName, mar
     await request('turn/start', {threadId: started.thread.id, input: [{type: 'text', text: prompt}]});
     await done;
     await Promise.all(subscriptions.values());
-    if (reason === 'OK' && observation.facts.terminalSuccess && marker !== 'ABSENT' && subscriptions.size === 1 && observation.facts.roleObserved) {
-      observation.facts.childEvidenceSource = 'live-public-child-events';
+    if (observation.facts.childMarkerReturned) childEnd();
+    if (reason === 'OK' && observation.facts.terminalSuccess && marker !== 'ABSENT' && subscriptions.size === 1 && observation.facts.roleObserved && !observation.facts.childMetadataOnly) {
       await childDone;
     }
 
   } catch(error) {reason = /^[A-Z_]+$/.test(error.code || '') ? error.code : 'RPC_REJECTED';}
   finally {clearTimeout(timer); stop(); buffer = '';}
   if (reason === 'OK' && observation.facts.parentCompleted && !observation.facts.terminalSuccess) reason = 'TURN_FAILED';
-  return {...observation.facts, reason, success: reason === 'OK' && observation.facts.terminalSuccess};
+  const stable = !expectedBinarySha256 || fingerprint() === expectedBinarySha256;
+  return {...observation.facts, reason: stable ? reason : 'CLIENT_BINARY_CHANGED', ...(expectedBinarySha256 ? {binaryUnchanged:stable} : {}), success: stable && reason === 'OK' && observation.facts.terminalSuccess};
 }

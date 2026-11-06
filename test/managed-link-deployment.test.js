@@ -88,6 +88,17 @@ test('managed strategy blocks unknown and externally modified files', () => {
   assert.equal(plan.blocked[0].reason, 'OWNED_CONTENT_MODIFIED_EXTERNALLY');
 });
 
+test('managed and link plans cannot replace native file or selected-unit ownership', t => {
+  for (const strategy of ['managed', 'link']) for (const selectedUnit of [false, true]) {
+    const subject = fixture(strategy); t.after(() => fs.rmSync(subject.root, {recursive: true, force: true}));
+    const target = path.join(fs.realpathSync(subject.project), `.client/${strategy}.txt`);
+    const state = {managed: {[target]: selectedUnit ? {owners: {asset: {nativeSource: {assetId: 'asset'}}}} : {nativeSource: {assetId: 'asset'}}}};
+    const plan = prepareManagedLinkDeployment({capabilityPlan: subject.capabilityPlan, sources: new Map([['asset', subject.source]]), targetRoot: subject.project, homeDir: subject.root, state});
+    assert.equal(plan.automatic, false); assert.equal(plan.operations.length, 0);
+    assert.equal(plan.blocked[0].reason, 'NATIVE_OWNERSHIP_CONFLICT'); assert.equal(fs.existsSync(target), false);
+  }
+});
+
 test('link strategy creates and safely replaces only an owned symlink', () => {
   const subject = fixture('link');
   let plan = subject.prepare();

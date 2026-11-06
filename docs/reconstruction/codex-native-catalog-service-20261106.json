@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T19:49:07.354Z",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "modelTurnsRequested": false,
+  "stages": [
+    {
+      "enabled": false,
+      "status": "observed",
+      "reason": null,
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "version": "0.166.0-alpha.6",
+      "entries": [
+        {
+          "scope": "global",
+          "activation": "enabled",
+          "nativeState": "listed",
+          "selected": false
+        },
+        {
+          "scope": "project",
+          "activation": "disabled",
+          "nativeState": "listed",
+          "selected": false
+        }
+      ],
+      "parentObserved": true,
+      "externalObservationOnly": true,
+      "externalAdditionalSuppressed": true,
+      "settingsPreserved": true
+    },
+    {
+      "enabled": true,
+      "status": "observed",
+      "reason": null,
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "version": "0.166.0-alpha.6",
+      "entries": [
+        {
+          "scope": "global",
+          "activation": "enabled",
+          "nativeState": "listed",
+          "selected": false
+        },
+        {
+          "scope": "project",
+          "activation": "enabled",
+          "nativeState": "listed",
+          "selected": false
+        }
+      ],
+      "parentObserved": true,
+      "externalObservationOnly": true,
+      "externalAdditionalSuppressed": true,
+      "settingsPreserved": true
+    }
+  ],
+  "linkPreserved": true,
+  "success": true
+}

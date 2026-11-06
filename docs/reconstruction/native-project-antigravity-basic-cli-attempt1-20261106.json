@@ -1,0 +1,458 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-2",
+  "observedAt": "2026-11-05T18:09:26.488Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "verificationRevision": "PR07-basic-cli-v1",
+  "checkOnly": false,
+  "modelRequests": 1,
+  "scope": "project",
+  "surface": "cli",
+  "stagesRequested": "lifecycle",
+  "resources": [
+    "instructions",
+    "skill",
+    "mcp"
+  ],
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "d59ea98adc24a2203836f4426a3e7fe8519c36cbe3d273b46005e599c47ba0c6",
+  "markerServerSha256": "7efc5d0c529a176cd6863f316d19919fca062e1c112d5671736e1ad5e69f717f",
+  "collectorSha256": "f87b2ccb9801280eb228345edbd35bbce939a98b0d104e1a40447db2d6c5ac19",
+  "authentication": "existing-native-login",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": false,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": true
+  },
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "instructions": true,
+            "skill": true,
+            "mcp": true
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "instructions": true,
+            "skill": true,
+            "mcp": true
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response",
+            "tool",
+            "finish"
+          ],
+          "terminalStatus": "SUCCESS",
+          "installedSkillRead": false,
+          "unexpectedTools": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": true,
+          "verification": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "noUnexpectedInvocation": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "passed",
+              "checks": {
+                "responseParsed": "passed",
+                "responseMatched": "passed",
+                "turnCompleted": "passed"
+              }
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": true
+          },
+          "verificationByResource": {
+            "instructions": {
+              "schemaVersion": 1,
+              "deployment": {
+                "status": "passed",
+                "checks": {
+                  "recoveryClear": "passed",
+                  "bytesMatch": "passed",
+                  "modesMatch": "passed",
+                  "ownershipMatch": "passed"
+                }
+              },
+              "nativeRecognition": {
+                "status": "passed",
+                "checks": {
+                  "noUnexpectedInvocation": "passed"
+                }
+              },
+              "modelBehavior": {
+                "status": "passed",
+                "checks": {
+                  "responseParsed": "passed",
+                  "responseMatched": "passed",
+                  "turnCompleted": "passed"
+                }
+              },
+              "execution": {
+                "status": "passed",
+                "checks": {
+                  "processCompleted": "passed",
+                  "binaryUnchanged": "passed",
+                  "allowedToolsOnly": "passed"
+                },
+                "reason": "OK"
+              },
+              "confirmed": true
+            },
+            "skill": {
+              "schemaVersion": 1,
+              "deployment": {
+                "status": "passed",
+                "checks": {
+                  "recoveryClear": "passed",
+                  "bytesMatch": "passed",
+                  "modesMatch": "passed",
+                  "ownershipMatch": "passed"
+                }
+              },
+              "nativeRecognition": {
+                "status": "passed",
+                "checks": {
+                  "noUnexpectedInvocation": "passed"
+                }
+              },
+              "modelBehavior": {
+                "status": "passed",
+                "checks": {
+                  "responseParsed": "passed",
+                  "responseMatched": "passed",
+                  "turnCompleted": "passed"
+                }
+              },
+              "execution": {
+                "status": "passed",
+                "checks": {
+                  "processCompleted": "passed",
+                  "binaryUnchanged": "passed",
+                  "allowedToolsOnly": "passed"
+                },
+                "reason": "OK"
+              },
+              "confirmed": true
+            },
+            "mcp": {
+              "schemaVersion": 1,
+              "deployment": {
+                "status": "passed",
+                "checks": {
+                  "recoveryClear": "passed",
+                  "bytesMatch": "passed",
+                  "modesMatch": "passed",
+                  "ownershipMatch": "passed"
+                }
+              },
+              "nativeRecognition": {
+                "status": "passed",
+                "checks": {
+                  "noUnexpectedInvocation": "passed"
+                }
+              },
+              "modelBehavior": {
+                "status": "passed",
+                "checks": {
+                  "responseParsed": "passed",
+                  "responseMatched": "passed",
+                  "turnCompleted": "passed"
+                }
+              },
+              "execution": {
+                "status": "passed",
+                "checks": {
+                  "processCompleted": "passed",
+                  "binaryUnchanged": "passed",
+                  "allowedToolsOnly": "passed"
+                },
+                "reason": "OK"
+              },
+              "confirmed": true
+            }
+          },
+          "nativeDiscovery": {
+            "mcp": {
+              "schemaVersion": 1,
+              "deployment": {
+                "status": "passed",
+                "checks": {
+                  "recoveryClear": "passed",
+                  "bytesMatch": "passed",
+                  "modesMatch": "passed",
+                  "ownershipMatch": "passed"
+                }
+              },
+              "nativeRecognition": {
+                "status": "passed",
+                "checks": {
+                  "configurationListed": "passed"
+                }
+              },
+              "modelBehavior": {
+                "status": "not-tested",
+                "checks": {}
+              },
+              "execution": {
+                "status": "passed",
+                "checks": {
+                  "processCompleted": "passed",
+                  "binaryUnchanged": "passed",
+                  "allowedToolsOnly": "passed"
+                },
+                "reason": "OK"
+              },
+              "confirmed": false
+            }
+          }
+        }
+      },
+      "customAgent": "not-tested",
+      "fullLifecycleConfirmed": false,
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "definitionSha256": "5ad6895be18539874885e54273c1685686a2845cfc222f7fe315333499ef6b64",
+      "preflight": {
+        "automatic": true,
+        "operations": [
+          {
+            "assetId": "ca04-marker",
+            "assetKind": "mcpServers",
+            "target": "/private/var/folders/3l/1d2h7vnj7kb9ds6v2mcvrg200000gn/T/agents-kit-ca04-use-4RPZL2/antigravity/project/.agents/mcp_config.json",
+            "operation": "CREATE"
+          },
+          {
+            "assetId": "ca04-rules",
+            "assetKind": "instructions",
+            "target": "/private/var/folders/3l/1d2h7vnj7kb9ds6v2mcvrg200000gn/T/agents-kit-ca04-use-4RPZL2/antigravity/project/AGENTS.md",
+            "operation": "UPDATE"
+          },
+          {
+            "assetId": "ca04-skill",
+            "assetKind": "skills",
+            "target": "/private/var/folders/3l/1d2h7vnj7kb9ds6v2mcvrg200000gn/T/agents-kit-ca04-use-4RPZL2/antigravity/project/.agents/skills/ca04-skill/SKILL.md",
+            "operation": "CREATE"
+          },
+          {
+            "assetId": "ca04-skill",
+            "assetKind": "skills",
+            "target": "/private/var/folders/3l/1d2h7vnj7kb9ds6v2mcvrg200000gn/T/agents-kit-ca04-use-4RPZL2/antigravity/project/.agents/skills/ca04-skill/references/marker.txt",
+            "operation": "CREATE"
+          }
+        ],
+        "blocked": []
+      },
+      "nativeDiscovery": {
+        "baseline": {
+          "mcp": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "passed",
+              "checks": {
+                "configurationListed": "passed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          }
+        },
+        "applied": {
+          "mcp": {
+            "schemaVersion": 1,
+            "deployment": {
+              "status": "passed",
+              "checks": {
+                "transactionCommitted": "passed",
+                "recoveryClear": "passed",
+                "bytesMatch": "passed",
+                "modesMatch": "passed",
+                "ownershipMatch": "passed"
+              }
+            },
+            "nativeRecognition": {
+              "status": "failed",
+              "checks": {
+                "configurationListed": "failed"
+              }
+            },
+            "modelBehavior": {
+              "status": "not-tested",
+              "checks": {}
+            },
+            "execution": {
+              "status": "passed",
+              "checks": {
+                "processCompleted": "passed",
+                "binaryUnchanged": "passed",
+                "allowedToolsOnly": "passed"
+              },
+              "reason": "OK"
+            },
+            "confirmed": false
+          }
+        }
+      },
+      "cleanupVerified": true,
+      "blocker": "NATIVE_DISCOVERY_UNCONFIRMED",
+      "verification": {
+        "schemaVersion": 1,
+        "requestedStages": [
+          "baseline",
+          "applied",
+          "updated",
+          "removed",
+          "rollback"
+        ],
+        "missingStages": [
+          "applied",
+          "updated",
+          "removed",
+          "rollback"
+        ],
+        "layers": {
+          "deployment": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "passed",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          },
+          "nativeRecognition": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "passed",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          },
+          "modelBehavior": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "passed",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          },
+          "execution": {
+            "status": "not-tested",
+            "stages": {
+              "baseline": "passed",
+              "applied": "not-tested",
+              "updated": "not-tested",
+              "removed": "not-tested",
+              "rollback": "not-tested"
+            }
+          }
+        },
+        "cleanup": "passed",
+        "complete": false,
+        "fullLifecycleConfirmed": false
+      }
+    }
+  ],
+  "completionScope": "requested-clients-resources-stages",
+  "verificationComponentHashes": {
+    "lib/domain/verification-evidence.js": "13c7cb3fa57745437814a5fc78dbc5af837728d376f7f8e94535d21f21274a8b",
+    "lib/adapters/verification/probe-evidence.js": "d5073340428a037b9e07879fd8519c9abb3d5a03cd445d0c92c6081237629645",
+    "lib/adapters/verification/model-use-observation.js": "a1b70399e6caf98d20c767c40872cafa314d06bdf435b4533366adc0a5e4d7ac",
+    "lib/adapters/verification/basic-resource-observation.js": "ba7e02b9d4b295d8dc3a00c8a96dd7c27462386c0a91366a2ec66fe114379ac3",
+    "lib/adapters/verification/agent-observation.js": "7ee27eca089a6eb281567577410c3da5d2749e37acf7f30cb4b1fa267b8f91ea",
+    "lib/adapters/verification/antigravity-child-acp.js": "c03fc22888501dcd5ae4b0d6877c1aa5252d905c06f341749fcdbe9a61bf7908",
+    "scripts/client-verification/antigravity-child-acp.mjs": "e99c491864940ab44b170b664c5b5619992fefe1927dea16814ff9a1f2fb0bf6",
+    "lib/adapters/verification/codex-agent-observation.js": "fefa642d39a36ffd8b5aed9cee4f374f4f5a1d44bcade98dc6b90b09df82be55",
+    "lib/adapters/verification/recorded-report.js": "f014eb92d99323d99c96ba5be3e13c5a7b433c0e8744cc0880bf0c9353df8ac7",
+    "scripts/client-verification/deployment.mjs": "6548099151ca96254470b15d860d3e660ec9e0769a4c11116e86809c01b903b1",
+    "scripts/client-verification/report.mjs": "fdc32e43ee53379030b9100ed5bf20f25eeeeb33d434bf984af4dcc8a442c14f"
+  },
+  "sessionPermission": {
+    "scope": "process-only",
+    "allow": [
+      "mcp(ca04-marker/read_marker)"
+    ],
+    "userSettingsWritten": false
+  }
+}

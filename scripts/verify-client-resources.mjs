@@ -8,6 +8,11 @@ import {parse, stringify} from 'yaml';
 import {createManifestDeploymentService} from '../lib/application/manifest-deployment-service.js';
 import {isolatedEnvironment, runCommand, withCodexRpc} from './client-verification/process.mjs';
 import {skillObservation, markerObservation, lifecycleRecognition} from './client-verification/observations.mjs';
+import {createClientDefinition, selectClientSurface} from '../lib/domain/client-definition.js';
+import {verificationStage} from '../lib/domain/verification-evidence.js';
+import {discoveryEvidence, probeExecution} from '../lib/adapters/verification/probe-evidence.js';
+import {createDeploymentVerification} from './client-verification/deployment.mjs';
+import {finalizeVerificationReport, cleanupVerificationScratch} from './client-verification/report.mjs';
 
 const repositoryRoot = path.resolve(import.meta.dirname, '..');
 const argv = process.argv.slice(2);
@@ -44,20 +49,26 @@ async function verify(clientId, binary, scope) {
     capabilityId, version, platform: process.platform, arch: process.arch, verifiedAt: report.observedAt.slice(0, 10), source: 'CA04 disposable test fixture ONLY; not support evidence'
   }));
   fs.writeFileSync(path.join(definitionsDir, `${clientId}.yaml`), stringify(definition));
+  const selectedProfile = selectClientSurface(createClientDefinition(definition), 'cli');
+  const clientPath = (kind, assetId, targetScope = scope) => {
+    const capability = selectedProfile.capabilities.find(item => item.assetKind === kind && item.scope === targetScope);
+    const template = capability.path.replaceAll('{assetId}', assetId);
+    return template.startsWith('~/') ? path.join(homeDir, template.slice(2)) : path.resolve(workspaceDir, template);
+  };
   // Project config must be explicitly trusted inside the disposable Codex home.
   if (clientId === 'codex' && scope === 'project') fs.writeFileSync(path.join(homeDir, '.codex/config.toml'), `[projects.${JSON.stringify(workspaceDir)}]\ntrust_level = "trusted"\n`);
   if (clientId === 'antigravity') {
-    const globalConfig = path.join(homeDir, '.gemini/config');
-    fs.mkdirSync(path.join(globalConfig, 'agents'), {recursive: true});
-    fs.writeFileSync(path.join(globalConfig, 'mcp_config.json'), JSON.stringify({mcpServers: {'ca04-global-control': {command: process.execPath, args: ['--version']}}}));
-    fs.writeFileSync(path.join(globalConfig, 'agents/ca04-global-control.md'), '---\nname: ca04-global-control\ndescription: List scope control\nmainAgent: true\nsubagent: false\n---\nDo not execute this control.\n');
+    const globalConfig = clientPath('mcp', 'ca04-global-control', 'global'), globalAgent = clientPath('agents', 'ca04-global-control', 'global');
+    for (const file of [globalConfig, globalAgent]) fs.mkdirSync(path.dirname(file), {recursive: true});
+    fs.writeFileSync(globalConfig, JSON.stringify({mcpServers: {'ca04-global-control': {command: process.execPath, args: ['--version']}}}));
+    fs.writeFileSync(globalAgent, '---\nname: ca04-global-control\ndescription: List scope control\nmainAgent: true\nsubagent: false\n---\nDo not execute this control.\n');
   }
   const service = createManifestDeploymentService({definitionsDir, homeDir, planStoreRoot: path.join(root, 'saved')});
   const input = {scopeRoot, targetRoot, clientId, scope, surface: 'cli', clientVersion: version};
-  const skillPath = path.join(targetRoot, scope === 'global' && clientId === 'antigravity' ? '.gemini/config/skills/ca04-skill/SKILL.md' : '.agents/skills/ca04-skill/SKILL.md');
-  const agentPath = path.join(targetRoot, clientId === 'codex' ? '.codex/agents/ca04-agent.toml' : scope === 'global' ? '.gemini/config/agents/ca04-agent.md' : '.agents/agents/ca04-agent.md');
-  const configPath = path.join(targetRoot, clientId === 'codex' ? '.codex/config.toml' : scope === 'global' ? '.gemini/config/mcp_config.json' : '.agents/mcp_config.json');
-  const instructionsPath = path.join(targetRoot, scope === 'project' ? 'AGENTS.md' : clientId === 'codex' ? '.codex/AGENTS.md' : '.gemini/GEMINI.md');
+  const deployment = createDeploymentVerification({service, input});
+  const skillPath = path.join(clientPath('skills', 'ca04-skill'), 'SKILL.md');
+  const agentPath = clientPath('agents', 'ca04-agent'), configPath = clientPath('mcp', 'ca04-marker');
+  const instructionsPath = clientPath('instructions', 'ca04-rules');
   fs.mkdirSync(path.dirname(instructionsPath), {recursive: true});
   const userText = '# Existing user instructions\n'; fs.writeFileSync(instructionsPath, userText);
   function manifest(revision) {
@@ -88,7 +99,7 @@ async function verify(clientId, binary, scope) {
           const skills = await request('skills/list', {cwds: [workspaceDir], forceReload: true});
           observation.skills = {status: 'client-discovery', ...skillObservation(skills, 'ca04-skill', skillPath, marker)};
           const thread = await request('thread/start', {cwd: workspaceDir, ephemeral: true, approvalPolicy: 'never', sandbox: 'read-only'});
-          observation.instructions = {status: 'instruction-source-discovery', sourceListed: JSON.stringify(thread.instructionSources || []).includes(instructionsPath)};
+          observation.instructions = {status: 'instruction-source-discovery', ...(Array.isArray(thread.instructionSources) ? {sourceListed: JSON.stringify(thread.instructionSources).includes(instructionsPath)} : {})};
           // A direct call through the installed client proves MCP transport use, not model selection.
           if (observation.mcp.present) {
             const result = await request('mcpServer/tool/call', {threadId: thread.thread.id, server: 'ca04-marker', tool: 'read_marker', arguments: {}});
@@ -102,27 +113,43 @@ async function verify(clientId, binary, scope) {
         ...(listed.code === 0 ? {present: listed.stdout.includes('ca04-marker'), globalControlPresent: listed.stdout.includes('ca04-global-control')} : {})};
       const agents = await runCommand(binary, ['agents'], execution);
       observation.agents = {status: agents.code === 0 ? 'agent-list' : 'blocked', reason: agents.reason,
+        coversSubagents: false,
         ...(agents.code === 0 ? {present: agents.stdout.includes('ca04-agent'), globalMainAgentControlPresent: agents.stdout.includes('ca04-global-control')} : {})};
     }
+    const present = !['baseline', 'removed'].includes(stage), proof = deployment.check();
+    const runResult = {success: !observation.rpc && !['instructions', 'skills', 'agents', 'mcp'].some(kind => observation[kind].status === 'blocked'),
+      reason: observation.rpc?.reason || 'OK', binaryUnchanged: entry.binarySha256 ? crypto.createHash('sha256').update(fs.readFileSync(binary)).digest('hex') === entry.binarySha256 : undefined};
+    observation.verificationByResource = Object.fromEntries(['instructions', 'skills', 'agents', 'mcp'].map(resource =>
+      [resource, discoveryEvidence(observation, {resource, present, deployment: proof, runResult})]));
+    const statuses = Object.values(observation.verificationByResource).map(value => value.nativeRecognition.status);
+    observation.verification = verificationStage({deployment: proof, nativeRecognition: {
+      configurationListed: statuses.includes('failed') ? false : statuses.every(value => value === 'passed') ? true : 'not-observed'
+    }, ...probeExecution(runResult)});
   }
   let marker = manifest(1);
-  await observe('baseline', marker);
-  const first = service.plan(input); if (!first.automatic) throw Object.assign(new Error('Fixture plan blocked'), {code: first.blocked[0]?.reason || 'FIXTURE_PLAN_BLOCKED'}); service.apply({planId: first.planId});
-  await observe('applied', marker);
-  marker = manifest(2); const second = service.plan(input); service.apply({planId: second.planId}); await observe('updated', marker);
-  const beforeRemoval = [instructionsPath, skillPath, agentPath, configPath].map(file => fs.readFileSync(file));
-  const removal = service.planRemoval({...input, assetIds: ['ca04-rules', 'ca04-skill', 'ca04-agent', 'ca04-marker']});
-  const removed = service.apply({planId: removal.planId}); await observe('removed', marker);
-  const rollback = service.planRollback({...input, transactionId: removed.transactionId}); service.rollback({planId: rollback.planId}); await observe('rollback', marker);
-  entry.fileLifecycle = {allPlansApplicable: first.automatic && second.automatic && removal.automatic && rollback.automatic,
-    rollbackBytesMatch: [instructionsPath, skillPath, agentPath, configPath].every((file, i) => fs.readFileSync(file).equals(beforeRemoval[i]))};
-  entry.recognition = {mcpLifecycle: lifecycleRecognition(entry.stages, 'mcp'), skillLifecycle: lifecycleRecognition(entry.stages, 'skills'), agentLifecycle: lifecycleRecognition(entry.stages, 'agents')};
-  if (clientId === 'codex') {
-    entry.use.mcp = ['applied', 'updated', 'rollback'].every(stage => entry.stages[stage].mcp.markerMatched === true) ? 'client-rpc-confirmed' : 'not-confirmed';
-    const auth = await runCommand(binary, ['login', 'status'], execution);
-    entry.authentication = auth.code === 0 ? 'available' : auth.stderr.includes('Not logged in') ? 'login-required' : 'unverified';
-  } else entry.authentication = 'not-tested';
-  entry.remaining = ['model instruction compliance', 'skill supporting-file use', 'custom agent execution', 'desktop and IDE'];
+  deployment.track(service.plan(input));
+  try {
+    await observe('baseline', marker);
+    const first = service.plan(input); if (!first.automatic) throw Object.assign(new Error('Fixture plan blocked'), {code: first.blocked[0]?.reason || 'FIXTURE_PLAN_BLOCKED'}); deployment.apply(first);
+    await observe('applied', marker);
+    marker = manifest(2); const second = service.plan(input); deployment.apply(second); await observe('updated', marker);
+    const beforeRemoval = [instructionsPath, skillPath, agentPath, configPath].map(file => fs.readFileSync(file));
+    const removal = service.planRemoval({...input, assetIds: ['ca04-rules', 'ca04-skill', 'ca04-agent', 'ca04-marker']});
+    const removed = deployment.apply(removal); await observe('removed', marker);
+    const rollback = service.planRollback({...input, transactionId: removed.transactionId}); deployment.rollback(rollback); await observe('rollback', marker);
+    entry.fileLifecycle = {allPlansApplicable: first.automatic && second.automatic && removal.automatic && rollback.automatic,
+      rollbackBytesMatch: [instructionsPath, skillPath, agentPath, configPath].every((file, i) => fs.readFileSync(file).equals(beforeRemoval[i]))};
+    entry.recognition = {mcpLifecycle: lifecycleRecognition(entry.stages, 'mcp'), skillLifecycle: lifecycleRecognition(entry.stages, 'skills'), agentLifecycle: lifecycleRecognition(entry.stages, 'agents')};
+    if (clientId === 'codex') {
+      entry.use.mcp = ['applied', 'updated', 'rollback'].every(stage => entry.stages[stage].mcp.markerMatched === true) ? 'client-rpc-confirmed' : 'not-confirmed';
+      const auth = await runCommand(binary, ['login', 'status'], execution);
+      entry.authentication = auth.code === 0 ? 'available' : auth.stderr.includes('Not logged in') ? 'login-required' : 'unverified';
+    } else entry.authentication = 'not-tested';
+    entry.remaining = ['model instruction compliance', 'skill supporting-file use', 'custom agent execution', 'desktop and IDE'];
+  } finally {
+    try {deployment.restore();}
+    finally {entry.cleanupVerified = false; entry.cleanupVerified = deployment.restored();}
+  }
 }
 try {
   for (const [clientId, binary] of [['codex', options.codex || 'codex'], ['antigravity', options.antigravity || 'agy']]) {
@@ -134,7 +161,8 @@ try {
       }
     }
   }
-} finally { fs.rmSync(scratch, {recursive: true, force: true}); }
+} finally { cleanupVerificationScratch(report, scratch); }
+finalizeVerificationReport(report);
 const output = `${JSON.stringify(report, null, 2)}\n`;
 if (options.output) fs.writeFileSync(path.resolve(options.output), output, {mode: 0o600});
 else process.stdout.write(output);

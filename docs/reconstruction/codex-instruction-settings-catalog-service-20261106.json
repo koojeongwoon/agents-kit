@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:30:58.544Z",
+  "freshHome": true,
+  "credentialsCopied": false,
+  "requests": [
+    "initialize",
+    "config/read"
+  ],
+  "threadStarted": false,
+  "modelTurnsRequested": false,
+  "status": "partial",
+  "reason": "INSTRUCTION_LOAD_UNVERIFIED",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "preview": {
+    "state": "documented-prediction",
+    "loadedSourcesState": "unverified",
+    "settingsVerified": true,
+    "byteBudget": 12,
+    "budgetMayTruncate": true,
+    "customGuidancePresent": false,
+    "contextIncomplete": false,
+    "files": [
+      {
+        "path": "<fixture>/home/.codex/AGENTS.override.md",
+        "scope": "global",
+        "state": "empty",
+        "bytes": 2,
+        "contentRead": true,
+        "manageable": false
+      },
+      {
+        "path": "<fixture>/home/.codex/AGENTS.md",
+        "scope": "global",
+        "state": "candidate",
+        "bytes": 9,
+        "contentRead": true,
+        "manageable": false
+      },
+      {
+        "path": "<fixture>/repo/AGENTS.override.md",
+        "scope": "context",
+        "state": "missing",
+        "bytes": 0,
+        "contentRead": false,
+        "manageable": false,
+        "code": "ENOENT"
+      },
+      {
+        "path": "<fixture>/repo/AGENTS.md",
+        "scope": "context",
+        "state": "missing",
+        "bytes": 0,
+        "contentRead": false,
+        "manageable": false,
+        "code": "ENOENT"
+      },
+      {
+        "path": "<fixture>/repo/TEAM.md",
+        "scope": "context",
+        "state": "candidate",
+        "bytes": 16,
+        "contentRead": true,
+        "manageable": false
+      },
+      {
+        "path": "<fixture>/repo/child/AGENTS.override.md",
+        "scope": "project",
+        "state": "candidate",
+        "bytes": 17,
+        "contentRead": true,
+        "manageable": false
+      },
+      {
+        "path": "<fixture>/repo/child/AGENTS.md",
+        "scope": "project",
+        "state": "shadowed",
+        "bytes": 7,
+        "contentRead": false,
+        "manageable": false
+      },
+      {
+        "path": "<fixture>/repo/child/TEAM.md",
+        "scope": "project",
+        "state": "missing",
+        "bytes": 0,
+        "contentRead": false,
+        "manageable": false,
+        "code": "ENOENT"
+      }
+    ]
+  },
+  "phantomShadowedPaths": 0,
+  "success": true
+}

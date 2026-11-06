@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:48:19.603Z",
+  "readOnly": true,
+  "scopes": [
+    {
+      "scope": "global",
+      "status": "ready",
+      "manifestSchemaVersion": 2
+    },
+    {
+      "scope": "project",
+      "status": "ready",
+      "manifestSchemaVersion": 1
+    }
+  ],
+  "graph": {
+    "valid": true,
+    "deploymentReady": false,
+    "issues": [],
+    "nodes": 1,
+    "globalPrerequisites": 0
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "nativeProcessesStarted": 0,
+  "modelCalls": 0
+}

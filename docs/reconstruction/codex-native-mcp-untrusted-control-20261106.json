@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T20:07:55.499Z",
+  "freshHome": true,
+  "projectTrustGranted": false,
+  "modelTurnsRequested": false,
+  "status": "observed",
+  "reason": null,
+  "sources": [
+    {
+      "scope": "global",
+      "nativeState": "listed",
+      "activation": "enabled"
+    },
+    {
+      "scope": "project",
+      "nativeState": "ignored",
+      "activation": "unknown"
+    }
+  ],
+  "configuration": [
+    {
+      "name": "shared",
+      "enabled": true,
+      "composition": "single-source"
+    }
+  ]
+}

@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-5",
+  "observedAt": "2026-11-05T12:51:26.838Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "agents",
+  "codexTransport": "exec",
+  "rpcCollectorSha256": "fb499de39cd06ecbd7e1ecb09c8fed4769d79609d566460c6057ab138ac035f5",
+  "stagesRequested": "lifecycle",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "6b44583acad16697a9d8b8af3b2ffa0333179fce3888a186c6ee9243a2f44ba7",
+  "collectorSha256": "94da0d8083a965fd535c25796cb213a6d7b0a2889e16dc7852bda09a481fc672",
+  "runnerSha256": "e9199c6d49a66e799c515886e8fe74a78389ec4304fbdd7a41d05a953fd4ee90",
+  "authentication": "existing-native-login",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": false,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": true
+  },
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalMatches": true,
+          "reportedAbsent": true,
+          "spawned": false,
+          "childMarkerReturned": false,
+          "roleObserved": false,
+          "roleRequested": false,
+          "unexpectedTools": false,
+          "toolKinds": [],
+          "eventShapes": [],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        },
+        "applied": {
+          "code": null,
+          "reason": "PROBE_TIMEOUT",
+          "terminalSuccess": false,
+          "finalMatches": false,
+          "reportedAbsent": false,
+          "spawned": false,
+          "childMarkerReturned": false,
+          "roleObserved": false,
+          "roleRequested": false,
+          "unexpectedTools": false,
+          "toolKinds": [],
+          "eventShapes": [],
+          "eventKinds": [
+            "init"
+          ],
+          "invocationStates": [],
+          "finalNonempty": false,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": false,
+          "markerConfirmed": false,
+          "invocationConfirmed": false,
+          "confirmed": false,
+          "verificationReason": "PROBE_TIMEOUT"
+        },
+        "updated": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "childMarkerReturned": false,
+          "roleObserved": true,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "tool_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": [
+                "name",
+                "parameters"
+              ]
+            },
+            {
+              "label": "parameters",
+              "keys": [
+                "Role",
+                "TypeName"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "conversation_id",
+                "initial_prompt",
+                "log_uri",
+                "role",
+                "type_name",
+                "workspace_uris"
+              ]
+            },
+            {
+              "label": "system_message",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "tool",
+            "subagent",
+            "system_message",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": false,
+          "verificationReason": "CHILD_RESULT_NOT_EXPOSED"
+        },
+        "removed": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalMatches": true,
+          "reportedAbsent": true,
+          "spawned": false,
+          "childMarkerReturned": false,
+          "roleObserved": false,
+          "roleRequested": false,
+          "unexpectedTools": false,
+          "toolKinds": [],
+          "eventShapes": [],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        },
+        "rollback": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "childMarkerReturned": false,
+          "roleObserved": true,
+          "roleRequested": true,
+          "unexpectedTools": false,
+          "toolKinds": [
+            "invoke_subagent"
+          ],
+          "eventShapes": [
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "tool_info",
+              "keys": []
+            },
+            {
+              "label": "parameters",
+              "keys": []
+            },
+            {
+              "label": "subagent_info",
+              "keys": [
+                "subagents"
+              ]
+            },
+            {
+              "label": "subagent",
+              "keys": [
+                "conversation_id",
+                "initial_prompt",
+                "log_uri",
+                "role",
+                "type_name",
+                "workspace_uris"
+              ]
+            },
+            {
+              "label": "step",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type",
+                "subagent_info",
+                "tool_name"
+              ]
+            },
+            {
+              "label": "system_message",
+              "keys": [
+                "conversation_id",
+                "duration_seconds",
+                "state",
+                "step_index",
+                "step_type"
+              ]
+            }
+          ],
+          "eventKinds": [
+            "init",
+            "step_update",
+            "user_input",
+            "agent_response",
+            "subagent",
+            "system_message",
+            "result"
+          ],
+          "invocationStates": [],
+          "finalNonempty": true,
+          "answerCategories": [],
+          "completedChildMarker": false,
+          "markerInWaitEvent": false,
+          "waitResultStates": [],
+          "waitReceiversPresent": false,
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": false,
+          "verificationReason": "CHILD_RESULT_NOT_EXPOSED"
+        }
+      },
+      "fullLifecycleConfirmed": false,
+      "roleEvidence": "subagent-type-name-and-final-marker; direct-child-result-required-for-full-proof",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "definitionSha256": "69e55e50d199435ac51de8efdda7ee2d5ec9ea996866b6c360f7c3e1b11f4108",
+      "markerLifecycleConfirmed": false,
+      "invocationLifecycleConfirmed": false,
+      "cleanup": {
+        "attempted": true,
+        "assetsAbsent": true,
+        "ledgerHistoryRetained": true
+      }
+    }
+  ]
+}

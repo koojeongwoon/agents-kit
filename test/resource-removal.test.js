@@ -63,12 +63,31 @@ test('Agent/MCP removal preserves other settings and restores exact bytes and ow
   }
 });
 
+test('removing every first-install MCP unit restores the exact untouched user file instead of leaving generated separators',t=>{
+  for(const client of ['codex','antigravity'])for(const scope of ['project','global']) {
+    const f=fixture(t,client,scope),before=fs.readFileSync(f.config),mode=fs.statSync(f.config).mode&0o777;f.apply();
+    f.service.apply({planId:f.remove(['docs','other']).planId});assert.deepEqual(fs.readFileSync(f.config),before);assert.equal(fs.statSync(f.config).mode&0o777,mode);
+  }
+});
+
+test('removing first-install units preserves unowned settings edited after installation',t=>{
+  const f=fixture(t);f.apply();fs.appendFileSync(f.config,'\n[extra]\n# User follow-up\nvalue="manual"\n');
+  f.service.apply({planId:f.remove(['docs','other']).planId});assert.match(fs.readFileSync(f.config,'utf8'),/User follow-up/);assert.match(fs.readFileSync(f.config,'utf8'),/value="manual"/);assert.doesNotMatch(fs.readFileSync(f.config,'utf8'),/mcp_servers\.(docs|other)/);
+});
+
 test('removal works from recorded identities after sources are removed or target disabled', t => {
   const f = fixture(t); f.apply();
   f.raw.assets = {}; f.raw.targets = {codex: {enabled: false}}; f.write();
   assert.equal(f.remove(['docs', 'reviewer']).automatic, true);
   f.service.apply({planId: f.remove(['docs', 'reviewer']).planId});
   assert.equal(fs.existsSync(f.agent), false);
+});
+
+test('typed Agent removal rollback restores executable permissions from its retained backup', t => {
+  const f = fixture(t); f.apply(); fs.chmodSync(f.agent, 0o750);
+  const before = fs.readFileSync(f.agent), removed = f.service.apply({planId: f.remove(['reviewer']).planId}); assert.equal(fs.existsSync(f.agent), false);
+  f.service.rollback({planId: f.service.planRollback({...f.input, transactionId: removed.transactionId}).planId});
+  assert.deepEqual(fs.readFileSync(f.agent), before); assert.equal(fs.statSync(f.agent).mode & 0o777, 0o750);
 });
 
 test('persisted Agent/Skill dependencies require a complete removal set even after Manifest changes', t => {

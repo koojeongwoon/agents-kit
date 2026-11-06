@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T13:08:00.582Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "mcp",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "stages": {},
+      "fullLifecycleConfirmed": false
+    }
+  ],
+  "proof": "native-model-read-only-fixture-tool",
+  "transactions": [
+    {
+      "intent": "verification-fixture-control",
+      "reason": "SEED_FRESH_SELECTED_FIXTURE_SERVER",
+      "beforeHash": "3d76dd74a4afc1af07b40be1985a3bd07b99ddf3236b4b85083a771698eedb61",
+      "afterHash": "c9291649f532e4009746bbaedf61965d4b1a5b1e8adfd1c7908c6a557fdea76c",
+      "target": "/Users/jw/.gemini/config/mcp_config.json",
+      "transactionId": "tx-2026-11-05T13-08-00-589Z-0687d399"
+    },
+    {
+      "intent": "adopt",
+      "transactionId": "tx-2026-11-05T13-08-00-713Z-2eb7ec65"
+    },
+    {
+      "intent": "reviewed-exception-recovery",
+      "original": "tx-2026-11-05T13-08-00-713Z-2eb7ec65",
+      "transactionId": "tx-2026-11-05T13-11-29-348Z-c57e4ede"
+    },
+    {
+      "intent": "reviewed-exception-recovery",
+      "original": "tx-2026-11-05T13-08-00-589Z-0687d399",
+      "transactionId": "tx-2026-11-05T13-11-29-359Z-f910b1aa"
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "blocker": "VERIFICATION_OBSERVER_FAILED",
+  "cleanup": {
+    "exactOriginalConfigAndModeRestored": true,
+    "fixtureOwnershipAbsent": true,
+    "fixtureRegistrationDetached": true,
+    "existingOwnersPreserved": true,
+    "recoveredThroughReviewedRollback": true
+  }
+}

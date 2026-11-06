@@ -10,10 +10,11 @@ use tauri::Manager;
 struct BackendProcess(Mutex<Option<Child>>);
 
 #[cfg(not(debug_assertions))]
-fn spawn_backend(backend: &std::path::Path) -> std::io::Result<Child> {
+fn spawn_backend(backend: &std::path::Path, resources: &std::path::Path) -> std::io::Result<Child> {
     if let Ok(node) = std::env::var("AGENTS_KIT_NODE") {
         return Command::new(node)
             .arg(backend)
+            .env("AGENTS_KIT_RESOURCE_DIR", resources)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
@@ -37,6 +38,7 @@ fn spawn_backend(backend: &std::path::Path) -> std::io::Result<Child> {
         if node.is_file() {
             return Command::new(&node)
                 .arg(backend)
+                .env("AGENTS_KIT_RESOURCE_DIR", resources)
                 .stdin(Stdio::null())
                 .stdout(Stdio::null())
                 .stderr(Stdio::null())
@@ -49,6 +51,7 @@ fn spawn_backend(backend: &std::path::Path) -> std::io::Result<Child> {
         return Command::new("/bin/zsh")
             .args(["-lc", "exec node \"$AGENTS_KIT_BACKEND\""])
             .env("AGENTS_KIT_BACKEND", backend)
+            .env("AGENTS_KIT_RESOURCE_DIR", resources)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
@@ -58,6 +61,7 @@ fn spawn_backend(backend: &std::path::Path) -> std::io::Result<Child> {
     #[cfg(not(target_os = "macos"))]
     Command::new("node")
         .arg(backend)
+        .env("AGENTS_KIT_RESOURCE_DIR", resources)
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
@@ -69,12 +73,9 @@ fn main() {
         .setup(|_app| {
             #[cfg(not(debug_assertions))]
             {
-                let backend = _app
-                    .path()
-                    .resource_dir()?
-                    .join("resources")
-                    .join("backend.mjs");
-                let child = match spawn_backend(&backend) {
+                let resources = _app.path().resource_dir()?;
+                let backend = resources.join("resources").join("backend.mjs");
+                let child = match spawn_backend(&backend, &resources) {
                     Ok(child) => Some(child),
                     Err(error) => {
                         eprintln!(

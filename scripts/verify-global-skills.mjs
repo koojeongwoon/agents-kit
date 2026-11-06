@@ -7,8 +7,11 @@ import crypto from 'node:crypto';
 import {parse, stringify} from 'yaml';
 import {createManifestDeploymentService} from '../lib/application/manifest-deployment-service.js';
 import {withGlobalFixture} from './client-verification/global-fixture.mjs';
-import {runCommand} from './client-verification/process.mjs';
+import {runCommand, readClientVersion} from './client-verification/process.mjs';
 import {authenticatedEnvironment, runModelUse} from './client-verification/model-use.mjs';
+import {probeEvidence} from '../lib/adapters/verification/probe-evidence.js';
+import {createDeploymentVerification} from './client-verification/deployment.mjs';
+import {finalizeVerificationReport, cleanupVerificationScratch} from './client-verification/report.mjs';
 const options = {}, argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i += 2) {
   if (!['--client', '--codex', '--antigravity', '--output', '--native-global', '--antigravity-skill-root'].includes(argv[i]) || !argv[i+1]) throw new Error('Use --native-global temporary-fixtures --client codex|antigravity|all --output <path>');
@@ -25,7 +28,7 @@ async function verify(clientId, binary) {
   for (const dir of [scopeRoot, workspace, definitionsDir]) fs.mkdirSync(dir, {recursive: true});
   const execution = {cwd: workspace, env: authenticatedEnvironment(os.homedir(), scratch)};
   const versionResult = await runCommand(binary, ['--version'], execution);
-  const version = versionResult.code === 0 ? versionResult.stdout.match(/(?:^|\s)(\d+\.\d+\.\d+)(?:\s|$)/)?.[1] : undefined;
+  const version = versionResult.code === 0 ? readClientVersion(versionResult.stdout) : undefined;
   const entry = {clientId, version: version || null, stages: {}, fullLifecycleConfirmed: false}; report.clients.push(entry);
   if (!version) {entry.blocker = 'VERSION_UNAVAILABLE'; return;}
   const bytes = fs.readFileSync(path.resolve(import.meta.dirname, '../clients', `${clientId}.yaml`));
@@ -46,34 +49,42 @@ async function verify(clientId, binary) {
   let marker = writeMarker(1);
   const service = createManifestDeploymentService({definitionsDir, homeDir: os.homedir(), planStoreRoot: path.join(root, 'plans')});
   const input = {scopeRoot, targetRoot: os.homedir(), scope: 'global', clientId, surface: 'cli', clientVersion: version};
+  const deployment = createDeploymentVerification({service, input});
   const prompt = `Explicitly use $${name} if available. Read only that Skill's references/marker.txt and return {"skill":"<exact file content>"}. If that exact Skill is unavailable return {"skill":"ABSENT"} without searching. Do not inspect source manifests, other skills, configurations, histories or other files. Do not write files, call MCP, browse, delegate, schedule or use any other tools.`;
   async function observe(stage, expected) {
     const args = clientId === 'codex' ? ['exec', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--sandbox', 'read-only', '--skip-git-repo-check', '--json', '-C', workspace, prompt]
       : ['--sandbox', '--mode', 'plan', '--print', prompt, '--output-format', 'stream-json', '--print-timeout', '80s', '--log-file', '/dev/null'];
-    const result = await runModelUse(binary, args, {...execution, clientId, expected: {skill: expected}});
+    const result = await runModelUse(binary, args, {...execution, clientId, expected: {skill: expected}, expectedBinarySha256: entry.binarySha256});
     result.confirmed = result.success && result.final.skill === true && (expected === 'ABSENT' ? !result.skillFileRead : result.skillFileRead);
+    result.verification = probeEvidence(result, {clientId, resource: 'skills', present: expected !== 'ABSENT', deployment: deployment.check()});
+    result.confirmed &&= result.verification.confirmed;
     entry.stages[stage] = result;
     process.stderr.write(`${clientId} global skill ${stage}: ${result.reason}; confirmed=${result.confirmed}\n`);
   }
   const preflight = service.plan(input);
+  deployment.track(preflight);
   entry.preflight = {automatic: preflight.automatic, operations: preflight.operations.map(op => ({assetId: op.assetId, operation: op.operation, reason: op.reason})), blocked: preflight.blocked.map(op => ({code: op.code, reason: op.reason}))};
-  const completed = await withGlobalFixture({service, input, assetIds: [name]}, async ({initialPlan, apply}) => {
-    await observe('baseline', 'ABSENT');
-    apply(initialPlan); await observe('applied', marker);
-    marker = writeMarker(2); apply(service.plan(input)); await observe('updated', marker);
-    const removed = apply(service.planRemoval({...input, assetIds: [name]})); await observe('removed', 'ABSENT');
-    const rollback = service.planRollback({...input, transactionId: removed.transactionId});
-    if (!rollback.automatic) throw Object.assign(new Error('Rollback blocked'), {code: 'FIXTURE_ROLLBACK_BLOCKED'});
-    service.rollback({planId: rollback.planId}); await observe('rollback', marker);
-  });
-  entry.cleanup = completed.cleanup;
-  entry.fullLifecycleConfirmed = Object.keys(entry.stages).length === 5 && Object.values(entry.stages).every(x => x.confirmed) && completed.cleanup.assetsAbsent;
+  try {
+    const completed = await withGlobalFixture({service, input, assetIds: [name]}, async ({initialPlan, apply: applyFixture}) => {
+      const apply = plan => deployment.apply(plan, applyFixture);
+      await observe('baseline', 'ABSENT');
+      apply(initialPlan); await observe('applied', marker);
+      marker = writeMarker(2); apply(service.plan(input)); await observe('updated', marker);
+      const removed = apply(service.planRemoval({...input, assetIds: [name]})); await observe('removed', 'ABSENT');
+      const rollback = service.planRollback({...input, transactionId: removed.transactionId});
+      if (!rollback.automatic) throw Object.assign(new Error('Rollback blocked'), {code: 'FIXTURE_ROLLBACK_BLOCKED'});
+      deployment.rollback(rollback); await observe('rollback', marker);
+    });
+    entry.cleanup = completed.cleanup;
+    entry.fullLifecycleConfirmed = Object.keys(entry.stages).length === 5 && Object.values(entry.stages).every(x => x.confirmed) && completed.cleanup.assetsAbsent;
+  } finally {entry.cleanupVerified = false; entry.cleanupVerified = deployment.restored();}
 }
 try {
   for (const [clientId, binary] of [['codex', options.codex || 'codex'], ['antigravity', options.antigravity || 'agy']]) {
     if (options.client && options.client !== 'all' && options.client !== clientId) continue;
     try {await verify(clientId, binary);} catch(error) {const entry = report.clients.find(x => x.clientId === clientId); if (entry) entry.blocker = /^[A-Z_]+$/.test(error.code || '') ? error.code : 'VERIFICATION_FAILED';}
   }
-} finally {fs.rmSync(scratch, {recursive: true, force: true});}
+} finally {cleanupVerificationScratch(report, scratch);}
+finalizeVerificationReport(report);
 if (options.output) fs.writeFileSync(path.resolve(options.output), JSON.stringify(report, null, 2)+'\n', {mode: 0o600}); else process.stdout.write(JSON.stringify(report, null, 2)+'\n');
-process.exitCode = 2;
+process.exitCode = report.complete ? 0 : 2;

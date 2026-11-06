@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "phase": "CA04-6",
+  "observedAt": "2026-11-05T12:43:14.872Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "agents",
+  "codexTransport": "app-server",
+  "rpcCollectorSha256": "fb499de39cd06ecbd7e1ecb09c8fed4769d79609d566460c6057ab138ac035f5",
+  "stagesRequested": "lifecycle",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "verifierSha256": "6b44583acad16697a9d8b8af3b2ffa0333179fce3888a186c6ee9243a2f44ba7",
+  "collectorSha256": "94da0d8083a965fd535c25796cb213a6d7b0a2889e16dc7852bda09a481fc672",
+  "runnerSha256": "e9199c6d49a66e799c515886e8fe74a78389ec4304fbdd7a41d05a953fd4ee90",
+  "authentication": "existing-native-login",
+  "isolation": {
+    "temporaryProject": true,
+    "freshHome": false,
+    "credentialsCopied": false,
+    "userSettingsWritten": false,
+    "rawTranscriptsStoredByVerifier": false,
+    "nativeClientHistoryMayPersist": true
+  },
+  "clients": [
+    {
+      "clientId": "codex",
+      "version": "0.166.0-alpha.6",
+      "stages": {
+        "baseline": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": true,
+          "spawned": false,
+          "roleObserved": false,
+          "childMarkerReturned": false,
+          "completedChildMarker": false,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "agentMessage"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-6.1-sol",
+          "reason": "OK",
+          "binaryUnchanged": true,
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        },
+        "applied": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "roleObserved": true,
+          "childMarkerReturned": true,
+          "completedChildMarker": true,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "agentMessage",
+            "subAgentActivity",
+            "collabAgentToolCall"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-6.1-sol",
+          "childMetadataOnly": true,
+          "childMetadataRoleMatches": true,
+          "childEvidenceSource": "live-public-child-events",
+          "reason": "OK",
+          "binaryUnchanged": true,
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        },
+        "updated": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "roleObserved": true,
+          "childMarkerReturned": true,
+          "completedChildMarker": true,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "agentMessage",
+            "subAgentActivity",
+            "collabAgentToolCall"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-6.1-sol",
+          "childMetadataOnly": true,
+          "childMetadataRoleMatches": true,
+          "childEvidenceSource": "live-public-child-events",
+          "reason": "OK",
+          "binaryUnchanged": true,
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        },
+        "removed": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": true,
+          "spawned": false,
+          "roleObserved": false,
+          "childMarkerReturned": false,
+          "completedChildMarker": false,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "agentMessage"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-6.1-sol",
+          "reason": "OK",
+          "binaryUnchanged": true,
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        },
+        "rollback": {
+          "terminalSuccess": true,
+          "parentCompleted": true,
+          "terminalStatus": "completed",
+          "errorCategory": [],
+          "finalMatches": true,
+          "reportedAbsent": false,
+          "spawned": true,
+          "roleObserved": true,
+          "childMarkerReturned": true,
+          "completedChildMarker": true,
+          "unexpectedTools": false,
+          "methods": [
+            "thread/started",
+            "item/started",
+            "item/completed",
+            "turn/completed"
+          ],
+          "itemTypes": [
+            "userMessage",
+            "agentMessage",
+            "subAgentActivity",
+            "collabAgentToolCall"
+          ],
+          "modelSelection": "native-advertised-default",
+          "nativeDefaultModel": "gpt-6.1-sol",
+          "childMetadataOnly": true,
+          "childMetadataRoleMatches": true,
+          "childEvidenceSource": "live-public-child-events",
+          "reason": "OK",
+          "binaryUnchanged": true,
+          "success": true,
+          "markerConfirmed": true,
+          "invocationConfirmed": true,
+          "confirmed": true,
+          "verificationReason": "CONFIRMED"
+        }
+      },
+      "fullLifecycleConfirmed": true,
+      "roleEvidence": "live-native-child-role-parent-and-completion",
+      "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+      "definitionSha256": "09adf788148a060c63c01023cb7f276046be199a737ed4a11d9da9079f8a6635",
+      "markerLifecycleConfirmed": true,
+      "invocationLifecycleConfirmed": true,
+      "cleanup": {
+        "attempted": true,
+        "assetsAbsent": true,
+        "ledgerHistoryRetained": true
+      }
+    }
+  ]
+}

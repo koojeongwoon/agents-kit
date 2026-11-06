@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-05T21:31:28.686Z",
+  "mode": "native-owned-metadata-only-apply-restore-retain",
+  "results": [
+    {
+      "assetId": "canva",
+      "assetKind": "mcpServers",
+      "clientId": "antigravity",
+      "surface": "cli",
+      "stages": [
+        {
+          "stage": "apply-audit",
+          "transactionId": "tx-2026-11-05T21-31-27-813Z-8fcc114a",
+          "revisionDigest": "5ba13a49bb386752e653ceb2b30d4befebc3b2f84136e8bd03cfb113d9123d4f"
+        },
+        {
+          "stage": "restore-audit",
+          "transactionId": "tx-2026-11-05T21-31-27-838Z-c9c54eb3"
+        },
+        {
+          "stage": "retain-reviewed-audit",
+          "transactionId": "tx-2026-11-05T21-31-27-920Z-c2be2e57",
+          "revisionDigest": "5ba13a49bb386752e653ceb2b30d4befebc3b2f84136e8bd03cfb113d9123d4f"
+        }
+      ]
+    },
+    {
+      "assetId": "codex-instructions",
+      "assetKind": "instructions",
+      "clientId": "codex",
+      "surface": "cli",
+      "stages": [
+        {
+          "stage": "apply-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-054Z-5ff1f862",
+          "revisionDigest": "2ec115792a0e79cc981ca12d736ff2d9ca93357ff878ee7e60216912039a93ee"
+        },
+        {
+          "stage": "restore-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-077Z-b64ba3fd"
+        },
+        {
+          "stage": "retain-reviewed-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-157Z-8397a8fc",
+          "revisionDigest": "2ec115792a0e79cc981ca12d736ff2d9ca93357ff878ee7e60216912039a93ee"
+        }
+      ]
+    },
+    {
+      "assetId": "node-repl",
+      "assetKind": "mcpServers",
+      "clientId": "codex",
+      "surface": "cli",
+      "stages": [
+        {
+          "stage": "apply-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-285Z-0342a6cc",
+          "revisionDigest": "e4b36d40721349721146b491e1e8267ac653e678f3839b1af02e788e38fcf3bf"
+        },
+        {
+          "stage": "restore-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-307Z-f24a1f8e"
+        },
+        {
+          "stage": "retain-reviewed-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-388Z-fe809a23",
+          "revisionDigest": "e4b36d40721349721146b491e1e8267ac653e678f3839b1af02e788e38fcf3bf"
+        }
+      ]
+    },
+    {
+      "assetId": "tools",
+      "assetKind": "mcpServers",
+      "clientId": "antigravity",
+      "surface": "cli",
+      "stages": [
+        {
+          "stage": "apply-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-516Z-f7038625",
+          "revisionDigest": "c75bfaa8576df1a13532895f9155af7c2123f0ed49ddd60619f47f75aed1998f"
+        },
+        {
+          "stage": "restore-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-537Z-1574a1be"
+        },
+        {
+          "stage": "retain-reviewed-audit",
+          "transactionId": "tx-2026-11-05T21-31-28-629Z-c7177f1d",
+          "revisionDigest": "c75bfaa8576df1a13532895f9155af7c2123f0ed49ddd60619f47f75aed1998f"
+        }
+      ]
+    }
+  ],
+  "beforeTransactions": 133,
+  "afterTransactions": 145,
+  "managedRecordsUnchanged": true,
+  "previousTransactionsUnchanged": true,
+  "kitManifestHashUnchanged": true,
+  "activeAuditReceipts": 4,
+  "clientFileOperations": 0,
+  "clientSettingsWritten": false,
+  "nativeProcessesStarted": 0,
+  "modelRequests": 0,
+  "nativeToolRequests": 0,
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "nativeDeploymentGateExpanded": false
+}

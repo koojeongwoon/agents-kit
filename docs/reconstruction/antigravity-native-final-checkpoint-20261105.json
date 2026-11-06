@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T14:52:04.950Z",
+  "scope": "global",
+  "surface": "cli",
+  "manifestValid": true,
+  "resources": [
+    {
+      "assetId": "codex-instructions",
+      "clientId": "codex",
+      "adopted": true,
+      "installedModified": false,
+      "kitPending": false,
+      "applyAutomatic": true,
+      "blockedReasons": []
+    },
+    {
+      "assetId": "node-repl",
+      "clientId": "codex",
+      "adopted": true,
+      "installedModified": false,
+      "kitPending": false,
+      "applyAutomatic": true,
+      "blockedReasons": []
+    },
+    {
+      "assetId": "canva",
+      "clientId": "antigravity",
+      "adopted": true,
+      "installedModified": false,
+      "kitPending": false,
+      "applyAutomatic": true,
+      "blockedReasons": []
+    },
+    {
+      "assetId": "tools",
+      "clientId": "antigravity",
+      "adopted": true,
+      "installedModified": false,
+      "kitPending": false,
+      "applyAutomatic": false,
+      "blockedReasons": [
+        "CLIENT_RESOURCE_PROFILE_UNVERIFIED"
+      ]
+    }
+  ],
+  "managedTargets": [
+    {
+      "path": ".codex/AGENTS.md",
+      "bytesMatchState": true,
+      "assetIds": [
+        "codex-instructions"
+      ]
+    },
+    {
+      "path": ".codex/config.toml",
+      "bytesMatchState": true,
+      "assetIds": [
+        "node-repl"
+      ]
+    },
+    {
+      "path": ".gemini/config/mcp_config.json",
+      "bytesMatchState": true,
+      "assetIds": [
+        "canva",
+        "tools"
+      ]
+    }
+  ],
+  "pending": {
+    "lock": false,
+    "journal": false,
+    "migration": false,
+    "sourceLock": false,
+    "sourceJournal": false
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": false
+      },
+      {
+        "path": ".gemini/config/mcp_config.json",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "externalLinks": [
+    {
+      "path": ".agents/skills/ego-browser",
+      "type": "symlink",
+      "target": "/Users/jw/.local/share/ego/ego-skills",
+      "unchangedFromBaseline": true
+    },
+    {
+      "path": ".gemini/config/skills/ego-browser",
+      "type": "symlink",
+      "target": "/Users/jw/.local/share/ego/ego-skills",
+      "unchangedFromBaseline": true
+    },
+    {
+      "path": ".gemini/antigravity-cli/skills/ego-browser",
+      "type": "symlink",
+      "target": "/Users/jw/.local/share/ego/ego-skills",
+      "unchangedFromBaseline": true
+    }
+  ],
+  "auditOnly": true,
+  "nativeClientCallsByAudit": 0,
+  "clientFilesWrittenByAudit": false,
+  "rawConfigurationStored": false
+}

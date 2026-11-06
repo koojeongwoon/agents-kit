@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T12:57:31.410Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "scope": "global",
+  "surface": "cli",
+  "resource": "mcp",
+  "complete": false,
+  "productionEvidencePromoted": false,
+  "clients": [
+    {
+      "clientId": "antigravity",
+      "version": "1.5.1",
+      "binarySha256": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+      "stages": {
+        "baseline": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": true
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response"
+          ],
+          "terminalStatus": "SUCCESS",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": true
+        },
+        "applied": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": true,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": false
+          },
+          "toolKinds": [
+            "call_mcp_tool"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "call_mcp_tool",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [
+                "Arguments",
+                "ServerName",
+                "ToolName"
+              ],
+              "fixtureServerInParameters": true,
+              "fixtureToolInParameters": true,
+              "supportingFileNamed": false,
+              "skillMarkerReturned": false,
+              "mcpMarkerReturned": true
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response",
+            "tool"
+          ],
+          "terminalStatus": "SUCCESS",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": false
+        },
+        "updated": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": true,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": false
+          },
+          "toolKinds": [
+            "call_mcp_tool"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "call_mcp_tool",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [
+                "Arguments",
+                "ServerName",
+                "ToolName"
+              ],
+              "fixtureServerInParameters": true,
+              "fixtureToolInParameters": true,
+              "supportingFileNamed": false,
+              "skillMarkerReturned": false,
+              "mcpMarkerReturned": true
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response",
+            "tool"
+          ],
+          "terminalStatus": "SUCCESS",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": false
+        },
+        "removed": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": true
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": false,
+          "completedTools": 0,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": true
+          },
+          "toolKinds": [],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response"
+          ],
+          "terminalStatus": "SUCCESS",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": true
+        },
+        "rollback": {
+          "code": 0,
+          "reason": "OK",
+          "terminalSuccess": true,
+          "final": {
+            "mcp": false
+          },
+          "skillFileRead": false,
+          "mcpToolCalled": true,
+          "completedTools": 1,
+          "finalParsed": true,
+          "reportedAbsent": {
+            "mcp": false
+          },
+          "toolKinds": [
+            "call_mcp_tool"
+          ],
+          "answerFormat": {
+            "text": true,
+            "fenced": false,
+            "nonempty": true
+          },
+          "toolEvidence": [
+            {
+              "kind": "call_mcp_tool",
+              "success": true,
+              "errorCategories": [],
+              "outputNonempty": true,
+              "parameterKeys": [
+                "Arguments",
+                "ServerName",
+                "ToolName"
+              ],
+              "fixtureServerInParameters": true,
+              "fixtureToolInParameters": true,
+              "supportingFileNamed": false,
+              "skillMarkerReturned": false,
+              "mcpMarkerReturned": true
+            }
+          ],
+          "mcpAdvertised": false,
+          "permissionRequested": false,
+          "stepTypes": [
+            "user_input",
+            "agent_response",
+            "tool"
+          ],
+          "terminalStatus": "SUCCESS",
+          "diagnostics": {
+            "projectConfigDisabled": false,
+            "mcpStartupFailed": false,
+            "permissionNotice": false,
+            "fixtureMcpPermissionNotice": false,
+            "mcpPermissionRequired": false
+          },
+          "binaryUnchanged": true,
+          "binarySha256Before": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "binarySha256After": "5ce7fbe126eb9abdc78634332a0a1bdd428327fba37ef7d1aeba7553eec55f3f",
+          "success": true,
+          "confirmed": false
+        }
+      },
+      "fullLifecycleConfirmed": false
+    }
+  ],
+  "proof": "native-model-read-only-fixture-tool",
+  "transactions": [
+    {
+      "intent": "verification-fixture-control",
+      "reason": "SEED_FRESH_SELECTED_FIXTURE_SERVER",
+      "beforeHash": "3d76dd74a4afc1af07b40be1985a3bd07b99ddf3236b4b85083a771698eedb61",
+      "afterHash": "dc305c2b463393f780aad34f25c428ccde09d7e7feb71e61e28e54b238404085",
+      "target": "/Users/jw/.gemini/config/mcp_config.json",
+      "transactionId": "tx-2026-11-05T12-57-43-021Z-418120aa"
+    },
+    {
+      "intent": "adopt",
+      "transactionId": "tx-2026-11-05T12-57-43-141Z-cdf65775"
+    },
+    {
+      "intent": "native-update",
+      "transactionId": "tx-2026-11-05T12-58-01-647Z-1dfb70c6"
+    },
+    {
+      "intent": "verification-fixture-control",
+      "reason": "TEMPORARY_FIXTURE_ABSENCE",
+      "beforeHash": "3adb94c9cd1bb66af592a1421492b74ac3d4e23da9237ac8febcc433c7f04aea",
+      "afterHash": "3d76dd74a4afc1af07b40be1985a3bd07b99ddf3236b4b85083a771698eedb61",
+      "target": "/Users/jw/.gemini/config/mcp_config.json",
+      "transactionId": "tx-2026-11-05T12-58-16-820Z-c732ef25"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-58-16-820Z-c732ef25",
+      "transactionId": "tx-2026-11-05T12-58-28-285Z-3b3924f8"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-58-01-647Z-1dfb70c6",
+      "transactionId": "tx-2026-11-05T12-58-28-294Z-b1ae2868"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-57-43-141Z-cdf65775",
+      "transactionId": "tx-2026-11-05T12-58-42-312Z-c3db5d6a"
+    },
+    {
+      "intent": "rollback",
+      "original": "tx-2026-11-05T12-57-43-021Z-418120aa",
+      "transactionId": "tx-2026-11-05T12-58-42-320Z-57fcdbd3"
+    }
+  ],
+  "rawTranscriptsStored": false,
+  "cleanup": {
+    "exactOriginalConfigAndModeRestored": true,
+    "fixtureOwnershipAbsent": true,
+    "fixtureRegistrationDetached": true,
+    "existingOwnersPreserved": true,
+    "historyRetained": true
+  }
+}

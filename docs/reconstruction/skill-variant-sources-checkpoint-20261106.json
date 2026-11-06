@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T04:47:35.791790+00:00",
+  "phase": "C07 per-variant source registration/edit/reimport/merge/revision rollback",
+  "status": "partial",
+  "fulfilled": false,
+  "contracts": {
+    "manifestVersions": [
+      1,
+      2,
+      3
+    ],
+    "skillDefinitionVersion": 3,
+    "distributionVersions": [
+      1,
+      2
+    ],
+    "managedSourceVersion": 1,
+    "managedSourceRecordVersions": [
+      2,
+      3
+    ],
+    "variantCheckpointVersion": 3,
+    "selectedSourceVersions": [
+      1,
+      2
+    ],
+    "skillSelectionReceiptVersions": [
+      1,
+      2
+    ],
+    "oldImportedSourceFlowPreserved": true
+  },
+  "sourceLifecycle": {
+    "separateAssetVariantNamespace": true,
+    "defaultOrigin": "registered Kit source, not implicitly the installed client",
+    "explicitLocalCandidateBaselinePreservesExistingKitChanges": true,
+    "pinnedGitNpmUsesExistingReader": true,
+    "sharedMergeEngine": true,
+    "perFileDeferredBaselinePreserved": true,
+    "sourceRollbackPreservesRealUpstreamAndClientFiles": true,
+    "headRevisionDistinctFromReusedContentArtifact": true,
+    "genericManagedRecordCrudBlocked": true,
+    "externalManagerPayloadNotRead": true,
+    "sigkillRecoveryPhases": [
+      "source",
+      "manifest"
+    ],
+    "otherVariantRecordsAndInstallationsPreserved": true
+  },
+  "deploymentEvidence": {
+    "newSelectionReceiptVersion": 2,
+    "definitionDigestScope": "chosen variant and exact client/surface/version rule plus common deployment/exposure policy",
+    "legacyReceiptVersion1DigestMeaningPreserved": true,
+    "unselectedVariantEditPreservesInstalledProjectPrerequisite": true,
+    "managedSourceRevisionRecorded": true,
+    "draftRequiresRenewedSourceReview": true
+  },
+  "tests": {
+    "root": {
+      "passed": 823,
+      "failed": 0,
+      "c07CasesIncluded": 42,
+      "newVariantSourceCases": 12,
+      "newCliCase": 1
+    },
+    "http": {
+      "passed": 53,
+      "failed": 0,
+      "newVariantCase": 1
+    },
+    "gui": {
+      "passed": 90,
+      "failed": 0,
+      "newPanelCases": 2
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "desktopBuild": {
+      "frontendAndBackend": true,
+      "exitCode": 0
+    }
+  },
+  "httpIntermediateFailure": {
+    "log": "/private/tmp/kit-c07-variant-sources-http-complete.log",
+    "case": "HTTP explicitly reviews, saves, applies and restores old and new resource locations",
+    "route": "/api/deployment/rollback-plan",
+    "status": 401,
+    "appOriginProven": false,
+    "repo401ReturnPathFound": false,
+    "currentMutationGuardRejectStatus": 403,
+    "safeResponseMetadataDiagnosticAdded": true,
+    "reproducedInFinalFullRun": false,
+    "authenticationWeakened": false
+  },
+  "realNativeVerification": {
+    "artifact": "docs/reconstruction/skill-variant-sources-native-roundtrip-20261106.json",
+    "clientId": "codex",
+    "version": "0.166.0-alpha.6",
+    "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+    "scope": "global",
+    "strategies": [
+      "copy",
+      "snapshot-link"
+    ],
+    "isolatedHome": true,
+    "managedSourceSelectionVersion": 2,
+    "sourceEditAndRefreshBeforeApply": true,
+    "metadataRequests": 4,
+    "providerDiscoveryRequests": 0,
+    "modelCalls": 0,
+    "toolCalls": 0,
+    "modelUseState": "unverified",
+    "evidenceBoundary": "Managed source output/native discovery/rollback; subsequent receipt-v2 policy independence tested separately in services"
+  },
+  "guiVerification": "components/typecheck/build; actual browser integration remains pending",
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "baselineReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "baselineAllBytesEqual": false,
+    "unchangedBaselinePaths": 26,
+    "externalLinkIdentitiesPreserved": true,
+    "originalBaselineReplaced": false,
+    "knownUnmanagedSettingsDifference": {
+      "path": ".gemini/config/config.json",
+      "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+      "mode": 384,
+      "currentSettingsPreserved": true,
+      "restoredOrRewritten": false,
+      "writerAttribution": "unproven; earlier app-start timing correlation remains an inference"
+    }
+  },
+  "agentKitUserClientFileOperations": 0,
+  "agentKitUserStateWrites": 0,
+  "clientSupportMatrixPromoted": false,
+  "sourceHashes": {
+    "README.md": "d6628726a4e3d77d25a7f4585fdde7f3deed416bff9325bb3039e474732dedca",
+    "bin/cli.js": "37d1302b7bbc46a10680c86262d2601ead7c3aefa56181ab3c5b73c8c0755426",
+    "package.json": "f1f34526585098e614b0680b36e3376735ecdbe8734b808bc2a9fdb4b7b367c7",
+    "lib/domain/managed-skill-source.js": "e625e86334137a2ba430db3968a22de0c371251fdca41e0ae6adf7b2d7d1c1df",
+    "lib/domain/skill-distribution.js": "8a2be0ce11e2b3d1d3520715dee08db77d3a13537ec99a1181df160b24a26883",
+    "lib/domain/common-source-definition.js": "a2182803f93fd80f7e698fcae6f9e2df55e8d282f58212c7099368f41f366e41",
+    "lib/domain/skill-selection-receipt.js": "fddd28962728251bd95e4ad04cf3b9f74f0664599cb310db63980e694ed19b2e",
+    "lib/application/skill-variant-source-service.js": "28a53bcb7634167dd13f304fcfe1cf3ce46da4311374092920cdffeef74d6298",
+    "lib/application/source-revision-service.js": "8233797bb3fc1c542370de07e809a32f8da7e68ad8a9017feb1cb82d0989b168",
+    "lib/application/resource-import-service.js": "ecf13db998f205fde3f1a03031cc851482ef04ccd0ee63997e0d59a86663d370",
+    "lib/application/resource-catalog-service.js": "5b973c022e23692e9bc23d11f0a7c3f91889bc7441e831102883a3d8622668ee",
+    "lib/application/manifest-deployment-service.js": "997d8a601bf85da555174b5d1f2275cbd583dd42059904f3f5238938a1d2c590",
+    "lib/application/manifest-editing-service.js": "8b6147f9607e8552b411200523467c0cd124b3639fddcedf15f9c7bd20fb71d1",
+    "lib/application/skill-distribution-deployment.js": "ad25720267d9ac303010136204c93d3df73b3f4122c4bd0addc7f3c486644e9c",
+    "lib/application/installation-receipt-service.js": "fcf5e907b6271d2387247e3ea58aebf267262ef5d7b11a8f13fac7564b05c76e",
+    "lib/application/scoped-deployment-prerequisites.js": "322908ad0c1070a61c26d5d4825768f05ef8f6a9e49b10638d4721c7fce41b07",
+    "lib/infrastructure/skill-distribution-source.js": "1b2e004d91f5cac0ac5b534400be3a85de0db481e0ccf8d1d73565015b697bed",
+    "lib/infrastructure/common-source-validator.js": "97f7f6e87de51931d6f26ab447805d95296ce67d987ccaee691221d4e1b1cd3e",
+    "lib/infrastructure/manifest-loader.js": "4ae1d02e9920d5e1a4a3d75542d46cd01462f34119237c5e6a092d49500d2ea7",
+    "lib/interfaces/http/error-mapper.js": "269885c4c11691f8989668faa7c77c50ed5e5ec97c07a28d87e58ceccbd28a2d",
+    "test/skill-variant-sources.test.js": "e449575498a598c1a773a874b86bfef1a2336d88a2a9d468ded65fcca1570dc2",
+    "test/skill-distribution-cli.test.js": "96c11b226a9c155841b52ac55e79e4262dac06af743f3b0e19c16248c6f28ff6",
+    "test/http-error-mapper.test.js": "25b8f47e757c4877d33068ff60fd602faf9e9ccab5eb6e552f21b9532e801c91",
+    "gui/server/routes/deploy.js": "86a8d575e7b7aa00e9a1e0af2fdb09de7e723f909dc2829af22da4a2d8d7eeeb",
+    "gui/server/test/deployment-routes.test.js": "759310f5e35266338ade9ba3a2d1ff51a206f25d4d52ad605243a8bf2f2e6a3d",
+    "gui/server/test/control-plane-e2e.test.js": "8e0facc12ddcfba35db032e0a1a824270121f3c2bba58a77616e8f0ab7a2a3cf",
+    "gui/src/api/deploy.ts": "ce6f46903c056483cc6dd20c1293b0673b83b2bf80798da5a0f15ec0b5c59514",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "bbd272dc442412425e3b20d3f98680bbe3675e6084fff057ac3f4ddffeabe536",
+    "gui/src/components/resources/SourceRevisionPanel.tsx": "2187ee2caef2c1d4db7bb45bcbf95121c9d8c0f7e2f98e89dc0b5f4147ed611c",
+    "gui/src/components/resources/SourceRevisionPanel.test.tsx": "6c0b4aaf0b9d3a20e53dbcfb66d86ead7915a3b253879fec96d4497eaa9a610e",
+    "gui/src/components/resources/UpstreamSourceFields.tsx": "f57a1addbbe9417bfa01cfb1835bb35635c65c2ba2d15c59c06d1d2cf667bfa4",
+    "scripts/client-verification/skill-distribution-fixture.mjs": "4743929cd0b2df590e4cb00729594b46d44416a748cf55c92e559e5a2a9e9d6c",
+    "docs/contracts/skill-variant-sources-v1.md": "807ce9ab12c4c12af7426cc396929bcf64db1becdcb7ad32d0a5827ecc3737f6",
+    "docs/contracts/skill-distribution-v1.md": "b94b70b7aa5f103e2177132835f4947a8486104cb922d43f6920c4063cef27c0",
+    "docs/contracts/source-revisions-v1.md": "99f03aa94672c04c557c34687d118768dd369ac4eac5e963ba777a668c36df34",
+    "docs/product/shared-resources-consolidation-plan.md": "34a260d480da3e05cc92ca9f3de2871cfa8cd0aabe207599d33288de9beb019d",
+    "docs/traceability/shared-conversation-requirements.md": "556410e62363ef187b325b075e9d68757ea9e0088e0001275294c749d917aed9",
+    "docs/reconstruction/phase-skill-distribution.md": "9dd914677b9cce66032a7968dda909157b45f9a47db415193b97f90dc35214d1",
+    "docs/reconstruction/skill-variant-sources-native-roundtrip-20261106.json": "7806465c3935f882a006cb3bce1a917fe355331a42bab9129fef1224a758da9f",
+    "docs/reconstruction/skill-variant-sources-live-compatibility-20261106.json": "f8cc729e8c4b44c6de34d9d9b0bcd1f52dd91ecdfdd6df14264c2859660cdac6"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-red.log",
+      "sha256": "567e02484c7b2f69745f23ba1b7d6cadf22a4560daf088cf5d7c878dafa9c17d"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-guards-red.log",
+      "sha256": "d3f96783f0f14589f7e1ec7c18653ecd7d7b291193703a0830a48254cea46471"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-expanded.log",
+      "sha256": "5c99703a139d6a9fb3c1de5069d3a78f211103cdaf80c5a1b8297ced85ea79db"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-public-work2.log",
+      "sha256": "cc3a6e6708c03658dba55e661314d81c7dc2b18324c5f0e952fd0b2bf30324bf"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-isolation-red.log",
+      "sha256": "17faf410146e95db849f748b831ba8dd536f5348e2348ffd77d19e48c6ef557b"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-isolation-work1.log",
+      "sha256": "87fccec07fcf2efaf31a473aad69d9b709bb8aa1fe365cf9da3448f0e4dd1f92"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-root-final.log",
+      "sha256": "25346db8427f3007f1904c8b3a5e4468cb8a303de18bad735473806ab19f85c5"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-http-final.log",
+      "sha256": "10ece6ea2101da4f2a04f56fb680787258763a396382a9fb6f49a1da2d8a2ddf"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-http-complete.log",
+      "sha256": "87821cd1715d5600152e0205ead15b5d27e4deb125810b817bf208c445f9749d"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-gui-final.log",
+      "sha256": "d91bc5b0b0e5b9b7509281441a47510c758729f13f7c10643e49f04087892c23"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-typecheck-final.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-build-final.log",
+      "sha256": "6085d2cfc8aa0836a338f2068da05e82d01beff16dedb4ff79f70696bc1b67e3"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-native.json",
+      "sha256": "7806465c3935f882a006cb3bce1a917fe355331a42bab9129fef1224a758da9f"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-native.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-preservation-final.json",
+      "sha256": "806c987dda1b1c2d82574a41561656922f69cbcb6a7b993ad64ac93847fde7cf"
+    },
+    {
+      "file": "/private/tmp/kit-c07-variant-sources-live-compatibility-final.json",
+      "sha256": "f8cc729e8c4b44c6de34d9d9b0bcd1f52dd91ecdfdd6df14264c2859660cdac6"
+    }
+  ],
+  "remaining": [
+    "Native variant deployment adapters/evidence and additional clients/surfaces",
+    "Exclusive-client isolation and actual additional discovery settings observation",
+    "Explicit variant management detach/retirement; ordinary removal stays blocked to preserve history",
+    "PR10 imported native v3 lifecycle, native/previous-path writer coordination and global settings transition",
+    "Remaining PR07/09/11, actual GUI integration and consumer/Agent completion evidence"
+  ]
+}

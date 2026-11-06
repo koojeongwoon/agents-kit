@@ -2,6 +2,11 @@
 
 2026-09-27, CA02-3. 기존 native `source` 방식은 유지하며 `definition`을 추가한
 자원에만 공통 형식 검사를 적용한다. 실제 클라이언트 로딩 검증과 별개다.
+공통 Skill v2의 명시적 배포 전략과 고정 사본 계획은 별도
+[snapshot·공유 연결 계획 계약](skill-snapshot-plan-v1.md)을 따른다. v1의 copy 의미는 유지한다.
+Skill definition v3의 대상·호환성·variant reader는 [배포 대상 계약](skill-distribution-v1.md)을 따른다.
+새 형식은 작성자 검토와 기존 실행 profile 검증을 통과한 common/shared variant의 배포를 제공한다.
+native·exclusive와 미확인 실행 profile은 차단하며 기존 v1/v2는 유지한다.
 
 ```yaml
 assets:
@@ -66,4 +71,7 @@ node bin/cli.js apply --kit /tmp/example-kit --project /tmp/example-project --cl
 node bin/cli.js apply --kit /tmp/example-kit --project /tmp/example-project --client antigravity --surface cli --dry-run
 ```
 
-production profile의 runtimeEvidence가 비어 있으므로 네 자원 모두 자동 적용은 차단된다.
+위 예제 명령은 정확한 client version을 지정하지 않아 자동 적용이 차단된다.
+검증된 version·실행 파일·scope·surface·자원 profile 조합만 자동 적용할 수 있다.
+공통 Skill의 명시적 source v2 전략은 [snapshot 계획](skill-snapshot-plan-v1.md)과
+[집행·이관·복구 계약](skill-snapshot-deployment-v1.md)을 함께 따른다.

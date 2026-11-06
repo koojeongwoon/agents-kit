@@ -3,8 +3,33 @@ import assert from 'node:assert/strict';
 import { DomainError } from '../lib/domain/errors.js';
 import {
   createAgentKitManifest,
+  validateManifestAssetContracts,
   resolveManifestDependencies
 } from '../lib/domain/manifest.js';
+
+test('Manifest v1/v2 reject unsupported qualified or malformed provider IDs even for optional Tools',()=>{
+  for(const schemaVersion of [1,2])for(const providerId of [null,'','../provider',42,{schemaVersion:1,kitId:'shared-kit',scope:{type:'global'},kind:'mcpServers',assetId:'provider'}]) {
+    const manifest=createAgentKitManifest({...validManifest({skills:[{id:'review',requires:{tools:[{id:'repository.search',providerId,optional:true}]}}]}),schemaVersion,
+      ...(schemaVersion===2?{management:{schemaVersion:1,resources:{}}}:{})});
+    assert.throws(()=>validateManifestAssetContracts(manifest),error=>error.code==='INVALID_TOOL_REQUIREMENT');
+  }
+  const manifest=createAgentKitManifest(validManifest({skills:[{id:'review',requires:{tools:[{id:'repository.search',providerId:'provider'}]}}],mcpServers:[{id:'provider',provides:{tools:['repository.search']}}]}));
+  assert.equal(validateManifestAssetContracts(manifest),manifest);
+  assert.equal(resolveManifestDependencies(manifest,{selectedAssetIds:['review']}).valid,true);
+});
+
+test('workflow provider selectors are valid bare IDs on Tool steps only until scoped references are supported',()=>{
+  for(const step of [
+    {id:'search',use:{tool:'repository.search'},providerId:{schemaVersion:1,kitId:'shared-kit',scope:{type:'global'},kind:'mcpServers',assetId:'provider'}},
+    {id:'review',use:{agent:'reviewer'},providerId:'provider'},
+    {id:'search',use:{tool:'repository.search'},providerId:'../provider'}
+  ]) {
+    const manifest=createAgentKitManifest(validManifest({workflows:[{id:'flow',steps:[step]}]}));
+    assert.throws(()=>validateManifestAssetContracts(manifest),error=>error.code==='INVALID_WORKFLOW_STEP');
+  }
+  const manifest=createAgentKitManifest(validManifest({workflows:[{id:'flow',steps:[{id:'search',use:{tool:'repository.search'},providerId:'provider'}]}]}));
+  assert.equal(validateManifestAssetContracts(manifest),manifest);
+});
 
 function validManifest(overrides = {}) {
   return {
@@ -25,7 +50,7 @@ function validManifest(overrides = {}) {
 
 test('Manifest validates schema version, kit identity, and duplicate asset IDs', () => {
   assert.throws(
-    () => createAgentKitManifest({ schemaVersion: 2, kit: { id: 'kit' }, assets: {} }),
+    () => createAgentKitManifest({ schemaVersion: 99, kit: { id: 'kit' }, assets: {} }),
     error => error instanceof DomainError && error.code === 'UNSUPPORTED_MANIFEST_VERSION'
   );
   assert.throws(

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T00:36:20.286381+00:00",
+  "phase": "PR10 common/typed new and changed installation prediction and pre-commit comparison",
+  "status": "partial",
+  "publicV3ApplyEnabled": false,
+  "tests": {
+    "root": {
+      "total": 666,
+      "passed": 666,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-prediction-root-final.log"
+    },
+    "http": {
+      "total": 44,
+      "passed": 44,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-prediction-http-final.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-prediction-build-final.log"
+    },
+    "guiTypecheckCargo": {
+      "rerun": false,
+      "reason": "No frontend, TypeScript or Rust source changes; prior evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "lib/domain/deployment-managed-record.js": "e53c3f3b86e503608be9e94453e51e109123cd82b5f3ef3f03d952e661f750a3",
+    "lib/application/deployment-command.js": "3751893325388998f02ca09a5f766729cda64d4c70cd55b8fb5677f3313af295",
+    "lib/application/deployment-installation-prediction.js": "3b264d3fbbd305e9cfba807e8ccc64dcfe1775e6d2ec69deda36023f4c8021b4",
+    "lib/infrastructure/planned-installation-view.js": "5ae856dee2c1c3a99503163acc77c60c21577b31bdff264ebe5a4f72f19b3904",
+    "lib/application/installation-receipt-service.js": "7fd12b9803f5409952e33f6ab25136776f6e3e638348e63b2197f2ba3c330461",
+    "lib/application/scoped-deployment-compiler.js": "a14517a38f11abe66679429e81ae500a9920ae606933bd8156d27c91983b2fd5",
+    "lib/application/apply-deployment.js": "a8fa023321d8b93802fee541ede302c0494075ebe154c1847a0a30b4a32e42d9",
+    "lib/application/apply-shared-snapshot-deployment.js": "24605420a51e9a03b36e5c710c2b836fbd5a611fb0f4494f3bb379acb74b3df3",
+    "lib/application/deployment-operation-content.js": "4f64e34aa229dfc48a61057919c61a6d0b821d7eccfebe4bf38dcc0e20e37a34",
+    "lib/domain/installation-receipt.js": "0cb5f3ae921f65b084931f70ea53791edcbfec2274582a791a3db67c32f565c4",
+    "lib/domain/scoped-installed-dependencies.js": "acf2d539d6b1991df31be8708128c7d0b7764526035f9c334d368386925b95ea",
+    "lib/application/dependency-coordination-service.js": "ad04c5455dd853634168808690945d6e75b1a7f69a2c22ceee3ebc35c5175324",
+    "test/scoped-deployment-compiler.test.js": "9b466f0e5dc9225553b526814b6fa5c92604c4662434a41baf742394bd939638",
+    "docs/contracts/deployment-installation-prediction-v1.md": "e80315281abc6ea8cacfb65fd277282cecfad3137a035bfb18c897fe2e9eada5",
+    "docs/contracts/scoped-deployment-compilation-v1.md": "081ae88e64e98bc708181cf2a8d5c4ba570f4e89b2fe18751a6c43aad9690dba",
+    "docs/contracts/scoped-installation-receipts-v4.md": "c89bc68417ac67756187a4256726d2d41a3dc75c0883aeca92d11f19099df8cd",
+    "docs/contracts/scoped-dependencies-v1.md": "5dab0ae594edab902737f7df26f6175de10e7b6c872694c2b03071452786404f",
+    "docs/contracts/dependency-coordination-v1.md": "e676c191fe7d3bff9579f09ab3e218afe73e1d5563a691e8748ac1173505671d",
+    "docs/product/shared-resources-consolidation-plan.md": "12d3420c6ba49ccb52ac1222454acb36891a9ac84314a093a863093a30acd1e1",
+    "docs/reconstruction/phase-scoped-dependencies.md": "33532e2c30848d1b08ed849f19f673829139c9c4b3cbec807f38a814206f44de",
+    "docs/traceability/shared-conversation-requirements.md": "a4639b3eac92831b4e16b63e3224307e05a26f996e01e3b9d9e25c0caf4e8f8c",
+    "docs/reconstruction/deployment-prediction-live-compatibility-20261106.json": "36c8fb9a5dad9bcd76ee7a92468e30041bbc2d68aab60155abbbbf071d90935e"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-prediction-red.log",
+      "sha256": "a3db14e17fddabd9be15dc2672bc1115aa675a45fc1d675cac368628e937252e"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-boundaries.log",
+      "sha256": "7f2b5baa2af8ff97af03ee939bda45259b0e77657b801751cca3493614c5232b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-directory-order-red.log",
+      "sha256": "f2d731f959a1fe9b7d314f8c8b724a1fe5d2ba9f804e1ef3f037a79cf5df2403"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-root-final.log",
+      "sha256": "ec2b91ec573709bbb7b4884a8a1a1f0dd7b81d38d617b57cc0c6aa351b2007f0"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-http-final.log",
+      "sha256": "b9893232fa0542a479d1ab8472d6b7c8c0809e72b01dd4bfa1f70b1f39eadb3d"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-build-final.log",
+      "sha256": "155fed80fb09bf06aa8644c00590384ea555518f49bc61d4adff5544fb2239f6"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-preservation-final.json",
+      "sha256": "0ef66f30e217b37d9f19ec50ae317ba46921f64955ba202074b1d944dd56b265"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-prediction-live-compatibility-final.json",
+      "sha256": "36c8fb9a5dad9bcd76ee7a92468e30041bbc2d68aab60155abbbbf071d90935e"
+    }
+  ],
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": [
+      {
+        "path": ".codex/config.toml",
+        "contentAndModeUnchanged": true,
+        "mtimeChanged": true,
+        "identityChanged": true
+      }
+    ]
+  },
+  "actualUserClientFileOperations": 0,
+  "newRealNativeCalls": 0,
+  "newModelOrToolCalls": 0,
+  "remaining": [
+    "Public v3 apply/save and coordinator dispatch/recovery",
+    "Native source and previous path migration prediction",
+    "All global mutation and source deletion/detachment impact guards",
+    "Planned native context transition and observation",
+    "Public saved plans/recovery/validate/doctor and actual cross-scope consumer roundtrip",
+    "Remaining PR07/09/11 and C07 Skill target/compatibility/variant work"
+  ]
+}

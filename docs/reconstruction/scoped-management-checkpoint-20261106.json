@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T03:47:58.977952+00:00",
+  "phase": "PR10 v3 source validation/readonly diagnostics/declaration CRUD and peer source preservation",
+  "status": "partial",
+  "manifestV3DeclarationManagementEnabled": true,
+  "importedNativeV3LifecycleEnabled": false,
+  "sourceManagement": {
+    "scopes": [
+      "global",
+      "project"
+    ],
+    "actions": [
+      "validate",
+      "doctor",
+      "registry",
+      "resource",
+      "dependencies",
+      "planEdit",
+      "applyEdit",
+      "CLI manifest-edit"
+    ],
+    "sourceOnlyProjectTargetRoot": null,
+    "sourceValidationAuthorizesDeployment": false,
+    "targetSelectionPreservedForStableIdReplacement": true,
+    "newAssetsAutomaticallyActivated": false,
+    "globalLegacyManifestProtectsV3ProjectDeclarations": true,
+    "peerSourceAndLockRevalidation": "before-and-after-manifest-write",
+    "externalLinks": "read-only",
+    "nativeProviderDiscoveryAutomatic": false,
+    "deploymentReady": false,
+    "fulfilled": false
+  },
+  "tests": {
+    "root": {
+      "total": 781,
+      "passed": 781,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-scoped-management-root-complete.log"
+    },
+    "http": {
+      "total": 51,
+      "passed": 51,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-scoped-management-http-complete.log"
+    },
+    "focused": {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "log": "/private/tmp/kit-pr10-scoped-management-focused-complete.log"
+    },
+    "gui": {
+      "total": 86,
+      "passed": 86,
+      "failed": 0,
+      "log": "/private/tmp/kit-pr10-scoped-management-gui-work2.log"
+    },
+    "typecheck": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-management-typecheck-work2.log"
+    },
+    "desktop": {
+      "passed": true,
+      "log": "/private/tmp/kit-pr10-scoped-management-build-complete.log"
+    },
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust source changes; prior evidence remains historical"
+    }
+  },
+  "sourceHashes": {
+    "README.md": "c3521a362924f85aefddea0b6d832388c20cd221e738fe27d0d85e2b1515893c",
+    "bin/cli.js": "81c3168bb8220e394770af1dc89733c2319bee5d854dd0cadfddc0abd0743b03",
+    "clients/codex.yaml": "628d969a128f950703a5d431639a4becd65ee6e5829a3fdd5e678daafca6a005",
+    "clients/native-prerequisites/codex-cli.yaml": "2f5732d9f5b8a02b6a3e9cf9db475d1d53e01a05d87e86f2cde0456a831cb25e",
+    "docs/contracts/dependency-coordination-v1.md": "28a0b726e14a61c3d9bc490e76df9b36db48c0281827cfe85e3b60f4ae00ff40",
+    "docs/contracts/dependency-reverse-index-v1.md": "cf743b51fcd95e19ecbdb330eacb41d6f5cf0ea7a700374f59448dd4ff57bb54",
+    "docs/contracts/deployment-installation-prediction-v1.md": "88cb07e583aabd94ee5d2429fc3107c4483e7acc63096eed80f8aaf4cdc39b12",
+    "docs/contracts/global-dependency-mutation-v1.md": "cee4c4645eceaacdc86c57194527b3105ccafe8371e3ed4a101491f45ca8898c",
+    "docs/contracts/installation-receipts-v1.md": "f8d2d1131a144dc99383db3d913b58fa965ce06b2d35855cf295dda384a483cf",
+    "docs/contracts/native-context-transition-v1.md": "f251d8c7e21db8432c6d7937a50ff4cad350030ed4558802e290c23da27e4b49",
+    "docs/contracts/native-prerequisite-observation-v1.md": "d804331c8df35ae4c78d01d7b083cb04e2cd9c42e6b26cef18580321906083bf",
+    "docs/contracts/scoped-dependencies-v1.md": "17cbfc93d60c5405d352bfa2797af4027faf9c61e2b6e53c862bdc724bf9ba33",
+    "docs/contracts/scoped-deployment-compilation-v1.md": "d7fe4d05e72568c0cf5ffe02e25ed30b96d787297e949e8f458f3c32f51415de",
+    "docs/contracts/scoped-deployment-execution-v1.md": "902997b87486a788f4ced3d99f7d94188900d97fe598b72a0b19446af74788d5",
+    "docs/contracts/scoped-deployment-rollback-v1.md": "e5c2d046f8fe2145cfd49081c2f2dd5fa6d621761c9f042e1834cf84efe0eeb5",
+    "docs/contracts/scoped-installation-receipts-v4.md": "954911a6f0329e5734484b70ac8ac3101d096f0f3ddce4973b9eb50130ba4507",
+    "docs/contracts/scoped-manifest-management-v1.md": "ed77f858230c18668dceea9d57278211c47651ae6efbe996efc023b93dfea6dc",
+    "docs/contracts/source-dependency-guards-v1.md": "34d51398425a7e38e12e31e0e242e6107b4f8f1ebd04252dde2e58861be521ec",
+    "docs/product/shared-resources-consolidation-plan.md": "b760d4503bab861c61d802d60302a29b8194a0900c8ce4ea47715d191f36ca21",
+    "docs/reconstruction/phase-scoped-dependencies.md": "8516b776b666e6ed6ffc93c3d8a0e75e1e99b952548708bea72d96037cda00ac",
+    "docs/reconstruction/scoped-management-existing-kit-diagnostics-20261106.json": "a726f1d8509a4b8c291a1e4c4160bc87653ce4f4f52796b13c8c4fe605127a9b",
+    "docs/reconstruction/scoped-management-live-compatibility-20261106.json": "3ca003367fc4786d83207f7387d1c57393320318d4c14a85ea9f317a6fabef68",
+    "docs/reconstruction/scoped-public-codex-cli-roundtrip-20261106.json": "1cff011a56337d7f2a994793b699739dd74d5b010bcbc8f45fd5eb875904d5af",
+    "docs/reconstruction/scoped-public-external-settings-observation-20261106.json": "44252ed816f61d172790f41032b77a1036fefd0fd7101ba0aa48e445c4b39e69",
+    "docs/reconstruction/scoped-public-live-compatibility-20261106.json": "754e33449b9c89739d56598616c502eeccbdcf0c906405539753fe563b171da1",
+    "docs/reconstruction/scoped-rollback-codex-cli-roundtrip-20261106.json": "500abe165b8365882753ace7fcf2889f45ecd4f4034bfdf9719d9f1e12b1308e",
+    "docs/reconstruction/scoped-rollback-live-compatibility-20261106.json": "09290d54658a31321fa2deceb906d14b4ad2e6e7a8cec668c6e5ae374a7be361",
+    "docs/traceability/shared-conversation-requirements.md": "30789e6d88cbf2fb85da91da727b7e692cb34568dbe367439ae24b03156ded56",
+    "gui/server/routes/deploy.js": "0ae70422691c612afed73cc5fea3dcdf02535936441abfe9192157969ec22e8c",
+    "gui/server/test/control-plane-e2e.test.js": "2219278c07d2071c516c055e7c2002d6fd3abe255f6e8658474b60d10a024947",
+    "gui/server/test/deployment-routes.test.js": "25ec784e5d0cc02950ac79ed67b98a40ee2b56befbbf1ff223e402307101b264",
+    "gui/src/api/deploy.test.ts": "a74cde9de6c0227c739a8dae88935d43ea5e71b6bfcf681c42f737aa912d1b83",
+    "gui/src/api/deploy.ts": "ab6f11a38b819bdf990180524ef08d62704fb323f64022da0f729868d59aa2d6",
+    "gui/src/components/config/ManifestEditor.test.tsx": "dc3f73e61412511d17074edb7d8b0f8b6b3c1bf460068d3b0a65e46d72819699",
+    "gui/src/components/config/ManifestEditor.tsx": "ca5f80cf326af1208dcfb7ee7d9a14f863dea17ff105cfad231dc12e8d3d2970",
+    "gui/src/components/deploy/ManifestDeploymentPanel.test.tsx": "49fa561641328fe01ff6165eaaf4806cff10f44dc858cb00988eb6662197c753",
+    "gui/src/components/deploy/ManifestDeploymentPanel.tsx": "4983e1aea887c6c5b144ba7c3ac8c13c60b01b0b2de6f89f66b4d5db01315dee",
+    "gui/src/components/resources/ResourceWorkspace.test.tsx": "373a674bc0c3d0d9d0acc5365a1846efbb64b9868fd0b4222238e783a4c34005",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "326c2f7199d9a3f63ba2e38441443522b639f57352081ec4d580c6827fb636dd",
+    "lib/application/client-diagnostics-service.js": "4ca718b240981123f6ef3949ee070ac2ba2be5c1b0fb017bb1ebe2d42c002d3b",
+    "lib/application/dependency-coordination-service.js": "6bea2faa746cd6352eb419c6b8abd6b28bd2f412a7eedec3dec761dc2a2168f3",
+    "lib/application/deployment-installation-prediction.js": "8b26d641d45980cd639ed9287fb3d8773496f85caf523671a66144a382a91337",
+    "lib/application/global-dependency-mutation.js": "6e970886763bf420033032c2edf64a6a70b83974af6a51df0df23e76ce2cd26c",
+    "lib/application/manifest-deployment-service.js": "5d631cf6e2715e9e31a2b0e00802bf1bceaafd74ed34b12a46a82779bdaf5cde",
+    "lib/application/manifest-editing-service.js": "87acb0a16a05a7edf76c9cb81bb97b5d6aadc2a77063cb7b23dac2e2d91b8e16",
+    "lib/application/native-prerequisite-service.js": "92ec568924531cf3e37a7d30cced4a9248c39622e9bdd6af71f7b63d4532baad",
+    "lib/application/native-prerequisite-transition.js": "90e77177f8ccb96603b995e886942cf6367287b477f144703fac64c5cda81042",
+    "lib/application/prepare-resource-removal.js": "ae400619dd85e589016159ac15d4fc6b087a565e34354d2d3c77dffcce315676",
+    "lib/application/resource-catalog-service.js": "2192c4f07b954256276b4f6c0f73e8662ec9eb8a3ed8ab799a4ed01edff29923",
+    "lib/application/rollback-command.js": "401d0be65c6ca006fe56e6410d85025bc51853916d6ab451f3e650348895e42c",
+    "lib/application/rollback-deployment.js": "c1825d9c6a0f082cbada59581373dd3f59de35a960a7ddb33c4963457a5187fa",
+    "lib/application/rollback-shared-snapshot-deployment.js": "eda24157de6ed9003b16b7b2744e0e1844ac809cae8f86b8cd9909cd23372467",
+    "lib/application/scoped-deployment-compiler.js": "a14517a38f11abe66679429e81ae500a9920ae606933bd8156d27c91983b2fd5",
+    "lib/application/scoped-deployment-execution.js": "6bb71ef971b446e6e9039f188e11474d5acb133cd3f190ed0ef7567e0774147b",
+    "lib/application/scoped-deployment-prerequisites.js": "5178116c73ec1f23c23bebb68a5c230678d0e1b8fc8bae6c0eb30ccfd4d4371b",
+    "lib/application/scoped-deployment-rollback.js": "2077d6bfbdb42f8de6cdf50519d07bca628e1e078399264750264e1c7d32ce3a",
+    "lib/application/scoped-manifest-management.js": "e34d96d46cb192e9c7ef6df47c3917efb0ebd57ee9f17fd1756db1de2c1b87f7",
+    "lib/application/scoped-resource-removal.js": "b9af04a91adfec9ed1b8a1b7b5807a1a4f737c2935b21c8df770ef2e93ea05a1",
+    "lib/application/source-dependency-guard.js": "2d4aad6d539e74b99ae9917e1d80c34a027c85a51444546e459a90517fe1fefe",
+    "lib/domain/scoped-installed-relations.js": "798dcb9824e3c5ac08da5180055468e38905bdfee5f4acb0539bb3ee2c400290",
+    "lib/infrastructure/dependency-store-session.js": "d2d75e997e22d7db96a660ec335f2e4bceae48dc81fedca9e3da288bac6bb4ad",
+    "lib/infrastructure/kit-source-transaction.js": "1c0352832a931a47d7d76b43016ba233a6ff022ef126b71bea3865b25fa8c581",
+    "lib/infrastructure/saved-deployment-plan-store.js": "7bb7bca5c0007412ed512a5d3e145078dda2dad2f8520b634a9b12a667c0e624",
+    "lib/infrastructure/transaction-workflow.js": "83cbd9a1f20b765835fdf21cc8550e9240504265e6c6b6cfcd5f95c72d408258",
+    "lib/infrastructure/tree-deployment-transaction.js": "3cbae12239ec9a5e2b485bb176480491233efeb3e08b28bedf02c34e61f1cfad",
+    "lib/interfaces/http/error-mapper.js": "eccce24420b29804320ea6a46e91110b967d4ee8cd31848790f09602181ee277",
+    "package.json": "45f82bfa6dab3b0d26d4e7e0d5cf4977bbfd7dd01a6251add188d12bcae56c73",
+    "scripts/client-verification/native-prerequisite-fixture.mjs": "7a112baaebba96cbf252fe2ff4a10b35711b0eeb4d6a033dec72558cdd067e56",
+    "test/dependency-reverse-index.test.js": "25eaca7fef869b52a0727ce88c00b05a9bd5b7877d961fbb88d9f51f03ac5ffc",
+    "test/helpers/crash-scoped-deployment-dispatch.js": "fc5cc201102723247288db2954d2ed1f798bcadfd44808fab6cb1ed12eea7595",
+    "test/helpers/native-prerequisite-service-fixture.js": "f7f6f71af54634d5b9c29ee3d7141bb5b499f07ef70b6663b2e1dfa6c9d9fad3",
+    "test/helpers/resource-path-fixture.js": "f6cbbc3443e5143ecb516e79bec938fda42bc370f0a2d991faad77a0e396edeb",
+    "test/native-prerequisite-service.test.js": "2d36bbcaa6bbe506ea20bfd113f72aa85de595d028f81b800120689c0f53b27f",
+    "test/scoped-dependency-catalog.test.js": "c198b1b45f0b8204b9fa8d30f75e1abb75e6884e1e28804ebc9e6b816f1c8b0d",
+    "test/scoped-deployment-compiler.test.js": "965e40fda172b34b252cfed8f6835a92cc1d9dd025174d541e39825dcf42459e",
+    "test/scoped-deployment-dispatch.test.js": "ec8031bb24cf650259196e3641dae8c4b2a741e32bf852d99ed020b1172262ca",
+    "test/scoped-deployment-rollback.test.js": "53ca8e3ba2ceb5959367d69b705153a9ce12eff3b267db8329202a1ac0f33dd6",
+    "test/scoped-manifest-management.test.js": "3fd13d7780e792250a75be65e998f45294d553d39499da8c4a9a3280bda50e1b"
+  },
+  "logs": [
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-root-complete.log",
+      "sha256": "d9c77e8bcb9cc199f402173ed38c13a993a5d3307356de90231d023457469a76"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-http-complete.log",
+      "sha256": "e8900d6ca47c5cacbfdb08bb714a68856244385090aa48fc366a8ba00e22dd9f"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-focused-complete.log",
+      "sha256": "2becc0ccdb46b47087cba9d23de7969644bce3574fd20c04061c62784fecb387"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-gui-work2.log",
+      "sha256": "9f4ff1ff1956835fe7fddb5511cde26d16cf96f23cd788df66545bf4f7eb6ca2"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-typecheck-work2.log",
+      "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-build-complete.log",
+      "sha256": "d8af5d00878be33388b3217f49fc28f0ec23012717595cb701fe1bf379f9277a"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-red.log",
+      "sha256": "947325df22a302a84a50f5ec9561244802686bd04fc070d7d1495472182b9ec1"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-lock-red.log",
+      "sha256": "1dc4cc328a554432298be734cd1be99f17bb6a630e9a90a0216f4854222b5f4e"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-legacy-global-red.log",
+      "sha256": "84a1991ced3b3a8121f8dbf1e94534447b51c37fed385078e0161593e5c48c18"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-gui-red.log",
+      "sha256": "30393518df264ca47c3a1c7068e465da8c3c06aa712e8e06a1b26fa717b66ed4"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-cli-red.log",
+      "sha256": "c4266a91d0f0b33286dd1eb3dc9f95d5d4c8ee7e48c5f7ebea13899a9eedc18c"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-target-preservation-red.log",
+      "sha256": "c11bc0eb900098d664288167c64cbc1a889eb2c542b35dae74fd2f4ed3a64a66"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-final-batch-red.log",
+      "sha256": "fa10402f1ef36a55cdeb90988e48a4db3dfb1b895142690e112fb6fd3e6b7bf8"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-companion-lease-red.log",
+      "sha256": "648ff8e4c6b7db34f91f87c8e7c013ea29f893065d4d6de03f3e3b4fbc062817"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-root-verified.log",
+      "sha256": "d38be5e8e8b1b165bafd9e842129d8a1a65c62d9af615e0cde7e79b909ed8963"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-live-diagnostics-final.json",
+      "sha256": "a7d809c7de798d2771f072fc1b4c64558061e48c8fce41a0cb0263934e713368"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-live-diagnostics-os-permissions.json",
+      "sha256": "a726f1d8509a4b8c291a1e4c4160bc87653ce4f4f52796b13c8c4fe605127a9b"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-preservation-complete.json",
+      "sha256": "806c987dda1b1c2d82574a41561656922f69cbcb6a7b993ad64ac93847fde7cf"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-live-compatibility-complete.json",
+      "sha256": "3ca003367fc4786d83207f7387d1c57393320318d4c14a85ea9f317a6fabef68"
+    },
+    {
+      "file": "/private/tmp/kit-pr10-scoped-management-live-diagnostics.mjs",
+      "sha256": "2471dae594a836e65aa6bdca1d71ad134843b315043bb4927534a30707e13fef"
+    }
+  ],
+  "realUserVerification": {
+    "artifact": "docs/reconstruction/scoped-management-existing-kit-diagnostics-20261106.json",
+    "mode": "read-only-existing-user-kit-diagnostics",
+    "validationValid": true,
+    "doctorHealthyWithOSPermissions": true,
+    "sandboxWriteBoundaryReportedSeparately": true,
+    "clientSelected": false,
+    "manifestStateAndMetadataPreserved": true,
+    "binaryCalls": 0,
+    "nativeCalls": 0,
+    "modelCalls": 0,
+    "toolCalls": 0
+  },
+  "userState": {
+    "schemaVersion": 6,
+    "transactions": 145,
+    "managedFiles": 3,
+    "owners": 4,
+    "unchanged": true,
+    "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+    "pendingOperations": 0,
+    "managedContentMatches": true
+  },
+  "preservation": {
+    "baselineReport": {
+      "preserved": false,
+      "paths": 27,
+      "differences": [
+        {
+          "path": ".gemini/config/config.json",
+          "before": "file",
+          "after": "file"
+        }
+      ],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "baselineAllBytesEqual": false,
+    "unchangedBaselinePaths": 26,
+    "baselineDifferencesUnchangedSincePreviousCheckpoint": true,
+    "knownUnmanagedSettingsDifference": {
+      "artifact": "docs/reconstruction/scoped-public-external-settings-observation-20261106.json",
+      "path": ".gemini/config/config.json",
+      "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+      "mode": 384,
+      "writerAttribution": "unproven; earlier app-start timing correlation is an inference",
+      "currentSettingsPreserved": true,
+      "currentHashAndModeStillMatchPreviousObservation": true,
+      "restoredOrRewritten": false
+    },
+    "externalLinkIdentitiesPreserved": true,
+    "managedClientBytesMatchLedger": true,
+    "originalBaselineReplaced": false
+  },
+  "agentKitUserClientFileOperations": 0,
+  "agentKitUserStateWrites": 0,
+  "clientSupportMatrixPromoted": false,
+  "guiVerification": "component tests/typecheck/frontend-backend build; real browser integration remains separate",
+  "remaining": [
+    "Native source and previous-path mutation prediction/coordination, including imported native v3 copy/update/installation lifecycle",
+    "Global settings transition and reobservation in all registered projects",
+    "Remaining PR07/09/11 and C07 Skill compatibility/variants",
+    "Separate consumer activation/agent child completion/model-response evidence where required"
+  ]
+}

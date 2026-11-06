@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "phase": "PR10-dependency-reverse-index-model-and-observation",
+  "checkedAt": "2026-11-05T22:09:46.624Z",
+  "implementation": {
+    "stateSchema": 8,
+    "indexSchema": 1,
+    "registrationSchema": 1,
+    "consumerStablePrerequisiteIds": true,
+    "physicalOriginsAndProfilesSeparated": true,
+    "boundedReadonlyProjectObservation": true,
+    "missingCorruptPendingEntriesRetained": true,
+    "perConsumerPureImpact": true,
+    "ordinaryClientDeploymentWritersFailClosed": true,
+    "legacyStateUnchanged": true,
+    "cliHttpGuiExplicitInspection": true,
+    "inventoryResponseOrderProtected": true,
+    "publicRegistrationCoordinator": false,
+    "allSourceMutationGuards": false,
+    "selectiveGlobalWriteAuthorization": false,
+    "crossScopeLocksAndJournal": false,
+    "manifestV3DeploymentEnabled": false
+  },
+  "validation": {
+    "passed": {
+      "root": 583,
+      "http": 44,
+      "gui": 74
+    },
+    "typecheck": true,
+    "desktopBuild": true,
+    "cargo": {
+      "rerun": false,
+      "reason": "No Rust source or Cargo dependency changes in this stage"
+    },
+    "logs": {
+      "root": {
+        "path": "/private/tmp/kit-pr10-reverse-root-final.log",
+        "sha256": "d881ba275ec4628448de31c2319c70a23cd585a2b48b2e15963a5bda40e2801b"
+      },
+      "http": {
+        "path": "/private/tmp/kit-pr10-reverse-http-final.log",
+        "sha256": "99cf9d039fc6506d8409ff71a89b3862e1343c404f50d83717566542965cb706"
+      },
+      "gui": {
+        "path": "/private/tmp/kit-pr10-reverse-gui-first.log",
+        "sha256": "5c9bb5706e9ff90939bf96da60512ce1e043b09f7e055ba415df871e9fd55721"
+      },
+      "typecheck": {
+        "path": "/private/tmp/kit-pr10-reverse-typecheck-first.log",
+        "sha256": "7f2350c5785806120cb50dbb5b396e4dedf6bd10ffd7ef75675dd2e649e76ca8"
+      },
+      "desktopBuild": {
+        "path": "/private/tmp/kit-pr10-reverse-build-final.log",
+        "sha256": "66027e8faead34d28921d926d29838732394d9d8bd7cb8c46705c0815571d903"
+      }
+    },
+    "redLogHashes": {
+      "/private/tmp/kit-pr10-reverse-index-behavior-red.log": "a4a0194d60c8e454799ce2b67cdac68c88257f79df8a81f5ab21560c30ad5443",
+      "/private/tmp/kit-pr10-reverse-profile-red.log": "9768a4c2ee91a98638155b56a295a0de4cb6086ebaf436dc3161efb9e69266ac",
+      "/private/tmp/kit-pr10-reverse-pending-red.log": "fa1b942356e5591614456b02cc21b850d253265f419377e4ed1cefa9a70c4d15",
+      "/private/tmp/kit-pr10-reverse-gui-red.log": "37dcb5a08a037cee831f17f6dd252037c0d7a94a2e96cb2f4b67526084637779"
+    },
+    "documentationLinksChecked": true
+  },
+  "sourceHashes": {
+    "lib/domain/dependency-reverse-index.js": "155b79a4fb3cdec83eaecb9dcbf8f2460a0a563855a6d24dcfe953f155f80e98",
+    "lib/application/inspect-dependency-dependents.js": "e63a1008a861a17d4ec4627de5c3736a24f04100a8f8350940b027c5d93e6472",
+    "lib/infrastructure/deployment-state-store.js": "1a18a00f6431e09211d323c2c64ca791cb42a1b3290f4dab8214cf90c2b58886",
+    "lib/application/manifest-deployment-service.js": "1e3c3358657a4b87d41dbf553791e1e0bfc337fa52f1700c47f4ac67e7000a48",
+    "lib/application/apply-copy-deployment.js": "5297e612af1070400df8a47a97ea4e827a8d1a070afe5d06b1938873aacb3ba7",
+    "lib/application/apply-merge-deployment.js": "4288ff3b09616cf226ad785f5027820f5fc027f16ecc15fb9294ea7e5a40eaba",
+    "lib/infrastructure/deployment-journal.js": "672f9274a33b33624c686dbf23dba02bb0db2d7e85ae4b40307b95a1256e1f0e",
+    "lib/infrastructure/tree-deployment-transaction.js": "b47ebf326c756926c2200d261cac3659a971b257f02c522632239f4f9568b331",
+    "lib/interfaces/http/error-mapper.js": "94c34913381ef14f8bf580531d81a761840b04083bcf2363485a8c61b78c2b77",
+    "bin/cli.js": "081b9fb547e96113e4e91daefbce89cefa00626aa176d53cd56ad0ef129a990c",
+    "test/dependency-reverse-index.test.js": "fae79392da97d9a208e42194331b9e80da95d7caa8ea01e915796a777daad014",
+    "test/helpers/dependency-index-fixture.js": "eba7e79e4c1f0c592a19bd145a5bb93e443829e797208cdc59b73508da040d12",
+    "test/http-error-mapper.test.js": "3fdc11c16cd71496ca585f302ea4925c25a8a32c64cc61728458789a392f1d18",
+    "gui/server/routes/deploy.js": "c94621dcf7523d0676c93b9c7e8e45869196924e2094997783b337c52d738e55",
+    "gui/server/test/control-plane-e2e.test.js": "3ca22aee881649d37335ca9b10b686cdc17846ec65b6ee9610f105fb7d8aa1ad",
+    "gui/src/ManifestApp.tsx": "9b3c596ff4aacc04743311055acb5e9b92fc2586f6d808a2b8847df2aba785b6",
+    "gui/src/ManifestApp.test.tsx": "635ad4337a4c7fcb09ade20f9904989691adb28731a760cd021293fde7f9fd8e",
+    "gui/src/api/deploy.ts": "f6d8eb32e47673921bb025406d460e1e0a44b067c5944cf2b20ef5324523dbf0",
+    "gui/src/api/deploy.test.ts": "9e3d1bf83668475ec0b5583f0be64b30c508c7d1bbfc125b2f857330ddd86d88",
+    "gui/src/components/resources/ResourceWorkspace.tsx": "617dc792d1af759aa2628cb3fc3663bb627f674d52e58e0e3ca5cd4422e4c399",
+    "gui/src/components/resources/ResourceWorkspace.test.tsx": "0d01f4a2d11f34d220b1e77b56376744928a7b94cc4234645358b6ad5376773d",
+    "docs/contracts/dependency-reverse-index-v1.md": "5d95c042f379e94888300ecdca7e02f5ca7f066237f7fcb30398e2ca6a6756dc",
+    "docs/contracts/scoped-dependencies-v1.md": "9b14d475b5e571d70a9b0140e814f15c4916c824bef8f567d35b2c9538f938bf",
+    "docs/reconstruction/phase-scoped-dependencies.md": "ea21f3af250c3da1a6094e8294b06b3449a681e8d7c0bb0d4bb1cdd562a379b8",
+    "docs/product/shared-resources-consolidation-plan.md": "02628af178280c4e41e9305c63dd25dd21c32fd61a830dcd4dc3e3631040574e",
+    "docs/traceability/shared-conversation-requirements.md": "4f4a491383f47ba4e3660ba60bdb42a8e3f4ea7203a47e28fcc32345b48da5cd",
+    "README.md": "844880e0119abd11d8114373c3371f7e62f6700f65f444ab0e5db2f08cb5b4d1",
+    "package.json": "baa81e2a7783c266df0d197b4a7ead129c41992ba5b82cebd6efb3a37993957e"
+  },
+  "realEnvironment": {
+    "cliInspection": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-05T22:05:34.377Z",
+      "mode": "read-only-cli-dependent-inspection",
+      "inspection": {
+        "schemaVersion": 1,
+        "readOnly": true,
+        "coverage": "registered-projects-only",
+        "observedAt": "2026-11-05T22:05:34.366Z",
+        "fulfilled": false,
+        "status": "not-enabled",
+        "reason": "DEPENDENCY_INDEX_NOT_ENABLED",
+        "projects": [],
+        "issues": []
+      },
+      "state": {
+        "schemaVersion": 6,
+        "transactions": 145,
+        "managedFiles": 3,
+        "owners": 4,
+        "unchanged": true,
+        "sha256": "886d2296226089f4f550e3560cfad7bfb7670ab2e53f1a978c1e3b841f656c5d",
+        "dependencyIndexAutomaticallyCreated": false
+      },
+      "catalogResponseSha256": "d289880774e8892c6823b3f02b90a7b1df867df69b511041568713aae883045b",
+      "catalogIssues": [],
+      "clientFileOperations": 0,
+      "nativeClientCalls": 0,
+      "modelCalls": 0,
+      "toolCalls": 0
+    },
+    "preservation": {
+      "preserved": true,
+      "paths": 27,
+      "differences": [],
+      "metadataOnly": [
+        {
+          "path": ".codex/config.toml",
+          "contentAndModeUnchanged": true,
+          "mtimeChanged": true,
+          "identityChanged": true
+        }
+      ]
+    },
+    "userIndexActivated": false,
+    "nativeCalls": 0,
+    "modelCalls": 0,
+    "toolCalls": 0,
+    "runtimeEvidenceRecords": 25,
+    "nativeSupportExpanded": false
+  },
+  "browser": {
+    "run": false,
+    "newTaskSpaceCreated": false,
+    "reason": "No additional browser verification; previously supplied task space was missing"
+  },
+  "remaining": [
+    "Native discovery and actual Tool/provider prerequisites",
+    "Cross-scope deployment plan prerequisite freeze/revalidation",
+    "Project registration/release coordinator with per-consumer merging",
+    "Global-to-project locks and reservation/active/release journals",
+    "Two-scope SIGKILL/recovery and contention tests",
+    "All global mutation/source removal/detach/rollback/path migration impact guards",
+    "Saved plan and validate/doctor integration",
+    "PR07 Antigravity Agent child completion, PR09 remaining native contexts, PR11 additional strategies/profiles"
+  ]
+}

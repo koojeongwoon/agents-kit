@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T04:21:58.075Z",
+  "phase": "C07 selected common Skill native discovery roundtrip",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "version": "0.166.0-alpha.6",
+  "isolatedHome": true,
+  "actualUserConfigWrites": 0,
+  "actualUserStateWrites": 0,
+  "nativeObservationCalls": 4,
+  "providerDiscoveryRequests": 0,
+  "modelCalls": 0,
+  "toolCalls": 0,
+  "modelUseState": "unverified",
+  "results": [
+    {
+      "strategy": "copy",
+      "scope": "global",
+      "manifestVersion": 3,
+      "selectedVariant": "selected",
+      "nativeSelectedMetadataObserved": true,
+      "nativePathForm": "logical",
+      "unselectedVariantInstalled": false,
+      "selectionReceiptRecorded": true,
+      "rollbackNativeAbsent": true,
+      "settingsBytesAndModePreserved": true,
+      "externalLinkIdentityPreserved": true,
+      "fulfilled": false
+    },
+    {
+      "strategy": "snapshot-link",
+      "scope": "global",
+      "manifestVersion": 3,
+      "selectedVariant": "selected",
+      "nativeSelectedMetadataObserved": true,
+      "nativePathForm": "canonical-owned-snapshot",
+      "unselectedVariantInstalled": false,
+      "selectionReceiptRecorded": true,
+      "rollbackNativeAbsent": true,
+      "settingsBytesAndModePreserved": true,
+      "externalLinkIdentityPreserved": true,
+      "fulfilled": false
+    }
+  ]
+}

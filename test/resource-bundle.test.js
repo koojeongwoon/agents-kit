@@ -289,7 +289,17 @@ test('installed reviewed binaries gate fixed-helper deployments for both CLI pro
     f.writeConfig({definitionsDir, bindings});
     const prepared = f.helper({schemaVersion: 1, operation: 'prepare', bindingId: 'workspace', sha256: bundle.sha256, bundleBase64: bundle.bytes.toString('base64')});
     assert.equal(prepared.ok, true, JSON.stringify(prepared));
-    assert.equal(prepared.result.phase, 'prepared', JSON.stringify(prepared.result.plan?.blocked));
+    const supported = ['codex', 'antigravity'].every(clientId => {
+      const profile = definitions.get(clientId).surfaces.find(surface => surface.id === 'cli'), observed = observeClientBinary(profile);
+      const required = scope === 'global' ? ['skills-global'] : ['instructions-project', 'skills-project', 'mcp-project', ...(clientId === 'codex' ? ['agents-project'] : [])];
+      return required.every(capabilityId => profile.runtimeEvidence.some(record => record.capabilityId === capabilityId && record.binarySha256 === observed.sha256 && record.platform === process.platform && record.arch === process.arch));
+    });
+    assert.equal(prepared.result.phase, supported ? 'prepared' : 'blocked', JSON.stringify(prepared.result.plan?.blocked));
+    if (!supported) {
+      assert.ok(prepared.result.plan.blocked.length); assert.ok(prepared.result.plan.blocked.every(item => item.reason === 'CLIENT_PROFILE_UNVERIFIED'));
+      assert.deepEqual(fs.readdirSync(f.targetRoot), []);
+      continue;
+    }
     for (const profile of prepared.result.plan.targetProfiles) assert.equal(profile.versionSource, 'binary-sha256');
     const applied = f.helper({schemaVersion: 1, operation: 'apply', ...f.applyRequest(prepared.result)});
     assert.equal(applied.ok, true, JSON.stringify(applied));

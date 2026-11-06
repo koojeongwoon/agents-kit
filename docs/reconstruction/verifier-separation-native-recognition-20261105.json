@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T13:50:08.314Z",
+  "purpose": "read-only-existing-MCP-registration-smoke",
+  "scope": "global",
+  "surface": "cli",
+  "clientId": "codex",
+  "version": "0.166.0-alpha.6",
+  "binarySha256": "508388df35319042107560d095b271a98a512f59a542848c908b23ed1bad4b44",
+  "existingAssetId": "node-repl",
+  "verification": {
+    "schemaVersion": 1,
+    "deployment": {
+      "status": "not-tested",
+      "checks": {}
+    },
+    "nativeRecognition": {
+      "status": "passed",
+      "checks": {
+        "configurationListed": "passed"
+      }
+    },
+    "modelBehavior": {
+      "status": "not-tested",
+      "checks": {}
+    },
+    "execution": {
+      "status": "passed",
+      "checks": {
+        "processCompleted": "passed",
+        "binaryUnchanged": "passed",
+        "allowedToolsOnly": "passed"
+      },
+      "reason": "OK"
+    },
+    "confirmed": false
+  },
+  "verificationComponentHashes": {
+    "lib/domain/verification-evidence.js": "dbc05c5d058ccb892e4b95ddf3d44ac920344677753cc4877b5affa2ae2a00a7",
+    "lib/adapters/verification/probe-evidence.js": "c0850be37c15f1e84b3ab5c8420f1a554a1a14b556f4d8b9258431af694c3511",
+    "lib/adapters/verification/model-use-observation.js": "9c5039cdcff11e2cb895de9098c63016fd379a28bab8d4a1d04e17a527983836",
+    "lib/adapters/verification/agent-observation.js": "b5052a6fd5f38f15c26b09c78f346964bbace1815d9dd7f4d6621cf361f45754",
+    "lib/adapters/verification/codex-agent-observation.js": "e3157d72622db0e4e94addbc6f6bb9e38c6a4b46b2f6f048f4e2dcdf83cd6113",
+    "scripts/client-verification/deployment.mjs": "56a1a63f82c10113373d6f07d9df22216841ba6374980a2e28f1f5c5f1aeba11",
+    "scripts/client-verification/report.mjs": "c312975b6647209ec78018f2a02cfcb37c2c519b7094f5f55d097cccc45b7e27"
+  },
+  "nativeRegistrationQueries": 1,
+  "modelTurnsRequested": 0,
+  "providerToolCallsRequested": 0,
+  "configurationWritesRequested": 0,
+  "productionEvidencePromoted": false,
+  "rawConfigurationStored": false,
+  "preservation": {
+    "preserved": true,
+    "paths": 27,
+    "differences": [],
+    "metadataOnly": []
+  }
+}

@@ -1,7 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {AlertTriangle, CheckCircle2, Trash2, Plus, Edit, RefreshCw, X, Save, AlertCircle, ArrowRight, GitFork} from 'lucide-react';
 import {
   fetchManifestRegistry,
+  fetchManifestResource,
   planManifestEdit,
   applyManifestEdit,
   fetchManifestDependencies,
@@ -38,6 +39,7 @@ export function ManifestEditor({
   setSelectedAssetId
 }: ManifestEditorProps) {
   const [registry, setRegistry] = useState<RegistryResource[]>([]);
+  const [manifestSchemaVersion,setManifestSchemaVersion]=useState(1);
   const [dependencyGraph, setDependencyGraph] = useState<DependencyGraph>({ nodes: [], links: [] });
   const [filterKind, setFilterKind] = useState<string>('all');
   const [selectedResource, setSelectedResource] = useState<RegistryResource | null>(null);
@@ -104,6 +106,9 @@ export function ManifestEditor({
 
   // Raw Content fallback
   const [rawAssetContent, setRawAssetContent] = useState('');
+  const [originalAsset, setOriginalAsset] = useState<Record<string, any> | null>(null);
+  const editRequest = useRef(0);
+  const typedEditing = originalAsset?.definition !== undefined||manifestSchemaVersion===3;
 
   // Deletion Downstream confirmation
   const [isDeleting, setIsDeleting] = useState(false);
@@ -118,6 +123,7 @@ export function ManifestEditor({
     try {
       const data = await fetchManifestRegistry({ scope, projectName, projectPath });
       setRegistry(data.registry || []);
+      setManifestSchemaVersion(data.manifestSchemaVersion||data.registry?.[0]?.manifestSchemaVersion||1);
       const graph = await fetchManifestDependencies({ scope, projectName, projectPath });
       setDependencyGraph(graph);
     } catch (cause) {
@@ -128,6 +134,9 @@ export function ManifestEditor({
   };
 
   useEffect(() => {
+    editRequest.current += 1;
+    setIsEditing(false);
+    setMutations([]);
     loadRegistry().catch(console.error);
   }, [scope, projectName, projectPath]);
 
@@ -145,6 +154,10 @@ export function ManifestEditor({
     .flatMap(p => (p as any).deny?.capabilities || []);
 
   // Transitive impact logic
+  const dependencyLabel=(id:string)=>{
+    const node=dependencyGraph.nodes.find(node=>node.id===id);if(!node)return id;
+    const label=node.displayName||node.assetId||id;return node.scope?`${label} · ${node.scope.type==='global'?'전역':node.projectName||'프로젝트'}`:label;
+  };
   const getDownstreamImpact = (startId: string): string[] => {
     const visited = new Set<string>();
     const queue = [startId];
@@ -168,7 +181,6 @@ export function ManifestEditor({
   };
 
   const addOrUpdateMutation = (mutation: any) => {
-    console.log('[ManifestEditor] addOrUpdateMutation:', mutation);
     const existingIdx = mutations.findIndex(
       m => m.assetId === mutation.assetId && m.type === mutation.type
     );
@@ -182,10 +194,18 @@ export function ManifestEditor({
   };
 
   const addCreateMutation = () => {
-    console.log('[ManifestEditor] addCreateMutation started, editId:', editId, 'kind:', editKind);
     if (!editId.trim()) {
-      console.warn('[ManifestEditor] addCreateMutation validation failed: ID is empty');
       setError('ID가 필요합니다.');
+      return;
+    }
+    if(manifestSchemaVersion===3) {
+      try {
+        const body=JSON.parse(rawAssetContent||'{}'),selectedScope=scope==='project'?{type:scope,projectName}:{type:scope};
+        if(!body||Array.isArray(body)||typeof body!=='object'||body.id&&body.id!==editId.trim()||body.kind&&body.kind!==editKind
+          ||body.scope&&(typeof body.scope==='string'?body.scope!==scope:body.scope.type!==scope||scope==='project'&&body.scope.projectName!==projectName)) {setError('자원 ID, 종류와 범위는 선택한 값과 같아야 합니다.');return;}
+        const asset={...body,scope:selectedScope,...(editSource.trim()?{source:editSource.trim()}:{}),...(editDisplayName.trim()?{displayName:editDisplayName.trim()}:{})};
+        addOrUpdateMutation({type:'create',kind:editKind,assetId:editId.trim(),asset});setIsCreating(false);clearEditForm();setMessage('생성 변경 사항이 임시 저장되었습니다.');
+      }catch{setError('올바른 JSON 형식이 아닙니다.');}
       return;
     }
     const newAsset: any = {
@@ -243,11 +263,20 @@ export function ManifestEditor({
     });
   };
 
-  const handleStartEdit = (resource: RegistryResource) => {
-    console.log('[ManifestEditor] handleStartEdit target:', resource.id, 'kind:', resource.kind);
+  const handleStartEdit = async (summary: RegistryResource) => {
+    if (summary.managementMode === 'kit-source') return;
+    const requestId = ++editRequest.current;
+    setLoading(true); setError('');
+    try {
+      const response = await fetchManifestResource({assetId: summary.id, scope, projectName, projectPath});
+      if (requestId !== editRequest.current) return;
+      const pending = mutations.find(m => m.assetId === summary.id && m.type === 'update');
+      const resource = pending?.asset || response.resource;
     // Clear everything first to prevent old values leaking
     clearEditForm();
     
+    setOriginalAsset(resource);
+    setRawAssetContent(JSON.stringify(resource, null, 2));
     // Then set the actual edit target values
     setIsEditing(true);
     setIsCreating(false);
@@ -298,23 +327,38 @@ export function ManifestEditor({
     } else {
       const { providedTools, requiredTools, references, ...rawFields } = resource;
       setRawAssetContent(JSON.stringify(rawFields, null, 2));
-    }
+    }    } catch (cause) {
+      if (requestId === editRequest.current) setError(cause instanceof Error ? cause.message : '자원 조회 실패');
+    } finally { if (requestId === editRequest.current) setLoading(false); }
+
   };
 
   const saveEditMutation = () => {
+    if (!originalAsset) return;
+    if (typedEditing) {
+      try {
+        const asset = JSON.parse(rawAssetContent);
+        if (!asset || Array.isArray(asset) || asset.id !== editId || asset.kind !== editKind || JSON.stringify(asset.scope) !== JSON.stringify(originalAsset.scope)) {
+          setError('자원 ID, 종류와 범위는 변경할 수 없습니다.'); return;
+        }
+        addOrUpdateMutation({type: 'update', kind: editKind, assetId: editId, asset});
+        setIsEditing(false); setMessage(`'${editId}' 변경 사항이 임시 저장되었습니다.`);
+      } catch { setError('올바른 JSON 형식이 아닙니다.'); }
+      return;
+    }
     let updatedAsset: any = {
-      scope,
+      ...originalAsset,
       displayName: editDisplayName.trim() || undefined
     };
     if (editSource.trim()) updatedAsset.source = editSource.trim();
 
     if (editKind === 'skills') {
-      if (selectedDependsSkills.length > 0) updatedAsset.dependsOn = { skills: selectedDependsSkills };
-      if (requiredTools.length > 0) updatedAsset.requires = { tools: requiredTools };
+      updatedAsset.dependsOn = { ...originalAsset.dependsOn, skills: selectedDependsSkills };
+      updatedAsset.requires = { ...originalAsset.requires, tools: requiredTools };
     } else if (editKind === 'agents') {
-      if (selectedDependsSkills.length > 0) updatedAsset.uses = { skills: selectedDependsSkills };
-      if (selectedPolicies.length > 0) updatedAsset.policies = selectedPolicies;
-      if (requiredTools.length > 0) updatedAsset.requires = { tools: requiredTools };
+      updatedAsset.uses = { ...originalAsset.uses, skills: selectedDependsSkills };
+      updatedAsset.policies = selectedPolicies;
+      updatedAsset.requires = { ...originalAsset.requires, tools: requiredTools };
     } else if (editKind === 'harness') {
       updatedAsset.enables = {
         agents: harnessAgents,
@@ -407,7 +451,6 @@ export function ManifestEditor({
   };
 
   const clearEditForm = () => {
-    console.log('[ManifestEditor] clearEditForm triggered');
     setEditId('');
     setEditDisplayName('');
     setEditSource('');
@@ -433,6 +476,7 @@ export function ManifestEditor({
     setMcpProvidesTools([]);
     setMcpEnvVars([]);
     setRawAssetContent('');
+    setOriginalAsset(null);
   };
 
   const discardMutations = () => {
@@ -469,7 +513,6 @@ export function ManifestEditor({
     return notDeleted && matchesKind;
   });
 
-  console.log('[ManifestEditor] Render State:', { isCreating, isEditing, isDeleting, mutationsCount: mutations.length, targetReady, loading, editId, editKind });
 
   return (
     <div className="space-y-6">
@@ -532,12 +575,12 @@ export function ManifestEditor({
               return (
                 <div key={node.id} className="p-3 border border-slate-200 dark:border-slate-850 rounded-2xl bg-slate-50 dark:bg-slate-950/30 text-xs">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{node.displayName || node.id}</span>
+                    <span className="font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{dependencyLabel(node.id)}</span>
                     <span className="text-[10px] bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded-full text-slate-500">{node.kind}</span>
                   </div>
                   <div className="space-y-1 text-slate-500 font-mono text-[10px]">
-                    <div>📥 Inward (피참조): {inward.length > 0 ? inward.map(l => l.source).join(', ') : '없음'}</div>
-                    <div>📤 Outward (참조): {outward.length > 0 ? outward.map(l => l.target).join(', ') : '없음'}</div>
+                    <div>📥 Inward (피참조): {inward.length > 0 ? inward.map(l => dependencyLabel(l.source)).join(', ') : '없음'}</div>
+                    <div>📤 Outward (참조): {outward.length > 0 ? outward.map(l => dependencyLabel(l.target)).join(', ') : '없음'}</div>
                   </div>
                 </div>
               );
@@ -565,7 +608,7 @@ export function ManifestEditor({
                     </div>
                     <ul className="mt-3 space-y-1.5 text-xs text-rose-650 dark:text-rose-350 list-disc list-inside font-mono">
                       {downstream.map(depId => (
-                        <li key={depId}>{depId}</li>
+                        <li key={depId}>{dependencyLabel(depId)}</li>
                       ))}
                     </ul>
                     <p className="text-[11px] text-slate-500 mt-3 leading-5">
@@ -575,7 +618,7 @@ export function ManifestEditor({
                 ) : (
                   <div className="p-4 border border-emerald-500/20 bg-emerald-500/5 rounded-2xl text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-semibold">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>안전함: 이 리소스를 의존하는 하위 다운스트림 리소스가 없습니다. 안전하게 삭제할 수 있습니다.</span>
+                    <span>현재 관계도에 이 자원을 참조하는 항목이 없습니다. 저장할 때 의존성을 다시 확인합니다.</span>
                   </div>
                 )}
 
@@ -624,7 +667,7 @@ export function ManifestEditor({
                 <input value={editSource} onChange={e => setEditSource(e.target.value)} placeholder="e.g. skills/search" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
               </label>
             )}
-            {editKind === 'mcpServers' && (
+            {editKind === 'mcpServers' && manifestSchemaVersion!==3 && (
               <>
                 <label className="space-y-1.5 text-xs font-semibold text-slate-500">
                   Command (for Local MCP, e.g. node, npx)
@@ -637,6 +680,10 @@ export function ManifestEditor({
               </>
             )}
           </div>
+          {manifestSchemaVersion===3&&<label className="mt-4 block space-y-2 text-xs text-slate-500">새 자원 정의 JSON
+            <textarea aria-label="새 자원 정의 JSON" value={rawAssetContent} onChange={event=>setRawAssetContent(event.target.value)} rows={12} className="w-full rounded-xl border bg-transparent p-3 font-mono text-xs"/>
+            <span>공통 정의와 qualified 참조를 보존합니다. 선택한 자원 ID·종류·범위로 저장하며 클라이언트 설치는 별도 배포 계획으로 반영합니다.</span>
+          </label>}
           <div className="mt-5 flex justify-end gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
             <button onClick={() => setIsCreating(false)} className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-700">취소</button>
             <button onClick={addCreateMutation} className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-bold text-white hover:bg-blue-500">추가하기</button>
@@ -644,7 +691,13 @@ export function ManifestEditor({
         </section>
       )}
 
-      {isEditing && (
+      {isEditing && typedEditing && <section className="rounded-3xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+        <h3 className="font-bold">공통 정의 편집 · {editId}</h3>
+        <p className="mt-2 text-xs text-slate-500">전체 정의를 보존해 편집합니다. 자원 ID·종류·범위는 유지하세요.</p>
+        <textarea aria-label="전체 자원 JSON" value={rawAssetContent} onChange={event => setRawAssetContent(event.target.value)} rows={18} className="mt-4 w-full rounded-xl border bg-transparent p-3 font-mono text-xs" />
+        <div className="mt-4 flex gap-3"><button onClick={() => setIsEditing(false)}>취소</button><button onClick={saveEditMutation}>임시저장</button></div>
+      </section>}
+      {isEditing && !typedEditing && (
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3 dark:border-slate-800">
             <h3 className="text-base font-bold">리소스 편집: {editId} ({editKind})</h3>
@@ -1280,14 +1333,14 @@ export function ManifestEditor({
                   <h3 className="text-lg font-bold mt-1">{selectedResource.displayName || selectedResource.id}</h3>
                   <p className="text-xs font-mono text-slate-500 mt-1">ID: {selectedResource.id}</p>
                 </div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleStartEdit(selectedResource)} className="flex items-center gap-1 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-500/20 dark:text-blue-300">
+                {selectedResource.managementMode === 'kit-source' ? <p className="text-xs text-slate-500">원본 사본 등록됨 · 자원 목록에서 등록 해제할 수 있습니다.</p> : <div className="flex gap-2">
+                  <button disabled={loading} onClick={() => void handleStartEdit(selectedResource)} className="flex items-center gap-1 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-500/20 dark:text-blue-300">
                     <Edit className="h-3.5 w-3.5" /> 상세 편집
                   </button>
                   <button onClick={() => startDeletionPlanning(selectedResource)} className="flex items-center gap-1 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-500/20 dark:text-rose-300">
                     <Trash2 className="h-3.5 w-3.5" /> 삭제 계획
                   </button>
-                </div>
+                </div>}
               </div>
 
               {/* Inward and Outward visual links */}
@@ -1302,7 +1355,7 @@ export function ManifestEditor({
                         <ul className="mt-2 space-y-1 font-mono">
                           {outward.map((l, idx) => (
                             <li key={idx} className="text-slate-700 dark:text-slate-300">
-                              ➡️ <span className="text-slate-450">[{l.relation}]</span> {l.target}
+                              ➡️ <span className="text-slate-450">[{l.relation}]</span> {dependencyLabel(l.target)}
                             </li>
                           ))}
                         </ul>
@@ -1316,7 +1369,7 @@ export function ManifestEditor({
                         <ul className="mt-2 space-y-1 font-mono">
                           {inward.map((l, idx) => (
                             <li key={idx} className="text-slate-700 dark:text-slate-300">
-                              ⬅️ <span className="text-slate-450">[{l.relation}]</span> {l.source}
+                              ⬅️ <span className="text-slate-450">[{l.relation}]</span> {dependencyLabel(l.source)}
                             </li>
                           ))}
                         </ul>
@@ -1335,7 +1388,7 @@ export function ManifestEditor({
                     <ul className="mt-2 space-y-1">
                       {selectedResource.references.map((ref, idx) => (
                         <li key={idx} className="font-mono text-slate-700 dark:text-slate-300">
-                          🔗 <span className="text-slate-400">[{ref.expectedKind}]</span> {ref.id}
+                          🔗 <span className="text-slate-400">[{ref.expectedKind}]</span> {ref.id}{ref.qualified?` · ${ref.qualified.scope.type==='global'?'전역':ref.qualified.scope.projectName} · ${ref.qualified.kitId}`:''}
                         </li>
                       ))}
                     </ul>

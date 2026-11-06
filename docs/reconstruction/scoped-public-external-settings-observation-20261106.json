@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-06T02:47:11.804633+00:00",
+  "path": ".gemini/config/config.json",
+  "mode": "read-only",
+  "baseline": {
+    "sha256": "f618d907dc2c1508ebaf9192aedeeed2892d518760bb702000e965002d10bcf9",
+    "size": 1807,
+    "mode": 384
+  },
+  "current": {
+    "sha256": "075d43387b9c94f4af13d9f37257c98249ede5ae66eddcaadfc3953b301e67c3",
+    "size": 1807,
+    "mode": 384,
+    "mtimeUtc": "2026-11-06T02:09:40.301715+00:00"
+  },
+  "observedAppStartUtc": "2026-11-06T02:09:37+00:00",
+  "firstNewTestLogCreatedUtc": "2026-11-06T02:11:12.995299+00:00",
+  "publicNativeProbeLogCreatedUtc": "2026-11-06T02:33:19.081957+00:00",
+  "attribution": "unproven; timing is consistent with Antigravity app startup before this stage tests/native probe",
+  "configurationBodyCaptured": false,
+  "restoredOrRewritten": false,
+  "preserveCurrentSettings": true
+}
