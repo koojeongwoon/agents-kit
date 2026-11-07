@@ -65,6 +65,13 @@ function mockControlCenterApis() {
 }
 
 describe('Agent Kit control center shell', () => {
+  it('clears an entered version when changing deployment clients',async()=>{
+    mockControlCenterApis();const user=userEvent.setup();render(<ManifestApp/>);
+    await screen.findByText('Codex · 설치 흔적 있음');await user.click(screen.getByRole('button',{name:'클라이언트 배포'}));
+    await user.type(screen.getByPlaceholderText('예: 1.0.0'),'1.2.3');
+    await user.click(within(screen.getByLabelText('배포할 클라이언트')).getByRole('button',{name:/Antigravity/}));
+    expect(screen.getByPlaceholderText('예: 1.0.0')).toHaveValue('');
+  });
   afterEach(() => {
     vi.restoreAllMocks();
     localStorage.clear();
@@ -125,7 +132,7 @@ describe('Agent Kit control center shell', () => {
     await screen.findByRole('article',{name:'Current Review 리소스'});expect(body).toBeUndefined();
     await user.click(screen.getByRole('button',{name:'Codex CLI 상태 확인'}));
     expect(body).toEqual({clientId:'codex',surface:'cli',projectName:'default',projectPath:'',includeOtherClients:true,kind:'skills'});
-    await user.type(screen.getByPlaceholderText('관리할 프로젝트 경로를 입력하세요'),'/other-project');
+    await user.type(screen.getByPlaceholderText('관리할 프로젝트 경로를 입력하세요'),'/other-project');await user.click(screen.getByRole('button',{name:'프로젝트 선택'}));
     await act(async()=>{resolveNative(new Response(JSON.stringify({...base,registry:[{...base.registry[0],displayName:'STALE RESPONSE'}]})));});
     expect(await screen.findByRole('article',{name:'Current Review 리소스'})).toBeInTheDocument();expect(screen.queryByText('STALE RESPONSE')).not.toBeInTheDocument();
   });
@@ -157,8 +164,8 @@ describe('Agent Kit control center shell', () => {
 
     const navigation = screen.getByRole('navigation', {name: '주요 자산'});
     expect(within(navigation).getAllByRole('tab').map(tab => tab.textContent)).toEqual([
-      'MCP',
       'Skill',
+      'MCP',
       'Agent',
       '지침',
       'Harness'
@@ -174,8 +181,8 @@ describe('Agent Kit control center shell', () => {
     render(<ManifestApp />);
 
     const environments = await screen.findByLabelText('지원 환경');
-    expect(await within(environments).findByText('Codex · PC에 설치됨')).toBeInTheDocument();
-    expect(await within(environments).findByText('Antigravity · 지원만 됨')).toBeInTheDocument();
+    expect(await within(environments).findByText('Codex · 설치 흔적 있음')).toBeInTheDocument();
+    expect(await within(environments).findByText('Antigravity · 설치 흔적 미확인')).toBeInTheDocument();
   });
 
   it('distinguishes installed clients from clients that are only supported', async () => {
@@ -184,8 +191,8 @@ describe('Agent Kit control center shell', () => {
     render(<ManifestApp />);
 
     const environments = await screen.findByLabelText('지원 환경');
-    expect(await within(environments).findByText('Codex · PC에 설치됨')).toBeInTheDocument();
-    expect(await within(environments).findByText('Antigravity · 지원만 됨')).toBeInTheDocument();
+    expect(await within(environments).findByText('Codex · 설치 흔적 있음')).toBeInTheDocument();
+    expect(await within(environments).findByText('Antigravity · 설치 흔적 미확인')).toBeInTheDocument();
     expect(fetchSpy.mock.calls.filter(([input]) => (
       String(input).includes('/api/local-discovery')
     ))).toHaveLength(1);
@@ -196,11 +203,11 @@ describe('Agent Kit control center shell', () => {
     const user = userEvent.setup();
     render(<ManifestApp />);
 
-    await user.click(screen.getByRole('button', {name: '배포 센터'}));
+    await user.click(screen.getByRole('button', {name: '클라이언트 배포'}));
 
-    expect(screen.getAllByRole('combobox', {name: '현재 배포 환경'})).toHaveLength(1);
+    expect(within(screen.getByLabelText('배포할 클라이언트')).getByRole('button',{name:/Codex/})).toHaveAttribute('aria-pressed','true');
     expect(screen.queryByRole('combobox', {name: 'Client'})).not.toBeInTheDocument();
-    expect(screen.getByText('프로젝트 Kit · default')).toBeInTheDocument();
+    expect(screen.getByText(/프로젝트 Kit · default/)).toBeInTheDocument();
   });
 
   it('shows existing external resources and explicit init guidance when no Kit exists', async () => {

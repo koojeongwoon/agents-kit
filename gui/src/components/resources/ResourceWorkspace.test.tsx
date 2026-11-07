@@ -142,6 +142,7 @@ it('requests native inventory only on explicit action and shows disabled and add
     targetReady loading={false} error="" scope="project" projectName="default" projectPath="/work" nativeClientId="codex" onObserveNative={onObserveNative} onOpenEditor={vi.fn()} onOpenDeploy={vi.fn()} />);
   expect(onObserveNative).not.toHaveBeenCalled();
   await user.click(screen.getByRole('button',{name:'Codex CLI 상태 확인'}));expect(onObserveNative).toHaveBeenCalledTimes(1);
+  await user.selectOptions(screen.getByLabelText('클라이언트 활성 상태'),'disabled');
   expect(screen.getByText(/클라이언트 목록: 비활성/)).toBeInTheDocument();
   await user.selectOptions(screen.getByLabelText('클라이언트 활성 상태'),'disabled');
   expect(within(screen.getByLabelText('Skill 라이브러리 목록')).getAllByRole('article')).toHaveLength(1);
@@ -157,6 +158,7 @@ it('routes global and project rows with the same ID to their own editor context'
     targetReady loading={false} error="" scope="project" projectName="other" projectPath="/other" onOpenEditor={onOpenEditor} onOpenDeploy={vi.fn()} />);
   await user.click(within(screen.getByRole('article', {name: 'Global GitHub 리소스'})).getByRole('button', {name: '편집'}));
   expect(onOpenEditor).toHaveBeenLastCalledWith('github-mcp', {scope: 'global', projectName: '', projectPath: ''});
+  await user.click(within(screen.getByLabelText('자원 선택')).getByRole('button',{name:/Project GitHub/}));
   await user.click(within(screen.getByRole('article', {name: 'Project GitHub 리소스'})).getByRole('button', {name: '편집'}));
   expect(onOpenEditor).toHaveBeenLastCalledWith('github-mcp', {scope: 'project', projectName: 'work', projectPath: '/work'});
 });
@@ -235,7 +237,7 @@ describe('ResourceWorkspace', () => {
 
     expect(screen.getByRole('searchbox', {name: 'MCP 검색'})).toHaveValue('');
     expect(screen.getByRole('heading', {name: 'GitHub MCP'})).toBeInTheDocument();
-    expect(screen.getByRole('heading', {name: 'Observability'})).toBeInTheDocument();
+    expect(within(screen.getByLabelText('자원 선택')).getByRole('button',{name:/Observability/})).toBeInTheDocument();
   });
 
   it('shows a search-specific empty state when no resource matches', async () => {
@@ -281,7 +283,7 @@ describe('ResourceWorkspace', () => {
     expect(screen.queryByRole('heading', {name: '검색 결과가 없습니다.'})).not.toBeInTheDocument();
   });
 
-  it('keeps same-named PC discovery separate from Agent Kit resources without ownership evidence', () => {
+  it('keeps same-named PC discovery separate from Agent Kit resources without ownership evidence', async () => {
     const localDiscovery: LocalClientDiscovery[] = [{
       id: 'codex',
       displayName: 'Codex',
@@ -323,14 +325,16 @@ describe('ResourceWorkspace', () => {
     const registered = screen.getByRole('article', {name: 'GitHub MCP 리소스'});
     expect(within(registered).queryByText('PC에서 발견')).not.toBeInTheDocument();
     expect(within(registered).getByText('Agent Kit 등록됨')).toBeInTheDocument();
+    await userEvent.setup().click(within(screen.getByLabelText('자원 선택')).getByRole('button',{name:/^github-mcp/}));
     const discovered = screen.getByRole('article', {name: 'github-mcp 리소스'});
     expect(within(discovered).getByText('PC에서 발견')).toBeInTheDocument();
     expect(within(discovered).queryByText('Agent Kit 등록됨')).not.toBeInTheDocument();
 
+    await userEvent.setup().click(within(screen.getByLabelText('자원 선택')).getByRole('button',{name:/^playwright/}));
     const pcOnly = screen.getByRole('article', {name: 'playwright 리소스'});
     expect(within(pcOnly).getByText('PC에서 발견')).toBeInTheDocument();
     expect(within(pcOnly).getByText('읽기 전용')).toBeInTheDocument();
-    expect(within(pcOnly).getByText('Codex')).toBeInTheDocument();
+    expect(within(pcOnly).getAllByText('Codex')[0]).toBeInTheDocument();
     expect(within(pcOnly).queryByRole('button', {name: '편집'})).not.toBeInTheDocument();
     expect(within(pcOnly).queryByRole('button', {name: /배포 검토/})).not.toBeInTheDocument();
   });
@@ -366,14 +370,14 @@ it('does not promote schema 2 file contracts to resource runtime support', () =>
 
 it('offers ordinary candidates import and connects a registered source only by candidate ID', async () => {
   const user = userEvent.setup();
-  const asset = {id: 'review', kind: 'skills' as const, clientId: 'codex', candidateId: 'selected', sourcePath: '~/.agents/skills', path: '~/.agents/skills/review', managementMode: 'unmanaged' as const, scope: 'global' as const, surface: 'cli'};
+  const asset = {id: 'review', kind: 'skills' as const, clientId: 'codex', candidateId: 'selected', sourcePath: '~/.claude/skills', path: '~/.claude/skills/review', managementMode: 'unmanaged' as const, scope: 'global' as const, surface: 'cli'};
   const local: LocalClientDiscovery = {id: 'codex', displayName: 'Codex', supported: true, installed: true, configured: true, signals: {commands: [], userRootExists: true}, assets: [asset], issues: []};
   const props = {view: 'skills' as const, clients, localDiscovery: [local], targetReady: true, loading: false, error: '', scope: 'global' as const, onChanged: vi.fn(), onOpenEditor: vi.fn(), onOpenDeploy: vi.fn()};
   const {rerender} = render(<ResourceWorkspace {...props} resources={[]} />);
   await user.click(screen.getByRole('button', {name: 'Kit에 가져오기'}));
   expect(screen.getByRole('region', {name: 'Kit에 가져오기'})).toBeInTheDocument();
   await user.click(screen.getByRole('button', {name: '닫기'}));
-  rerender(<ResourceWorkspace {...props} resources={[{id: 'different-kit-id', displayName: 'Imported Review', kind: 'skills', scope: {type: 'global'}, providedTools: [], requiredTools: [], references: [], managementMode: 'kit-source', importedFrom: {candidateId: 'selected', clientId: 'codex', surface: 'cli', scope: 'global', path: '.agents/skills/review'}}]} />);
+  rerender(<ResourceWorkspace {...props} resources={[{id: 'different-kit-id', displayName: 'Imported Review', kind: 'skills', scope: {type: 'global'}, providedTools: [], requiredTools: [], references: [], managementMode: 'kit-source', importedFrom: {candidateId: 'selected', clientId: 'codex', surface: 'cli', scope: 'global', path: '.claude/skills/review'}}]} />);
   expect(screen.getAllByRole('article')).toHaveLength(1);
   expect(screen.getByText('Kit 원본 등록')).toBeInTheDocument();
   expect(screen.getByRole('button', {name: '등록 해제'})).toBeInTheDocument();

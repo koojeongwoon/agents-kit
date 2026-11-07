@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {applyNativeInstallation, fetchNativeInstallation, planNativeInstallation} from '../../api/deploy';
 import type {NativeInstallation, NativeInstallationPlan, SourceFileView} from '../../api/deploy';
+import {isSharedSkillPath} from '../../domain/resource-presentation';
 const has = (map: object, key: string) => Object.prototype.hasOwnProperty.call(map, key);
 const reasonText: Record<string, string> = {
   NATIVE_ADOPTION_REQUIRED: '현재 설치를 먼저 관리 등록하세요.',
@@ -50,7 +51,7 @@ export function NativeInstallationPanel({assetId, scope, projectName = '', proje
     finally {setBusy(false);}
   };
   const apply = async () => {
-    if (!plan || !plan.automatic || !reviewed) return;
+    if (!plan || !plan.automatic || !reviewed || isSharedSkillPath(installation?.target) || plan.operations.some(operation=>isSharedSkillPath(operation.target))) return;
     setBusy(true); setError(''); setReviewed(false);
     try {const result = await applyNativeInstallation(plan.planId); await load(); onChanged(); setMessage(result.unchanged ? '설치 변경이 없습니다.' : mode === 'adopt' ? '설치 파일을 그대로 유지하고 관리 등록했습니다.' : mode === 'detach' ? '설치 내용은 유지하고 관리만 해제했습니다.' : mode === 'import-installed' ? '설치 변경을 Kit에 병합했습니다. 설치본은 유지됩니다. 다시 반영 계획을 검토하세요.' : result.metadataOnly ? '설치 파일은 유지하고 설치 소유 기록을 갱신했습니다.' : `클라이언트 설치에 반영했습니다. 복원 이력: ${result.transactionId}`);}
     catch (cause) {setError(cause instanceof Error ? cause.message : '설치 적용 실패'); setPlan(null);}
@@ -60,6 +61,7 @@ export function NativeInstallationPanel({assetId, scope, projectName = '', proje
     <div className="flex justify-between gap-4"><div><h2 className="font-bold">클라이언트 설치 반영 · {assetId}</h2><p className="mt-2 text-sm text-slate-500">현재 설치를 먼저 관리 등록한 뒤 Kit 사본을 반영합니다. 기존 링크를 자동 교체하거나 따라가 쓰지 않습니다. 등록하지 않은 파일과 MCP 설정은 유지합니다.</p></div><button disabled={busy} onClick={onClose}>닫기</button></div>
     {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}{message && <p role="status" className="text-sm text-blue-500">{message}</p>}
     {installation && <>
+      {isSharedSkillPath(installation.target)&&<p role="status" className="resource-observation-boundary">.agents/skills는 관측 전용입니다. 기존 파일·링크·원장을 보존하며 관리 등록·변경·해제를 진행하지 않습니다.</p>}
       <p className="break-all font-mono text-xs">{installation.clientId} · {installation.surface} · {installation.target}</p>
       <p className="text-xs text-slate-500">{installation.adopted ? '설치 관리 중' : '설치 관리 등록 전'} · {installation.kitPending ? 'Kit 반영 대기' : 'Kit·설치 내용 일치'}{installation.installedModified ? ' · 설치본 외부 수정 감지' : ''}</p>
       <label className="block text-xs">설치 작업 <select aria-label="설치 작업" disabled={busy} value={mode} onChange={event => {setMode(event.target.value as typeof mode); setPlan(null); setChoices({}); setManualTexts({}); invalidate();}} className="ml-2 rounded border bg-transparent p-2"><option value="adopt">현재 설치 관리 등록 · 내용 유지</option><option value="apply">Kit 사본 반영</option><option value="import-installed">설치 변경을 Kit에 가져와 병합</option><option value="detach">설치 관리 해제 · 내용 유지</option></select></label>
@@ -84,8 +86,8 @@ export function NativeInstallationPanel({assetId, scope, projectName = '', proje
         </section>}
         <ul className="max-h-56 overflow-auto rounded bg-slate-100 p-3 font-mono text-xs dark:bg-slate-950">{plan.operations.map((item, index) => <li key={index} className="break-all py-1">{item.operation} · {item.target}{item.metadataOnly ? ' · 내용 유지' : item.beforeMode === undefined && item.afterMode === undefined ? '' : ` · ${item.beforeMode?.toString(8) || '없음'} → ${item.afterMode?.toString(8) || '없음'}`}</li>)}</ul>
       </div>}
-      <div className="flex flex-wrap gap-3"><button disabled={busy} onClick={() => void load()} className="rounded-xl border px-3 py-2 text-xs">설치 상태 다시 읽기</button><button disabled={busy} onClick={() => void review()} className="rounded-xl border px-3 py-2 text-xs">설치 변경 계획 확인</button>
-        {plan && <button disabled={busy || !reviewed || !plan.automatic} onClick={() => void apply()} className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white disabled:opacity-40">검토한 설치 계획 적용</button>}
+      <div className="flex flex-wrap gap-3"><button disabled={busy} onClick={() => void load()} className="rounded-xl border px-3 py-2 text-xs">설치 상태 다시 읽기</button><button disabled={busy||isSharedSkillPath(installation?.target)} onClick={() => void review()} className="rounded-xl border px-3 py-2 text-xs">설치 변경 계획 확인</button>
+        {plan && <button disabled={busy || !reviewed || !plan.automatic || isSharedSkillPath(installation?.target) || plan.operations.some(operation=>isSharedSkillPath(operation.target))} onClick={() => void apply()} className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white disabled:opacity-40">검토한 설치 계획 적용</button>}
       </div>
     </>}
     <button disabled={busy} onClick={() => onHistory(installation?.clientId)} className="rounded-xl border px-3 py-2 text-xs">배포 이력·복원·중단 복구</button>

@@ -1,4 +1,8 @@
 import test from 'node:test';
+
+test('shared skill observation policy is an actionable conflict',()=>{
+  assert.equal(httpStatusForError({code:'SHARED_SKILLS_OBSERVATION_ONLY'}),409);
+});
 import assert from 'node:assert/strict';
 import { DomainError } from '../lib/domain/errors.js';
 import { errorResponse, httpStatusForError } from '../lib/interfaces/http/error-mapper.js';

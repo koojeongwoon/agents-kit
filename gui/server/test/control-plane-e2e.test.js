@@ -12,6 +12,13 @@ import {nativeInstallationFixture} from '../../../test/helpers/native-installati
 import {dependencyIndexFixture} from '../../../test/helpers/dependency-index-fixture.js';
 import {nativePrerequisiteServiceFixture} from '../../../test/helpers/native-prerequisite-service-fixture.js';
 
+function usePrivateSkillFixture(definitionsDir) {
+  for(const name of fs.readdirSync(definitionsDir).filter(name=>name.endsWith('.yaml'))) {
+    const file=path.join(definitionsDir,name);
+    fs.writeFileSync(file,fs.readFileSync(file,'utf8').replaceAll('.agents/skills','.codex/skills'));
+  }
+}
+
 test('HTTP v3 validation, readonly doctor and source edits preserve installed files and require the mutation session',async t=>{
   const f=nativePrerequisiteServiceFixture(t,{scoped:true}),{app,apiToken}=createControlPlaneApp({context:createAppContext({...f.options,kitRoot:f.f.kitRoot}),logRequest:()=>{}}),input={scope:'project',projectPath:f.project.targetRoot,projectName:'default'},file=path.join(f.project.sourceRoot,'agent-kit.yaml'),raw=parse(fs.readFileSync(file,'utf8')),config=path.join(f.project.targetRoot,'.codex/config.toml'),before=fs.readFileSync(config),ledger=fs.readFileSync(f.f.statePath);
   const post=(route,body)=>request(app).post(route).set('X-Agents-Kit-Token',apiToken).send(body),registry=await request(app).get('/api/manifest/registry').query(input).expect(200);assert.equal(registry.body.manifestSchemaVersion,3);assert.equal(registry.body.registry.find(asset=>asset.id==='reviewer').previewOnly,false);
@@ -56,7 +63,7 @@ test('HTTP global review, saved resume and rollback preserve registered pins and
   await post('rollback',{planId:rollback.body.planId}).expect(200);assert.deepEqual(fs.readFileSync(f.global.rules),before);
   f.global.raw.targets={codex:{assetIds:['review']}};f.global.write();fs.appendFileSync(path.join(f.global.scopeRoot,'review/SKILL.md'),'\nPinned change\n');
   const blocked=await post('plan',input).expect(200);assert.equal(blocked.body.automatic,false);assert.equal(blocked.body.dependencyProtection.status,'blocked');assert.ok(blocked.body.blocked.some(item=>item.reason==='GLOBAL_REVISION_IN_USE'));
-  const rejected=await post('apply',{planId:blocked.body.planId,automatic:true,dependencyProtection:{status:'ready'}}).expect(409);assert.equal(rejected.body.code,'GLOBAL_MUTATION_PLAN_BLOCKED');
+  const rejected=await post('apply',{planId:blocked.body.planId,automatic:true,dependencyProtection:{status:'ready'}}).expect(409);assert.equal(rejected.body.code,'SHARED_SKILLS_OBSERVATION_ONLY');
   assert.deepEqual(f.global.state().dependencyIndex,index);assert.deepEqual(fs.readFileSync(f.project.statePath),project);f.global.preserved();f.project.preserved();
 });
 
@@ -90,7 +97,7 @@ test('registered dependent API retains missing projects and blocks ordinary writ
   await request(app).get('/api/manifest/registry').query({...query,dependents:'yes'}).expect(400);
   const plan=await request(app).post('/api/deployment/plan').set('X-Agents-Kit-Token',apiToken).send({scope:'global',clientId:'codex',surface:'cli',clientVersion:'0.0.1-test'}).expect(200);
   assert.equal(plan.body.automatic,false);assert.equal(plan.body.dependencyProtection.status,'blocked');
-  const applied=await request(app).post('/api/deployment/apply').set('X-Agents-Kit-Token',apiToken).send({planId:plan.body.planId}).expect(409);assert.equal(applied.body.code,'GLOBAL_MUTATION_PLAN_BLOCKED');
+  const applied=await request(app).post('/api/deployment/apply').set('X-Agents-Kit-Token',apiToken).send({planId:plan.body.planId}).expect(409);assert.equal(applied.body.code,'SHARED_SKILLS_OBSERVATION_ONLY');
   assert.equal(calls,0);assert.deepEqual(fs.readFileSync(f.global.statePath),before);for(const [file,bytes] of Object.entries(clientFiles))assert.deepEqual(fs.readFileSync(file),bytes);f.global.preserved();f.project.preserved();
 });
 
@@ -227,13 +234,14 @@ test('HTTP explicitly reviews, saves, applies and restores old and new resource 
   const {app, apiToken} = createControlPlaneApp({context: createAppContext({homeDir: f.homeDir, kitRoot: f.kitRoot, definitionsDir: f.definitionsDir}), apiToken: 'c'.repeat(64), logRequest: () => {}});
   const post = (endpoint, body) => request(app).post(endpoint).set('X-Agents-Kit-Token', apiToken).send(body);
   const input = {scope: 'project', projectPath: f.targetRoot, projectName: 'default', clientId: 'codex', surface: 'cli', clientVersion: '0.0.1-test'};
-  const planned = await post('/api/deployment/migration-plan', {...input, migration: 'resource-path', assetIds: ['rules', 'review', 'reviewer', 'docs']}).expect(200);
-  assert.equal(planned.body.automatic, true, JSON.stringify(planned.body.blocked)); assert.equal(planned.body.pathMigrations.length, 4);
+  const planned = await post('/api/deployment/migration-plan', {...input, migration: 'resource-path', assetIds: ['rules', 'reviewer', 'docs']}).expect(200);
+  assert.equal(planned.body.automatic, true, JSON.stringify(planned.body.blocked)); assert.equal(planned.body.pathMigrations.length, 3);
   assert.deepEqual(f.state().managed, f.managed); assert.ok(planned.body.operations.every(op => op.nextManaged === undefined && op.beforeImage === undefined));
   const saved = await post('/api/deployment/save-plan', {planId: planned.body.planId}).expect(200);
   await request(app).post('/api/deployment/resume').send({planId: saved.body.planId, digest: saved.body.digest}).expect(403);
   const applied = await post('/api/deployment/resume', {planId: saved.body.planId, digest: saved.body.digest}).expect(200);
-  assert.ok(Object.keys(f.state().managed).every(file => file.includes('/moved/')));
+  assert.ok(Object.keys(f.state().managed).filter(file=>!file.includes('/.agents/skills/')).every(file => file.includes('/moved/')));
+  for(const [file,entry] of Object.entries(f.managed).filter(([file])=>file.includes('/.agents/skills/')))assert.deepEqual(f.state().managed[file],entry);
   const rollback = await post('/api/deployment/rollback-plan', {...input, transactionId: applied.body.transactionId}).expect(response=>assert.equal(response.status,200,JSON.stringify({status:response.status,hasAppRequestId:!!response.headers['x-request-id'],contentType:response.headers['content-type'],code:/^[A-Z_]+$/.test(response.body?.code||'')?response.body.code:undefined})));
   await post('/api/deployment/rollback', {planId: rollback.body.planId}).expect(200); assert.deepEqual(f.state().managed, f.managed); f.preserved();
 });
@@ -284,7 +292,7 @@ test('HTTP path drift blocks duplicate installation and a reviewed plan using th
   assert.deepEqual(fs.readFileSync(target), original); assert.equal(fs.existsSync(path.join(targetRoot, 'moved')), false);
 });
 
-test('HTTP shared snapshot deployment, multi-client strategy migration and rollback preserve unrelated external links', async t => {
+test('HTTP snapshot and strategy plans preserve observation-only skill roots and external links', async t => {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kit-link-http-')));
   t.after(() => {const visit = file => {if (fs.lstatSync(file).isDirectory()) {fs.chmodSync(file, 0o700); for (const name of fs.readdirSync(file)) visit(path.join(file, name));}}; visit(root); fs.rmSync(root, {recursive: true, force: true});});
   const homeDir = path.join(root, 'home'), kitRoot = path.join(root, 'kit'), scopeRoot = path.join(kitRoot, 'projects/default'), targetRoot = path.join(root, 'project'), definitionsDir = path.join(root, 'definitions');
@@ -297,13 +305,16 @@ test('HTTP shared snapshot deployment, multi-client strategy migration and rollb
   const {app, apiToken} = createControlPlaneApp({context: createAppContext({homeDir, kitRoot, definitionsDir}), apiToken: 'c'.repeat(64), logRequest: () => {}});
   const input = {scope: 'project', projectPath: targetRoot, targets: ['codex', 'antigravity'].map(clientId => ({clientId, surface: 'cli', clientVersion: '0.0.1-test'}))};
   const post = (endpoint, body) => request(app).post(endpoint).set('X-Agents-Kit-Token', apiToken).send(body);
-  const plan = await post('/api/deployment/plan', input).expect(200); assert.equal(plan.body.automatic, true); assert.equal(JSON.stringify(plan.body).includes('PRIVATE_MARKER_BODY'), false);
-  await post('/api/deployment/apply', {planId: plan.body.planId}).expect(200); assert.equal(fs.lstatSync(target).isSymbolicLink(), true);
-  manifest.assets.skills[0].definition.deployment.strategy = 'copy'; write();
-  const migration = await post('/api/deployment/migration-plan', {...input, migration: 'skill-strategy', assetIds: ['review']}).expect(200);
-  assert.equal(migration.body.automatic, true); const installed = await post('/api/deployment/apply', {planId: migration.body.planId}).expect(200); assert.equal(fs.lstatSync(target).isDirectory(), true);
-  const rollback = await post('/api/deployment/rollback-plan', {scope: 'project', projectPath: targetRoot, clientId: 'codex', transactionId: installed.body.transactionId}).expect(200);
-  await post('/api/deployment/rollback', {planId: rollback.body.planId}).expect(200); assert.equal(fs.lstatSync(target).isSymbolicLink(), true); assert.equal(fs.readlinkSync(external), '/external/ego-skills');
+  const plan = await post('/api/deployment/plan', input).expect(200);
+  assert.equal(plan.body.automatic,false);assert.ok(plan.body.blocked.some(item=>item.reason==='SHARED_SKILLS_OBSERVATION_ONLY'));
+  assert.equal(JSON.stringify(plan.body).includes('PRIVATE_MARKER_BODY'),false);
+  await post('/api/deployment/apply',{planId:plan.body.planId,automatic:true}).expect(409);
+  await post('/api/deployment/save-plan',{planId:plan.body.planId}).expect(409);
+  manifest.assets.skills[0].definition.deployment.strategy='copy';write();
+  const migration=await post('/api/deployment/migration-plan',{...input,migration:'skill-strategy',assetIds:['review']}).expect(200);
+  assert.equal(migration.body.automatic,false);await post('/api/deployment/apply',{planId:migration.body.planId}).expect(409);
+  assert.equal(fs.existsSync(target),false);assert.equal(fs.existsSync(path.join(targetRoot,'.agent-kit')),false);
+  assert.equal(fs.existsSync(path.join(homeDir,'.agents-kit/snapshots')),false);assert.equal(fs.readlinkSync(external),'/external/ego-skills');
 });
 
 test('HTTP snapshot preview is pure and the token-protected apply cannot execute it', async t => {
@@ -321,7 +332,7 @@ test('HTTP snapshot preview is pure and the token-protected apply cannot execute
   assert.equal(planned.body.operations[0].previewOnly, true); assert.equal(planned.body.stateUpgrade.to, 6);
   await request(app).post('/api/deployment/apply').send({planId: planned.body.planId}).expect(403);
   const applied = await request(app).post('/api/deployment/apply').set('X-Agents-Kit-Token', apiToken).send({planId: planned.body.planId}).expect(409);
-  assert.equal(applied.body.code, 'DEPLOYMENT_PREVIEW_ONLY'); assert.equal(fs.existsSync(path.join(targetRoot, '.agent-kit')), false);
+  assert.equal(applied.body.code, 'SHARED_SKILLS_OBSERVATION_ONLY'); assert.equal(fs.existsSync(path.join(targetRoot, '.agent-kit')), false);
   assert.equal(fs.existsSync(path.join(homeDir, '.agents-kit/snapshots')), false); assert.equal(fs.readlinkSync(external), '/external/ego-skills');
 });
 
@@ -364,9 +375,10 @@ test('HTTP native installation separates adoption, guarded apply, installed merg
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'kit-native-http-'))); t.after(() => fs.rmSync(root, {recursive: true, force: true}));
   const homeDir = path.join(root, 'home'), kitRoot = path.join(root, 'kit'), targetRoot = path.join(root, 'project'), definitionsDir = path.join(root, 'definitions');
   for (const directory of [homeDir, targetRoot, path.join(kitRoot, 'projects/default')]) fs.mkdirSync(directory, {recursive: true});
-  const primary = path.join(targetRoot, '.agents/skills/review/SKILL.md'); fs.mkdirSync(path.dirname(primary), {recursive: true}); fs.writeFileSync(primary, 'alpha\nbase\nomega\n'); fs.chmodSync(primary, 0o640);
+  const primary = path.join(targetRoot, '.codex/skills/review/SKILL.md'); fs.mkdirSync(path.dirname(primary), {recursive: true}); fs.writeFileSync(primary, 'alpha\nbase\nomega\n'); fs.chmodSync(primary, 0o640);
   fs.writeFileSync(path.join(kitRoot, 'projects/default/agent-kit.yaml'), 'schemaVersion: 1\nkit: {id: http-native}\nassets: {}\n');
   writeProfileFixture({definitionsDir, repositoryRoot: path.resolve(import.meta.dirname, '../../..'), capabilityIds: ['skills-project']});
+  usePrivateSkillFixture(definitionsDir);
   const context = createAppContext({homeDir, kitRoot, definitionsDir}); const {app, apiToken} = createControlPlaneApp({context, apiToken: 'c'.repeat(64), logRequest: () => {}});
   const input = {scope: 'project', projectPath: targetRoot, projectName: 'default', assetId: 'review', clientVersion: '0.0.1-test'};
   const post = (endpoint, body) => request(app).post(endpoint).set('X-Agents-Kit-Token', apiToken).send(body);
@@ -491,6 +503,7 @@ assets:
 
   const definitionsDir = path.join(root, 'definitions');
   writeProfileFixture({definitionsDir, repositoryRoot: path.resolve(import.meta.dirname, '../../..')});
+  usePrivateSkillFixture(definitionsDir);
   const context = createAppContext({
     homeDir,
     kitRoot,
@@ -530,7 +543,7 @@ assets:
     .expect(200);
   assert.ok(applied.body.transactionId);
   assert.equal(
-    fs.readFileSync(path.join(targetRoot, '.agents', 'skills', 'review', 'SKILL.md'), 'utf8'),
+    fs.readFileSync(path.join(targetRoot, '.codex', 'skills', 'review', 'SKILL.md'), 'utf8'),
     '# Review\n'
   );
 
@@ -556,7 +569,7 @@ assets:
     .send({planId: rollbackPlan.body.planId})
     .expect(200);
   assert.equal(
-    fs.existsSync(path.join(targetRoot, '.agents', 'skills', 'review', 'SKILL.md')),
+    fs.existsSync(path.join(targetRoot, '.codex', 'skills', 'review', 'SKILL.md')),
     false
   );
 });

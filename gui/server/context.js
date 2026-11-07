@@ -6,6 +6,7 @@ import {isWithinRoot, resolveForAuthorization, assertSafeProjectTarget as assert
 import {errorResponse, httpStatusForError} from '../../lib/interfaces/http/error-mapper.js';
 import {createManifestDeploymentService} from '../../lib/application/manifest-deployment-service.js';
 import {createLocalDaemonStatusService} from '../../lib/application/local-daemon-status-service.js';
+import {createObservedSkillsBoundary} from './observed-skills-boundary.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,7 +35,7 @@ export function createAppContext(options = {}) {
     homeDir,
     projectRoot,
     kitRoot,
-    manifestDeploymentService,
+    manifestDeploymentService: createObservedSkillsBoundary(manifestDeploymentService),
     localDaemonStatusService: options.localDaemonStatusService || createLocalDaemonStatusService(),
     resolveKitScopeDir,
     assertSafeProjectTarget,

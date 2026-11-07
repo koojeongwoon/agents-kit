@@ -4,6 +4,7 @@ export interface ClientSummary {
   schemaVersion?: number;
   defaultSurface?: string;
   surfaces?: Array<{ id: string; displayName: string; configStore: string; runtimeState: string;
+    capabilities?:ClientSummary['capabilities'];
     runtimeEvidence?: Array<{capabilityId: string; version: string; platform: string; arch: string;
       verifiedAt: string; source: string; resourceProfile?: string; binarySha256?: string}>;
   }>;

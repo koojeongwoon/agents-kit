@@ -28,7 +28,8 @@ export default function ManifestApp() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => (
     (localStorage.getItem('theme') as 'light' | 'dark') || 'dark'
   ));
-  const [activeView, setActiveView] = useState<AppView>('home');
+  const [activeView, setActiveView] = useState<AppView>('skills');
+  const [allClients,setAllClients]=useState(false);
   const [scope, setScope] = useState<'global' | 'project'>('project');
   const [clientId, setClientId] = useState('codex');
   const [projectName, setProjectName] = useState('default');
@@ -71,6 +72,7 @@ export default function ManifestApp() {
   };
 
   const targetReady = scope === 'global' || projectPath.trim().length > 0;
+  const selectClient=(id:string)=>{if(id!==clientId)setClientVersion('');setClientId(id);};
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -215,16 +217,20 @@ export default function ManifestApp() {
           loading={resourcesLoading}
           error={resourcesError}
           onOpenEditor={openEditor}
-          onOpenDeploy={context => {selectContext(context); setActiveView('deploy');}}
+          onOpenDeploy={context => {selectContext(context);setAllClients(false); setActiveView('deploy');}}
           scope={scope} projectName={projectName} projectPath={projectPath}
           recoveryRequired={sourceRecoveryRequired} onChanged={() => setResourceRevision(value => value + 1)}
-          onNativeHistory={(id, context) => {selectContext(context); if (id) setClientId(id); setActiveView('deploy');}}
+          onNativeHistory={(id, context) => {selectContext(context);setAllClients(false); if (id) selectClient(id); setActiveView('deploy');}}
         />
       );
     }
     if (activeView === 'deploy') {
       return (
         <ManifestDeploymentPanel
+          key={`${allClients}:${clientId}:${scope}:${projectName}:${projectPath}`}
+          allClients={allClients}
+          resources={resources}
+          localDiscovery={catalog?.clients||resourceDiscovery}
           scope={scope}
           clientId={clientId}
           clients={clients}
@@ -260,13 +266,15 @@ export default function ManifestApp() {
       localDiscoveryLoading={localDiscoveryLoading}
       localDiscoveryError={localDiscoveryError}
       clientId={clientId}
-      setClientId={setClientId}
+      setClientId={selectClient}
       scope={scope}
       setScope={setScope}
       projectName={projectName}
       setProjectName={setProjectName}
       projectPath={projectPath}
       setProjectPath={setProjectPath}
+      allClients={allClients}
+      setAllClients={setAllClients}
     >
       {content}
     </ControlCenterShell>

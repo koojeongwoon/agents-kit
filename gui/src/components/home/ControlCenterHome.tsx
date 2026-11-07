@@ -82,7 +82,7 @@ export function ControlCenterHome({
             </div>
             <p className="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-400">
               {targetReady
-                ? `${scope === 'global' ? '내 PC 전역' : '선택한 프로젝트'} Kit의 자산을 읽을 수 있습니다. 진단은 선택 사항이며 계획 생성의 선행 조건이 아닙니다.`
+                ? `${scope === 'global' ? '공통' : '선택한 프로젝트'} Kit의 자산을 읽을 수 있습니다. 진단은 선택 사항이며 계획 생성의 선행 조건이 아닙니다.`
                 : '상단의 프로젝트 경로를 입력하면 기존 Manifest를 읽고 자산별 상태를 보여줍니다.'}
             </p>
           </div>
